@@ -2,4 +2,32 @@
     background-color: aquamarine !important;
     height: 150px;
     border-bottom: 3px solid black;
+    position: relative;
+}
+
+#profile-circle {
+    position: fixed;
+    top:25px;
+    margin-right:auto;
+    height:200px;
+    width:200px;
+    border-radius:50%;
+    border: 3px solid black;
+    background-color: yellow;
+}
+
+#nav-menu {
+    position: absolute;
+    bottom: 0;
+}
+
+.content-block {
+    margin-top: 100px;
+}
+
+.fillblock {
+    height: 400px;
+    width: 100%;
+    border: 2px solid black;
+    border-radius: 5px;
 }
