@@ -35,72 +35,55 @@
     <title>Crossfit Community{% block extra_title %}{% endblock %}</title>
   </head>
   <body>
-      <header class="container-fluid fixed-top" id="header-bar">
-          <div class="row">
-              <div class="col-9 d-flex justify-content-center" style="background-color:bisque">
-                    <nav class="navbar navbar-expand-lg navbar-light w-100" id="nav-menu">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="main-nav">
-                            <ul class="navbar-nav w-auto mx-auto">
-                                <li class="nav-item d-block d-md-none">
-                                    <a class="logo-font font-weight-bold nav-link text-black mr-5" href="" id="home-link">
-                                            Home
-                                    </a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="logo-font font-weight-bold nav-link text-black mr-5" href="" id="all-products-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        All Products
-                                    </a>
-                                    <div class="dropdown-menu border-0" aria-labelledby="all-products-link">
-                                        <a href="" class="dropdown-item">By Price</a>
-                                        <a href="" class="dropdown-item ">By Rating</a>
-                                        <a href="" class="dropdown-item ">By Category</a>
-                                        <a href="" class="dropdown-item">All Products</a>
-                                    </div>
-                                </li>
-
-                                <li class="nav-item dropdown">
-                                    <a class="logo-font font-weight-bold nav-link text-black mr-5" href="" id="clothing-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Clothing
-                                    </a>
-                                    <div class="dropdown-menu border-0" aria-labelledby="clothing-link">
-                                        <a href="" class="dropdown-item">Activewear &amp; Essentials</a>
-                                        <a href="" class="dropdown-item">Jeans</a>
-                                        <a href="" class="dropdown-item">Shirts</a>
-                                        <a href="" class="dropdown-item">All Clothing</a>
-                                    </div>
-                                </li>
-
-                                <li class="nav-item dropdown">
-                                    <a class="logo-font font-weight-bold nav-link text-black mr-5" href="" id="homeware-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Homeware
-                                    </a>
-                                    <div class="dropdown-menu border-0" aria-labelledby="homeware-link">
-                                        <a href="" class="dropdown-item">Bed &amp; Bath</a>
-                                        <a href="" class="dropdown-item">Kitchen &amp; Dining</a>
-                                        <a href="" class="dropdown-item">All Homeware</a>
-                                    </div>
-                                </li>
-
-                                <li class="nav-item dropdown">
-                                    <a class="logo-font font-weight-bold nav-link text-black" href="" id="specials-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Special Offers
-                                    </a>
-                                    <div class="dropdown-menu border-0" aria-labelledby="specials-link">
-                                        <a href="" class="dropdown-item">New Arrivals</a>
-                                        <a href="" class="dropdown-item">Deals</a>
-                                        <a href="" class="dropdown-item">Clearance</a>
-                                        <a href="" class="dropdown-item">All Specials</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+      <header class="container-fluid sticky-top" id="header-bar">
+            <div class="row align-items-start">
+                <div class="col-3 col-lg-9 d-flex">
+                            <nav class="navbar navbar-expand-lg navbar-dark">
+                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                        </li>
+                                        {% if request.user.is_authenticated %}
+                                        <li class="nav-item">
+                                        <a class="nav-link" href="#">WOD's</a>
+                                        </li>
+                                        <li class="nav-item">
+                                        <a class="nav-link" href="#">Members</a>
+                                        </li>
+                                        <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                                        </li>
+                                        {% else %}
+                                        <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                                        </li>
+                                        <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'account_signup' %}">Register</a>
+                                        </li>
+                                        {% endif %}
+                                        <li class="nav-item dropdown d-none">
+                                        <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Dropdown link
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                    </div>
+                <div class="col-6 col-lg-3 d-flex justify-content-center">
+                    {% with "/media/herocommunitylogo.jpg" as image %}
+                  <div id="profile-circle" style="background: url({{ image }}) no-repeat; background-size: cover"></div>
+                  {% endwith %}
               </div>
-              <div class="col-3 d-flex justify-content-center">
-                  <div id="profile-circle"></div>
+              <div class="col-3 d-lg-none d-flex justify-content-center">
               </div>
           </div>
       </header>

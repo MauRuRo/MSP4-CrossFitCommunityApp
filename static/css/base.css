@@ -1,33 +1,101 @@
+body {
+    background: url('/media/background.jpg') no-repeat fixed;
+    background-size: cover;
+    background-position-y: 150px;
+}
 #header-bar {
-    background-color: aquamarine !important;
+    /* background-color: aquamarine !important; */
     height: 150px;
     border-bottom: 3px solid black;
-    position: relative;
+    /* position: relative; */
+    background-color:#0E2246;
+    color: #DEC19A;
+}
+
+.navbar {
+    text-transform: uppercase;
+    font-size: 1.5rem;
 }
 
 #profile-circle {
-    position: fixed;
-    top:25px;
-    margin-right:auto;
+    margin-top:25px;
     height:200px;
     width:200px;
+    min-width: 120px;
     border-radius:50%;
     border: 3px solid black;
-    background-color: yellow;
+    background-size: cover;
+    z-index: 999;
 }
 
-#nav-menu {
-    position: absolute;
-    bottom: 0;
+.page-content {
+    /* height: calc(100% - 150px); */
+    padding-top: 75px;
+    padding-bottom: 75px;
+    /* background: url('/media/background.jpg') no-repeat fixed;
+    background-size: cover; */
 }
 
 .content-block {
-    margin-top: 100px;
+    margin-top: 15px;
 }
 
 .fillblock {
-    height: 400px;
+    min-height: 400px;
     width: 100%;
     border: 2px solid black;
     border-radius: 5px;
+    background-color: white;
+}
+
+.navbar {
+    margin-top:85px;
+}
+
+#promo-text {
+    margin-top: 100px;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px#0E2246;
+    /* background-color: rgba(0,0,0, 0.5) */
+}
+
+/* .navbar-collapse {
+    padding: 0px 24px 0px 24px;
+    background-color: #0E2246;
+    left: -24px;
+    top: 15px;
+    position: relative;
+} */
+
+/* MEDIAQUERIES */
+
+@media (max-width: 576px) {
+    
+  body {
+    background-position-y: 90px;
+  }
+  #profile-circle {
+    height: 120px;
+    width: 120px;
+  }
+#header-bar {
+    height: 90px;
+  }
+  .page-content {
+    padding-top: 50px;
+    }
+    .navbar {
+        margin-top:25px;
+    }
+}
+
+@media (max-width: 992px) {
+    .navbar-collapse {
+        padding: 0px 24px 0px 24px;
+        background-color: #0E2246;
+        left: -24px;
+        top: 15px;
+        position: relative;
+    }
 }

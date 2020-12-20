@@ -14,6 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -58,6 +59,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'crossfit_community.urls'
 
 TEMPLATES = [
+    # { 
+    #     'BACKEND':'django.template.backends.jinja2.Jinja2',
+    #     'DIRS': ['%s/jinjatemplates/'% (PROJECT_DIR),],
+    #     'APP_DIRS': True,
+    #     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
@@ -148,3 +154,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
