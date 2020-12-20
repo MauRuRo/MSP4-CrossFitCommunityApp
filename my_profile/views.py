@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
 
-def index(request):
+def profile(request):
     """ a view to render the home page """
-    return render(request, 'home/index.html')
+    return render(request, 'my_profile/profile.html')

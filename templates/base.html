@@ -48,15 +48,15 @@
                                     <ul class="navbar-nav">
                                         {% if not request.user.is_authenticated %}
                                         <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                        <a class="nav-link active" aria-current="page" href="/">Home</a>
                                         </li>
                                         {% endif %}
                                         {% if request.user.is_authenticated %}
                                         <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="#">Profile</a>
+                                        <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Profile</a>
                                         </li>
                                         <li class="nav-item">
-                                        <a class="nav-link" href="#">WOD's</a>
+                                        <a class="nav-link" href="/">WOD's</a>
                                         </li>
                                         <li class="nav-item">
                                         <a class="nav-link" href="#">Members</a>
