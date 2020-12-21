@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'home',
     'my_profile',
+    # Other
+    'crispy_forms',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'crossfit_community.urls'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     # { 
@@ -79,6 +84,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'builtins': [
+                'crispy_forms.templatetags.crispy_forms_tags',
+                'crispy_forms.templatetags.crispy_forms_field',
+            ]
         },
     },
 ]

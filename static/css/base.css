@@ -8,6 +8,7 @@ body {
 h1, h2, h3 {
     font-family: 'Bungee';
 }
+
 #header-bar {
     /* background-color: aquamarine !important; */
     height: 150px;
@@ -35,7 +36,7 @@ h1, h2, h3 {
 }
 
 .page-content {
-    /* height: calc(100% - 150px); */
+    height: calc(100vh - 150px);
     padding-top: 75px;
     padding-bottom: 75px;
     /* background: url('/media/background.jpg') no-repeat fixed;
@@ -47,7 +48,7 @@ h1, h2, h3 {
 }
 
 .fillblock {
-    min-height: 400px;
+    min-height: 200px;
     width: 100%;
     border: 2px solid black;
     border-radius: 5px;
@@ -71,6 +72,11 @@ h1, h2, h3 {
     /* background-color: rgba(0,0,0, 0.5) */
 }
 
+.header-text {
+    color: white;
+    text-shadow: 2px 2px 5px #0E2246;
+}
+
 /* .navbar-collapse {
     padding: 0px 24px 0px 24px;
     background-color: #0E2246;
@@ -78,6 +84,69 @@ h1, h2, h3 {
     top: 15px;
     position: relative;
 } */
+
+/* Allauth form formatting  */
+
+.allauth-form-inner-content p {
+    margin-top: 1.5rem; /*mt-4*/
+    color: #000000; /* text-secondary */
+    text-shadow: 1px 1px 2px white;
+}
+
+.allauth-form-inner-content form {
+    text-shadow: 1px 1px 2px white;
+}
+
+.allauth-form-inner-content input {
+    border-color: #000;
+    border-radius: 0;
+}
+
+.allauth-form-inner-content label:not([for='id_remember']) {
+    display: none;
+}
+
+.allauth-form-inner-content input::placeholder {
+    color: #aab7c4;
+}
+
+.allauth-form-inner-content button,
+.allauth-form-inner-content input[type='submit'] {
+    /* btn */
+	display: inline-block;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #000;
+    border: 1px solid #000;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0;
+
+    /* standard bootstrap btn transitions */
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.allauth-form-inner-content button:hover,
+.allauth-form-inner-content input[type='submit']:hover {	
+	color: #fff;
+    background-color: #222;
+    border-color: #222;
+}
+
+.allauth-form-inner-content input {
+    margin-bottom: 15px;
+}
+.allauth-form-inner-content a {
+    color: #17a2b8; /* text-info */
+    text-decoration: none;
+}
 
 /* MEDIAQUERIES */
 
