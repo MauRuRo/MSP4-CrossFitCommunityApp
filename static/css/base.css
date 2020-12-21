@@ -35,6 +35,21 @@ h1, h2, h3 {
     z-index: 999;
 }
 
+#emblem-circle {
+    position: absolute;
+    top:93px;
+    margin-left:190px;
+    /* left:50px; */
+    margin-top:25px;
+    height:60px;
+    width:60px;
+    /* min-width: 30px; */
+    border-radius:50%;
+    border: 3px solid black;
+    background-size: cover;
+    z-index: 999;
+}
+
 .page-content {
     height: calc(100vh - 150px);
     padding-top: 75px;
@@ -168,6 +183,13 @@ h1, h2, h3 {
     .navbar {
         margin-top:25px;
     }
+#emblem-circle {
+    
+    top:42px;
+    margin-left:120px;
+    height:40px;
+    width:40px;
+}
 }
 
 @media (max-width: 992px) {

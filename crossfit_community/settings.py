@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'home',
-    'my_profile',
+    'profiles',
     # Other
     'crispy_forms',
     'storages',
@@ -65,7 +65,7 @@ ROOT_URLCONF = 'crossfit_community.urls'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
-    # { 
+    # {
     #     'BACKEND':'django.template.backends.jinja2.Jinja2',
     #     'DIRS': ['%s/jinjatemplates/'% (PROJECT_DIR),],
     #     'APP_DIRS': True,
@@ -80,7 +80,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request', #required by allauth
+                'django.template.context_processors.request',  # required by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
