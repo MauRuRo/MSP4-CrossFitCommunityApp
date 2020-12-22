@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'profiles/css/profiles.css' %}">
+{% endblock %}
+
 {% block content %}
                     <div class="container-fluid page-content">
                         <div class="row h-100 align-items-center justify-content-center">
@@ -8,10 +12,18 @@
                                 <div class="allauth-form-inner-content">
                                     <h1 class="header-text mb-4">Create Profile</h1>
 
-                                    <form class="signup" id="create_profile_form" method="post" action="">
+                                    <form class="signup" id="create_profile_form" method="post" action="{% url 'create_profile' %}">
                                     {% csrf_token %}
                                     {{ form|crispy }}
-                                    <button type="submit">Create Profile</button>
+                                    <fieldset>
+                                        <legend class="fieldset-label small px-1 text-black w-auto">A one-time payment of €9,99 will be charged to your card.</legend>
+                                        <!-- A stripe card element will go here -->
+                                        <div class="mb-3" id="card-element"></div>
+                                        <!-- Used to display form errors -->
+                                        <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
+                                        <input type="hidden" value="{{ client_secret }}" name="client_secret">
+                                    </fieldset>
+                                    <button type="submit" id="submit-button">Create Profile</button>
                                     </form>
                                 </div>
                             </div>
@@ -21,12 +33,15 @@
 
 {% block postloadjs %}
     {{ block.super }}
+    {{ stripe_public_key|json_script:"id_stripe_public_key" }}
+    {{ client_secret|json_script:"id_client_secret" }}
+    <script src="{% static 'profiles/js/stripe_elements.js' %}"></script>
     <script type="text/javascript" src="{% static 'profiles/js/unselected_select_field.js' %}"></script>
     <script type="text/javascript">
+    // auto-fill email field and hide
     $(document).ready(function(){
     $("#id_email").val("{{ email }}");
     $("#id_email").hide()
-    console.log($("#id_email").val())
 });
-    </script>
+    </script> 
 {% endblock %}
