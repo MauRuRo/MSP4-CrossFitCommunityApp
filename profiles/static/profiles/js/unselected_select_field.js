@@ -23,5 +23,3 @@ $('#id_gender').change(function() {
         $(this).css('color', '#000');
     }
 });
-
-console.log("TESTING")

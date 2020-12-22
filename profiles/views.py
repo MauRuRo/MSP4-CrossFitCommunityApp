@@ -8,12 +8,15 @@ def profile(request):
         # profile = get_object_or_404(UserProfile, user=request.user)
         profile = UserProfile.objects.get(user=request.user)
         form = UserProfileForm(instance=profile)
+        template = 'profiles/profile.html'
     except UserProfile.DoesNotExist:
         form = UserProfileForm()
+        template = 'profiles/create_profile.html'
+        email = request.user.email
 
-    template = 'profiles/profile.html'
     context = {
         'form': form,
+        'email': email,
     }
 
     return render(request, template, context)

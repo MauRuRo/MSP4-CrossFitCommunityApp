@@ -22,4 +22,11 @@
 {% block postloadjs %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'profiles/js/unselected_select_field.js' %}"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+    $("#id_email").val("{{ email }}");
+    $("#id_email").hide()
+    console.log($("#id_email").val())
+});
+    </script>
 {% endblock %}
