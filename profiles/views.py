@@ -4,8 +4,12 @@ from .forms import UserProfileForm
 
 def profile(request):
     """ a view to render the home page """
-    profile = get_object_or_404(UserProfile, user=request.user)
-    form = UserProfileForm(instance=profile)
+    try:
+        # profile = get_object_or_404(UserProfile, user=request.user)
+        profile = UserProfile.objects.get(user=request.user)
+        form = UserProfileForm(instance=profile)
+    except UserProfile.DoesNotExist:
+        form = UserProfileForm()
 
     template = 'profiles/profile.html'
     context = {

@@ -9,7 +9,7 @@ class UserProfile(models.Model):
     A user profile
     """
     GENDER_CHOICES = (
-        ('', 'Please select gender...'),
+        ('', 'Please select gender... *'),
         ('M', 'Male'),
         ('F', 'Female'),
     )
@@ -18,10 +18,11 @@ class UserProfile(models.Model):
     email = models.EmailField(max_length=254, null=False, blank=False)
     town_or_city = models.CharField(max_length=40, null=False, blank=False)
     country = CountryField(blank_label="Country *", max_length=40, null=True,blank=True)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=False, blank=False, default='Please select gender...')
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=False, blank=False, default='Please select gender... *')
     weight = models.DecimalField(max_digits=4, decimal_places=1)
     age = models.IntegerField(null=False, blank=False)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank= True)
+
 
     def __str__(self):
         return self.user.username
