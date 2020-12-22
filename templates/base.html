@@ -87,12 +87,10 @@
                             </nav>
                     </div>
                 <div class="col-6 col-lg-3 d-flex justify-content-center">
-                    {% with "/media/herocommunitylogo.jpg" as image %}                    
-                        <a href="{% url 'home' %}"><div id="profile-circle" style="background: url({% if request.user.is_authenticated %}'/media/ovchip.jpg'{% else %}{{ image }}{% endif %}) no-repeat; background-size: cover"></div></a>
+                        <a href="{% url 'home' %}"><div id="profile-circle" style="background: url({% if request.user.is_authenticated %}{{ image }}{% else %}'/media/herocommunitylogo.jpg'{% endif %}) no-repeat; background-size: cover"></div></a>
                         {% if request.user.is_authenticated %}
                         <div id="emblem-circle" style="background: url('/media/herocommunitylogo.jpg') no-repeat; background-size: cover"></div>
                         {% endif %}
-                    {% endwith %}
               </div>
               <div class="col-3 d-lg-none d-flex justify-content-center">
               </div>
