@@ -19,7 +19,7 @@ class UserProfileForm(forms.ModelForm):
             'full_name': 'Full Name',
             'email': 'Email Address',
             'town_or_city': 'Town or City',
-            'gender': 'M/F',
+            'gender': 'Gender',
             'weight': 'weight in kilograms',
             'age': 'Age'
         }
@@ -32,5 +32,7 @@ class UserProfileForm(forms.ModelForm):
                 else:
                     placeholder = placeholders[field]
                 self.fields[field].widget.attrs['placeholder'] = placeholder
-            self.fields[field].widget.attrs['class'] = 'stripe-style-input'
+            self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
             self.fields[field].label = False
+            # self.fields[field].widget.attrs['class'] = 'stripe-style-input'
+            # self.fields[field].label = False

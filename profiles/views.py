@@ -13,3 +13,15 @@ def profile(request):
     }
 
     return render(request, template, context)
+
+
+def create_profile(request):
+    """ a view to render the home page """
+    form = UserProfileForm()
+
+    template = 'profiles/create_profile.html'
+    context = {
+        'form': form,
+    }
+
+    return render(request, template, context)

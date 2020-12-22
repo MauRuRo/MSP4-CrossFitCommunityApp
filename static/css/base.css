@@ -92,15 +92,17 @@ h1, h2, h3 {
     text-shadow: 2px 2px 5px #0E2246;
 }
 
-/* .navbar-collapse {
-    padding: 0px 24px 0px 24px;
-    background-color: #0E2246;
-    left: -24px;
-    top: 15px;
-    position: relative;
-} */
 
 /* Allauth form formatting  */
+
+select {
+    margin-bottom: 15px;
+    border: solid 1px #000000 !important;
+}
+
+#id_image {
+    text-shadow: 1px 1px 2px white;
+}
 
 .allauth-form-inner-content p {
     margin-top: 1.5rem; /*mt-4*/
@@ -110,6 +112,7 @@ h1, h2, h3 {
 
 .allauth-form-inner-content form {
     text-shadow: 1px 1px 2px white;
+    margin-bottom: 25px;
 }
 
 .allauth-form-inner-content input {
