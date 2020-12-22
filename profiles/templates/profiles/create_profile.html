@@ -12,18 +12,18 @@
                                 <div class="allauth-form-inner-content">
                                     <h1 class="header-text mb-4">Create Profile</h1>
 
-                                    <form class="signup" id="create_profile_form" method="post" action="{% url 'create_profile' %}">
+                                    <form class="signup" id="create-profile-form" method="post" action="{% url 'create_profile' %}">
                                     {% csrf_token %}
                                     {{ form|crispy }}
                                     <fieldset>
-                                        <legend class="fieldset-label small px-1 text-black w-auto">A one-time payment of €9,99 will be charged to your card.</legend>
+                                        <legend class="fieldset-label px-3 text-black w-auto" id="payment-label">A one-time payment of €9,99 will be charged to your card.</legend>
                                         <!-- A stripe card element will go here -->
                                         <div class="mb-3" id="card-element"></div>
                                         <!-- Used to display form errors -->
                                         <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
                                         <input type="hidden" value="{{ client_secret }}" name="client_secret">
                                     </fieldset>
-                                    <button type="submit" id="submit-button">Create Profile</button>
+                                    <button type="submit" id="submit-button">Pay & Create Profile</button>
                                     </form>
                                 </div>
                             </div>

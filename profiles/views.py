@@ -29,86 +29,92 @@ import json
 
 def profile(request):
     """ a view to render the home page """
+    email = request.user.email
     try:
         # profile = get_object_or_404(UserProfile, user=request.user)
         profile = UserProfile.objects.get(user=request.user)
         form = UserProfileForm(instance=profile)
         template = 'profiles/profile.html'
-    except UserProfile.DoesNotExist:
-        form = UserProfileForm()
-        template = 'profiles/create_profile.html'
-    
-    email = request.user.email
-
-    context = {
+        context = {
         'form': form,
         'email': email,
-    }
-
-    return render(request, template, context)
+        }
+        return render(request, template, context)
+    except:
+        return redirect(reverse('create_profile'))
+    
 
 
 def create_profile(request):
-    profile_form = UserProfileForm()
-    template = 'profiles/create_profile.html'
-    context = {
-        'form': profile_form,
-        'stripe_public_key': 'pk_test_51HsDgjDkrpalIwBc7BEDcca6MTlERYinria7OXBUoKsGDYEqsFGJIzQrsAZgIbwy0r7H8xckVrwnN55KUZi7UKVx00YYVxm0aD',
-        'client_secret': 'test client secret',
-    }
+    stripe_public_key = settings.STRIPE_PUBLIC_KEY
+    stripe_secret_key = settings.STRIPE_SECRET_KEY
 
-    return render(request, template, context)
+    if request.method == "GET":
+        profile_form = UserProfileForm()
+        stripe_total = 999
+        stripe.api_key = stripe_secret_key
+        intent = stripe.PaymentIntent.create(
+            amount=stripe_total,
+            currency=settings.STRIPE_CURRENCY,
+        )
+        template = 'profiles/create_profile.html'
+        context = {
+            'form': profile_form,
+            'stripe_public_key': stripe_public_key,
+            'client_secret': intent.client_secret,
+        }
+        if not stripe_public_key:
+            messages.warning(request, 'Stripe public key is missing. \
+            Did you forget to set it in your environment?')
 
-    # """ a view to render the home page """
-    # stripe_public_key = 'pk_test_51HsDgjDkrpalIwBc7BEDcca6MTlERYinria7OXBUoKsGDYEqsFGJIzQrsAZgIbwy0r7H8xckVrwnN55KUZi7UKVx00YYVxm0aD'
-    # # settings.STRIPE_PUBLIC_KEY
-    # stripe_secret_key = settings.STRIPE_SECRET_KEY
+        return render(request, template, context)
+    else:
+        form_data = {
+            'full_name': request.POST['full_name'],
+            'town_or_city': request.POST['town_or_city'],
+            'country': request.POST['country'],
+            'gender': request.POST['gender'],
+            'weight': request.POST['weight'],
+            'age': request.POST['age'],
+            'image': request.POST['image']
+        }
+        profile_form = UserProfileForm(form_data)
+        if profile_form.is_valid():
+            print ("SUUUUUUUCCCCESSSSS")
+            pid = request.POST.get('client_secret').split('_secret')[0]
+            # user_profile = UserProfileForm(user=request.user, stripe_pid=pid, email=request.user.email, **form_data, **request.FILES)
+            user_profile = UserProfile(**form_data, **request.FILES, user=request.user, stripe_pid=pid, email=request.user.email)
+            user_profile.save()
+                # user=request.user,
+                # full_name=form_data.full_name,
+                # town_or_city=
+                # )
+            # user_profile = UserProfile(form_data).save
+            # user_profile = profile_form.save(commit=False)
+                # user_profile.user = request.user
+                # user_profile.stripe_pid = pid
+                # user_profile.email = request.user.email
+            # UserProfile.objects.create(user=instance)
+            # user_profile.save()
+            # Save the info to the user's profile if all is well
+            # request.session['save_info'] = 'save-info' in request.POST
+            # messages.success(request, f'Profile succesfully created and payment succesfully processed! \
+            # Please explore and enjoy our digital hero community!')
+            return redirect(reverse('profile'))
+        else:
+            messages.error(request, 'There was an error with your form. \
+                Please double check your information.')     
 
-    # if request.method == "GET":
-    #     form = UserProfileForm()
+        # return render(request, template, context)
 
-    #     stripe_total = 999
-    #     stripe.api_key = stripe_secret_key
-    #     intent = stripe.PaymentIntent.create(
-    #         amount=stripe_total,
-    #         currency=settings.STRIPE_CURRENCY,
-    #     )
 
-    #     template = 'profiles/create_profile.html'
-    #     context = {
-    #         'form': form,
-    #         'stripe_public_key': stripe_public_key,
-    #         'client_secret': intent.client_secret,
-    #     }
+# def creation_success(request, order_number):
+#     """
+#     Handle successful profile creation
+#     """
+#     messages.success(request, f'Profile succesfully created and payment succesfully processed! \
+#         Please explore and enjoy our digital hero community!')
 
-    #     if not stripe_public_key:
-    #         messages.warning(request, 'Stripe public key is missing. \
-    #         Did you forget to set it in your environment?')
+#     template = 'checkout/checkout_success.html'
 
-    #     return render(request, template, context)
-    # else:
-    #     form_data = {
-    #         'full_name': request.POST['full_name'],
-    #         'email': request.POST['email'],
-    #         'town_or_city': request.POST['town_or_city'],
-    #         'country': request.POST['country'],
-    #         'gender': request.POST['gender'],
-    #         'weight': request.POST['weight'],
-    #         'age': request.POST['age'],
-    #         'image': request.POST['image']
-    #     }
-    #     user_profile_form = UserProfileForm(form_data)
-    #     if user_profile_form.is_valid():
-    #         user_profile = user_profile_form.save(commit=False)
-    #         pid = request.POST.get('client_secret').split('_secret')[0]
-    #         user_profile.stripe_pid = pid
-    #         user_profile.user = request.user
-    #         user_profile.save()
-    #         # Save the info to the user's profile if all is well
-    #         # request.session['save_info'] = 'save-info' in request.POST
-    #         return redirect(reverse('checkout_success'))
-    #     else:
-    #         messages.error(request, 'There was an error with your form. \
-    #             Please double check your information.')     
-
-    # return render(request, template, context)
+#     return render(request, template)

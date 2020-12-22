@@ -69,3 +69,7 @@ select option[value=""] {
     border: solid 1px black;
     background-color: white;
 }
+
+#payment-label {
+    font-size: 1.2rem;
+}

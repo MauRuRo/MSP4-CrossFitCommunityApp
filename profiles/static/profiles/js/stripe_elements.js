@@ -27,35 +27,55 @@ var style = {
 var card = elements.create('card', {style: style});
 card.mount('#card-element')
 
-// //  handle realtime validation errors on the card element.
+//  handle realtime validation errors on the card element.
 
-// card.addEventListener('change', function (event){
-//     var errorDiv = document.getElementById('card-errors');
-//     if (event.error) {
-//         var html = `<span class="icon" role="alert"></span><i class="fas fa-times"></i></span><span>${event.error.message}</span>`;
-//         $(errorDiv).html(html);
-//     } else {
-//         errorDiv.textContent = '';
-//     }
-// });
+card.addEventListener('change', function (event){
+    var errorDiv = document.getElementById('card-errors');
+    if (event.error) {
+        var html = `<span class="icon" role="alert"></span><i class="fas fa-times"></i></span><span>${event.error.message}</span>`;
+        $(errorDiv).html(html);
+    } else {
+        errorDiv.textContent = '';
+    }
+});
 
-// // handle form submit
+// handle form submit
 
-// var form = document.getElementById('create_profile_form');
+var form = document.getElementById('create-profile-form');
 
-// form.addEventListener('submit', function(ev) {
-//   ev.preventDefault();
-//   card.update({'disabled': true});
-//   $('#submit-button').attr('disabled', true);
-// //   $('#payment-form').fadeToggle(100);
-// //   $('#loading-overlay').fadeToggle(100);
+form.addEventListener('submit', function(ev) {
+  ev.preventDefault();
+  card.update({'disabled': true});
+  $('#submit-button').attr('disabled', true);
+//   $('#create-profile-form').fadeToggle(100);
+//   $('#loading-overlay').fadeToggle(100);
+    stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+            card: card,
+        }
+    }).then(function(result) {
+        if (result.error) {
+            var errorDiv = document.getElementById('card-errors');
+            var html = `
+                <span class="icon" role="alert">
+                <i class="fas fa-times"></i>
+                </span>
+                <span>${result.error.message}</span>`;
+            $(errorDiv).html(html);
+            card.update({ 'disabled': false});
+            $('#submit-button').attr('disabled', false);
+        } else {
+            if (result.paymentIntent.status === 'succeeded') {
+                form.submit();
+            }
+        }
+    });
 
 //   var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
 //   var postData = {
 //       'csrfmiddlewaretoken': csrfToken,
 //       'client_secret': clientSecret,
 //   };
-
 // var url = '/profile/cache_payment_create_profile/';
 
 //   $.post(url, postData).done(function() {
@@ -65,7 +85,7 @@ card.mount('#card-element')
 //         profile_details: {
 //             user: request.user,
 //             name: $.trim(form.full_name.value),
-//             email: $.trim(form.email.value),
+//             email: request.user.email,
 //             town_or_city: $.trim(form.town_or_city.value),
 //             country: $.trim(form.country.value),
 //             gender: $.trim(form.gender.value),
@@ -93,4 +113,4 @@ card.mount('#card-element')
 //     // just reload page to show error message from django
 //     location.reload();
 // })
-// });
+});

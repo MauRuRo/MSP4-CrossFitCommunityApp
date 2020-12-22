@@ -5,9 +5,11 @@ from .models import User,  UserProfile
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('full_name', 'email',
-                    'town_or_city', 'country',
-                    'gender', 'weight', 'age', 'image',)
+        fields = ('full_name', 'town_or_city', 'country',
+                  'gender', 'weight', 'age', 'image',)
+
+    # image = forms.ImageField(label='Image', required=False, widget=CustomClearableFileInput)
+
 
     def __init__(self, *args, **kwargs):
         """
@@ -17,7 +19,6 @@ class UserProfileForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         placeholders = {
             'full_name': 'Full Name',
-            'email': 'Email Address',
             'town_or_city': 'Town or City',
             'gender': 'Gender',
             'weight': 'weight in kilograms',
