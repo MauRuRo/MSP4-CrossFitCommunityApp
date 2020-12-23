@@ -12,7 +12,7 @@
                                 <div class="allauth-form-inner-content">
                                     <h1 class="header-text mb-4">Create Profile</h1>
 
-                                    <form class="signup" id="create-profile-form" method="post" action="{% url 'create_profile' %}">
+                                    <form class="signup" id="create-profile-form" method="post" action="{% url 'create_profile' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     {{ form|crispy }}
                                     <fieldset>

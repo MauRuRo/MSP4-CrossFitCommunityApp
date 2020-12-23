@@ -69,22 +69,26 @@ def create_profile(request):
 
         return render(request, template, context)
     else:
-        form_data = {
-            'full_name': request.POST['full_name'],
-            'town_or_city': request.POST['town_or_city'],
-            'country': request.POST['country'],
-            'gender': request.POST['gender'],
-            'weight': request.POST['weight'],
-            'age': request.POST['age'],
-            'image': request.POST['image']
-        }
-        profile_form = UserProfileForm(form_data)
+        # form_data = {
+        #     'full_name': request.POST['full_name'],
+        #     'town_or_city': request.POST['town_or_city'],
+        #     'country': request.POST['country'],
+        #     'gender': request.POST['gender'],
+        #     'weight': request.POST['weight'],
+        #     'age': request.POST['age'],
+        #     'image': request.POST['image']
+        # }
+        profile_form = UserProfileForm(request.POST, request.FILES)
         if profile_form.is_valid():
-            print ("SUUUUUUUCCCCESSSSS")
             pid = request.POST.get('client_secret').split('_secret')[0]
+            new_profile = profile_form.save(commit=False)
             # user_profile = UserProfileForm(user=request.user, stripe_pid=pid, email=request.user.email, **form_data, **request.FILES)
-            user_profile = UserProfile(**form_data, **request.FILES, user=request.user, stripe_pid=pid, email=request.user.email)
-            user_profile.save()
+            new_profile.stripe_pid = pid
+            new_profile.email = request.user.email
+            new_profile.user = request.user
+            new_profile.save()
+            # user_profile = UserProfile(**form_data, **request.FILES, user=request.user, stripe_pid=pid, email=request.user.email)
+            # user_profile.save()
                 # user=request.user,
                 # full_name=form_data.full_name,
                 # town_or_city=
