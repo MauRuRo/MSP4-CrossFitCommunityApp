@@ -83,7 +83,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # required by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'profiles.context_processors.user_info',  #processor to pass user profile image and possible other user info to all templates
+                'profiles.context_processors.user_info',  # processor to pass user profile image and possible other user info to all templates
             ],
             'builtins': [
                 'crispy_forms.templatetags.crispy_forms_tags',

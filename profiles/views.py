@@ -36,13 +36,12 @@ def profile(request):
         form = UserProfileForm(instance=profile)
         template = 'profiles/profile.html'
         context = {
-        'form': form,
-        'email': email,
+            'form': form,
+            'email': email,
         }
         return render(request, template, context)
-    except:
+    except UserProfile.DoesNotExist:
         return redirect(reverse('create_profile'))
-    
 
 
 def create_profile(request):
@@ -50,24 +49,28 @@ def create_profile(request):
     stripe_secret_key = settings.STRIPE_SECRET_KEY
 
     if request.method == "GET":
-        profile_form = UserProfileForm()
-        stripe_total = 999
-        stripe.api_key = stripe_secret_key
-        intent = stripe.PaymentIntent.create(
-            amount=stripe_total,
-            currency=settings.STRIPE_CURRENCY,
-        )
-        template = 'profiles/create_profile.html'
-        context = {
-            'form': profile_form,
-            'stripe_public_key': stripe_public_key,
-            'client_secret': intent.client_secret,
-        }
-        if not stripe_public_key:
-            messages.warning(request, 'Stripe public key is missing. \
-            Did you forget to set it in your environment?')
+        if UserProfile.objects.get(user=request.user):
+            messages.warning(request, 'Your profile is already created.')
+            return redirect(reverse('profile'))
+        else:
+            profile_form = UserProfileForm()
+            stripe_total = 999
+            stripe.api_key = stripe_secret_key
+            intent = stripe.PaymentIntent.create(
+                amount=stripe_total,
+                currency=settings.STRIPE_CURRENCY,
+            )
+            template = 'profiles/create_profile.html'
+            context = {
+                'form': profile_form,
+                'stripe_public_key': stripe_public_key,
+                'client_secret': intent.client_secret,
+            }
+            if not stripe_public_key:
+                messages.warning(request, 'Stripe public key is missing. \
+                Did you forget to set it in your environment?')
 
-        return render(request, template, context)
+            return render(request, template, context)
     else:
         # form_data = {
         #     'full_name': request.POST['full_name'],
