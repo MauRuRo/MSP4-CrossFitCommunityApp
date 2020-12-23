@@ -35,15 +35,26 @@ h1, h2, h3 {
     z-index: 999;
 }
 
+.toast {
+    box-shadow: 5px 5px 15px #0E2246;
+}
+
+.toast-body {
+    font-family: 'Open Sans', sans-serif;
+}
+#arrow-emblem {
+    top:56px;
+    right: 23px;
+    background-color:transparent;
+}
+
 #emblem-circle {
     position: absolute;
     top:93px;
     margin-left:190px;
-    /* left:50px; */
     margin-top:25px;
     height:60px;
     width:60px;
-    /* min-width: 30px; */
     border-radius:50%;
     border: 3px solid black;
     background-size: cover;
@@ -92,14 +103,156 @@ h1, h2, h3 {
     text-shadow: 2px 2px 5px #0E2246;
 }
 
+/* from Bulma _ from Boutique Ado project */
+.icon { 
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+/* check for actual use */
+
+/* .logo-font {
+    text-transform: uppercase;
+} */
+/* check for actual use */
+/* .main-logo-link {
+    width: fit-content;
+} */
+/* check for actual use */
+/* .shop-now-button {
+    background: black;
+    color: white;
+    min-width: 260px;
+} */
+/* check for actual use */
+.btn-black {
+    background: black;
+    color: white;
+}
+/* check for actual use */
+.btn-outline-black {
+    background: white;
+    color: black !important;
+    border: 1px solid black;
+}
+/* check for actual use */
+/* .shop-now-button:hover,
+.shop-now-button:active,
+.shop-now-button:focus, */
+.btn-black:hover,
+.btn-black:active,
+.btn-black:focus {
+    background: #222;
+    color: white;
+}
+/* check for actual use */
+.text-black {
+    color: #000 !important;
+}
+/* check for actual use */
+.border-black {
+    border: 1px solid black !important;
+}
+/* check for actual use */
+.bg-black {
+    background: #000 !important;
+}
+/* check for actual use */
+/* .overlay {
+    height:100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background: white;
+    z-index: -1;
+} */
+/* check for actual use */
+a.category-badge > span.badge:hover {
+    background: #212529 !important;
+    color: #fff !important;
+}
+/* check for actual use */
+.btt-button {
+    height: 42px;
+    width:42px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+/* check for actual use */
+.btt-link,
+.update-link,
+.remove-item {
+    cursor: pointer;
+}
+/* check for actual use */
+input[name='q']::placeholder {
+    color:#aab7c4;
+}
+/* check for actual use */
+.message-container {
+    position: absolute;
+    top:187px;
+    /* right:15px; */
+    z-index: 99999999;
+}
+/* check for actual use */
 .custom-toast {
     overflow: visible;
+    /* position: absolute; */
 }
 
 .toast-capper {
     height: 2px;
 }
 
+/* from CSS-tricks.com: https://css-tricks.com/snippets/css/css-triangle/ */
+.arrow-up {
+    width: 0; 
+    height: 0; 
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent; 
+    border-bottom: 10px solid black;
+    position: absolute;
+    top: -10px;
+    right: 34px;
+}
+
+/* Convenience classes - colors copied from Bootstrap */
+.arrow-primary {
+    border-bottom-color: #007bff !important;
+}
+
+.arrow-secondary {
+    border-bottom-color: #6c757d !important;
+}
+
+.arrow-success {
+    border-bottom-color: #28a745 !important;
+}
+
+.arrow-danger {
+    border-bottom-color: #dc3545 !important;
+}
+
+.arrow-warning {
+    border-bottom-color: #ffc107 !important;
+}
+
+.arrow-info {
+    border-bottom-color: #17a2b8 !important;
+}
+
+.arrow-light {
+    border-bottom-color: #f8f9fa !important;
+}
+
+.arrow-dark {
+    border-bottom-color: #343a40 !important;
+}
 
 /* Allauth form formatting  */
 
@@ -188,14 +341,22 @@ select {
 #header-bar {
     height: 90px;
   }
-  .page-content {
-    padding-top: 50px;
-    }
-    .navbar {
-        margin-top:25px;
-    }
-#emblem-circle {
-    
+.page-content {
+padding-top: 50px;
+}
+.navbar {
+    margin-top:25px;
+}  
+.message-container {
+    top:115px;
+}
+
+#arrow-emblem {
+    top:35px;
+    right: 13px;
+}
+
+#emblem-circle {  
     top:42px;
     margin-left:120px;
     height:40px;

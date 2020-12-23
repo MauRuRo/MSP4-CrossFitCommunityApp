@@ -29,12 +29,11 @@ import json
 
 def profile(request):
     """ a view to render the home page """
-    messages.success(request, f'Profile succesfully created and payment succesfully processed! \
-        Please explore and enjoy our digital hero community!')
+    # messages.success(request, f'Profile succesfully created and payment succesfully processed! \
+    #     Please explore and enjoy our digital hero community!')
     
     email = request.user.email
     try:
-        # profile = get_object_or_404(UserProfile, user=request.user)
         profile = UserProfile.objects.get(user=request.user)
         form = UserProfileForm(instance=profile)
         template = 'profiles/profile.html'
@@ -52,8 +51,13 @@ def create_profile(request):
     stripe_secret_key = settings.STRIPE_SECRET_KEY
 
     if request.method == "GET":
-        if UserProfile.objects.get(user=request.user):
-            messages.warning(request, 'Your profile is already created.')
+        if UserProfile.objects.filter(user=request.user).exists():
+            # context= {
+            #     'created': True,
+            # }
+            # template = 'profiles/profile.html'
+            # return render(request, template, context)
+            messages.error(request, 'Your profile is already created.')
             return redirect(reverse('profile'))
         else:
             profile_form = UserProfileForm()
@@ -84,13 +88,12 @@ def create_profile(request):
             new_profile.user = request.user
             new_profile.save()
             context = {
-                'created': True,
+                'created': 'success',
             }
             messages.success(request, f'Profile succesfully created and payment succesfully processed! \
             Please explore and enjoy our digital hero community!')
             template = 'profiles/profile.html'
             return render(request, template, context)
-            # return redirect(reverse('profile'))
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')     
