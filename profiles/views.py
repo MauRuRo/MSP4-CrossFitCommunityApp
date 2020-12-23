@@ -29,6 +29,9 @@ import json
 
 def profile(request):
     """ a view to render the home page """
+    messages.success(request, f'Profile succesfully created and payment succesfully processed! \
+        Please explore and enjoy our digital hero community!')
+    
     email = request.user.email
     try:
         # profile = get_object_or_404(UserProfile, user=request.user)
@@ -72,47 +75,25 @@ def create_profile(request):
 
             return render(request, template, context)
     else:
-        # form_data = {
-        #     'full_name': request.POST['full_name'],
-        #     'town_or_city': request.POST['town_or_city'],
-        #     'country': request.POST['country'],
-        #     'gender': request.POST['gender'],
-        #     'weight': request.POST['weight'],
-        #     'age': request.POST['age'],
-        #     'image': request.POST['image']
-        # }
         profile_form = UserProfileForm(request.POST, request.FILES)
         if profile_form.is_valid():
             pid = request.POST.get('client_secret').split('_secret')[0]
             new_profile = profile_form.save(commit=False)
-            # user_profile = UserProfileForm(user=request.user, stripe_pid=pid, email=request.user.email, **form_data, **request.FILES)
             new_profile.stripe_pid = pid
             new_profile.email = request.user.email
             new_profile.user = request.user
             new_profile.save()
-            # user_profile = UserProfile(**form_data, **request.FILES, user=request.user, stripe_pid=pid, email=request.user.email)
-            # user_profile.save()
-                # user=request.user,
-                # full_name=form_data.full_name,
-                # town_or_city=
-                # )
-            # user_profile = UserProfile(form_data).save
-            # user_profile = profile_form.save(commit=False)
-                # user_profile.user = request.user
-                # user_profile.stripe_pid = pid
-                # user_profile.email = request.user.email
-            # UserProfile.objects.create(user=instance)
-            # user_profile.save()
-            # Save the info to the user's profile if all is well
-            # request.session['save_info'] = 'save-info' in request.POST
-            # messages.success(request, f'Profile succesfully created and payment succesfully processed! \
-            # Please explore and enjoy our digital hero community!')
-            return redirect(reverse('profile'))
+            context = {
+                'created': True,
+            }
+            messages.success(request, f'Profile succesfully created and payment succesfully processed! \
+            Please explore and enjoy our digital hero community!')
+            template = 'profiles/profile.html'
+            return render(request, template, context)
+            # return redirect(reverse('profile'))
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')     
-
-        # return render(request, template, context)
 
 
 # def creation_success(request, order_number):
