@@ -28,10 +28,7 @@ import json
 
 
 def profile(request):
-    """ a view to render the home page """
-    # messages.success(request, f'Profile succesfully created and payment succesfully processed! \
-    #     Please explore and enjoy our digital hero community!')
-    
+    """ a view to render the profile page """    
     email = request.user.email
     try:
         profile = UserProfile.objects.get(user=request.user)
@@ -52,11 +49,6 @@ def create_profile(request):
 
     if request.method == "GET":
         if UserProfile.objects.filter(user=request.user).exists():
-            # context= {
-            #     'created': True,
-            # }
-            # template = 'profiles/profile.html'
-            # return render(request, template, context)
             messages.error(request, 'Your profile is already created.')
             return redirect(reverse('profile'))
         else:
@@ -87,13 +79,11 @@ def create_profile(request):
             new_profile.email = request.user.email
             new_profile.user = request.user
             new_profile.save()
-            context = {
-                'created': 'success',
-            }
             messages.success(request, f'Profile succesfully created and payment succesfully processed! \
             Please explore and enjoy our digital hero community!')
-            template = 'profiles/profile.html'
-            return render(request, template, context)
+            # template = 'profiles/profile.html'
+            return redirect(reverse('profile'))
+            # return render(request, template, context)
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')     

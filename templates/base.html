@@ -119,25 +119,6 @@
               </div>
           </div>
       </header>
-    
-        <!-- {% if messages %}
-            <div class="message-container">
-                {% for message in messages %}
-                    {% with message.level as level %}
-                        {% if level == 40 %}
-                            {% include 'includes/toasts/toast_error.html' %}
-                        {% elif level == 30 %}
-                            {% include 'includes/toasts/toast_warning.html' %}
-                        {% elif level == 25 %}
-                            {% include 'includes/toasts/toast_success.html' %}
-                        {% else %}
-                            {% include 'includes/toasts/toast_info.html' %}
-                        {% endif %}
-                    {% endwith %}
-
-                {% endfor %}
-            </div>
-        {% endif %} -->
 
       {% block page_header %}
       {% endblock %}
@@ -150,7 +131,6 @@
         $(document).ready(function(){
             $('.toast').toast('show');
             $("#arrow-emblem").addClass( $('.arrow-up').attr('class') );
-            // $("#arrow-emblem").attr("class", $(".arrow-up.ToCopy").attr("class"));
         });
         </script>
       {% endblock %}
