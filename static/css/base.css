@@ -10,10 +10,8 @@ h1, h2, h3 {
 }
 
 #header-bar {
-    /* background-color: aquamarine !important; */
     height: 150px;
     border-bottom: 3px solid black;
-    /* position: relative; */
     background-color:#0E2246;
     color: #DEC19A;
     font-family: 'Bungee';
@@ -45,6 +43,23 @@ h1, h2, h3 {
 #arrow-emblem {
     top:56px;
     right: 23px;
+    background-color:transparent;
+}
+
+#arrow-emblem-home {
+    position: absolute;
+    top:221px;
+    right:auto;
+    /* margin-top:25px;
+    height:60px;
+    width:60px;
+    border-radius:50%;
+    border: 3px solid black;
+    background-size: cover; */
+    z-index: 999;
+    /* position: absolute;
+    top:221px;
+    right: 120px; */
     background-color:transparent;
 }
 
@@ -199,6 +214,10 @@ input[name='q']::placeholder {
     /* right:15px; */
     z-index: 99999999;
 }
+
+.message-container-home {
+    top: 231px !important;
+}
 /* check for actual use */
 .custom-toast {
     overflow: visible;
@@ -346,7 +365,12 @@ padding-top: 50px;
 }
 .navbar {
     margin-top:25px;
-}  
+} 
+
+.message-container-home {
+    top: 152px !important;
+}
+
 .message-container {
     top:115px;
 }
@@ -355,6 +379,11 @@ padding-top: 50px;
     top:35px;
     right: 13px;
 }
+
+#arrow-emblem-home {
+    top:143px;
+}
+
 
 #emblem-circle {  
     top:42px;

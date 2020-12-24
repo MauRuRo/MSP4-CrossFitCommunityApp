@@ -60,7 +60,7 @@
                                         <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Profile</a>
                                         </li>
                                         <li class="nav-item">
-                                        <a class="nav-link" href="/">WOD's</a>
+                                        <a class="nav-link" href="{% url 'workouts' %}">WOD's</a>
                                         </li>
                                         <li class="nav-item">
                                         <a class="nav-link" href="{% url 'create_profile' %}">Members</a>
@@ -91,7 +91,11 @@
                             </nav>
                     </div>
                 <div class="col-6 col-lg-3 d-flex justify-content-center">
-                        <a href="{% url 'home' %}"><div id="profile-circle" style="background: url({% if request.user.is_authenticated %}{{ image }}{% else %}'/media/herocommunitylogo.jpg'{% endif %}) no-repeat; background-size: cover"></div></a>
+                        <a href="{% url 'home' %}"><div id="profile-circle" style="background: url({% if request.user.is_authenticated %}{{ image }}{% else %}'/media/herocommunitylogo.jpg'{% endif %}) no-repeat; background-size: cover">
+                        </div></a>
+                        {% if request.user.is_authenticated == False %}
+                        <div id="arrow-emblem-home" class="toast"></div>
+                        {% endif %}
                         {% if request.user.is_authenticated %}
                         <div id="emblem-circle" style="background: url('/media/herocommunitylogo.jpg') no-repeat; background-size: cover">
                         <div id="arrow-emblem" class="toast"></div>
@@ -131,8 +135,12 @@
       {% block postloadjs %}
         <script type="text/javascript">
         $(document).ready(function(){
+            if ($('#emblem-circle').length == 0 ) {
+                $('.message-container').addClass('message-container-home');
+            }
             $('.toast').toast('show');
             $("#arrow-emblem").addClass( $('.arrow-up').attr('class') );
+            $("#arrow-emblem-home").addClass( $('.arrow-up').attr('class') );
         });
         </script>
       {% endblock %}
