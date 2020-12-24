@@ -21,7 +21,7 @@ class UserProfile(models.Model):
     country = CountryField(blank_label="Country *", max_length=40, null=False, blank=False)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=False, blank=False, default='Please select gender... *')
     weight = models.DecimalField(max_digits=4, decimal_places=1, null=False, blank=False)
-    age = models.IntegerField(null=False, blank=False)
+    birthdate = models.DateField(null=False, blank=False, default="2000-01-01")
     image = models.ImageField(null=True, blank= True)
     stripe_pid = models.CharField(max_length=254, null=False, blank=False, default='')
 

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load calc_functions %}
 
 {% block content %}
     <div class="container-fluid page-content">
@@ -17,7 +18,7 @@
                         <div class="row">
                             <ul class="list-unstyled">
                                 <li>Hero: {{ profile.full_name }}</li>
-                                <li>Age: {{ profile.age }} years</li>
+                                <li>Age: {{ profile.birthdate | calc_age }}</li>
                                 <li>{{ profile.town_or_city }} <i class="fflag fflag-{{ profile.country.code }} ff-lg ff-round" aria-label="{{ profile.country.code }}"></i></li>
                                 <li>Weight: {{ profile.weight }}kg</li>
                             </ul>
