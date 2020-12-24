@@ -36,7 +36,6 @@ def profile(request):
         template = 'profiles/profile.html'
         context = {
             'form': form,
-            'email': email,
         }
         return render(request, template, context)
     except UserProfile.DoesNotExist:
@@ -81,21 +80,41 @@ def create_profile(request):
             new_profile.save()
             messages.success(request, f'Profile succesfully created and payment succesfully processed! \
             Please explore and enjoy our digital hero community!')
-            # template = 'profiles/profile.html'
             return redirect(reverse('profile'))
-            # return render(request, template, context)
         else:
             messages.error(request, 'There was an error with your form. \
-                Please double check your information.')     
+                Please double check your information.')
 
+def edit_profile(request):
+    if request.method == "GET":
 
-# def creation_success(request, order_number):
-#     """
-#     Handle successful profile creation
-#     """
-#     messages.success(request, f'Profile succesfully created and payment succesfully processed! \
-#         Please explore and enjoy our digital hero community!')
+        if request.user.is_authenticated:
+            if not UserProfile.objects.filter(user=request.user).exists():
+                messages.error(request, 'You need to create a profile first!')
+                return redirect(reverse('create_profile'))
+        else:
+            messages.error(request, 'You need to sign in or sign up first!')
+            return redirect(reverse('account_login'))
 
-#     template = 'checkout/checkout_success.html'
+        profile = UserProfile.objects.get(user=request.user)
+        profile_form = UserProfileForm(instance=profile)
+        template = 'profiles/edit_profile.html'
+        context = {
+            'form': profile_form,
+        }
+        return render(request, template, context)
 
-#     return render(request, template)
+    else:
+        instance = UserProfile.objects.get(user=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=instance)
+
+        if profile_form.is_valid():
+            edited_profile = profile_form.save(commit=False)
+            edited_profile.email = request.user.email
+            edited_profile.user = request.user
+            edited_profile.save()
+            messages.success(request, f'Profile succesfully updated!')
+            return redirect(reverse('profile'))
+        else:
+            messages.error(request, 'There was an error with your form. \
+                Please double check your information.')
