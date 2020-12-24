@@ -29,13 +29,11 @@ import json
 
 def profile(request):
     """ a view to render the profile page """    
-    email = request.user.email
     try:
         profile = UserProfile.objects.get(user=request.user)
-        form = UserProfileForm(instance=profile)
         template = 'profiles/profile.html'
         context = {
-            'form': form,
+            'profile': profile,
         }
         return render(request, template, context)
     except UserProfile.DoesNotExist:
