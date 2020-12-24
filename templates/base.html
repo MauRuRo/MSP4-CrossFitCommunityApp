@@ -57,7 +57,7 @@
                                         {% endif %}
                                         {% if request.user.is_authenticated %}
                                         <li class="nav-item">
-                                        <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Profile</a>
+                                        <a class="nav-link" aria-current="page" href="{% url 'profile' %}">Profile</a>
                                         </li>
                                         <li class="nav-item">
                                         <a class="nav-link" href="{% url 'workouts' %}">WOD's</a>
@@ -76,7 +76,7 @@
                                         <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
                                         </li>
                                         {% endif %}
-                                        <li class="nav-item dropdown d-none">
+                                        <!-- <li class="nav-item dropdown d-none">
                                         <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             Dropdown link
                                         </a>
@@ -85,7 +85,7 @@
                                             <li><a class="dropdown-item" href="#">Another action</a></li>
                                             <li><a class="dropdown-item" href="#">Something else here</a></li>
                                         </ul>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                 </div>
                             </nav>
@@ -135,12 +135,26 @@
       {% block postloadjs %}
         <script type="text/javascript">
         $(document).ready(function(){
+            // code for toast messages and arrow attributions 
             if ($('#emblem-circle').length == 0 ) {
                 $('.message-container').addClass('message-container-home');
             }
             $('.toast').toast('show');
             $("#arrow-emblem").addClass( $('.arrow-up').attr('class') );
             $("#arrow-emblem-home").addClass( $('.arrow-up').attr('class') );
+
+            // code for attributing active class to nav item
+            let current = "/" + window.location.pathname.split("/")[1] + "/"
+            if (current == "/accounts/" || current == "//") {
+                current = window.location.pathname
+            }
+            $('.nav-link').each(function() {
+                let link = $(this).attr("href")
+                    $(this).removeClass("active");
+                if (link == current) {
+                    $(this).addClass("active");
+                    }
+                });
         });
         </script>
       {% endblock %}
