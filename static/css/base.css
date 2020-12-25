@@ -5,7 +5,7 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
     font-family: 'Bungee';
 }
 
@@ -94,7 +94,18 @@ h1, h2, h3 {
     border: 2px solid black;
     border-radius: 5px;
     background-color: white;
-    white-space: pre-line;
+}
+
+.workout-name span {
+    color: #6c757d;
+}
+
+.workout-description {
+    white-space:pre-line;
+}
+
+.category-name {
+    color: #ffc107;
 }
 
 .navbar {

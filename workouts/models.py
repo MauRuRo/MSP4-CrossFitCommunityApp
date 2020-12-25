@@ -1,4 +1,6 @@
 from django.db import models
+from datetime import date, datetime
+from django.contrib.auth.models import User
 # from django.contrib.auth.models import User
 # from django_countries.fields import CountryField
 # from django.db.models.signals import post_save
@@ -33,5 +35,19 @@ class Workout(models.Model):
 
     def __str__(self):
         return self.workout_name
+
+class Log(models.Model):
+    """ a model for workout logs """
+    ft_result = models.DurationField(blank=True)
+    amrap_result = models.DecimalField(blank=True, decimal_places=2, max_digits=5, default=0)
+    mw_result = models.DecimalField(blank=True, decimal_places=2, max_digits=5, default =0)
+    rx = models.BooleanField(blank=False, default=True)
+    user_comment = models.TextField(blank=True,null=True)
+    member_comment = models.TextField(blank=True,null=True)
+    wod_date = models.DateTimeField(null=False, blank=False, default=datetime.now)
+    user = models.ManyToManyField(User, blank=False)
+    personal_record = models.BooleanField(default=False)
+    # rank = models.IntegerField(blank=True)
+    # percentile = models.IntegerField(blank = True)
 
 

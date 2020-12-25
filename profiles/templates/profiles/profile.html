@@ -5,29 +5,29 @@
 {% block content %}
     <div class="container-fluid page-content">
         <div class="row h-100 align-items-center">
-            <div class="col-sm-6 col-lg-3 order-lg-1 content-block">
-                <div class="fillblock p-2"></div>
-            </div>
-            <div class="col-lg-6 order-sm-first order-lg-2 content-block">
-                <div class="fillblock p-2">
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-3 order-lg-3 content-block">
+            <div class="col-sm-6 col-lg-3 content-block order-lg-3 align-self-start">
                 <div class="fillblock p-2">
                     <div class="container">
                         <div class="row">
                             <ul class="list-unstyled">
-                                <li>Hero: {{ profile.full_name }}</li>
+                                <li><h5>{{ profile.full_name }}</h5></li>
                                 <li>Age: {{ profile.birthdate | calc_age }}</li>
                                 <li>{{ profile.town_or_city }} <i class="fflag fflag-{{ profile.country.code }} ff-lg ff-round" aria-label="{{ profile.country.code }}"></i></li>
-                                <li>Weight: {{ profile.weight }}kg</li>
+                                <li>{{ profile.weight }}kg</li>
                             </ul>
                         </div>
-                        <div class="row">
+                        <div class="row justify-content-end">
                              <a href="{% url 'edit_profile' %}">Edit Profile</a>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
+                <div class="fillblock p-2">
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
+                <div class="fillblock p-2"></div>
             </div>
         </div>
     </div>
