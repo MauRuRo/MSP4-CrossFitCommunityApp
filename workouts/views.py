@@ -4,7 +4,7 @@ from .models import Workout
 
 
 def workouts(request):
-    wod = Workout.objects.filter().first()
+    wod = Workout.objects.get(workout_name="J.T.")
     context = {
         'wod': wod
     }

@@ -8,9 +8,10 @@
                 <div class="fillblock p-2"></div>
             </div>
             <div class="col-lg-6 order-sm-first order-lg-2 content-block">
-                <div class="fillblock p-2">
-                    {{ wod.workout_name }} <br>
-                    {{ wod.description }}
+                <div class="fillblock p-4"><div class="row">{{ wod.workout_name }}<br><br>Category: {{ wod.get_workout_category_display }}<br><br>{{ wod.description }}</div>
+                    <div class="row p-2 justify-content-end">
+                        <a href="#">Log Workout</a>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 order-lg-3 content-block">
