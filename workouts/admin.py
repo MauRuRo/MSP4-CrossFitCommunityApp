@@ -18,13 +18,22 @@ class WorkoutAdmin(admin.ModelAdmin):
 admin.site.register(Workout, WorkoutAdmin)
 
 class LogAdmin(admin.ModelAdmin):
+
+    readonly_fields = (
+        'wod_name',
+        'user',
+        'personal_record',
+    )
+
     fields = (
+        'wod_name',
+        'user',
+        'wod_date',
         'ft_result',
         'amrap_result',
         'mw_result',
         'rx',
         'user_comment',
-        'user',
         'personal_record'
     )
 admin.site.register(Log, LogAdmin)

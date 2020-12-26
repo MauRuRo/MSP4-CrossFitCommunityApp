@@ -6,6 +6,8 @@
         <div class="row h-100 align-items-center">
             <div class="col-sm-6 col-lg-3 content-block order-lg-3 align-self-start">
                 <div class="fillblock p-2">
+                    <form id="log-workout-form" method="post" action="{% url 'workouts' %}">
+                    {% csrf_token %}
                     <div class="logfield" hidden id="log-block">
                         {% if wod.workout_type == 'FT' %}
                         <!-- <p>For Time Result:</p> -->
@@ -22,13 +24,18 @@
                             {{ form_log.rx|as_crispy_field }}
                     </div>
                     <div class="logfield" hidden>
+                            {{ form_log.wod_date|as_crispy_field }}
+                    </div>
+                    <div class="logfield" hidden>
                         <!-- <p>Comments:</p> -->
                             {{ form_log.user_comment|as_crispy_field }}
                     </div>
                     <div class="justify-content-end logfield" hidden>
-                        <button class="btn rounded-0 btn-black" type=submit>Log</button>
+                        <button class="btn rounded-0 btn-black" type="submit">Log</button>
                         <button class="btn btn-outline-black rounded-0" id="cancel-log">Cancel</button>
-                    </div>                    
+                        {{ log }}
+                    </div>     
+                    </form>              
                 </div>
             </div>
             <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
