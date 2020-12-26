@@ -2,6 +2,7 @@ from django import forms
 from .models import Log
 from datetime import date, datetime
 
+
 class LogForm(forms.ModelForm):
     class Meta:
         model = Log
@@ -10,7 +11,7 @@ class LogForm(forms.ModelForm):
             'amrap_result',
             'mw_result',
             'rx',
-            'wod_date',
+            'date',
             'user_comment'
             )
         # wod_date = DateTimeField(input_formats=["%d %b %Y %H:%M:%S %Z"])
@@ -27,7 +28,6 @@ class LogForm(forms.ModelForm):
             'amrap_result': '0.00 rounds',
             'mw_result': 'weight in kg',
             'user_comment': 'notes?',
-            'wod_date': date.today
         }
 
         labels = {
@@ -35,14 +35,16 @@ class LogForm(forms.ModelForm):
             'amrap_result': 'AMRAP Result:',
             'mw_result': 'Weight in kilograms:',
             'user_comment': 'Comment:',
-            'wod_date': 'Date:'
         }
 
         for field in self.fields:
-            if not field == 'rx':
+            if not (field == 'rx' or field == 'date'):
                 placeholder = placeholders[field]
                 label = labels[field]
                 self.fields[field].widget.attrs['placeholder'] = placeholder
-                self.fields[field].label = label
+                if field == 'date':
+                    self.fields[field].label = False
+                else:
+                    self.fields[field].label = label
             self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
 

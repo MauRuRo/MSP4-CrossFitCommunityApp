@@ -28,7 +28,7 @@ class LogAdmin(admin.ModelAdmin):
     fields = (
         'wod_name',
         'user',
-        'wod_date',
+        'date',
         'ft_result',
         'amrap_result',
         'mw_result',

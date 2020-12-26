@@ -22,44 +22,81 @@ def striphours(duration):
 
 
 def workouts(request):
-    wod = Workout.objects.get(workout_name="Murph")
+    # wod = Workout.objects.get(workout_name="Murph")
+    wod = Workout.objects.filter().first()
     if request.method == "GET":
-        # wod = Workout.objects.get(workout_name="Murph")
-        # wod = Workout.objects.filter().first()
         log = Log.objects.filter().first()
         if log is None:
             result = "No logs for this WOD"
         else:
             duration = str(log.ft_result)
             result = striphours(duration)
-        # result = "No logs for this WOD"
+        date_today = date.today()
+        date_initial = date_today.strftime("%d %b %Y")
         form_log = LogForm()
         context = {
             'wod': wod,
             'log': result,
             'form_log': form_log,
+            'date_initial': date_initial,
         }
         template = "workouts/workouts.html"
         return render(request, template, context)
     else:
-        log_form = LogForm(request.POST)
+        if wod.workout_type == 'FT':
+            result = 'ft_result'
+        elif wod.workout_type == 'AMRAP':
+            result = 'amrap_result'
+        else:
+            result = 'mw_result'
+            
+        form_data = {
+            f"{result}": request.POST[f"{result}"],
+            'rx': request.POST['rx'],
+            'date': datetime.strptime(request.POST.get('date'), "%d %b %Y"),
+            'user_comment': request.POST['user_comment'],
+        }
+        log_form = LogForm(form_data)
         if log_form.is_valid():
             new_log = log_form.save(commit=False)
             new_log.wod_name = wod.workout_name
             new_log.user = request.user
-            new_result = new_log.ft_result.seconds
-            # new_log.wod_date = datetime.now
-
-            max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Min('ft_result'))
-            print(max_result)
-            if max_result['ft_result__min'] == None:
-                new_log.personal_record = True
-            else:
-                best_result = max_result['ft_result__min'].seconds
-                if best_result > new_result:
+            if wod.workout_type == "FT":
+                new_result = new_log.ft_result.seconds
+                max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Min('ft_result'))
+                if max_result['ft_result__min'] == None:
                     new_log.personal_record = True
                 else:
-                    new_log.personal_record = False
+                    best_result = max_result['ft_result__min'].seconds
+                    if best_result > new_result:
+                        new_log.personal_record = True
+                    else:
+                        new_log.personal_record = False
+            elif wod.workout_type == "AMRAP":
+                new_result = new_log.amrap_result
+                max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('amrap_result'))
+                if max_result['amrap_result__max'] == None:
+                    new_log.personal_record = True
+                else:
+                    best_result = max_result['amrap_result__max']
+                    if best_result < new_result:
+                        new_log.personal_record = True
+                    else:
+                        new_log.personal_record = False
+            else:
+                new_result = new_log.mw_result
+                max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('mw_result'))
+                if max_result['mw_result__max'] == None:
+                    new_log.personal_record = True
+                else:
+                    best_result = max_result['mw_result__max']
+                    print(best_result)
+                    print(new_result)
+                    if best_result < new_result:
+                        new_log.personal_record = True
+                    else:
+                        new_log.personal_record = False
+
             new_log.save()
             messages.success(request, 'Workout logged: Great work!')
             return redirect(reverse('workouts'))

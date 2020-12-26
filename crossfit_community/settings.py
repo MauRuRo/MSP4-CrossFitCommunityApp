@@ -26,7 +26,7 @@ SECRET_KEY = 'j4b)58$*hwd@z0ywe73hwgmo&-e#n*he$wu@t(^v+o2^92731y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # Other
     'crispy_forms',
     'storages',
+    'tempus_dominus'
 ]
 
 MIDDLEWARE = [
@@ -163,6 +164,11 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# https://pypi.org/project/django-tempus-dominus/
+TEMPUS_DOMINUS_LOCALIZE = True
+
+TEMPUS_DOMINUS_INCLUDE_ASSETS = True
 
 # DATE_INPUT_FORMATS = ('%d-%b-%Y', '%Y-%b-%d')
 

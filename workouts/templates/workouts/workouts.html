@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_css %}
+{{ block.super }}
+    {{ date_field.media }}
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid page-content">
         <div class="row h-100 align-items-center">
@@ -8,7 +13,7 @@
                 <div class="fillblock p-2">
                     <form id="log-workout-form" method="post" action="{% url 'workouts' %}">
                     {% csrf_token %}
-                    <div class="logfield" hidden id="log-block">
+                    <div class="logfield" id="log-block">
                         {% if wod.workout_type == 'FT' %}
                         <!-- <p>For Time Result:</p> -->
                             {{ form_log.ft_result|as_crispy_field }}
@@ -20,17 +25,17 @@
                             {{ form_log.mw_result|as_crispy_field }}
                         {% endif %}
                     </div>
-                    <div class="logfield" hidden>
+                    <div class="logfield">
                             {{ form_log.rx|as_crispy_field }}
                     </div>
-                    <div class="logfield" hidden>
-                            {{ form_log.wod_date|as_crispy_field }}
+                    <div class="logfield">
+                        {% include 'includes/date-picker.html' %}
                     </div>
-                    <div class="logfield" hidden>
+                    <div class="logfield">
                         <!-- <p>Comments:</p> -->
                             {{ form_log.user_comment|as_crispy_field }}
                     </div>
-                    <div class="justify-content-end logfield" hidden>
+                    <div class="justify-content-end logfield">
                         <button class="btn rounded-0 btn-black" type="submit">Log</button>
                         <button class="btn btn-outline-black rounded-0" id="cancel-log">Cancel</button>
                         {{ log }}

@@ -40,18 +40,16 @@ class Workout(models.Model):
 class Log(models.Model):
     """ a model for workout logs """
     wod_name = models.CharField(blank=False, null=False, max_length=100, default="WOD")
-    ft_result = models.DurationField(blank=True)
+    ft_result = models.DurationField(blank=True, null=True)
     amrap_result = models.DecimalField(blank=True, decimal_places=2, max_digits=5, default=0)
     mw_result = models.DecimalField(blank=True, decimal_places=2, max_digits=5, default =0)
     rx = models.BooleanField(blank=False, default=True)
     user_comment = models.TextField(blank=True,null=True)
     member_comment = models.TextField(blank=True,null=True)
-    wod_date = models.DateField(null=False, blank=False, default=date.today)
+    date = models.DateField(null=False, blank=False, default=date.today)
     user = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE, default='1')
-    # user = models.ManyToManyField(User, blank=False)
     personal_record = models.BooleanField(default=False)
-    # rank = models.IntegerField(blank=True)
-    # percentile = models.IntegerField(blank = True)
+
 
     def __str__(self):
         return self.wod_name + " | " + self.user.username

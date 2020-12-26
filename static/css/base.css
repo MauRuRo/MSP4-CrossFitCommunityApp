@@ -132,6 +132,9 @@ h1, h2, h3, h4, h5, h6 {
     /* background-color: rgba(0,0,0, 0.5) */
 }
 
+.datepicker {
+    z-index: 9999!important;
+}
 .header-text {
     color: white;
     text-shadow: 2px 2px 5px #0E2246;
@@ -165,10 +168,10 @@ h1, h2, h3, h4, h5, h6 {
     min-width: 260px;
 } */
 /* check for actual use */
-.button-black {
+/* .button-black {
     background: black;
     color: white;
-}
+} */
 /* check for actual use */
 .btn-outline-black {
     background: white;
@@ -319,8 +322,8 @@ select {
 }
 
 .allauth-form-inner-content input {
-    border-color: #000;
-    border-radius: 0;
+    border-color: #000!important;
+    border-radius: 0!important;
 }
 
 .allauth-form-inner-content label:not([for='id_remember']) {
