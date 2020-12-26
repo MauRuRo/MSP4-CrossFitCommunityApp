@@ -12,6 +12,7 @@ class LogForm(forms.ModelForm):
             'rx',
             'user_comment'
             )
+        
 
     def __init__(self, *args, **kwargs):
         """
@@ -26,9 +27,18 @@ class LogForm(forms.ModelForm):
             'user_comment': 'notes?'
         }
 
+        labels = {
+            'ft_result': 'For Time Result:',
+            'amrap_result': 'AMRAP Result:',
+            'mw_result': 'Weight in kilograms',
+            'user_comment': 'Comment'
+        }
+
         for field in self.fields:
             if not field == 'rx':
                 placeholder = placeholders[field]
+                label = labels[field]
                 self.fields[field].widget.attrs['placeholder'] = placeholder
+                self.fields[field].label = label
             self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
-            self.fields[field].label = False
+            

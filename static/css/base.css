@@ -96,6 +96,13 @@ h1, h2, h3, h4, h5, h6 {
     background-color: white;
 }
 
+#id_user_comment {
+    height: 4em;
+}
+.workout-name {
+    color: #0E2246;
+}
+
 .workout-name span {
     color: #6c757d;
 }
@@ -130,6 +137,10 @@ h1, h2, h3, h4, h5, h6 {
     text-shadow: 2px 2px 5px #0E2246;
 }
 
+.btn-black {
+    background-color: #000;
+    color: #fff;
+}
 /* from Bulma _ from Boutique Ado project */
 .icon { 
     align-items: center;
@@ -154,7 +165,7 @@ h1, h2, h3, h4, h5, h6 {
     min-width: 260px;
 } */
 /* check for actual use */
-.btn-black {
+.button-black {
     background: black;
     color: white;
 }

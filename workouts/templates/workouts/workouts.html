@@ -6,25 +6,45 @@
         <div class="row h-100 align-items-center">
             <div class="col-sm-6 col-lg-3 content-block order-lg-3 align-self-start">
                 <div class="fillblock p-2">
-                    {{ form_log|crispy }}
-                    <button type=submit>submit</button>
-                    {{ log }}                    
+                    <div class="logfield" hidden id="log-block">
+                        {% if wod.workout_type == 'FT' %}
+                        <!-- <p>For Time Result:</p> -->
+                            {{ form_log.ft_result|as_crispy_field }}
+                        {% elif wod.workout_type == 'AMRAP' %}
+                        <!-- <p>AMRAP Result:</p> -->
+                            {{ form_log.amrap_result|as_crispy_field }}
+                        {% else %}
+                        <!-- <p>Weight Result:</p> -->
+                            {{ form_log.mw_result|as_crispy_field }}
+                        {% endif %}
+                    </div>
+                    <div class="logfield" hidden>
+                            {{ form_log.rx|as_crispy_field }}
+                    </div>
+                    <div class="logfield" hidden>
+                        <!-- <p>Comments:</p> -->
+                            {{ form_log.user_comment|as_crispy_field }}
+                    </div>
+                    <div class="justify-content-end logfield" hidden>
+                        <button class="btn rounded-0 btn-black" type=submit>Log</button>
+                        <button class="btn btn-outline-black rounded-0" id="cancel-log">Cancel</button>
+                    </div>                    
                 </div>
             </div>
             <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
-                <div class="container fillblock px-4 py-3">
-                    <div class="row">
+                <div class="fillblock px-4 py-3">
+                    <div>
                         <h3 class="workout-name"><span>Workout of the Day:</span><br>{{ wod.workout_name }}</h3>
                     </div>
-                    <div class="row">
+                    <div >
                         <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
                     </div>
-                    <div class="row">
+                    <div >
                         <p class="workout-description">{{ wod.description }}</p>
                     </div>
-                    <div class="row mr-2 justify-content-end">
-                        <a class="btn btn-outline-black rounded-0" href="#">Log Workout</a>
-                    </div>
+                    <div class="mr-2 align-items-end">
+                        <a class="btn btn-black rounded-0" href="#" id="log-workout-button">Log Workout</a>
+                    </div>                    
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
@@ -35,3 +55,17 @@
     </div>
 {% endblock %}
 
+{% block postloadjs %}
+{{ block.super }}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#log-workout-button').click(function() {
+            $('.logfield').removeAttr('hidden')
+            window.scrollTo(0,0)
+        });
+        $('#cancel-log').click(function() {
+            $('.logfield').attr('hidden', 'hidden')
+        })
+    });
+</script>
+{% endblock %}
