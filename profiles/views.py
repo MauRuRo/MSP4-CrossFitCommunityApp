@@ -1,6 +1,7 @@
 from django.shortcuts import (
-    render, redirect, reverse, get_object_or_404, HttpResponse
+    render, redirect, reverse, get_object_or_404
 )
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import UserProfile
 from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
@@ -70,7 +71,7 @@ def create_profile(request):
             return render(request, template, context)
     else:
         profile_form = UserProfileForm(request.POST, request.FILES)
-        if profile_form.is_valid():
+        if profile_form.is_valid() and request.POST['date'] != '':
             pid = request.POST.get('client_secret').split('_secret')[0]
             new_profile = profile_form.save(commit=False)
             new_profile.birthdate = datetime.strptime(request.POST.get('date'), "%d %b %Y")
@@ -84,6 +85,7 @@ def create_profile(request):
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def edit_profile(request):
     if request.method == "GET":

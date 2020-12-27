@@ -42,19 +42,29 @@ def workouts(request):
     else:
         if wod.workout_type == 'FT':
             result = 'ft_result'
+            non_result_1 = 'amrap_result'
+            non_result_2 = 'mw_result'
         elif wod.workout_type == 'AMRAP':
             result = 'amrap_result'
+            non_result_1 = 'ft_result'
+            non_result_2 = 'mw_result'
         else:
             result = 'mw_result'
+            non_result_1 = 'amrap_result'
+            non_result_2 = 'ft_result'
             
         form_data = {
             f"{result}": request.POST[f"{result}"],
+            f"{non_result_1}": 0,
+            f"{non_result_2}": 0,
             'rx': request.POST['rx'],
             'date': datetime.strptime(request.POST.get('date'), "%d %b %Y"),
             'user_comment': request.POST['user_comment'],
         }
+        
         log_form = LogForm(form_data)
-        if log_form.is_valid():
+        # fresult = request.POST[f"{result}"]
+        if log_form.is_valid():  #  and fresult != '':
             new_log = log_form.save(commit=False)
             new_log.wod_name = wod.workout_name
             new_log.user = request.user
@@ -87,17 +97,15 @@ def workouts(request):
                     new_log.personal_record = True
                 else:
                     best_result = max_result['mw_result__max']
-                    print(best_result)
-                    print(new_result)
                     if best_result < new_result:
                         new_log.personal_record = True
                     else:
                         new_log.personal_record = False
-
             new_log.save()
             messages.success(request, 'Workout logged: Great work!')
             return redirect(reverse('workouts'))
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
+            return redirect(reverse('workouts'))
 

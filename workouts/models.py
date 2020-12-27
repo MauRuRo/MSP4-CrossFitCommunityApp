@@ -40,9 +40,9 @@ class Workout(models.Model):
 class Log(models.Model):
     """ a model for workout logs """
     wod_name = models.CharField(blank=False, null=False, max_length=100, default="WOD")
-    ft_result = models.DurationField(blank=True, null=True)
-    amrap_result = models.DecimalField(blank=True, decimal_places=2, max_digits=5, default=0)
-    mw_result = models.DecimalField(blank=True, decimal_places=2, max_digits=5, default =0)
+    ft_result = models.DurationField(blank=False, null=True)
+    amrap_result = models.DecimalField(blank=False, decimal_places=2, max_digits=5)
+    mw_result = models.DecimalField(blank=False, decimal_places=2, max_digits=5)
     rx = models.BooleanField(blank=False, default=True)
     user_comment = models.TextField(blank=True,null=True)
     member_comment = models.TextField(blank=True,null=True)
