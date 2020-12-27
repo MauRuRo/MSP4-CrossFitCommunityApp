@@ -72,11 +72,11 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#log-workout-button').click(function() {
-            $('.logfield').removeAttr('hidden')
+            $('.logfield').css('display', 'block')
             window.scrollTo(0,0)
         });
         $('#cancel-log').click(function() {
-            $('.logfield').attr('hidden', 'hidden')
+            $('.logfield').css('display', 'none')
         })
     });
 </script>
