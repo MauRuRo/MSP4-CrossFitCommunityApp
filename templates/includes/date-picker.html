@@ -6,11 +6,21 @@
 <link rel="stylesheet" href="https://formden.com/static/cdn/font-awesome/4.4.0/css/font-awesome.min.css" />
 
 <!-- Inline CSS based on choices in "Settings" tab -->
-<style>.bootstrap-iso .formden_header h2, .bootstrap-iso .formden_header p, .bootstrap-iso form{font-family: Arial, Helvetica, sans-serif; color: black}.bootstrap-iso form button, .bootstrap-iso form button:hover{color: white !important;} .asteriskField{color: red;}</style>
+<style>
+/* .bootstrap-iso .formden_header h2, .bootstrap-iso .formden_header p, .bootstrap-iso form{font-family: Arial, Helvetica, sans-serif; color: black}.bootstrap-iso form button, .bootstrap-iso form button:hover{color: white !important;} .asteriskField{color: red;} */
+.bootstrap-iso,
+.bootstrap-iso .form-control {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 1rem !important;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    height: 38px;
+    margin-bottom: 16px;
+}
+</style>
 
 <!-- HTML Form (wrapped in a .bootstrap-iso div) -->
 <div class="bootstrap-iso">
-    <!-- {{ form_log.date|as_crispy_field }} -->
      <div class="form-group ">
       <div class="input-group allauth-form-inner-content">
        <div class="input-group-addon">
@@ -42,5 +52,8 @@
             todayHighlight: true,
             autoclose: true,
         })
+        if ("/" + window.location.pathname.split("/")[1] + "/" == "/profile/"){
+            $('#date').attr('placeholder', 'Select your date of birth *')
+        }
     })
 </script>

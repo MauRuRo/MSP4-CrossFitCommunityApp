@@ -6,7 +6,7 @@ from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.conf import settings
-from datetime import date
+from datetime import date, datetime
 
 import stripe
 import json
@@ -73,6 +73,7 @@ def create_profile(request):
         if profile_form.is_valid():
             pid = request.POST.get('client_secret').split('_secret')[0]
             new_profile = profile_form.save(commit=False)
+            new_profile.birthdate = datetime.strptime(request.POST.get('date'), "%d %b %Y")
             new_profile.stripe_pid = pid
             new_profile.email = request.user.email
             new_profile.user = request.user

@@ -299,6 +299,11 @@ input[name='q']::placeholder {
     border-bottom-color: #343a40 !important;
 }
 
+.bootstrap-iso {
+    font-family: inherit !important;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+}
 /* Allauth form formatting  */
 
 select {

@@ -6,7 +6,7 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('full_name', 'town_or_city', 'country',
-                  'gender', 'weight', 'birthdate', 'image',)
+                  'gender', 'weight', 'image',)  # 'birthdate',
 
     # image = forms.ImageField(label='Image', required=False, widget=CustomClearableFileInput)
 
@@ -22,7 +22,7 @@ class UserProfileForm(forms.ModelForm):
             'town_or_city': 'Town or City',
             'gender': 'Gender',
             'weight': 'weight in kilograms',
-            'birthdate': 'birthday'
+            # 'birthdate': 'birthday'
         }
 
         self.fields['full_name'].widget.attrs['autofocus'] = True

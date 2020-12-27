@@ -14,7 +14,13 @@
 
                                     <form class="signup" id="create-profile-form" method="post" action="{% url 'create_profile' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
-                                    {{ form|crispy }}
+                                    {{ form.full_name|as_crispy_field }}
+                                    {{ form.town_or_city|as_crispy_field }}
+                                    {{ form.country|as_crispy_field }}
+                                    {{ form.gender|as_crispy_field }}
+                                    {{ form.weight|as_crispy_field }}
+                                    {% include 'includes/date-picker.html' %}
+                                    {{ form.image|as_crispy_field }}
                                     <fieldset>
                                         <legend class="fieldset-label px-3 text-black w-auto" id="payment-label">A one-time payment of €9,99 will be charged to your card.</legend>
                                         <!-- A stripe card element will go here -->

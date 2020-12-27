@@ -11,11 +11,8 @@ from django.contrib import messages
 
 def striphours(duration):
     for x in duration:
-        # print(x)
         if x == "0" or x == ':':
-            # print("DELETE")
             no_hours = duration.split(x, 1)[1]
-            # print(no_hours)
         else:
             break
     return no_hours
