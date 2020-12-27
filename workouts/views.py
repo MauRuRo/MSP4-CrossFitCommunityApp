@@ -19,8 +19,8 @@ def striphours(duration):
 
 
 def workouts(request):
-    # wod = Workout.objects.get(workout_name="Murph")
-    wod = Workout.objects.filter().first()
+    wod = Workout.objects.get(workout_is_wod=True)
+    # wod = Workout.objects.filter().first()
     if request.method == "GET":
         log = Log.objects.filter().first()
         if log is None:

@@ -6,6 +6,7 @@ from .models import Log
 class WorkoutAdmin(admin.ModelAdmin):
     fields = (
         'workout_name',
+        'workout_is_wod',
         'workout_type',
         'workout_category',
         'description',

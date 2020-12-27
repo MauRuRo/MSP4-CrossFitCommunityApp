@@ -33,6 +33,7 @@ class Workout(models.Model):
     workout_type = models.CharField(max_length=5, choices=WORKOUT_TYPE_CHOICES, null=False, blank=False)
     workout_category = models.CharField(max_length=5, choices=WORKOUT_CATEGORY_CHOICES, null=False, blank=False)
     description = models.TextField(null=False, blank=False)
+    workout_is_wod = models.BooleanField(blank=False, default=False)
 
     def __str__(self):
         return self.workout_name
