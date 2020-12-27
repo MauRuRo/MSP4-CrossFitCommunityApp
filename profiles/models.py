@@ -4,6 +4,17 @@ from django_countries.fields import CountryField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
+from django.core.exceptions import ValidationError
+
+def validate_max(value):
+    if value > 500:
+        print("TestValidateModel")
+        raise ValidationError(
+            'This weight is too high.',
+            code='invalid',
+            params={'value': value},
+        )
+
 
 class UserProfile(models.Model):
     """

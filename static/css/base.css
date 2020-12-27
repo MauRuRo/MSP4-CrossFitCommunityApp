@@ -114,7 +114,10 @@ h1, h2, h3, h4, h5, h6 {
 .category-name {
     color: #ffc107;
 }
-
+#log-workout-button {
+    position: absolute;
+    right: 0;
+}
 .logfield {
     display: none;
 }
@@ -336,6 +339,15 @@ select {
 
 .allauth-form-inner-content label:not([for='id_remember']) {
     display: none;
+}
+
+/* .allauth-form-inner-content label[for='image_clear_id'] { */
+label[for='image-clear_id'] {
+    display: inline-block !important;
+}
+
+#id_image {
+    border: none !important;
 }
 
 .allauth-form-inner-content input::placeholder {

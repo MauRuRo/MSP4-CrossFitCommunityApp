@@ -1,5 +1,5 @@
 from django.shortcuts import (
-    render, redirect, reverse, get_object_or_404
+    render, redirect, reverse
 )
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import UserProfile
@@ -8,6 +8,8 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.conf import settings
 from datetime import date, datetime
+from django.core.exceptions import ValidationError
+# from django.core.validators import RegexValidator
 
 import stripe
 import json
@@ -30,7 +32,7 @@ import json
 
 
 def profile(request):
-    """ a view to render the profile page """    
+    """ a view to render the profile page """
     try:
         profile = UserProfile.objects.get(user=request.user)
         template = 'profiles/profile.html'
@@ -71,6 +73,10 @@ def create_profile(request):
             return render(request, template, context)
     else:
         profile_form = UserProfileForm(request.POST, request.FILES)
+        if profile_form.weight > 500.0:
+            profile_form.weight = None
+            messages.error(request, 'The weight you filled in is too high.')
+
         if profile_form.is_valid() and request.POST['date'] != '':
             pid = request.POST.get('client_secret').split('_secret')[0]
             new_profile = profile_form.save(commit=False)
@@ -79,7 +85,7 @@ def create_profile(request):
             new_profile.email = request.user.email
             new_profile.user = request.user
             new_profile.save()
-            messages.success(request, f'Profile succesfully created and payment succesfully processed! \
+            messages.success(request, 'Profile succesfully created and payment succesfully processed! \
             Please explore and enjoy our digital hero community!')
             return redirect(reverse('profile'))
         else:
@@ -109,8 +115,14 @@ def edit_profile(request):
     else:
         instance = UserProfile.objects.get(user=request.user)
         profile_form = UserProfileForm(request.POST, request.FILES, instance=instance)
+        bodyweight = int(request.POST.get('weight').split('.')[0])
+        print(bodyweight)
+        if bodyweight > 500:
+            wrong_weight = False
+        else:
+            wrong_weight = True
 
-        if profile_form.is_valid():
+        if profile_form.is_valid() and wrong_weight:
             edited_profile = profile_form.save(commit=False)
             edited_profile.email = request.user.email
             edited_profile.user = request.user
@@ -118,5 +130,10 @@ def edit_profile(request):
             messages.success(request, f'Profile succesfully updated!')
             return redirect(reverse('profile'))
         else:
-            messages.error(request, 'There was an error with your form. \
-                Please double check your information.')
+            if wrong_weight is False:
+                messages.error(request, 'The weight you filled in is too high.')
+            else:
+                messages.error(request, 'There was an error with your form. \
+                    Please double check your information.')
+                    
+            return redirect('edit_profile')

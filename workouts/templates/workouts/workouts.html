@@ -44,19 +44,24 @@
                 </div>
             </div>
             <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
-                <div class="fillblock px-4 py-3">
-                    <div>
-                        <h3 class="workout-name"><span>Workout of the Day:</span><br>{{ wod.workout_name }}</h3>
+                <div class="fillblock px-4 py-3 mb-3">
+                    <div class="row">
+                        <div class="col-10 px-0">
+                            <h3 class="workout-name"><span>Workout of the Day:</span><br>{{ wod.workout_name }}</h3>
+                        </div>
+                        <div class="col-2 px-0 justify-content-end">
+                            <a class="btn btn-black rounded-0" href="#" id="log-workout-button">Log</a>
+                        </div>      
                     </div>
-                    <div >
+                    <div class="row">
                         <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
                     </div>
-                    <div >
+                    <div class="row">
                         <p class="workout-description">{{ wod.description }}</p>
                     </div>
-                    <div class="mr-2 align-items-end">
+                    <!-- <div class="row mr-2 justify-content-end">
                         <a class="btn btn-black rounded-0" href="#" id="log-workout-button">Log Workout</a>
-                    </div>                    
+                    </div>                     -->
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
@@ -71,13 +76,25 @@
 {{ block.super }}
 <script type="text/javascript">
     $(document).ready(function() {
+        // if ($('.logfield').css('display', 'none')) {
         $('#log-workout-button').click(function() {
-            $('.logfield').css('display', 'block')
+            $('.logfield').toggle()
             window.scrollTo(0,0)
         });
+        // } else {
+        //     $('#log-workout-button').click(function() {
+        //     $('.logfield').css('display', 'none')
+        //     });
+        // };
+
+        // $('#log-workout-button').click(function() {
+        //     $('.logfield').css('display', 'block')
+        //     window.scrollTo(0,0)
+        // });
+
         $('#cancel-log').click(function() {
             $('.logfield').css('display', 'none')
-        })
+        });    
     });
 </script>
 {% endblock %}

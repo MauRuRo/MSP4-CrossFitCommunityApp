@@ -1,8 +1,21 @@
 from django import forms
 from .models import User,  UserProfile
+from django.core.exceptions import ValidationError
+
+
+def validate_max(value):
+    if value > 500:
+        print("TESTVALIDATE")
+        raise ValidationError(
+            'This weight is too high.',
+            code='invalid',
+            params={'value': value},
+        )
 
 
 class UserProfileForm(forms.ModelForm):
+    # weight = forms.DecimalField(validators=[validate_max])
+
     class Meta:
         model = UserProfile
         fields = ('full_name', 'town_or_city', 'country',
@@ -35,5 +48,3 @@ class UserProfileForm(forms.ModelForm):
                 self.fields[field].widget.attrs['placeholder'] = placeholder
             self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
             self.fields[field].label = False
-
-
