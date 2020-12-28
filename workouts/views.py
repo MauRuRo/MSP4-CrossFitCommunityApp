@@ -18,8 +18,13 @@ def striphours(duration):
     return no_hours
 
 
-def workouts(request):
-    wod = Workout.objects.get(workout_is_wod=True)
+def workouts(request, wod_id):
+    if wod_id == "0":
+        wod = Workout.objects.get(workout_is_wod=True)
+    else:
+        wod = Workout.objects.get(id=wod_id)
+    print(wod)
+    print(wod.id)
     # wod = Workout.objects.filter().first()
     if request.method == "GET":
         log = Log.objects.filter().first()
@@ -40,15 +45,19 @@ def workouts(request):
         template = "workouts/workouts.html"
         return render(request, template, context)
     else:
+
         if wod.workout_type == 'FT':
+            print("FT")
             result = 'ft_result'
             non_result_1 = 'amrap_result'
             non_result_2 = 'mw_result'
         elif wod.workout_type == 'AMRAP':
+            print("AMRAP")
             result = 'amrap_result'
             non_result_1 = 'ft_result'
             non_result_2 = 'mw_result'
         else:
+            print("MW")
             result = 'mw_result'
             non_result_1 = 'amrap_result'
             non_result_2 = 'ft_result'
@@ -103,9 +112,9 @@ def workouts(request):
                         new_log.personal_record = False
             new_log.save()
             messages.success(request, 'Workout logged: Great work!')
-            return redirect(reverse('workouts'))
+            return redirect(reverse('workouts', args=(wod_id,)))
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
-            return redirect(reverse('workouts'))
+            return redirect(reverse('workouts', args=wod_id))
 

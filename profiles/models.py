@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
+
 def validate_max(value):
     if value > 500:
         print("TestValidateModel")

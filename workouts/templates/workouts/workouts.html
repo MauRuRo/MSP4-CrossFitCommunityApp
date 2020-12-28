@@ -11,43 +11,14 @@
         <div class="row h-100 align-items-center">
             <div class="col-sm-6 col-lg-3 content-block order-lg-3 align-self-start">
                 <div class="fillblock p-2">
-                    <form id="log-workout-form" method="post" action="{% url 'workouts' %}">
-                    {% csrf_token %}
-                    <div class="logfield" id="log-block">
-                        {% if wod.workout_type == 'FT' %}
-                        <!-- <p>For Time Result:</p> -->
-                            {{ form_log.ft_result|as_crispy_field }}
-                        {% elif wod.workout_type == 'AMRAP' %}
-                        <!-- <p>AMRAP Result:</p> -->
-                            {{ form_log.amrap_result|as_crispy_field }}
-                        {% else %}
-                        <!-- <p>Weight Result:</p> -->
-                            {{ form_log.mw_result|as_crispy_field }}
-                        {% endif %}
-                    </div>
-                    <div class="logfield">
-                            {{ form_log.rx|as_crispy_field }}
-                    </div>
-                    <div class="logfield">
-                        {% include 'includes/date-picker.html' %}
-                    </div>
-                    <div class="logfield">
-                        <!-- <p>Comments:</p> -->
-                            {{ form_log.user_comment|as_crispy_field }}
-                    </div>
-                    <div class="justify-content-end logfield">
-                        <button class="btn rounded-0 btn-black" type="submit">Log</button>
-                        <button class="btn btn-outline-black rounded-0" id="cancel-log">Cancel</button>
-                        {{ log }}
-                    </div>     
-                    </form>              
+                    {% include 'includes/logform.html' %}             
                 </div>
             </div>
             <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
                 <div class="fillblock px-4 py-3 mb-3">
                     <div class="row">
                         <div class="col-10 px-0">
-                            <h3 class="workout-name"><span>Workout of the Day:</span><br>{{ wod.workout_name }}</h3>
+                            <h3 class="workout-name">{% if wod.workout_is_wod %}<span>Workout of the Day:</span><br>{% endif %}{{ wod.workout_name }}</h3>
                         </div>
                         <div class="col-2 px-0 justify-content-end">
                             <a class="btn btn-black rounded-0" href="#" id="log-workout-button">Log</a>
@@ -66,6 +37,9 @@
             </div>
             <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
                 <div class="fillblock p-2">
+                    Personal Workout History
+                    <a href="{% url 'workouts' 1 %}">New WOD</a>
+                    <!-- {% for user_log in } -->
                 </div>
             </div>
         </div>

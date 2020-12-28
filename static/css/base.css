@@ -409,6 +409,10 @@ label[for='image-clear_id'] {
 #header-bar {
     height: 90px;
   }
+
+#first-head-col {
+    padding-left: 0px;
+}
 .page-content {
 padding-top: 50px;
 }
@@ -445,7 +449,8 @@ padding-top: 50px;
 @media (max-width: 992px) {
     .navbar-collapse {
         padding: 0px 24px 0px 24px;
-        background-color: #000;
+        background: url('/media/blackmat.jpg') repeat fixed;
+        background-size: 300px 300px;
         left: -24px;
         top: 15px;
         position: relative;

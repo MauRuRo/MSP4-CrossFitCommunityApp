@@ -1,28 +1,15 @@
 from django import forms
 from .models import User,  UserProfile
-from django.core.exceptions import ValidationError
-
-
-def validate_max(value):
-    if value > 500:
-        print("TESTVALIDATE")
-        raise ValidationError(
-            'This weight is too high.',
-            code='invalid',
-            params={'value': value},
-        )
 
 
 class UserProfileForm(forms.ModelForm):
-    # weight = forms.DecimalField(validators=[validate_max])
-
+    # birthdate = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}))
+    weight = forms.DecimalField(widget=forms.NumberInput(attrs={'max': '250'}))
     class Meta:
         model = UserProfile
         fields = ('full_name', 'town_or_city', 'country',
-                  'gender', 'weight', 'image',)  # 'birthdate',
-
-    # image = forms.ImageField(label='Image', required=False, widget=CustomClearableFileInput)
-
+                  'gender', 'weight', 'image')  # 'birthdate',
+   
 
     def __init__(self, *args, **kwargs):
         """
@@ -35,7 +22,7 @@ class UserProfileForm(forms.ModelForm):
             'town_or_city': 'Town or City',
             'gender': 'Gender',
             'weight': 'weight in kilograms',
-            # 'birthdate': 'birthday'
+            # 'birthdate': 'Date of birth: dd-mm-yyyy'
         }
 
         self.fields['full_name'].widget.attrs['autofocus'] = True

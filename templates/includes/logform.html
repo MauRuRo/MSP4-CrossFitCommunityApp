@@ -1,0 +1,26 @@
+<form id="log-workout-form" method="post" action="{% url 'workouts' wod.id %}">
+{% csrf_token %}
+<div class="logfield" id="log-block">
+    {% if wod.workout_type == 'FT' %}
+        {{ form_log.ft_result|as_crispy_field }}
+    {% elif wod.workout_type == 'AMRAP' %}
+        {{ form_log.amrap_result|as_crispy_field }}
+    {% else %}
+        {{ form_log.mw_result|as_crispy_field }}
+    {% endif %}
+</div>
+<div class="logfield">
+        {{ form_log.rx|as_crispy_field }}
+</div>
+<div class="logfield">
+    {% include 'includes/date-picker.html' %}
+</div>
+<div class="logfield">
+        {{ form_log.user_comment|as_crispy_field }}
+</div>
+<div class="justify-content-end logfield">
+    <button class="btn rounded-0 btn-black" type="submit">Log</button>
+    <button class="btn btn-outline-black rounded-0" id="cancel-log">Cancel</button>
+    {{ log }}
+</div>     
+</form>   
