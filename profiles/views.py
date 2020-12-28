@@ -73,10 +73,6 @@ def create_profile(request):
             return render(request, template, context)
     else:
         profile_form = UserProfileForm(request.POST, request.FILES)
-        if profile_form.weight > 500.0:
-            profile_form.weight = None
-            messages.error(request, 'The weight you filled in is too high.')
-
         if profile_form.is_valid() and request.POST['date'] != '':
             pid = request.POST.get('client_secret').split('_secret')[0]
             new_profile = profile_form.save(commit=False)
@@ -115,25 +111,16 @@ def edit_profile(request):
     else:
         instance = UserProfile.objects.get(user=request.user)
         profile_form = UserProfileForm(request.POST, request.FILES, instance=instance)
-        bodyweight = int(request.POST.get('weight').split('.')[0])
-        print(bodyweight)
-        if bodyweight > 500:
-            wrong_weight = False
-        else:
-            wrong_weight = True
 
-        if profile_form.is_valid() and wrong_weight:
+        if profile_form.is_valid():
             edited_profile = profile_form.save(commit=False)
             edited_profile.email = request.user.email
             edited_profile.user = request.user
             edited_profile.save()
-            messages.success(request, f'Profile succesfully updated!')
+            messages.success(request, 'Profile succesfully updated!')
             return redirect(reverse('profile'))
         else:
-            if wrong_weight is False:
-                messages.error(request, 'The weight you filled in is too high.')
-            else:
-                messages.error(request, 'There was an error with your form. \
-                    Please double check your information.')
-                    
-            return redirect('edit_profile')
+            messages.error(request, 'There was an error with your form. \
+                Please double check your information.')
+
+        return redirect('edit_profile')

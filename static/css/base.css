@@ -12,7 +12,10 @@ h1, h2, h3, h4, h5, h6 {
 #header-bar {
     height: 150px;
     border-bottom: 3px solid black;
-    background-color:#0E2246;
+    background: url('/media/blackmat.jpg') repeat fixed;
+    background-size: 300px 300px;
+    /* background-size: cover; */
+    /* background-color:#000; */
     color: #DEC19A;
     font-family: 'Bungee';
 }
@@ -34,7 +37,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .toast {
-    box-shadow: 5px 5px 15px #0E2246;
+    box-shadow: 5px 5px 15px #000;
 }
 
 .toast-body {
@@ -100,7 +103,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 4em;
 }
 .workout-name {
-    color: #0E2246;
+    color: #000;
 }
 
 .workout-name span {
@@ -128,13 +131,13 @@ h1, h2, h3, h4, h5, h6 {
 .example-slide {
     margin-top: 50px;
     margin-bottom: 50px;
-    border: solid 3px #0E2246;
+    border: solid 3px #000;
 }
 #promo-text {
     /* margin-top:100px; */
     text-align: center;
     color: white;
-    text-shadow: 2px 2px 5px #0E2246;
+    text-shadow: 2px 2px 5px #000;
     /* background-color: rgba(0,0,0, 0.5) */
 }
 
@@ -143,7 +146,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .header-text {
     color: white;
-    text-shadow: 2px 2px 5px #0E2246;
+    text-shadow: 2px 2px 5px #000;
 }
 
 .btn-black {
@@ -442,7 +445,7 @@ padding-top: 50px;
 @media (max-width: 992px) {
     .navbar-collapse {
         padding: 0px 24px 0px 24px;
-        background-color: #0E2246;
+        background-color: #000;
         left: -24px;
         top: 15px;
         position: relative;
