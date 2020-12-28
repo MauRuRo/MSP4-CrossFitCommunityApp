@@ -23,22 +23,28 @@ def workouts(request, wod_id):
         wod = Workout.objects.get(workout_is_wod=True)
     else:
         wod = Workout.objects.get(id=wod_id)
-    print(wod)
-    print(wod.id)
-    # wod = Workout.objects.filter().first()
     if request.method == "GET":
-        log = Log.objects.filter().first()
-        if log is None:
-            result = "No logs for this WOD"
-        else:
-            duration = str(log.ft_result)
-            result = striphours(duration)
+        # log = Log.objects.filter().first()
+        all_logs = Log.objects.all().order_by('-date')
+        all_logs_wod = all_logs.filter(wod_name=wod.workout_name)
+        user_logs = all_logs.filter(user=request.user)
+        user_logs_wod = user_logs.filter(wod_name=wod.workout_name)
+        log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
+        # if log is None:
+        #     result = "No logs for this WOD"
+        # else:
+        #     duration = str(log.ft_result)
+        #     result = striphours(duration)
         date_today = date.today()
         date_initial = date_today.strftime("%d %b %Y")
         form_log = LogForm()
         context = {
             'wod': wod,
-            'log': result,
+            'all_logs': all_logs,
+            'all_logs_wod': all_logs_wod,
+            'user_logs': user_logs,
+            'user_logs_wod': user_logs_wod,
+            'log_groups': log_groups,
             'form_log': form_log,
             'date_initial': date_initial,
         }

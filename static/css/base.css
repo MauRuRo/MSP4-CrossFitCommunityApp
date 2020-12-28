@@ -395,6 +395,16 @@ label[for='image-clear_id'] {
     text-decoration: none;
 }
 
+#block-3 {
+    overflow: overlay;
+    max-height: none;
+    max-height: 400px;
+}
+
+.log-history {
+    list-style:none;
+    padding-left:0;
+}
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {

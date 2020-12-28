@@ -1,21 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block extra_css %}
-{{ block.super }}
-    {{ date_field.media }}
-{% endblock %}
-
 {% block content %}
     <div class="container-fluid page-content">
         <div class="row h-100 align-items-center">
-            <div class="col-sm-6 col-lg-3 content-block order-lg-3 align-self-start">
-                <div class="fillblock p-2">
-                    {% include 'includes/logform.html' %}             
-                </div>
-            </div>
-            <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
-                <div class="fillblock px-4 py-3 mb-3">
+            <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
+                <div class="fillblock px-4 py-3 mb-3" id="block-2">
                     <div class="row">
                         <div class="col-10 px-0">
                             <h3 class="workout-name">{% if wod.workout_is_wod %}<span>Workout of the Day:</span><br>{% endif %}{{ wod.workout_name }}</h3>
@@ -35,11 +25,28 @@
                     </div>                     -->
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
-                <div class="fillblock p-2">
-                    Personal Workout History
+            <div class="col-sm-6 col-lg-3 content-block align-self-start order-2 order-md-3">
+                <div class="fillblock p-2 mb-3" id="block-1">
+                    {% include 'includes/logform.html' %}             
+                </div>
+            </div>           
+            <div class="col-sm-6 col-lg-3 content-block  align-sef-start order-3 order-md-2 order-lg-1">
+                <div class="fillblock p-2 mb-3" id="block-3">
+                    Workout History
+                    <span id='all-all'>All</span><br>
+                    <span id='all-wod'>All-WOD</span><br>
+                    <span id='user-all'>{{ profile.full_name}}</span><br>
+                    <span id='user-wod'>{{ profile.full_name }}-WOD</span><br>
                     <a href="{% url 'workouts' 1 %}">New WOD</a>
-                    <!-- {% for user_log in } -->
+                        {% for group in log_groups %}
+                                <!-- {{ group|length }} -->
+                                <ul class="log-history log-his">
+                                {% for member_log in group %}
+                                    <li>{{ member_log.date }}</li>
+                                {% endfor %}
+                                </ul>
+                        {% endfor %}
+                    
                 </div>
             </div>
         </div>
@@ -50,7 +57,13 @@
 {{ block.super }}
 <script type="text/javascript">
     $(document).ready(function() {
-        // if ($('.logfield').css('display', 'none')) {
+        // add classes to log history groups.
+        for( i = 1; i < 5; i++) {
+            let group = $('.log-his').first()
+            group.removeClass('log-his')
+            group.addClass('log-his-' + i)
+        }
+
         $('#log-workout-button').click(function() {
             $('.logfield').toggle()
             window.scrollTo(0,0)
@@ -58,7 +71,38 @@
 
         $('#cancel-log').click(function() {
             $('.logfield').css('display', 'none')
-        });    
+        });
+        
+        // compare heights of blocks to determine height for block-3
+        // let element = document.getElementById('block-2')
+        // let style = getComputedStyle(element)
+        // let block2_height = style.height
+        // element = document.getElementById('block-1')
+        // style = getComputedStyle(element)
+        // let block1_height = style.height
+        // let block_height = Math.max(block1_height, block2_height)
+        // console.log(block2_height)
+        // $('#block-3').css("max-height", `${block2_height}`);
+
+        // log-history navigator:
+        $('.log-history').hide()
+        $('.log-his-2').show()
+        $('#all-all').click(function(){
+            $('.log-history').hide()
+            $('.log-his-1').show()
+        })
+        $('#all-wod').click(function(){
+            $('.log-history').hide()
+            $('.log-his-2').show()
+        })
+        $('#user-all').click(function(){
+            $('.log-history').hide()
+            $('.log-his-3').show()
+        })
+        $('#user-wod').click(function(){
+            $('.log-history').hide()
+            $('.log-his-4').show()
+        })
     });
 </script>
 {% endblock %}

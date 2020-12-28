@@ -16,4 +16,7 @@ def user_info(request):
     else:
         image = ''
 
-    return {'image': image}
+    return {
+        'image': image,
+        'profile': profile
+        }
