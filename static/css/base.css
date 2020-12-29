@@ -121,8 +121,11 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     right: 0;
 }
-.logfield {
+/* .logfield {
     display: none;
+} */
+#logform-div {
+    display:none;
 }
 .navbar {
     margin-top:85px;
@@ -395,6 +398,7 @@ label[for='image-clear_id'] {
     text-decoration: none;
 }
 
+#block-1,
 #block-3 {
     overflow: overlay;
     max-height: none;
@@ -403,8 +407,73 @@ label[for='image-clear_id'] {
 
 .log-ranking,
 .log-history {
+    list-style: none;
+}
+
+.log-ranking {
+    /* https://css-tricks.com/custom-list-number-styling/ */
+    counter-reset: my-awesome-counter;
+    padding-left:0px;
+    font-size:0.75rem;
+}
+
+.rank-card {
+    counter-increment: my-awesome-counter;
+    border: 1px solid grey;
+    border-radius: 3px;
+    padding-left:2px;
+}
+
+.log-ranking .rank-card:before {
+    content: counter(my-awesome-counter);
+    color: #ffc107;;
+    font-weight: bold;
+    font-size:1.5rem;
+}
+
+.card-col p{
+    margin-bottom: 3px;
+}
+
+.pf-rnk-circle {
+    /* margin-top:25px; */
+    height:30px;
+    width:30px;
+    /* min-width: 120px; */
+    border-radius:50%;
+    border: 1px solid grey;
+    background-size: cover;
+    z-index: 999;
+    position:absolute;
+    top:-15px;
+    left:-15px;
+}
+
+.pf-rnk-circle:hover{
+    height: 50px;
+    width: 50px;
+    top: -25px;
+}
+
+.rank-flag{
+    position:absolute !important;
+    /* left:15px; */
+    top:-15px;
+    height:30px !important;
+    width:30px !important;
+    z-index: 0;
+}
+
+.rank-flag:hover{
+    z-index:9999;
+}
+
+.block-title{
+    text-align:center;
+}
+ol#rank-nav li {
+    display:inline;
     list-style:none;
-    padding-left:0;
 }
 /* MEDIAQUERIES */
 

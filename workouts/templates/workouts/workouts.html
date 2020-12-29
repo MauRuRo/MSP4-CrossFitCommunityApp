@@ -27,20 +27,8 @@
             </div>
             <div class="col-sm-6 col-lg-3 content-block align-self-start order-2 order-md-3">
                 <div class="fillblock p-2 mb-3" id="block-1">
-                    Workout Ranking
-                    <span id="rank-all-time">All Time</span><br>
-                    <span id="rank-today">Today</span><br>
-                    {% with result as rank_result %}
-                            {% for r_group in rank_groups %}
-                            {{ r_group|length }}
-                                <ul class="log-ranking log-rank">
-                                {% for member_r_log in r_group %}
-                                    <li>{{ member_r_log.amrap_result }} | {{ member_r_log.date }} | {{ member_r_log.user.userprofile.full_name }}</li>
-                                {% endfor %}
-                                </ul>
-                            {% endfor %}
-                    {% endwith %}
-                    {% include 'includes/logform.html' %}             
+                    <div id='log-ranking-div'>{% include 'workouts/includes/log-ranking.html' %} </div>
+                    <div id="logform-div">{% include 'workouts/includes/logform.html' %}</div>           
                 </div>
             </div>           
             <div class="col-sm-6 col-lg-3 content-block align-self-start order-3 order-md-2 order-lg-1">
@@ -75,14 +63,21 @@
             group.removeClass('log-his')
             group.addClass('log-his-' + i)
         }
+        for( i = 1; i < 3; i++) {
+            let group = $('.log-rank').first()
+            group.removeClass('log-rank')
+            group.addClass('log-rank-' + i)
+        }
 
         $('#log-workout-button').click(function() {
-            $('.logfield').toggle()
+            $('#logform-div').toggle()
+            $('#log-ranking-div').toggle()
             window.scrollTo(0,0)
         });
 
         $('#cancel-log').click(function() {
-            $('.logfield').css('display', 'none')
+            $('#logform-div').css('display', 'none')
+            $('#log-ranking-div').css('display', 'block')
         });
         
         // compare heights of blocks to determine height for block-3
@@ -96,6 +91,17 @@
         // console.log(block2_height)
         // $('#block-3').css("max-height", `${block2_height}`);
 
+        // rank-logs navigator:
+        $('.log-ranking').hide()
+        $('.log-rank-2').show()
+        $('#rank-all-time').click(function(){
+            $('.log-ranking').hide()
+            $('.log-rank-1').show()
+        })
+        $('#rank-today').click(function(){
+            $('.log-ranking').hide()
+            $('.log-rank-2').show()
+        })
         // log-history navigator:
         $('.log-history').hide()
         $('.log-his-2').show()
@@ -114,6 +120,27 @@
         $('#user-wod').click(function(){
             $('.log-history').hide()
             $('.log-his-4').show()
+        })
+        $('.r-log').each(function(){
+            if (!$(this).hasClass('ft-log')) {
+                while ($(this).text().slice(-1) == '0' || $(this).text().slice(-1) == '.') {
+                    if ($(this).text().slice(-1) == '.'){
+                        let log_text = $(this).text().slice(0, -1);
+                        $(this).text(log_text);
+                        break
+                    }else{
+                        let log_text = $(this).text().slice(0, -1);
+                        $(this).text(log_text);
+                    }
+                }
+            }
+        })
+        $('.rank-flag').click(function() {
+            if ($(this).css('z-index') == 9999) {
+                $(this).css('z-index', '0')
+            } else {
+                $(this).css('z-index', '9999')
+            }
         })
     });
 </script>

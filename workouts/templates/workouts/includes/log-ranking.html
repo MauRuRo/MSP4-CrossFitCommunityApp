@@ -1,0 +1,31 @@
+<h4 class="block-title">Ranking</h4>
+<ol id="rank-nav">
+<li id="rank-all-time">All Time</li>
+<li id="rank-today">Today</li>
+<li id="rank-men">Men</li>
+<li id="rank-women">Women</li>
+</ol>
+        {% for r_group in rank_groups %}
+            <ol class="log-ranking log-rank">
+                <!-- {{ r_group|length }} -->
+            {% for member_r_log in r_group %}                
+                    <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between">
+                        <div class="card-col col-8 px-1">
+                            <p class='rank-name'><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
+                            {% if rank_result == 'ft_result' %}
+                            <p><span class="ft-log r-log">{{ member_r_log.ft_result }}</span></p>
+                            {% elif rank_result == 'amrap_result' %}
+                            <p><span class="amrap-log r-log">{{ member_r_log.amrap_result }}</span> rounds</p>
+                            {% else %}
+                            <p><span class="mw-log r-log">{{ member_r_log.mw_result }}</span>kg</p>
+                            {% endif %} 
+                        </div>
+                        <div class="col-2 px-0 align-self-center justify-content-end">
+                            <a href="#"><div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">                                
+                            </div><i class="fflag fflag-{{ member_r_log.user.userprofile.country.code }} ff-lg ff-round rank-flag" aria-label="{{ member_r_log.user.userprofile.country.code }}"></i></a>
+                            
+                        </div>
+                    </div>
+            {% endfor %}
+            </ol>
+        {% endfor %}

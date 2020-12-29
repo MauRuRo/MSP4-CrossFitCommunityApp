@@ -43,7 +43,8 @@ def workouts(request, wod_id):
             print("TEST3")
             all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-mw_result')
             rank_result = 'mw_result'
-        all_logs_rank_today = all_logs_rank.filter(date=date.today())
+        filter_rx = all_logs_rank.filter(rx=True)
+        all_logs_rank_today = filter_rx.filter(date=date.today())
         print(all_logs_rank)
         rank_groups = [all_logs_rank, all_logs_rank_today]
         # if log is None:
