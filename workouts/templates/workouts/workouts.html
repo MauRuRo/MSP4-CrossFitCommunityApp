@@ -27,26 +27,38 @@
             </div>
             <div class="col-sm-6 col-lg-3 content-block align-self-start order-2 order-md-3">
                 <div class="fillblock p-2 mb-3" id="block-1">
+                    Workout Ranking
+                    <span id="rank-all-time">All Time</span><br>
+                    <span id="rank-today">Today</span><br>
+                    {% with result as rank_result %}
+                            {% for r_group in rank_groups %}
+                            {{ r_group|length }}
+                                <ul class="log-ranking log-rank">
+                                {% for member_r_log in r_group %}
+                                    <li>{{ member_r_log.amrap_result }} | {{ member_r_log.date }} | {{ member_r_log.user.userprofile.full_name }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endfor %}
+                    {% endwith %}
                     {% include 'includes/logform.html' %}             
                 </div>
             </div>           
-            <div class="col-sm-6 col-lg-3 content-block  align-sef-start order-3 order-md-2 order-lg-1">
+            <div class="col-sm-6 col-lg-3 content-block align-self-start order-3 order-md-2 order-lg-1">
                 <div class="fillblock p-2 mb-3" id="block-3">
-                    Workout History
-                    <span id='all-all'>All</span><br>
-                    <span id='all-wod'>All-WOD</span><br>
-                    <span id='user-all'>{{ profile.full_name}}</span><br>
-                    <span id='user-wod'>{{ profile.full_name }}-WOD</span><br>
+                    Activity History
+                    <span id="all-all">All</span><br>
+                    <span id="all-wod">All-WOD</span><br>
+                    <span id="user-all">{{ profile.full_name}}</span><br>
+                    <span id="user-wod">{{ profile.full_name }}-WOD</span><br>
+                    <!-- '1' is a temporary placeholder for search value -->
                     <a href="{% url 'workouts' 1 %}">New WOD</a>
                         {% for group in log_groups %}
-                                <!-- {{ group|length }} -->
                                 <ul class="log-history log-his">
                                 {% for member_log in group %}
                                     <li>{{ member_log.date }}</li>
                                 {% endfor %}
                                 </ul>
                         {% endfor %}
-                    
                 </div>
             </div>
         </div>

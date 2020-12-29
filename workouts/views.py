@@ -30,6 +30,22 @@ def workouts(request, wod_id):
         user_logs = all_logs.filter(user=request.user)
         user_logs_wod = user_logs.filter(wod_name=wod.workout_name)
         log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
+
+        if wod.workout_type == 'FT':
+            print("TEST1")
+            all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('ft_result')
+            rank_result = 'ft_result'
+        elif wod.workout_type == 'AMRAP':
+            print("TEST2")
+            all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-amrap_result')
+            rank_result = 'amrap_result'
+        else:
+            print("TEST3")
+            all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-mw_result')
+            rank_result = 'mw_result'
+        all_logs_rank_today = all_logs_rank.filter(date=date.today())
+        print(all_logs_rank)
+        rank_groups = [all_logs_rank, all_logs_rank_today]
         # if log is None:
         #     result = "No logs for this WOD"
         # else:
@@ -45,6 +61,10 @@ def workouts(request, wod_id):
             'user_logs': user_logs,
             'user_logs_wod': user_logs_wod,
             'log_groups': log_groups,
+            'all_logs_rank': all_logs_rank,
+            'all_logs_rank_today': all_logs_rank_today,
+            'rank_groups': rank_groups,
+            'rank_result': rank_result,
             'form_log': form_log,
             'date_initial': date_initial,
         }

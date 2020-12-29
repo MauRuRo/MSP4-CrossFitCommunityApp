@@ -15,7 +15,7 @@ def user_info(request):
             image = '/media/noprofpic.jpg'
     else:
         image = ''
-
+        profile = None
     return {
         'image': image,
         'profile': profile

@@ -401,6 +401,7 @@ label[for='image-clear_id'] {
     max-height: 400px;
 }
 
+.log-ranking,
 .log-history {
     list-style:none;
     padding-left:0;

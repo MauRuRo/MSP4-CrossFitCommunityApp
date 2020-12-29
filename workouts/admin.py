@@ -20,6 +20,13 @@ admin.site.register(Workout, WorkoutAdmin)
 
 class LogAdmin(admin.ModelAdmin):
 
+    list_display = (
+        'wod_name',
+        'user',
+        'date',
+        'amrap_result'
+    )
+
     readonly_fields = (
         'wod_name',
         'user',
