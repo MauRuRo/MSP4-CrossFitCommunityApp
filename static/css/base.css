@@ -429,17 +429,27 @@ label[for='image-clear_id'] {
     color: #ffc107;;
     font-weight: bold;
     font-size:1.5rem;
+    margin-left:3px;
 }
 
 .card-col p{
     margin-bottom: 3px;
 }
 
-.pf-rnk-circle {
-    /* margin-top:25px; */
+.pr-logo-circle {
     height:30px;
     width:30px;
-    /* min-width: 120px; */
+    border-radius:50%;
+    background-size: cover;
+    z-index: 1;
+    position:absolute;
+    top:-15px;
+    left:-30px;
+}
+
+.pf-rnk-circle {
+    height:30px;
+    width:30px;
     border-radius:50%;
     border: 1px solid grey;
     background-size: cover;
@@ -448,11 +458,13 @@ label[for='image-clear_id'] {
     top:-15px;
     left:-15px;
 }
-
+.pr-logo-circle:hover,
+.rank-flag:hover,
 .pf-rnk-circle:hover{
-    height: 50px;
-    width: 50px;
-    top: -25px;
+    height: 60px !important;
+    width: 60px !important;
+    top: -30px;
+    z-index:99999!important;
 }
 
 .rank-flag{
@@ -464,16 +476,29 @@ label[for='image-clear_id'] {
     z-index: 0;
 }
 
-.rank-flag:hover{
+/* .rank-flag:hover{
     z-index:9999;
-}
+} */
 
 .block-title{
     text-align:center;
 }
+#rank-nav {
+    font-size: 0.8rem;
+    text-align: center;
+    padding-left:0;
+}
 ol#rank-nav li {
     display:inline;
     list-style:none;
+}
+
+.extra-log-info {
+    display:none;
+}
+
+.extra-log-info hr {
+    margin: 5px 0px;
 }
 /* MEDIAQUERIES */
 

@@ -63,7 +63,7 @@
             group.removeClass('log-his')
             group.addClass('log-his-' + i)
         }
-        for( i = 1; i < 3; i++) {
+        for( i = 1; i < 5; i++) {
             let group = $('.log-rank').first()
             group.removeClass('log-rank')
             group.addClass('log-rank-' + i)
@@ -91,16 +91,68 @@
         // console.log(block2_height)
         // $('#block-3').css("max-height", `${block2_height}`);
 
-        // rank-logs navigator:
+        // set visibility on page elements
         $('.log-ranking').hide()
-        $('.log-rank-2').show()
+        let gender = $('#gender').text()
+        if (gender == "F"){
+            $('.log-rank-4').show()
+            $('#rank-women').css({'font-weight': '700', 'text-decoration': 'underline'})
+        }else{
+            $('#rank-men').css({'font-weight': '700', 'text-decoration': 'underline'})
+            $('.log-rank-3').show()
+        }
+        $('#rank-today').css({'font-weight': '700', 'text-decoration': 'underline'})
+        let period = 'today'
+        
+        // rank-logs navigator:
         $('#rank-all-time').click(function(){
-            $('.log-ranking').hide()
-            $('.log-rank-1').show()
+            // console.log($('#rank-nav').children().css('font-weight'))
+            $('.period').css({'font-weight': '400', 'text-decoration': 'none'})
+            $('#rank-all-time').css({'font-weight': '700', 'text-decoration': 'underline'})
+            if (gender == "F") {
+                $('.log-ranking').hide()
+                $('.log-rank-2').show()
+            } else {
+                $('.log-ranking').hide()
+                $('.log-rank-1').show()
+            }
+            period = 'alltime'           
         })
         $('#rank-today').click(function(){
-            $('.log-ranking').hide()
-            $('.log-rank-2').show()
+            $('.period').css({'font-weight': '400', 'text-decoration': 'none'})
+            $('#rank-today').css({'font-weight': '700', 'text-decoration': 'underline'})
+            if (gender == "F") {
+                $('.log-ranking').hide()
+                $('.log-rank-4').show()
+            } else {
+                $('.log-ranking').hide()
+                $('.log-rank-2').show()
+            }
+            period = 'today'
+        })
+        $('#rank-men').click(function(){
+            $('.gender').css({'font-weight': '400', 'text-decoration': 'none'})
+            $('#rank-men').css({'font-weight': '700', 'text-decoration': 'underline'})
+            if (period == "today") {
+                $('.log-ranking').hide()
+                $('.log-rank-3').show()
+            } else {
+                $('.log-ranking').hide()
+                $('.log-rank-1').show()
+            }
+            gender = 'M'
+        })
+        $('#rank-women').click(function(){
+            $('.gender').css({'font-weight': '400', 'text-decoration': 'none'})
+            $('#rank-women').css({'font-weight': '700', 'text-decoration': 'underline'})
+            if (period == "today") {
+                $('.log-ranking').hide()
+                $('.log-rank-4').show()
+            } else {
+                $('.log-ranking').hide()
+                $('.log-rank-2').show()
+            }
+            gender = 'F'
         })
         // log-history navigator:
         $('.log-history').hide()
@@ -135,13 +187,21 @@
                 }
             }
         })
-        $('.rank-flag').click(function() {
-            if ($(this).css('z-index') == 9999) {
-                $(this).css('z-index', '0')
-            } else {
-                $(this).css('z-index', '9999')
-            }
+        // $('.rank-flag').click(function() {
+        //     if ($(this).css('z-index') == 9999) {
+        //         $(this).css('z-index', '0')
+        //     } else {
+        //         $(this).css('z-index', '9999')
+        //     }
+        // })
+
+        $('.card-col').click(function(){
+            $(this).siblings('.extra-log-info').slideToggle(100)
         })
+        $('.extra-log-info').click(function(){
+            $(this).slideToggle(100)
+        })
+
     });
 </script>
 {% endblock %}

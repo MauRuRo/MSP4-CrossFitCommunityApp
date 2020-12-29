@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from datetime import date, datetime
+from profiles.models import UserProfile
 from .models import Workout
 from .models import Log
 from .forms import LogForm
@@ -23,8 +24,22 @@ def workouts(request, wod_id):
         wod = Workout.objects.get(workout_is_wod=True)
     else:
         wod = Workout.objects.get(id=wod_id)
+
     if request.method == "GET":
-        # log = Log.objects.filter().first()
+        # default_gender = request.user.userprofile.gender
+        # print(default_gender)
+
+        all_women_q = UserProfile.objects.filter(gender='F')
+        all_men_q = UserProfile.objects.filter(gender='M')
+
+        all_women = []
+        for woman in all_women_q:
+            all_women.append(woman.user.username)
+
+        all_men = []
+        for man in all_men_q:
+            all_men.append(man.user.username)
+
         all_logs = Log.objects.all().order_by('-date')
         all_logs_wod = all_logs.filter(wod_name=wod.workout_name)
         user_logs = all_logs.filter(user=request.user)
@@ -32,21 +47,27 @@ def workouts(request, wod_id):
         log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
 
         if wod.workout_type == 'FT':
-            print("TEST1")
             all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('ft_result')
             rank_result = 'ft_result'
         elif wod.workout_type == 'AMRAP':
-            print("TEST2")
             all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-amrap_result')
             rank_result = 'amrap_result'
         else:
-            print("TEST3")
             all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-mw_result')
             rank_result = 'mw_result'
-        filter_rx = all_logs_rank.filter(rx=True)
+
+        filter_rx = all_logs_rank.filter(rx=True)        
+        # all_logs_rank = filter_rx
+        all_logs_rank = filter_rx.filter(personal_record=True)
         all_logs_rank_today = filter_rx.filter(date=date.today())
-        print(all_logs_rank)
-        rank_groups = [all_logs_rank, all_logs_rank_today]
+
+        all_logs_rank_women = all_logs_rank.filter(user__username__in=all_women)
+        all_logs_rank_men = all_logs_rank.filter(user__username__in=all_men)
+        all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
+        all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
+
+        rank_groups = [all_logs_rank_men, all_logs_rank_women, all_logs_rank_men_today, all_logs_rank_women_today]
+
         # if log is None:
         #     result = "No logs for this WOD"
         # else:
@@ -57,17 +78,16 @@ def workouts(request, wod_id):
         form_log = LogForm()
         context = {
             'wod': wod,
-            'all_logs': all_logs,
-            'all_logs_wod': all_logs_wod,
-            'user_logs': user_logs,
-            'user_logs_wod': user_logs_wod,
+            # 'all_logs': all_logs,
+            # 'all_logs_wod': all_logs_wod,
+            # 'user_logs': user_logs,
+            # 'user_logs_wod': user_logs_wod,
             'log_groups': log_groups,
-            'all_logs_rank': all_logs_rank,
-            'all_logs_rank_today': all_logs_rank_today,
             'rank_groups': rank_groups,
             'rank_result': rank_result,
             'form_log': form_log,
             'date_initial': date_initial,
+            # 'default_gender': default_gender,
         }
         template = "workouts/workouts.html"
         return render(request, template, context)
