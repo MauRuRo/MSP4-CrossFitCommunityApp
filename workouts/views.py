@@ -1,14 +1,33 @@
 from django.shortcuts import render, redirect, reverse
-from datetime import date, datetime
-from profiles.models import UserProfile
+from datetime import date, datetime, timedelta
+from profiles.models import UserProfile, User
 from .models import Workout
 from .models import Log
 from .forms import LogForm
 from django.utils.dateparse import parse_duration
 from django.db.models import Avg, Max, Min, Sum
 from django.contrib import messages
+# from varname import Wrapper
 # Create your views here.
 
+def user_list():
+    users = User.objects.all()
+    user_l = []
+    for user in users:
+        user_l.append(user.id)
+    return user_l
+
+def id_list(userlist, queryset):
+    log_id_list = []
+    for log_user in userlist:
+        max_result_user = queryset.filter(user=log_user).aggregate(Max('amrap_result'))['amrap_result__max']
+        print(max_result_user)
+        max_log_id = queryset.filter(user=log_user).filter(amrap_result=max_result_user).aggregate(Max('id'))['id__max']
+        # print(max_log_id)
+        if max_log_id != None:
+            log_id_list.append(max_log_id)
+    print(log_id_list)
+    return log_id_list
 
 def striphours(duration):
     for x in duration:
@@ -19,16 +38,15 @@ def striphours(duration):
     return no_hours
 
 
-def workouts(request, wod_id):
+def workouts(request, wod_id):  
     if wod_id == "0":
         wod = Workout.objects.get(workout_is_wod=True)
     else:
         wod = Workout.objects.get(id=wod_id)
 
     if request.method == "GET":
-        # default_gender = request.user.userprofile.gender
-        # print(default_gender)
-
+        user_l = user_list()
+        lapse_date = date.today() - timedelta(days=365)
         all_women_q = UserProfile.objects.filter(gender='F')
         all_men_q = UserProfile.objects.filter(gender='M')
 
@@ -56,17 +74,20 @@ def workouts(request, wod_id):
             all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-mw_result')
             rank_result = 'mw_result'
 
-        filter_rx = all_logs_rank.filter(rx=True)        
+        filter_rx = all_logs_rank.filter(rx=True)
+        filter_lapsed = filter_rx.filter(date__gt=lapse_date)
+        log_id_list = id_list(user_l, filter_lapsed)
+        all_logs_rank = filter_lapsed.filter(id__in=log_id_list)
         # all_logs_rank = filter_rx
-        all_logs_rank = filter_rx.filter(personal_record=True)
+        # all_logs_rank = filter_lapsed  #.filter(personal_record=True)
         all_logs_rank_today = filter_rx.filter(date=date.today())
-
         all_logs_rank_women = all_logs_rank.filter(user__username__in=all_women)
         all_logs_rank_men = all_logs_rank.filter(user__username__in=all_men)
         all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
         all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
 
         rank_groups = [all_logs_rank_men, all_logs_rank_women, all_logs_rank_men_today, all_logs_rank_women_today]
+        # rank_groups = {'alrm': all_logs_rank_men, 'alrw': all_logs_rank_women, 'alrmt':all_logs_rank_men_today, 'alrwt': all_logs_rank_women_today}
 
         # if log is None:
         #     result = "No logs for this WOD"
@@ -108,7 +129,10 @@ def workouts(request, wod_id):
             result = 'mw_result'
             non_result_1 = 'amrap_result'
             non_result_2 = 'ft_result'
-            
+        # if request.POST['rx'] is None:
+        #     rx_value = False
+        # else:
+        #     rx_value = True
         form_data = {
             f"{result}": request.POST[f"{result}"],
             f"{non_result_1}": 0,

@@ -1,6 +1,6 @@
 <h4 class="block-title">WOD Ranking</h4>
     <ol id="rank-nav">
-    <li id="rank-all-time" class="period">All Time</li>
+    <li id="rank-all-time" class="period">Year</li>
     -
     <li id="rank-today" class="period">Today</li>
     |
@@ -11,9 +11,8 @@
         {% for r_group in rank_groups %}
             <ol class="log-ranking log-rank">
             {% for member_r_log in r_group %}                
-                    <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between">
+                    <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_r_log.id }}">
                         <div class="card-col col-8 px-1">
-                            <!-- <div class="pr-logo-circle" style="background: url('/media/herocommunitylogo-PR-lean.jpg') no-repeat; background-size: cover"></div> -->
                             <p class='rank-name'><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
                             {% if rank_result == 'ft_result' %}
                             <p><span class="ft-log r-log">{{ member_r_log.ft_result }}</span></p>
@@ -33,15 +32,78 @@
                             {% endif %}
                             </a>                            
                         </div>
-                        <div class="col-12 extra-log-info">
+                    </div>
+                    <!-- EXTRA INFO -->
+                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                        <div class="card-col col-8 px-1">
                             <hr>
-                            Performed on: {{ member_r_log.date }}<br>
-                            {% if member_r_log.rx %}
-                            As prescribed<br>
-                            {% else %}
-                            Scaled<br>
-                            {% endif %}
-                            {{ member_r_log.user_comment }}
+                            <div class="x-info">
+                                <strong>
+                                    {{ member_r_log.date }}<br>
+                                    {% if member_r_log.rx %}
+                                        As prescribed<br>
+                                        {% else %}
+                                        Scaled<br>
+                                    {% endif %}
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="col-2 px-0 align-self-center justify-content-end">
+                        </div>
+                    </div>
+                    <!-- USER COMMENT -->
+                    {% if member_r_log.user_comment != '' %}
+                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                        <div class="card-col col-8 px-1">
+                            <hr>
+                            <div class="x-info">
+                                <strong>{{ member_r_log.user.userprofile.full_name }}:</strong><br>
+                                <em>"{{ member_r_log.user_comment }}"</em>
+                            </div>
+                        </div>
+                        <div class="col-2 px-0 align-self-center justify-content-end">
+                            <a href="#">
+                            <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
+                            </div>
+                            </a>                         
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- MEMBER COMMENT -->
+                    {% if member_r_log.user_comment != '' %}
+                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                        <div class="card-col col-8 px-1">
+                            <hr>
+                            <div class="x-info">
+                                <strong>{{ member_r_log.user.userprofile.full_name }}:</strong><br>
+                                <em>"{{ member_r_log.user_comment }}"</em>
+                            </div>
+                        </div>
+                        <div class="col-2 px-0 align-self-center justify-content-end">
+                            <a href="#">
+                                <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
+                                </div>
+                            </a>                         
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- LEAVE A COMMENT -->
+                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                        <div class="card-col col-8 px-1">
+                            <hr>
+                            <div class="x-info">
+                                <strong>Leave a comment:</strong><br>
+                                <form>
+                                    <input type="text">
+                                    <button class="btn rounded-1 btn-black comment-btn" type="submit">Comment</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-2 px-0 align-self-center justify-content-end">
+                            <a href="#">
+                            <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{ image }}') no-repeat; background-size: cover">
+                            </div>
+                            </a>                         
                         </div>
                     </div>
             {% endfor %}

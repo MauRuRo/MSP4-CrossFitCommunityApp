@@ -10,6 +10,7 @@
     {% endif %}
 </div>
 <div class="logfield">
+        <input type="hidden" name="{{ form_log.rx.name }}" value="False" />
         {{ form_log.rx|as_crispy_field }}
 </div>
 <div class="logfield">

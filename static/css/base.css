@@ -93,6 +93,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .fillblock {
     min-height: 200px;
+    min-width: 230px;
     width: 100%;
     border: 2px solid black;
     border-radius: 5px;
@@ -430,8 +431,46 @@ label[for='image-clear_id'] {
     font-weight: bold;
     font-size:1.5rem;
     margin-left:3px;
+    width:30px;
 }
 
+.extra-log-info {
+    /* counter-increment: my-awesome-counter; */
+    border: 1px solid grey;
+    border-radius: 3px;
+    padding-left:2px;
+    margin-top:-4px !important;
+    margin-bottom:0px;
+    border-top-color: rgba(255,255,255,0);
+    border-bottom-color:rgba(255,255,255,0);
+    border-radius:0;
+}
+
+.remove-borders-main {
+    border-bottom-color: rgba(255,255,255,0);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.add-border-last {
+    border-bottom-color: grey;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.extra-log-info:before {
+    content: counter(my-awesome-counter);
+    color: rgba(255,255,255,0);
+    font-weight: bold;
+    font-size:1.5rem;
+    margin-left:3px;
+    width:30px;
+}
+
+.extra-log-info hr {
+    margin-top:3px;
+    margin-bottom:3px;
+}
 .card-col p{
     margin-bottom: 3px;
 }
@@ -469,16 +508,11 @@ label[for='image-clear_id'] {
 
 .rank-flag{
     position:absolute !important;
-    /* left:15px; */
     top:-15px;
     height:30px !important;
     width:30px !important;
     z-index: 0;
 }
-
-/* .rank-flag:hover{
-    z-index:9999;
-} */
 
 .block-title{
     text-align:center;
@@ -493,12 +527,15 @@ ol#rank-nav li {
     list-style:none;
 }
 
-.extra-log-info {
-    display:none;
+.x-info {
+    font-size:0.7rem;
+    margin-bottom:3px;
 }
 
-.extra-log-info hr {
-    margin: 5px 0px;
+.comment-btn {
+    font-size:0.8rem;
+    margin-top:2px;
+    padding:5px;
 }
 /* MEDIAQUERIES */
 

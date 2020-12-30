@@ -48,3 +48,5 @@ class LogForm(forms.ModelForm):
                     self.fields[field].label = label
             self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
 
+
+# class MemberCommentForm(forms.ModelForm):

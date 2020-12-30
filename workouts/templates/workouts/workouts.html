@@ -126,7 +126,7 @@
                 $('.log-rank-4').show()
             } else {
                 $('.log-ranking').hide()
-                $('.log-rank-2').show()
+                $('.log-rank-3').show()
             }
             period = 'today'
         })
@@ -194,14 +194,29 @@
         //         $(this).css('z-index', '9999')
         //     }
         // })
-
-        $('.card-col').click(function(){
-            $(this).siblings('.extra-log-info').slideToggle(100)
+        $('.extra-log-info').each(function(){
+            let group_class_name = $(this).parent().attr('class')
+            let group_id = group_class_name.split(" ")[1]
+            $(this).addClass(group_id + "X")
         })
-        $('.extra-log-info').click(function(){
-            $(this).slideToggle(100)
+        $('.extra-log-info').hide()
+        $('.rank-card').children('.card-col').click(function(){
+            let log_name = $(this).parents().attr('name')
+            let log_name_class = "." + log_name
+            let group_class_name = $(this).parent().parent().attr('class')
+            let group_id = log_name_class + "." + group_class_name.split(" ")[1] + "X"
+            console.log(group_id)
+            let extra_info_cards = $(group_id);
+            console.log(extra_info_cards)
+            let last_info_card = extra_info_cards.last()
+            last_info_card.addClass('add-border-last')
+            extra_info_cards.slideToggle(100)
+            if ($(this).parent().hasClass('remove-borders-main')) {
+                $(this).parent().removeClass('remove-borders-main');
+            }else{
+                $(this).parent().addClass('remove-borders-main');
+            }
         })
-
     });
 </script>
 {% endblock %}

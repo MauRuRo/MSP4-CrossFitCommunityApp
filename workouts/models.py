@@ -40,7 +40,7 @@ class Log(models.Model):
     ft_result = models.DurationField(blank=False, null=True)
     amrap_result = models.DecimalField(blank=False, decimal_places=2, max_digits=5)
     mw_result = models.DecimalField(blank=False, decimal_places=2, max_digits=5)
-    rx = models.BooleanField(blank=False, default=True)
+    rx = models.BooleanField(blank=True, default=True)
     user_comment = models.TextField(blank=True,null=True)
     member_comment = models.TextField(blank=True,null=True)
     date = models.DateField(null=False, blank=False, default=date.today)
@@ -50,3 +50,9 @@ class Log(models.Model):
 
     def __str__(self):
         return self.wod_name + " | " + self.user.username
+
+class MemberComment(models.Model):
+    """ a model for member comments """
+    member = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE, default='1')
+    message = models.CharField(blank=False, null=False, max_length=250)
+    log_id = models.ForeignKey(Log, blank=False, null=False, on_delete=models.CASCADE, default='1')
