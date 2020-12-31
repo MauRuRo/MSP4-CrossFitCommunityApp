@@ -219,6 +219,33 @@
                 // $('.rank-card').not(this).parent().removeClass('remove-borders-main')
             }
         })
+
+        if ($('.member-comment').focus()) {
+            let shift = false
+            $('.member-comment').on('keydown', function (e) {
+                if(e.which === 16){
+                    shift = true
+                    console.log("shiftkey")
+                }
+            });
+            $('.member-comment').on('keyup', function (e) {
+                if(e.which === 16){
+                    shift = false
+                    console.log("shiftkey")
+                }
+            });
+            $('.member-comment').on('keypress', function (e) {
+                if(e.which === 13 && shift == false){
+                    //Disable textbox to prevent multiple submit
+                    $(this).attr("disabled", "disabled");
+                    //Do Stuff, submit, etc..
+                    console.log("testing keypress")
+                    //Enable the textbox again if needed.
+                    $(this).removeAttr("disabled");
+                }
+            });
+        }
+        
     });
 </script>
 {% endblock %}

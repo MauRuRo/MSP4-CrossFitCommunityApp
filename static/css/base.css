@@ -533,11 +533,15 @@ ol#rank-nav li {
     padding-right:15px;
 }
 
-.comment-btn {
+/* .comment-btn {
     font-size:0.8rem;
     margin-top:2px;
     padding:5px;
-}
+} */
+
+    .member-comment {
+        margin-top: 3px;
+    }
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {
