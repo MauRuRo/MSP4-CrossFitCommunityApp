@@ -527,6 +527,9 @@ ol#rank-nav li {
     list-style:none;
 }
 
+.rank-name{
+    margin-top:4px;
+}
 .x-info {
     font-size:0.7rem;
     margin-bottom:3px;

@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Workout
-from .models import Log
+from .models import Workout, Log, MemberComment
 
 
 class WorkoutAdmin(admin.ModelAdmin):
@@ -17,6 +16,7 @@ class WorkoutAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(Workout, WorkoutAdmin)
+
 
 class LogAdmin(admin.ModelAdmin):
 
@@ -45,3 +45,18 @@ class LogAdmin(admin.ModelAdmin):
         'personal_record'
     )
 admin.site.register(Log, LogAdmin)
+
+
+class MemberCommentAdmin(admin.ModelAdmin):
+    list_display = (
+        'member',
+        'message',
+        'log_id'
+    )
+
+    fields = (
+        'member',
+        'message',
+        'log_id'
+    )
+admin.site.register(MemberComment, MemberCommentAdmin)

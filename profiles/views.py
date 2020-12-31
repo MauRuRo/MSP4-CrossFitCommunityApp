@@ -1,7 +1,7 @@
 from django.shortcuts import (
     render, redirect, reverse
 )
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import UserProfile
 from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
@@ -124,3 +124,13 @@ def edit_profile(request):
                 Please double check your information.')
 
         return redirect('edit_profile')
+
+
+def test(request):
+    print("MADE IT TO TEST VIEW")
+    if request.is_ajax() and request.POST:
+        msg = "This was the message: " + request.POST.get('test')
+        data = {"message": msg}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        raise Http404

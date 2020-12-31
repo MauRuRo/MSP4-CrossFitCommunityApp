@@ -43,7 +43,4 @@
     {{ client_secret|json_script:"id_client_secret" }}
     <script src="{% static 'profiles/js/stripe_elements.js' %}"></script>
     <script type="text/javascript" src="{% static 'profiles/js/unselected_select_field.js' %}"></script>
-    <!-- <script type="text/javascript">
-        $("#id_weight").attr('max', 250)
-    </script> -->
 {% endblock %}

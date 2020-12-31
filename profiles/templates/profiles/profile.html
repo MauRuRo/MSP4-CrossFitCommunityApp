@@ -24,6 +24,11 @@
             </div>
             <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
                 <div class="fillblock p-2">
+                    <form id="test-form">
+                        {% csrf_token %}
+                        <input type="text">
+                        <input type="submit" value="Submit" id="test-submit-button">
+                    </form>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
@@ -33,3 +38,25 @@
     </div>
 {% endblock %}
 
+{% block postloadjs %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'profiles/js/token.js' %}"></script>
+<script type="text/javascript">
+$('#test-submit-button').click(function(e) {
+    e.preventDefault()
+    $.ajax({
+        type:"POST",
+        url: "/profile/test/",
+        data: {test:"test"},
+        dataType: 'json',
+        success: function(data){
+            console.log(data.message)
+            alert("SUCCESs!!")
+        },
+        error: function(){
+            console.log("Failed")
+        }
+    })
+})
+</script>
+{% endblock %}

@@ -51,8 +51,12 @@ class Log(models.Model):
     def __str__(self):
         return self.wod_name + " | " + self.user.username
 
+
 class MemberComment(models.Model):
     """ a model for member comments """
     member = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE, default='1')
     message = models.CharField(blank=False, null=False, max_length=250)
     log_id = models.ForeignKey(Log, blank=False, null=False, on_delete=models.CASCADE, default='1')
+
+    def __str__(self):
+        return self.member.username

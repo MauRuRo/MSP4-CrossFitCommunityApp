@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect, reverse
 from datetime import date, datetime, timedelta
 from profiles.models import UserProfile, User
-from .models import Workout
-from .models import Log
-from .forms import LogForm
+from .models import Workout, MemberComment, Log
+from .forms import LogForm, MemberCommentForm
 from django.utils.dateparse import parse_duration
 from django.db.models import Avg, Max, Min, Sum
 from django.contrib import messages
-# from varname import Wrapper
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.core import serializers
+from django.http import Http404, HttpResponse
+import json
 # Create your views here.
+
 
 def user_list():
     users = User.objects.all()
@@ -17,17 +21,16 @@ def user_list():
         user_l.append(user.id)
     return user_l
 
+
 def id_list(userlist, queryset):
     log_id_list = []
     for log_user in userlist:
         max_result_user = queryset.filter(user=log_user).aggregate(Max('amrap_result'))['amrap_result__max']
-        print(max_result_user)
         max_log_id = queryset.filter(user=log_user).filter(amrap_result=max_result_user).aggregate(Max('id'))['id__max']
-        # print(max_log_id)
         if max_log_id != None:
             log_id_list.append(max_log_id)
-    print(log_id_list)
     return log_id_list
+
 
 def striphours(duration):
     for x in duration:
@@ -38,7 +41,7 @@ def striphours(duration):
     return no_hours
 
 
-def workouts(request, wod_id):  
+def workouts(request, wod_id):
     if wod_id == "0":
         wod = Workout.objects.get(workout_is_wod=True)
     else:
@@ -113,26 +116,18 @@ def workouts(request, wod_id):
         template = "workouts/workouts.html"
         return render(request, template, context)
     else:
-
         if wod.workout_type == 'FT':
-            print("FT")
             result = 'ft_result'
             non_result_1 = 'amrap_result'
             non_result_2 = 'mw_result'
         elif wod.workout_type == 'AMRAP':
-            print("AMRAP")
             result = 'amrap_result'
             non_result_1 = 'ft_result'
             non_result_2 = 'mw_result'
         else:
-            print("MW")
             result = 'mw_result'
             non_result_1 = 'amrap_result'
             non_result_2 = 'ft_result'
-        # if request.POST['rx'] is None:
-        #     rx_value = False
-        # else:
-        #     rx_value = True
         form_data = {
             f"{result}": request.POST[f"{result}"],
             f"{non_result_1}": 0,
@@ -189,3 +184,65 @@ def workouts(request, wod_id):
                 Please double check your information.')
             return redirect(reverse('workouts', args=wod_id))
 
+
+# def test(request):
+#     print("MADE IT TO TEST VIEW")
+#     if request.is_ajax() and request.POST:
+#         msg = "This was the message: " + request.POST.get('test')
+#         data = {"message": msg}
+#         return HttpResponse(json.dumps(data), content_type='application/json')
+#     else:
+#         raise Http404
+
+        
+def commentMember(request):
+    # request should be ajax and method should be POST.
+    print("commentMEMBER VIEW")
+    if request.is_ajax() and request.POST:
+        # get the form data
+        form_data = {
+            "message": request.POST["member_comment"],
+            "member": request.user,
+            "log_id": request.POST["log_id"],
+        }
+        form = MemberCommentForm(form_data)
+        # save the data and after fetch the object in instance
+        if form.is_valid():
+            form.save()
+            # serialize in new friend object in json
+            # ser_instance = serializers.serialize('json', [instance, ])
+            # send to client side.
+            data = {"message": form_data['message']}
+            return HttpResponse(json.dumps(data), content_type='application/json')
+            # return JsonResponse({"instance": "YES!"}, status=200)
+        else:
+            # some form errors occured.
+            return JsonResponse({"error": form.errors}, status=400)
+
+    #     msg = "This was the message: " + request.POST.get('test')
+    #     data = {"message": msg}
+    #     return HttpResponse(json.dumps(data), content_type='application/json')
+    # else:
+    #     raise Http404
+
+    #     # get the form data
+    #     form_data = {
+    #         "message": request.POST["member_comment"],
+    #         "member": request.user,
+    #         "log_id": 3,
+    #     }
+    #     form = MemberCommentForm(form_data)
+    #     # save the data and after fetch the object in instance
+    #     if form.is_valid():
+    #         form.save()
+    #         # serialize in new friend object in json
+    #         # ser_instance = serializers.serialize('json', [instance, ])
+    #         # send to client side.
+    #         return HttpResponse("Success!")
+    #         # return JsonResponse({"instance": "YES!"}, status=200)
+    #     else:
+    #         # some form errors occured.
+    #         return JsonResponse({"error": form.errors}, status=400)
+
+    # # some error occured
+    # return JsonResponse({"error": ""}, status=400)

@@ -1,3 +1,12 @@
+<h4 class="block-title">
+    {% if wod.workout_type == 'FT' %}
+        For Time Result:
+    {% elif wod.workout_type == 'AMRAP' %}
+        AMRAP Result:
+    {% else %}
+        Max Weight Result:
+    {% endif %}
+</h4>
 <form id="log-workout-form" method="post" action="{% url 'workouts' wod.id %}">
 {% csrf_token %}
 <div class="logfield" id="log-block">

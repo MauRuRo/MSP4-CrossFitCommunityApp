@@ -1,5 +1,5 @@
 from django import forms
-from .models import Log
+from .models import Log, MemberComment
 from datetime import date, datetime
 
 
@@ -42,11 +42,18 @@ class LogForm(forms.ModelForm):
                 placeholder = placeholders[field]
                 label = labels[field]
                 self.fields[field].widget.attrs['placeholder'] = placeholder
-                if field == 'date':
+                if field != 'rx':
                     self.fields[field].label = False
                 else:
                     self.fields[field].label = label
             self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
 
 
-# class MemberCommentForm(forms.ModelForm):
+class MemberCommentForm(forms.ModelForm):
+    class Meta:
+        model = MemberComment
+        fields = (
+            'member',
+            'message',
+            'log_id',
+            )
