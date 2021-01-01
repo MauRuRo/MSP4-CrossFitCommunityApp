@@ -11,7 +11,7 @@
         {% for r_group in rank_groups %}
             <ol class="log-ranking log-rank">
             {% for member_r_log in r_group %}  
-            <div id="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
+                <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_r_log.id }}" id="log-id-{{ member_r_log.id }}">
                         <div class="card-col col-8 px-1">
                             <p class='rank-name'><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
@@ -62,9 +62,17 @@
                                     <strong>{{ member_r_log.user.userprofile.full_name }}:</strong><br>
                                     <em>"{{ member_r_log.user_comment }}"</em>
                                 </div>
+                                <div class="edit-comment-form" name="edit-comment-form-user" hidden>
+                                        <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
+                                            {% csrf_token %}
+                                            <div class="comment-id" hidden>{{ member_r_log.pk }}</div>
+                                            <textarea name="user_comment" class="user-comment">{{ member_r_log.user_comment }}</textarea>
+                                            <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
+                                        </form>
+                                    </div>
                                 {% if profile.user == member_r_log.user %}
                                 <div class="crud-icons">
-                                    <i class="far fa-edit edit-comment"></i>
+                                    <i class="far fa-edit edit-comment"></i><br>
                                     <i class="far fa-trash-alt delete-comment"></i>
                                 </div>
                                 {% endif %}
@@ -100,7 +108,7 @@
                                     </div>
                                     {% if profile.user == member_comment.member %}
                                     <div class="crud-icons">
-                                        <i class="far fa-edit edit-comment"></i>
+                                        <i class="far fa-edit edit-comment"></i><br>
                                         <i class="far fa-trash-alt delete-comment"></i>
                                     </div>
                                     {% endif %}
@@ -145,8 +153,16 @@
                                     <strong id="new-comment-member">{{ member_comment.member.userprofile.full_name }}:</strong><br>
                                     <em id="new-comment">"{{ member_comment.message }}"</em>
                                 </div>
+                                <div class="edit-comment-form" hidden>
+                                    <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
+                                        {% csrf_token %}
+                                        <div class="comment-id" id="comment-id" hidden>{{ member_comment.pk }}</div>
+                                        <textarea name="member_comment" class="member-comment">{{ member_comment.message }}</textarea>
+                                        <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
+                                    </form>
+                                </div>
                                 <div class="crud-icons">
-                                    <i class="far fa-edit edit-comment"></i>
+                                    <i class="far fa-edit edit-comment"></i><br>
                                     <i class="far fa-trash-alt delete-comment"></i>
                                 </div>
                             </div>
@@ -159,4 +175,3 @@
                         </div>
                     </div>
             </div>
-            

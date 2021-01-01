@@ -430,8 +430,8 @@ label[for='image-clear_id'] {
     color: #ffc107;;
     font-weight: bold;
     font-size:1.5rem;
-    margin-left:3px;
-    width:30px;
+    margin-left:2px;
+    width:25px;
 }
 
 .new-row,
@@ -554,15 +554,28 @@ ol#rank-nav li {
         text-align: right;
         width: 20%;
     }
+    .fa-trash-alt {
+        padding-right:3px!important;
+    }
 
     .crud-icons i:hover{
-        font-size: 1.3rem;
+        font-size: 1.1rem;
+
     }
 
     .edit-comment-form,
     .comment-info {
         float:left;
         width:80%;
+    }
+    .comment-info em {
+        white-space: pre-wrap;
+    }
+
+
+    .comment-edit textarea {
+        resize: none;
+        width:100%;
     }
 /* MEDIAQUERIES */
 

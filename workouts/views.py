@@ -212,38 +212,41 @@ def commentMember(request):
             form = MemberCommentForm(form_data)
             # save the data and after fetch the object in instance
             if form.is_valid():
-                form.save()
+                new_comment = form.save()
                 # serialize in new friend object in json
                 # ser_instance = serializers.serialize('json', [instance, ])
                 # send to client side.
-                data = {"message": form_data['message']}
+                new_comment_id = new_comment.pk
+                print(new_comment_id)
+                data = {"message": form_data['message'], "new_comment_id": new_comment_id}
                 return HttpResponse(json.dumps(data), content_type='application/json')
-                # return JsonResponse({"instance": "YES!"}, status=200)
             else:
                 # some form errors occured.
                 return JsonResponse({"error": form.errors}, status=400)
         elif request.POST["info_crud"] == "comment-edit":
             # get the form data
             comment_id = request.POST["id_comment"]
-            db_comment = get_object_or_404(MemberComment, pk=comment_id)
-            form_data = {
-                "message": request.POST["member_comment"],
-                "member": request.user,
-                "log_id": request.POST["log_id"],
-            }
-            form = MemberCommentForm(form_data, instance=db_comment)
-            # save the data and after fetch the object in instance
-            if form.is_valid():
-                form.save()
-                # serialize in new friend object in json
-                # ser_instance = serializers.serialize('json', [instance, ])
-                # send to client side.
-                data = {"message": form_data['message']}
+            if request.POST["main_comment"]:
+                db_comment = get_object_or_404(Log, pk=comment_id)
+                Log.objects.filter(pk=db_comment.pk).update(user_comment=request.POST["member_comment"])
+                data = {"message": request.POST["member_comment"]}
                 return HttpResponse(json.dumps(data), content_type='application/json')
-                # return JsonResponse({"instance": "YES!"}, status=200)
             else:
-                # some form errors occured.
-                return JsonResponse({"error": form.errors}, status=400)
+                db_comment = get_object_or_404(MemberComment, pk=comment_id)
+                form_data = {
+                    "message": request.POST["member_comment"],
+                    "member": request.user,
+                    "log_id": request.POST["log_id"],
+                }
+                form = MemberCommentForm(form_data, instance=db_comment)
+                # save the data and after fetch the object in instance
+                if form.is_valid():
+                    form.save()
+                    data = {"message": form_data['message']}
+                    return HttpResponse(json.dumps(data), content_type='application/json')
+                else:
+                    # some form errors occured.
+                    return JsonResponse({"error": form.errors}, status=400)
         else:
             return JsonResponse({"error": "No edit, no upload"}, status=400)
 
