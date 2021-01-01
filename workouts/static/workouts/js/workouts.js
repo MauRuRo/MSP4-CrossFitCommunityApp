@@ -130,13 +130,6 @@ $(document).ready(function() {
                 }
             }
         })
-        // $('.rank-flag').click(function() {
-        //     if ($(this).css('z-index') == 9999) {
-        //         $(this).css('z-index', '0')
-        //     } else {
-        //         $(this).css('z-index', '9999')
-        //     }
-        // })
         $('.extra-log-info').each(function(){
             let group_class_name = $(this).parent().attr('class')
             let group_id = group_class_name.split(" ")[1]
@@ -150,8 +143,8 @@ $(document).ready(function() {
             let group_class_name = $(this).parent().parent().attr('class')
             let group_id = log_name_class + "." + group_class_name.split(" ")[1] + "X"
             let extra_info_cards = $(group_id);
-            let last_info_card = extra_info_cards.last()
-            last_info_card.addClass('add-border-last')
+            // let last_info_card = extra_info_cards.last()
+            // last_info_card.addClass('add-border-last')
             extra_info_cards.slideToggle(100)
             $('.extra-log-info').not(group_id).slideUp()
            $('.rank-card').not(main_card).removeClass('remove-borders-main')
@@ -159,7 +152,6 @@ $(document).ready(function() {
                 $(this).parent().removeClass('remove-borders-main');
             }else{
                 $(this).parent().addClass('remove-borders-main');
-                // $('.rank-card').not(this).parent().removeClass('remove-borders-main')
             }
         })
         
@@ -188,7 +180,8 @@ $(document).ready(function() {
                 }
             });
             $('.member-comment').on('keypress', function (e) {
-                let m_comment = $(this).val()
+                let m_comment_ta = $(this)
+                let m_comment = m_comment_ta.val()
                 if(e.which === 13 && shift == false){
                     //Disable textbox to prevent multiple submit
                     $(this).attr("disabled", "disabled");
@@ -196,18 +189,19 @@ $(document).ready(function() {
                     console.log("testing keypress")
                     //Enable the textbox again if needed.
                     $(this).removeAttr("disabled");
-                    submitComment(m_comment)
+                    submitComment(m_comment, m_comment_ta)
                 }
             });
         }
 
         $('.member-comment-button').click(function(e) {
             e.preventDefault()
-            let m_comment = $(this).siblings('textarea').val()
-            submitComment(m_comment)
+            let m_comment_ta =  $(this).siblings('textarea')
+            let m_comment = m_comment_ta.val()
+            submitComment(m_comment, m_comment_ta)
         })
 
-       function submitComment(m_comment) {
+       function submitComment(m_comment, m_comment_ta) {
             // let m_comment = $(this).siblings('textarea').val()
             let m_log_id = $('#m-log-id').attr('data')
             $.ajax({
@@ -220,7 +214,11 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data){
                     console.log(data.message)
-                    $('#member-comment-form').parent().parent().parent().prepend("<row><p>THIS IS A NEW MESSAGE</p></row>")
+                    let template = $('#hidden-row-template').innerHTML()
+                    $('#member-comment-form').parent().parent().parent().before(template)
+                    $('#new-comment').text(data.message)
+                    $('#new-comment-member').text($('#profile-name').innerHTML() + ":")
+                    m_comment_ta.val("")
                 },
                 error: function(){
                     console.log("Failed")

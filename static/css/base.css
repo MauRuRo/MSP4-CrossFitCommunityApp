@@ -434,6 +434,7 @@ label[for='image-clear_id'] {
     width:30px;
 }
 
+.new-row,
 .extra-log-info {
     /* counter-increment: my-awesome-counter; */
     border: 1px solid grey;

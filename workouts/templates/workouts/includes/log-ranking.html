@@ -89,7 +89,7 @@
                     </div>
                     {% endif %}
                     <!-- LEAVE A COMMENT -->
-                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info add-border-last log-id-{{ member_r_log.id }}">
                         <div class="card-col col-8 px-1">
                             <hr>
                             <div class="x-info">
@@ -107,4 +107,23 @@
             </ol>
         {% endfor %}
             <div id="gender" hidden>{{ profile.gender }}</div>
+            <div id="profile-name" hidden>{{ profile.full_name }}</div>
+            <!-- TEMPLATE FOR NEW COMMENT ROWS -->
+            <div id="hidden-row-template" hidden>
+                <div class = "row mx-0 my-1 align-items-center justify-content-between new-row log-id-new}">
+                        <div class="card-col col-8 px-1">
+                            <hr>
+                            <div class="x-info">
+                                <strong id="new-comment-member"></strong><br>
+                                <em id="new-comment"></em>
+                            </div>
+                        </div>
+                        <div class="col-2 px-0 align-self-center justify-content-end">
+                            <a href="#">
+                                <div id="pf-rnk-circle-{{profile.user.username}}" class="pf-rnk-circle" style="background: url('{{profile.image.url}}') no-repeat; background-size: cover">
+                                </div>
+                            </a>                         
+                        </div>
+                    </div>
+            </div>
             
