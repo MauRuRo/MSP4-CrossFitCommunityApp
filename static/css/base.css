@@ -548,6 +548,20 @@ ol#rank-nav li {
     .member-comment {
         margin-top: 3px;
     }
+
+    .crud-icons {
+        display: inline-block;
+        text-align: right;
+        width: 20%;
+    }
+
+    .crud-icons i:hover{
+        font-size: 1.3rem;
+    }
+    .comment-test {
+        float:left;
+        width:80%;
+    }
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {
@@ -598,6 +612,8 @@ padding-top: 50px;
     width:40px;
 }
 }
+
+
 
 @media (max-width: 992px) {
     .navbar-collapse {
