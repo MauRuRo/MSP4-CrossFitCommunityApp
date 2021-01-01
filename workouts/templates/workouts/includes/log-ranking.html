@@ -11,7 +11,7 @@
         {% for r_group in rank_groups %}
             <ol class="log-ranking log-rank">
             {% for member_r_log in r_group %}  
-            <div id="m-log-id" data="{{ member_r_log.id }}" hidden></div>              
+            <div id="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_r_log.id }}" id="log-id-{{ member_r_log.id }}">
                         <div class="card-col col-8 px-1">
                             <p class='rank-name'><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
@@ -71,23 +71,25 @@
                     </div>
                     {% endif %}
                     <!-- MEMBER COMMENT -->
-                    {% if member_r_log.user_comment != '' %}
-                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
-                        <div class="card-col col-8 px-1">
-                            <hr>
-                            <div class="x-info">
-                                <strong>{{ member_r_log.user.userprofile.full_name }}:</strong><br>
-                                <em>"{{ member_r_log.user_comment }}"</em>
+                    {% for member_comment in member_comments %}
+                        {% if member_comment.log_id.pk == member_r_log.pk %}
+                        <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                            <div class="card-col col-8 px-1">
+                                <hr>
+                                <div class="x-info">
+                                    <strong>{{ member_comment.member.userprofile.full_name }}:</strong><br>
+                                    <em>"{{ member_comment.message }}"</em>
+                                </div>
+                            </div>
+                            <div class="col-2 px-0 align-self-center justify-content-end">
+                                <a href="#">
+                                    <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_comment.member.userprofile.image.url}}') no-repeat; background-size: cover">
+                                    </div>
+                                </a>                         
                             </div>
                         </div>
-                        <div class="col-2 px-0 align-self-center justify-content-end">
-                            <a href="#">
-                                <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
-                                </div>
-                            </a>                         
-                        </div>
-                    </div>
-                    {% endif %}
+                        {% endif %}
+                    {% endfor %}
                     <!-- LEAVE A COMMENT -->
                     <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info add-border-last log-id-{{ member_r_log.id }}">
                         <div class="card-col col-8 px-1">

@@ -459,6 +459,7 @@ label[for='image-clear_id'] {
     border-bottom-right-radius: 3px;
 }
 
+.new-row:before,
 .extra-log-info:before {
     content: counter(my-awesome-counter);
     color: rgba(255,255,255,0);
@@ -468,6 +469,7 @@ label[for='image-clear_id'] {
     width:30px;
 }
 
+.new-row hr,
 .extra-log-info hr {
     margin-top:3px;
     margin-bottom:3px;

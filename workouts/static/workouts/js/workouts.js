@@ -154,16 +154,24 @@ $(document).ready(function() {
                 $(this).parent().addClass('remove-borders-main');
             }
         })
-        
+        let comment_field = ''
         $('.member-comment').focus(function() {
             console.log("focus")
+            comment_field = $(this)
+            $('#member-comment-form').removeAttr('id')
             $(this).parent().attr("id", "member-comment-form")
         })
-        $('#member-comment-form').focusout(function() {
-            console.log("focus")
-            $(this).parent().removeAttr("id")
-        })
 
+                // $('.member-comment').focusout(function() {
+                // console.log("focusout")
+                // $(this).parent().removeAttr("id")
+                // })
+        // if (comment_field != '') {
+        //     comment_field.focusout(function() {
+        //         console.log("focusout")
+        //         $(this).removeAttr("id")
+        //     })
+        // }
 
         if ($('.member-comment').focus()) {            
             let shift = false
@@ -214,11 +222,19 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data){
                     console.log(data.message)
-                    let template = $('#hidden-row-template').innerHTML()
+                    let template = $('#hidden-row-template').html()
                     $('#member-comment-form').parent().parent().parent().before(template)
                     $('#new-comment').text(data.message)
-                    $('#new-comment-member').text($('#profile-name').innerHTML() + ":")
+                    let commenting_member = $('#profile-name').html()
+                    $('#new-comment-member').text(commenting_member + ":")
+                    $('#new-comment-member').not(':hidden').removeAttr('id')
+                    $('#new-comment').not(':hidden').removeAttr('id')
+                    let new_row = $('.new-row:visible')
+                    let old_row = $('.new-row:visible').prev('.row').attr('class')
+                    new_row.attr('class', old_row)
                     m_comment_ta.val("")
+                    
+                    console.log("GOT HERE")
                 },
                 error: function(){
                     console.log("Failed")
@@ -226,4 +242,4 @@ $(document).ready(function() {
             })
        }
         
-    });
+});

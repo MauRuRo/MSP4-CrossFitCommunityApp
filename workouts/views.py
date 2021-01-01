@@ -53,6 +53,8 @@ def workouts(request, wod_id):
         all_women_q = UserProfile.objects.filter(gender='F')
         all_men_q = UserProfile.objects.filter(gender='M')
 
+        member_comments = MemberComment.objects.all()
+
         all_women = []
         for woman in all_women_q:
             all_women.append(woman.user.username)
@@ -106,6 +108,7 @@ def workouts(request, wod_id):
             # 'all_logs_wod': all_logs_wod,
             # 'user_logs': user_logs,
             # 'user_logs_wod': user_logs_wod,
+            'member_comments': member_comments,
             'log_groups': log_groups,
             'rank_groups': rank_groups,
             'rank_result': rank_result,
