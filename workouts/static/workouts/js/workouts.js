@@ -211,35 +211,59 @@ $(document).ready(function() {
 
        function submitComment(m_comment, m_comment_ta) {
             // let m_comment = $(this).siblings('textarea').val()
+            let crud_info = m_comment_ta.parent('form').attr('class')
+            let comment_id = ''
+            if (crud_info != "comment-upload") {
+                comment_id = m_comment_ta.prev('.comment-id').text()
+            }
             let m_log_id = $('#m-log-id').attr('data')
             $.ajax({
                 type:"POST",
                 url: "/workouts/0/commentMember/",
                 data: {
                     member_comment:m_comment,
-                    log_id:m_log_id
+                    log_id:m_log_id,
+                    info_crud: crud_info,
+                    id_comment:comment_id
                 },
                 dataType: 'json',
                 success: function(data){
-                    console.log(data.message)
-                    let template = $('#hidden-row-template').html()
-                    $('#member-comment-form').parent().parent().parent().before(template)
-                    $('#new-comment').text(data.message)
-                    let commenting_member = $('#profile-name').html()
-                    $('#new-comment-member').text(commenting_member + ":")
-                    $('#new-comment-member').not(':hidden').removeAttr('id')
-                    $('#new-comment').not(':hidden').removeAttr('id')
-                    let new_row = $('.new-row:visible')
-                    let old_row = $('.new-row:visible').prev('.row').attr('class')
-                    new_row.attr('class', old_row)
-                    m_comment_ta.val("")
+                    if (crud_info == 'comment-upload'){
+                        let template = $('#hidden-row-template').html()
+                        $('#member-comment-form').parent().parent().parent().before(template)
+                        $('#new-comment').text(data.message)
+                        let commenting_member = $('#profile-name').html()
+                        console.log(commenting_member)
+                        $('#new-comment-member').text(commenting_member + ":")
+                        $('#new-comment-member').not(':hidden').removeAttr('id')
+                        $('#new-comment').not(':hidden').removeAttr('id')
+                        let new_row = $('.new-row:visible')
+                        let old_row = $('.new-row:visible').prev('.row').attr('class')
+                        new_row.attr('class', old_row)                    
+                        m_comment_ta.val("")
+                    }else if (crud_info == 'comment-edit'){
+                        m_comment_ta.parent().parent().parent().children('.comment-info').children('em').text(data.message)
+                        m_comment_ta.parent().parent('.edit-comment-form').hide()
+                        m_comment_ta.parent().parent().parent().children('.comment-info').show()
+                    }
                     
-                    console.log("GOT HERE")
+                    
                 },
                 error: function(){
                     console.log("Failed")
                 }
             })
        }
+
+       $('.edit-comment').click(function(){
+           if ($(this).parent().parent().children('.edit-comment-form').is(':visible')) {
+               let m_comment_ta = $(this).parent().parent().children('.edit-comment-form').children('form').children('textarea')
+               let m_comment = m_comment_ta.val()
+                submitComment(m_comment, m_comment_ta)
+           }else{
+            $(this).parent().parent().children('.edit-comment-form').removeAttr('hidden').show()
+           $(this).parent().parent().children('.comment-info').hide()
+           }
+       })
         
 });

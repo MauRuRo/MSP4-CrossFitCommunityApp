@@ -10,6 +10,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.core import serializers
 from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404
 import json
 # Create your views here.
 
@@ -200,27 +201,51 @@ def workouts(request, wod_id):
         
 def commentMember(request):
     # request should be ajax and method should be POST.
-    print("commentMEMBER VIEW")
     if request.is_ajax() and request.POST:
-        # get the form data
-        form_data = {
-            "message": request.POST["member_comment"],
-            "member": request.user,
-            "log_id": request.POST["log_id"],
-        }
-        form = MemberCommentForm(form_data)
-        # save the data and after fetch the object in instance
-        if form.is_valid():
-            form.save()
-            # serialize in new friend object in json
-            # ser_instance = serializers.serialize('json', [instance, ])
-            # send to client side.
-            data = {"message": form_data['message']}
-            return HttpResponse(json.dumps(data), content_type='application/json')
-            # return JsonResponse({"instance": "YES!"}, status=200)
+        if request.POST["info_crud"] == "comment-upload":
+            # get the form data
+            form_data = {
+                "message": request.POST["member_comment"],
+                "member": request.user,
+                "log_id": request.POST["log_id"],
+            }
+            form = MemberCommentForm(form_data)
+            # save the data and after fetch the object in instance
+            if form.is_valid():
+                form.save()
+                # serialize in new friend object in json
+                # ser_instance = serializers.serialize('json', [instance, ])
+                # send to client side.
+                data = {"message": form_data['message']}
+                return HttpResponse(json.dumps(data), content_type='application/json')
+                # return JsonResponse({"instance": "YES!"}, status=200)
+            else:
+                # some form errors occured.
+                return JsonResponse({"error": form.errors}, status=400)
+        elif request.POST["info_crud"] == "comment-edit":
+            # get the form data
+            comment_id = request.POST["id_comment"]
+            db_comment = get_object_or_404(MemberComment, pk=comment_id)
+            form_data = {
+                "message": request.POST["member_comment"],
+                "member": request.user,
+                "log_id": request.POST["log_id"],
+            }
+            form = MemberCommentForm(form_data, instance=db_comment)
+            # save the data and after fetch the object in instance
+            if form.is_valid():
+                form.save()
+                # serialize in new friend object in json
+                # ser_instance = serializers.serialize('json', [instance, ])
+                # send to client side.
+                data = {"message": form_data['message']}
+                return HttpResponse(json.dumps(data), content_type='application/json')
+                # return JsonResponse({"instance": "YES!"}, status=200)
+            else:
+                # some form errors occured.
+                return JsonResponse({"error": form.errors}, status=400)
         else:
-            # some form errors occured.
-            return JsonResponse({"error": form.errors}, status=400)
+            return JsonResponse({"error": "No edit, no upload"}, status=400)
 
     #     msg = "This was the message: " + request.POST.get('test')
     #     data = {"message": msg}

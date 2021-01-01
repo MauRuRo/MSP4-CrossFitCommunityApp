@@ -558,7 +558,9 @@ ol#rank-nav li {
     .crud-icons i:hover{
         font-size: 1.3rem;
     }
-    .comment-test {
+
+    .edit-comment-form,
+    .comment-info {
         float:left;
         width:80%;
     }
