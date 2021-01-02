@@ -283,6 +283,10 @@ $(document).ready(function() {
                 },
                 dataType: 'json',
                 success: function(data){
+                    console.log(data.del_false)
+                    if (data.del_false == "False") {
+                        location.reload()
+                    }
                     console.log(data.message)
                 },
                 error: function(){

@@ -204,15 +204,27 @@ def deleteCommentMember(request):
         comment_type = request.POST["comment_type"]
         if comment_type == 'user-comment':
             db_comment = get_object_or_404(Log, pk=comment_id)
-            Log.objects.filter(pk=db_comment.pk).update(user_comment=None)
-            data = {"message": comment_id}
-            return HttpResponse(json.dumps(data), content_type='application/json')
+            if db_comment.user == request.user:
+                Log.objects.filter(pk=db_comment.pk).update(user_comment=None)
+                data = {"message": comment_id}
+                return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+                data = {"message": "You cannot delete another member's post.", "del_false": "False"}
+                messages.error(request, "You cannot delete another member's post.")
+                return HttpResponse(json.dumps(data), content_type='application/json')
         else:
-            MemberComment.objects.filter(pk=comment_id).delete()
-            data = {"message": "TEST"}
-            return HttpResponse(json.dumps(data), content_type='application/json')
+            db_comment = get_object_or_404(MemberComment, pk=comment_id)
+            if db_comment.member == request.user:
+                MemberComment.objects.filter(pk=comment_id).delete()
+                data = {"message": comment_id}
+                return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+                data = {"message": "You cannot delete another member's post.", "del_false": "False"}
+                messages.error(request, "You cannot delete another member's post.")
+                return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         return JsonResponse({"error": "Delete Failed"}, status=400)
+
 
 def commentMember(request):
     # request should be ajax and method should be POST.
