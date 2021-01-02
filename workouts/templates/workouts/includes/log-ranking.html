@@ -14,24 +14,35 @@
                 <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_r_log.id }}" id="log-id-{{ member_r_log.id }}">
                         <div class="card-col col-8 px-1">
-                            <p class='rank-name'><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
-                            {% if rank_result == 'ft_result' %}
-                            <p><span class="ft-log r-log">{{ member_r_log.ft_result }}</span></p>
-                            {% elif rank_result == 'amrap_result' %}
-                            <p><span class="amrap-log r-log">{{ member_r_log.amrap_result }}</span> rounds</p>
-                            {% else %}
-                            <p><span class="mw-log r-log">{{ member_r_log.mw_result }}</span>kg</p>
-                            {% endif %} 
+                            <!-- <div class="m-info">
+                                <div class="result-info"> -->
+                                    <p class='rank-name'><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
+                                    {% if rank_result == 'ft_result' %}
+                                    <p><span class="ft-log r-log">{{ member_r_log.ft_result }}</span></p>
+                                    {% elif rank_result == 'amrap_result' %}
+                                    <p><span class="amrap-log r-log">{{ member_r_log.amrap_result }}</span> rounds</p>
+                                    {% else %}
+                                    <p><span class="mw-log r-log">{{ member_r_log.mw_result }}</span>kg</p>
+                                    {% endif %}
+                                <!-- </div>  -->
+                                
+                            <!-- </div> -->
                         </div>
                         <div class="col-2 px-0 align-self-center justify-content-end">
-                            <a href="#">
+                            <!-- <a href="#"> -->
                             <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
                             </div>
                             <i class="fflag fflag-{{ member_r_log.user.userprofile.country.code }} ff-lg ff-round rank-flag" aria-label="{{ member_r_log.user.userprofile.country.code }}"></i>
                             {% if member_r_log.personal_record %}
                             <div class="pr-logo-circle" style="background: url('/media/herocommunitylogo-PR-lean.jpg') no-repeat; background-size: cover"></div>
                             {% endif %}
-                            </a>                            
+                            {% if member_r_log.user == request.user %}
+                            <div class="crud-icons-log">
+                                <i class="far fa-edit edit-log"></i><br>
+                                <i class="far fa-trash-alt delete-log"></i>
+                            </div>
+                            {% endif %}
+                            <!-- </a>                             -->
                         </div>
                     </div>
                     <!-- EXTRA INFO -->

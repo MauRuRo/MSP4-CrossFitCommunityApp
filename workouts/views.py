@@ -23,13 +23,26 @@ def user_list():
     return user_l
 
 
-def id_list(userlist, queryset):
+def id_list(userlist, queryset, wodtype):
     log_id_list = []
-    for log_user in userlist:
-        max_result_user = queryset.filter(user=log_user).aggregate(Max('amrap_result'))['amrap_result__max']
-        max_log_id = queryset.filter(user=log_user).filter(amrap_result=max_result_user).aggregate(Max('id'))['id__max']
-        if max_log_id != None:
-            log_id_list.append(max_log_id)
+    if wodtype == 'FT':
+        for log_user in userlist:
+            max_result_user = queryset.filter(user=log_user).aggregate(Min('ft_result'))['ft_result__min']
+            max_log_id = queryset.filter(user=log_user).filter(ft_result=max_result_user).aggregate(Max('id'))['id__max']
+            if max_log_id != None:
+                log_id_list.append(max_log_id)
+    elif wodtype == 'AMRAP':
+        for log_user in userlist:
+            max_result_user = queryset.filter(user=log_user).aggregate(Max('amrap_result'))['amrap_result__max']
+            max_log_id = queryset.filter(user=log_user).filter(amrap_result=max_result_user).aggregate(Max('id'))['id__max']
+            if max_log_id != None:
+                log_id_list.append(max_log_id)
+    else:
+        for log_user in userlist:
+            max_result_user = queryset.filter(user=log_user).aggregate(Max('mw_result'))['mw_result__max']
+            max_log_id = queryset.filter(user=log_user).filter(mw_result=max_result_user).aggregate(Max('id'))['id__max']
+            if max_log_id != None:
+                log_id_list.append(max_log_id)
     return log_id_list
 
 
@@ -43,33 +56,36 @@ def striphours(duration):
 
 
 def workouts(request, wod_id):
+    # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
         wod = Workout.objects.get(workout_is_wod=True)
     else:
         wod = Workout.objects.get(id=wod_id)
 
     if request.method == "GET":
+        # create list of all user id's
         user_l = user_list()
+        # check which date is exactly a year ago
         lapse_date = date.today() - timedelta(days=365)
+        # make query of all women and one of all men
         all_women_q = UserProfile.objects.filter(gender='F')
         all_men_q = UserProfile.objects.filter(gender='M')
-
+        # get all comments
         member_comments = MemberComment.objects.all()
-
+        # make lists of all women/men
         all_women = []
         for woman in all_women_q:
             all_women.append(woman.user.username)
-
         all_men = []
         for man in all_men_q:
             all_men.append(man.user.username)
-
+        # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
         all_logs = Log.objects.all().order_by('-date')
         all_logs_wod = all_logs.filter(wod_name=wod.workout_name)
         user_logs = all_logs.filter(user=request.user)
         user_logs_wod = user_logs.filter(wod_name=wod.workout_name)
         log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
-
+        # For rank list, find out type of wod, set proper result field and order.
         if wod.workout_type == 'FT':
             all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('ft_result')
             rank_result = 'ft_result'
@@ -79,43 +95,41 @@ def workouts(request, wod_id):
         else:
             all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-mw_result')
             rank_result = 'mw_result'
-
+        # filter out all logs that are not Rx
         filter_rx = all_logs_rank.filter(rx=True)
+        # filter out all logs that are more than a year old
         filter_lapsed = filter_rx.filter(date__gt=lapse_date)
-        log_id_list = id_list(user_l, filter_lapsed)
+        # create list of log id's max result for this workout for every user
+        log_id_list = id_list(user_l, filter_lapsed, wod.workout_type)
+        # filter out all none max results from query
         all_logs_rank = filter_lapsed.filter(id__in=log_id_list)
-        # all_logs_rank = filter_rx
-        # all_logs_rank = filter_lapsed  #.filter(personal_record=True)
+        # create query for today's logs, for women, for men, and rank logs for the whole past year.
         all_logs_rank_today = filter_rx.filter(date=date.today())
         all_logs_rank_women = all_logs_rank.filter(user__username__in=all_women)
         all_logs_rank_men = all_logs_rank.filter(user__username__in=all_men)
         all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
         all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
-
+        # list queries to pass to context
         rank_groups = [all_logs_rank_men, all_logs_rank_women, all_logs_rank_men_today, all_logs_rank_women_today]
-        # rank_groups = {'alrm': all_logs_rank_men, 'alrw': all_logs_rank_women, 'alrmt':all_logs_rank_men_today, 'alrwt': all_logs_rank_women_today}
-
+        # ##### REDUNDANT CODE?
         # if log is None:
         #     result = "No logs for this WOD"
         # else:
         #     duration = str(log.ft_result)
         #     result = striphours(duration)
+        #######
+        # Get todays date and convert it to string
         date_today = date.today()
         date_initial = date_today.strftime("%d %b %Y")
         form_log = LogForm()
         context = {
             'wod': wod,
-            # 'all_logs': all_logs,
-            # 'all_logs_wod': all_logs_wod,
-            # 'user_logs': user_logs,
-            # 'user_logs_wod': user_logs_wod,
             'member_comments': member_comments,
             'log_groups': log_groups,
             'rank_groups': rank_groups,
             'rank_result': rank_result,
             'form_log': form_log,
             'date_initial': date_initial,
-            # 'default_gender': default_gender,
         }
         template = "workouts/workouts.html"
         return render(request, template, context)
@@ -189,15 +203,6 @@ def workouts(request, wod_id):
             return redirect(reverse('workouts', args=wod_id))
 
 
-# def test(request):
-#     print("MADE IT TO TEST VIEW")
-#     if request.is_ajax() and request.POST:
-#         msg = "This was the message: " + request.POST.get('test')
-#         data = {"message": msg}
-#         return HttpResponse(json.dumps(data), content_type='application/json')
-#     else:
-#         raise Http404
-
 def deleteCommentMember(request):
     if request.is_ajax() and request.POST:
         comment_id = request.POST["comment_id"]
@@ -205,7 +210,7 @@ def deleteCommentMember(request):
         if comment_type == 'user-comment':
             db_comment = get_object_or_404(Log, pk=comment_id)
             if db_comment.user == request.user:
-                Log.objects.filter(pk=db_comment.pk).update(user_comment=None)
+                Log.objects.filter(pk=db_comment.pk).update(user_comment='')
                 data = {"message": comment_id}
                 return HttpResponse(json.dumps(data), content_type='application/json')
             else:
@@ -255,24 +260,34 @@ def commentMember(request):
             comment_id = request.POST["id_comment"]
             if request.POST["main_comment"] == True:
                 db_comment = get_object_or_404(Log, pk=comment_id)
-                Log.objects.filter(pk=db_comment.pk).update(user_comment=request.POST["member_comment"])
-                data = {"message": request.POST["member_comment"]}
-                return HttpResponse(json.dumps(data), content_type='application/json')
-            else:
-                db_comment = get_object_or_404(MemberComment, pk=comment_id)
-                form_data = {
-                    "message": request.POST["member_comment"],
-                    "member": request.user,
-                    "log_id": request.POST["log_id"],
-                }
-                form = MemberCommentForm(form_data, instance=db_comment)
-                # save the data and after fetch the object in instance
-                if form.is_valid():
-                    form.save()
-                    data = {"message": form_data['message']}
+                if db_comment.user == request.user:
+                    Log.objects.filter(pk=db_comment.pk).update(user_comment=request.POST["member_comment"])
+                    data = {"message": request.POST["member_comment"]}
                     return HttpResponse(json.dumps(data), content_type='application/json')
                 else:
-                    # some form errors occured.
-                    return JsonResponse({"error": form.errors}, status=400)
+                    data = {"message": "You cannot edit another member's post.", "del_false": "False"}
+                    messages.error(request, "You cannot edit another member's post.")
+                    return HttpResponse(json.dumps(data), content_type='application/json')
+            else:
+                db_comment = get_object_or_404(MemberComment, pk=comment_id)
+                if db_comment.member == request.user:
+                    form_data = {
+                        "message": request.POST["member_comment"],
+                        "member": request.user,
+                        "log_id": request.POST["log_id"],
+                    }
+                    form = MemberCommentForm(form_data, instance=db_comment)
+                    # save the data and after fetch the object in instance
+                    if form.is_valid():
+                        form.save()
+                        data = {"message": form_data['message']}
+                        return HttpResponse(json.dumps(data), content_type='application/json')
+                    else:
+                        # some form errors occured.
+                        return JsonResponse({"error": form.errors}, status=400)
+                else:
+                    data = {"message": "You cannot edit another member's post.", "del_false": "False"}
+                    messages.error(request, "You cannot edit another member's post.")
+                    return HttpResponse(json.dumps(data), content_type='application/json') 
         else:
             return JsonResponse({"error": "No edit, no upload"}, status=400)

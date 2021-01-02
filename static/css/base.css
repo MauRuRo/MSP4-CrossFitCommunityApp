@@ -489,6 +489,12 @@ label[for='image-clear_id'] {
     left:-30px;
 }
 
+.crud-icons-log {
+    position:absolute;
+    top:-18px;
+    left:-45px;
+}
+
 .pf-rnk-circle {
     height:30px;
     width:30px;
@@ -558,11 +564,13 @@ ol#rank-nav li {
         padding-right:3px!important;
     }
 
+    .crud-icons-log i:hover,
     .crud-icons i:hover{
         font-size: 1.1rem;
 
     }
 
+    /* .result-info, */
     .edit-comment-form,
     .comment-info {
         float:left;
