@@ -198,7 +198,22 @@ def workouts(request, wod_id):
 #     else:
 #         raise Http404
 
-        
+def deleteCommentMember(request):
+    if request.is_ajax() and request.POST:
+        comment_id = request.POST["comment_id"]
+        comment_type = request.POST["comment_type"]
+        if comment_type == 'user-comment':
+            db_comment = get_object_or_404(Log, pk=comment_id)
+            Log.objects.filter(pk=db_comment.pk).update(user_comment=None)
+            data = {"message": comment_id}
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            MemberComment.objects.filter(pk=comment_id).delete()
+            data = {"message": "TEST"}
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        return JsonResponse({"error": "Delete Failed"}, status=400)
+
 def commentMember(request):
     # request should be ajax and method should be POST.
     if request.is_ajax() and request.POST:

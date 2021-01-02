@@ -273,6 +273,32 @@ $(document).ready(function() {
             })
        }
 
+       function deleteComment(comment_id, comment_type) {
+            $.ajax({
+                type:"POST",
+                url: "/workouts/0/deleteCommentMember/",
+                data: {
+                    comment_id:comment_id,
+                    comment_type:comment_type
+                },
+                dataType: 'json',
+                success: function(data){
+                    console.log(data.message)
+                },
+                error: function(){
+                    console.log("Failed Delete")
+                }
+            })
+       };
+       
+       $(document).on("click", ".delete-comment", function(){
+            let comment_type = $(this).parent().siblings('.edit-comment-form').find('textarea').attr('class')
+            let comment_id = $(this).parent().siblings('.edit-comment-form').find('.comment-id').text()
+            deleteComment(comment_id, comment_type)
+            $(this).closest('.extra-log-info').remove()
+
+        })
+
        $(document).on("click", ".edit-comment", function(){
            let clicked_comment = $(this)  //let
            let m_comment_ta = $(this).parent().parent().children('.edit-comment-form').children('form').children('textarea')
@@ -318,13 +344,15 @@ $(document).ready(function() {
                    console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
                }
             });
-            $(".edit-comment-form").click(function(e) {
+            // $(".edit-comment-form").click(function(e) {
+            $(document).on("click", ".edit-comment-form", function(e) {
                 console.log("editform click")
                 e.stopPropagation(); // This is the preferred method.
                         // return false;        // This should not be used unless you do not want
                             // any click events registering inside the div
             });
-            $("#clicked-edit").click(function(e) {
+            // $("#clicked-edit").click(function(e) {
+            $(document).on("click", "#clicked-edit", function(e) {
                 console.log("active clickbutton click")
                 e.stopPropagation(); // This is the preferred method.
                 // return false;        // This should not be used unless you do not want
