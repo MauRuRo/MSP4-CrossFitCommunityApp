@@ -226,7 +226,7 @@ def commentMember(request):
         elif request.POST["info_crud"] == "comment-edit":
             # get the form data
             comment_id = request.POST["id_comment"]
-            if request.POST["main_comment"]:
+            if request.POST["main_comment"] == True:
                 db_comment = get_object_or_404(Log, pk=comment_id)
                 Log.objects.filter(pk=db_comment.pk).update(user_comment=request.POST["member_comment"])
                 data = {"message": request.POST["member_comment"]}
