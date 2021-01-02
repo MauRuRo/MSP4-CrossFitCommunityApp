@@ -157,7 +157,7 @@
                                     <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
                                         {% csrf_token %}
                                         <div class="comment-id" id="comment-id" hidden>{{ member_comment.pk }}</div>
-                                        <textarea name="member_comment" class="member-comment">{{ member_comment.message }}</textarea>
+                                        <textarea name="member_comment" class="member-comment" id="member-comment-ta">{{ member_comment.message }}</textarea>
                                         <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
                                     </form>
                                 </div>

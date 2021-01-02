@@ -244,10 +244,13 @@ $(document).ready(function() {
                         let template = $('#hidden-row-template').html()
                         $('#member-comment-form').parent().parent().parent().before(template)
                         $('#new-comment').text('"'+data.message+'"')
+                        $('#member-comment-ta').text(data.message)
                         let commenting_member = $('#profile-name').html()
                         $('#new-comment-member').text(commenting_member + ":")
                         $('#new-comment-member').not(':hidden').removeAttr('id')
                         $('#new-comment').not(':hidden').removeAttr('id')
+                        $('#member-comment-form').removeAttr('id')
+                        $('#member-comment-ta').removeAttr('id')
                         let new_row = $('.new-row:visible')
                         let old_row = $('.new-row:visible').prev('.row').attr('class')
                         new_row.attr('class', old_row)                    
@@ -260,6 +263,7 @@ $(document).ready(function() {
                 $('#active-edit-form').removeAttr('id')
                 $('#active-edit-hidden-info').removeAttr('id')
                 $("#clicked-edit").removeAttr('id')
+                $('#member-comment-form').removeAttr('id')
                 click_const=0
                     
                 },
@@ -269,12 +273,13 @@ $(document).ready(function() {
             })
        }
 
-       $('.edit-comment').click(function(){
+       $(document).on("click", ".edit-comment", function(){
            let clicked_comment = $(this)  //let
            let m_comment_ta = $(this).parent().parent().children('.edit-comment-form').children('form').children('textarea')
-           let m_comment = m_comment_ta.val()           
+           let m_comment = m_comment_ta.val()
+           console.log("test last edit")        
            if ($(this).parent().parent().children('.edit-comment-form').is(':visible')) {
-                let cicked_commnent_form = $(this).parent().parent().children('.edit-comment-form:visible')               
+                // let clicked_comment_form = $(this).parent().parent().children('.edit-comment-form:visible')              
                 submitComment(m_comment, m_comment_ta)
                 clicked_comment.removeAttr('id')
            } else if ($(this).attr('id') != 'clicked-edit') {
@@ -292,12 +297,13 @@ $(document).ready(function() {
             
             let click_const = 0
             function cancelEdit() {
-                console.log("bodyclick if clickconst 1");
+                console.log("bodyclick if clickconst 1 or edit button click; clickcons= " + click_const);
                 $("#active-edit-form").hide()
                 $("#active-edit-hidden-info").show()
                 $('#active-edit-form').removeAttr('id')
                 $('#active-edit-hidden-info').removeAttr('id')
                 $('#clicked-edit').removeAttr('id')
+                $('#member-comment-form').removeAttr('id')
                 click_const = 0
                 console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
             }
@@ -305,14 +311,6 @@ $(document).ready(function() {
                console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
                if (click_const != 0) {
                    cancelEdit()
-                // console.log("bodyclick if clickconst 1");
-                // $("#active-edit-form").hide()
-                // $("#active-edit-hidden-info").show()
-                // $('#active-edit-form').removeAttr('id')
-                // $('#active-edit-hidden-info').removeAttr('id')
-                // $('#clicked-edit').removeAttr('id')
-                // click_const = 0
-                // console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
                }
                if ($("#active-edit-form").is(":visible")) {
                    console.log("bodyclick if form is visible")
