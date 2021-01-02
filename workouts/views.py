@@ -249,31 +249,3 @@ def commentMember(request):
                     return JsonResponse({"error": form.errors}, status=400)
         else:
             return JsonResponse({"error": "No edit, no upload"}, status=400)
-
-    #     msg = "This was the message: " + request.POST.get('test')
-    #     data = {"message": msg}
-    #     return HttpResponse(json.dumps(data), content_type='application/json')
-    # else:
-    #     raise Http404
-
-    #     # get the form data
-    #     form_data = {
-    #         "message": request.POST["member_comment"],
-    #         "member": request.user,
-    #         "log_id": 3,
-    #     }
-    #     form = MemberCommentForm(form_data)
-    #     # save the data and after fetch the object in instance
-    #     if form.is_valid():
-    #         form.save()
-    #         # serialize in new friend object in json
-    #         # ser_instance = serializers.serialize('json', [instance, ])
-    #         # send to client side.
-    #         return HttpResponse("Success!")
-    #         # return JsonResponse({"instance": "YES!"}, status=200)
-    #     else:
-    #         # some form errors occured.
-    #         return JsonResponse({"error": form.errors}, status=400)
-
-    # # some error occured
-    # return JsonResponse({"error": ""}, status=400)

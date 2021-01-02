@@ -177,6 +177,8 @@ $(document).ready(function() {
                 }
             });
         }
+        
+
         if ($('.user-comment').focus()) {            
             let shift = false
             $('.user-comment').on('keydown', function (e) {
@@ -255,7 +257,10 @@ $(document).ready(function() {
                         m_comment_ta.parent().parent('.edit-comment-form').hide()
                         m_comment_ta.parent().parent().parent().children('.comment-info').show()
                     }
-                    
+                $('#active-edit-form').removeAttr('id')
+                $('#active-edit-hidden-info').removeAttr('id')
+                $("#clicked-edit").removeAttr('id')
+                click_const=0
                     
                 },
                 error: function(){
@@ -271,12 +276,68 @@ $(document).ready(function() {
            if ($(this).parent().parent().children('.edit-comment-form').is(':visible')) {
                 let cicked_commnent_form = $(this).parent().parent().children('.edit-comment-form:visible')               
                 submitComment(m_comment, m_comment_ta)
-           }else{
+                clicked_comment.removeAttr('id')
+           } else if ($(this).attr('id') != 'clicked-edit') {
+                cancelEdit()
                 console.log("opening-form")
                 m_comment_ta.focus()  
                 clicked_comment.parent().parent().children('.edit-comment-form').removeAttr('hidden').show()
                 clicked_comment.parent().parent().children('.comment-info').hide()
+                clicked_comment.parent().parent().children('.edit-comment-form').attr('id', 'active-edit-form')
+                console.log(clicked_comment.parent().parent().children('.edit-comment-form').attr('id'))
+                clicked_comment.parent().parent().children('.comment-info').attr('id', 'active-edit-hidden-info')
+                clicked_comment.attr('id', 'clicked-edit')
            }
        })
+            
+            let click_const = 0
+            function cancelEdit() {
+                console.log("bodyclick if clickconst 1");
+                $("#active-edit-form").hide()
+                $("#active-edit-hidden-info").show()
+                $('#active-edit-form').removeAttr('id')
+                $('#active-edit-hidden-info').removeAttr('id')
+                $('#clicked-edit').removeAttr('id')
+                click_const = 0
+                console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
+            }
+            $(document).click(function() {               
+               console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
+               if (click_const != 0) {
+                   cancelEdit()
+                // console.log("bodyclick if clickconst 1");
+                // $("#active-edit-form").hide()
+                // $("#active-edit-hidden-info").show()
+                // $('#active-edit-form').removeAttr('id')
+                // $('#active-edit-hidden-info').removeAttr('id')
+                // $('#clicked-edit').removeAttr('id')
+                // click_const = 0
+                // console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
+               }
+               if ($("#active-edit-form").is(":visible")) {
+                   console.log("bodyclick if form is visible")
+                   click_const = 1
+                   console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
+               }
+            });
+            $(".edit-comment-form").click(function(e) {
+                console.log("editform click")
+                e.stopPropagation(); // This is the preferred method.
+                        // return false;        // This should not be used unless you do not want
+                            // any click events registering inside the div
+            });
+            $("#clicked-edit").click(function(e) {
+                console.log("active clickbutton click")
+                e.stopPropagation(); // This is the preferred method.
+                // return false;        // This should not be used unless you do not want
+                            // any click events registering inside the div
+            });
+            // $(".edit-comment").not("#clicked-edit").click(function(e) {
+            //     console.log("OTHER EDIT")
+            //     // cancelEdit()
+            // });
+       
+
+
         
 });
