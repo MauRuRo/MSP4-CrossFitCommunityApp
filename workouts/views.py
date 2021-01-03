@@ -258,7 +258,8 @@ def commentMember(request):
         elif request.POST["info_crud"] == "comment-edit":
             # get the form data
             comment_id = request.POST["id_comment"]
-            if request.POST["main_comment"] == True:
+            if request.POST["main_comment"] == 'true':
+                print("correct")
                 db_comment = get_object_or_404(Log, pk=comment_id)
                 if db_comment.user == request.user:
                     Log.objects.filter(pk=db_comment.pk).update(user_comment=request.POST["member_comment"])
@@ -269,6 +270,7 @@ def commentMember(request):
                     messages.error(request, "You cannot edit another member's post.")
                     return HttpResponse(json.dumps(data), content_type='application/json')
             else:
+                print("incorrect")
                 db_comment = get_object_or_404(MemberComment, pk=comment_id)
                 if db_comment.member == request.user:
                     form_data = {
