@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-2 px-0 align-self-center justify-content-end">
                             <!-- <a href="#"> -->
-                            <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
+                            <div class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
                             </div>
                             <i class="fflag fflag-{{ member_r_log.user.userprofile.country.code }} ff-lg ff-round rank-flag" aria-label="{{ member_r_log.user.userprofile.country.code }}"></i>
                             {% if member_r_log.personal_record %}
@@ -81,19 +81,25 @@
                                             <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
                                         </form>
                                     </div>
-                                {% if profile.user == member_r_log.user %}
+                                <!-- {% if profile.user == member_r_log.user %}
                                 <div class="crud-icons">
                                     <i class="far fa-edit edit-comment"></i><br>
                                     <i class="far fa-trash-alt delete-comment"></i>
                                 </div>
-                                {% endif %}
+                                {% endif %} -->
                             </div>
                         </div>
                         <div class="col-2 px-0 align-self-center justify-content-end">
-                            <a href="#">
-                            <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
+                            <!-- <a href="#"> -->
+                            <div class="pf-rnk-circle prc-tm" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
                             </div>
-                            </a>                         
+                            {% if profile.user == member_r_log.user %}
+                                <div class="crud-icons">
+                                    <i class="far fa-edit edit-comment"></i><br>
+                                    <i class="far fa-trash-alt delete-comment"></i>
+                                </div>
+                            {% endif %}
+                            <!-- </a>                          -->
                         </div>
                     </div>
                     {% endif %}
@@ -117,19 +123,25 @@
                                             <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
                                         </form>
                                     </div>
-                                    {% if profile.user == member_comment.member %}
+                                    <!-- {% if profile.user == member_comment.member %}
                                     <div class="crud-icons">
                                         <i class="far fa-edit edit-comment"></i><br>
                                         <i class="far fa-trash-alt delete-comment"></i>
                                     </div>
-                                    {% endif %}
+                                    {% endif %} -->
                                 </div>
                             </div>
                             <div class="col-2 px-0 align-self-center justify-content-end">
-                                <a href="#">
-                                    <div id="pf-rnk-circle-{{member_r_log.user}}" class="pf-rnk-circle" style="background: url('{{member_comment.member.userprofile.image.url}}') no-repeat; background-size: cover">
+                                <!-- <a href="#"> -->
+                                    <div class="pf-rnk-circle  prc-tm" style="background: url('{{member_comment.member.userprofile.image.url}}') no-repeat; background-size: cover">
                                     </div>
-                                </a>                         
+                                    {% if profile.user == member_r_log.user %}
+                                        <div class="crud-icons">
+                                            <i class="far fa-edit edit-comment"></i><br>
+                                            <i class="far fa-trash-alt delete-comment"></i>
+                                        </div>
+                                    {% endif %}
+                                <!-- </a>                          -->
                             </div>
                         </div>
                         {% endif %}
@@ -172,17 +184,21 @@
                                         <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
                                     </form>
                                 </div>
+                                <!-- <div class="crud-icons">
+                                    <i class="far fa-edit edit-comment"></i><br>
+                                    <i class="far fa-trash-alt delete-comment"></i>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-2 px-0 align-self-center justify-content-end">
+                            <!-- <a href="#"> -->
+                                <div class="pf-rnk-circle  prc-tm" style="background: url('{{profile.image.url}}') no-repeat; background-size: cover">
+                                </div>
                                 <div class="crud-icons">
                                     <i class="far fa-edit edit-comment"></i><br>
                                     <i class="far fa-trash-alt delete-comment"></i>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-2 px-0 align-self-center justify-content-end">
-                            <a href="#">
-                                <div id="pf-rnk-circle-{{profile.user.username}}" class="pf-rnk-circle" style="background: url('{{profile.image.url}}') no-repeat; background-size: cover">
-                                </div>
-                            </a>                         
+                            <!-- </a>                          -->
                         </div>
                     </div>
             </div>

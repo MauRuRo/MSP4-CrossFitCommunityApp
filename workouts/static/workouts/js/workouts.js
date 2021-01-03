@@ -296,31 +296,38 @@ $(document).ready(function() {
        };
        
        $(document).on("click", ".delete-comment", function(){
-            let comment_type = $(this).parent().siblings('.edit-comment-form').find('textarea').attr('class')
-            let comment_id = $(this).parent().siblings('.edit-comment-form').find('.comment-id').text()
+            // let comment_type = $(this).parent().siblings('.edit-comment-form').find('textarea').attr('class')
+            // let comment_id = $(this).parent().siblings('.edit-comment-form').find('.comment-id').text()
+            let comment_type = $(this).closest('.col-2').siblings('.card-col').find('textarea').attr('class')            
+            let comment_id = $(this).closest('.col-2').siblings('.card-col').find('.comment-id').text()
             deleteComment(comment_id, comment_type)
-            $(this).closest('.extra-log-info').remove()
+            // $(this).closest('.extra-log-info').remove()
+             $(this).closest('.extra-log-info').remove()
 
         })
 
        $(document).on("click", ".edit-comment", function(){
            let clicked_comment = $(this)  //let
-           let m_comment_ta = $(this).parent().parent().children('.edit-comment-form').children('form').children('textarea')
+        //    let m_comment_ta = $(this).parent().parent().children('.edit-comment-form').children('form').children('textarea')
+           let m_comment_ta = $(this).closest('.col-2').siblings('.card-col').find('textarea')
            let m_comment = m_comment_ta.val()
-           console.log("test last edit")        
-           if ($(this).parent().parent().children('.edit-comment-form').is(':visible')) {
+        //    if ($(this).parent().parent().children('.edit-comment-form').is(':visible')) {
+            if ($(this).closest('.col-2').siblings('.card-col').find('.edit-comment-form').is(':visible')) {
                 // let clicked_comment_form = $(this).parent().parent().children('.edit-comment-form:visible')              
                 submitComment(m_comment, m_comment_ta)
                 clicked_comment.removeAttr('id')
-           } else if ($(this).attr('id') != 'clicked-edit') {
+            } else if ($(this).attr('id') != 'clicked-edit') {
                 cancelEdit()
-                console.log("opening-form")
                 m_comment_ta.focus()  
-                clicked_comment.parent().parent().children('.edit-comment-form').removeAttr('hidden').show()
-                clicked_comment.parent().parent().children('.comment-info').hide()
-                clicked_comment.parent().parent().children('.edit-comment-form').attr('id', 'active-edit-form')
-                console.log(clicked_comment.parent().parent().children('.edit-comment-form').attr('id'))
-                clicked_comment.parent().parent().children('.comment-info').attr('id', 'active-edit-hidden-info')
+                // clicked_comment.parent().parent().children('.edit-comment-form').removeAttr('hidden').show()
+                // clicked_comment.parent().parent().children('.comment-info').hide()
+                // clicked_comment.parent().parent().children('.edit-comment-form').attr('id', 'active-edit-form')
+                // clicked_comment.parent().parent().children('.comment-info').attr('id', 'active-edit-hidden-info')
+                // clicked_comment.attr('id', 'clicked-edit')
+                clicked_comment.closest('.col-2').siblings('.card-col').find('.edit-comment-form').removeAttr('hidden').show()
+                clicked_comment.closest('.col-2').siblings('.card-col').find('.comment-info').hide()
+                clicked_comment.closest('.col-2').siblings('.card-col').find('.edit-comment-form').attr('id', 'active-edit-form')
+                clicked_comment.closest('.col-2').siblings('.card-col').find('.comment-info').attr('id', 'active-edit-hidden-info')
                 clicked_comment.attr('id', 'clicked-edit')
            }
        })
@@ -335,29 +342,29 @@ $(document).ready(function() {
                 $('#clicked-edit').removeAttr('id')
                 $('#member-comment-form').removeAttr('id')
                 click_const = 0
-                console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
+                // console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
             }
             $(document).click(function() {               
-               console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
+            //    console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
                if (click_const != 0) {
                    cancelEdit()
                }
                if ($("#active-edit-form").is(":visible")) {
-                   console.log("bodyclick if form is visible")
+                //    console.log("bodyclick if form is visible")
                    click_const = 1
-                   console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
+                //    console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
                }
             });
             // $(".edit-comment-form").click(function(e) {
             $(document).on("click", ".edit-comment-form", function(e) {
-                console.log("editform click")
+                // console.log("editform click")
                 e.stopPropagation(); // This is the preferred method.
                         // return false;        // This should not be used unless you do not want
                             // any click events registering inside the div
             });
             // $("#clicked-edit").click(function(e) {
             $(document).on("click", "#clicked-edit", function(e) {
-                console.log("active clickbutton click")
+                // console.log("active clickbutton click")
                 e.stopPropagation(); // This is the preferred method.
                 // return false;        // This should not be used unless you do not want
                             // any click events registering inside the div
