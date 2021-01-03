@@ -70,8 +70,9 @@
                             <hr>
                             <div class="x-info">
                                 <div class="comment-info">
-                                    <strong>{{ member_r_log.user.userprofile.full_name }}:</strong><br>
-                                    <em>"{{ member_r_log.user_comment }}"</em>
+                                    <p><strong>{{ member_r_log.user.userprofile.full_name }}:</strong></p>
+                                    <!-- <strong>{{ member_r_log.user.userprofile.full_name }}:</strong><br> -->
+                                    <p>"{{ member_r_log.user_comment }}"</p>
                                 </div>
                                 <div class="edit-comment-form" name="edit-comment-form-user" hidden>
                                         <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
@@ -112,8 +113,8 @@
                                 <hr>
                                 <div class="x-info">
                                     <div class="comment-info">
-                                        <strong>{{ member_comment.member.userprofile.full_name }}:</strong><br>
-                                        <em>"{{ member_comment.message }}"</em>
+                                        <p><strong>{{ member_comment.member.userprofile.full_name }}:</strong></p>
+                                        <p>"{{ member_comment.message }}"</p>
                                     </div>
                                     <div class="edit-comment-form" hidden>
                                         <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
@@ -173,8 +174,9 @@
                             <hr>
                             <div class="x-info">
                                 <div class="comment-info">
-                                    <strong id="new-comment-member">{{ member_comment.member.userprofile.full_name }}:</strong><br>
-                                    <em id="new-comment">"{{ member_comment.message }}"</em>
+                                    <!-- <strong id="new-comment-member">{{ member_comment.member.userprofile.full_name }}:</strong><br> -->
+                                    <p><strong id="new-comment-member">{{ member_comment.member.userprofile.full_name }}:</strong></p>
+                                    <p id="new-comment">"{{ member_comment.message }}"</p>
                                 </div>
                                 <div class="edit-comment-form" hidden>
                                     <form action="/ajax/post/commentMember" method="POST" class="comment-edit">

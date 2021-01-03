@@ -492,7 +492,7 @@ label[for='image-clear_id'] {
 .crud-icons{
     position:absolute;
     top:-14px;
-    left:-30px;
+    left:-15px;
 }
 .crud-icons-log {
     position:absolute;
@@ -513,6 +513,7 @@ label[for='image-clear_id'] {
 }
 .prc-tm{
     margin-top:3px;
+    left: 0 !important;
 }
 .pr-logo-circle:hover,
 .rank-flag:hover,
@@ -589,9 +590,13 @@ ol#rank-nav li {
     .edit-comment-form,
     .comment-info {
         float:left;
-        width:90%;
+        width:95%;
     }
-    .comment-info em {
+    .comment-info p strong {
+        color: grey;
+        margin-bottom: 3px;
+    }
+    .comment-info p {
         white-space: pre-wrap;
     }
 
