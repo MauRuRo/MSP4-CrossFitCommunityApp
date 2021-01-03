@@ -609,6 +609,18 @@ ol#rank-nav li {
     #profile-circle-container {
         height:150px;
     }
+
+    .hidden-datefield {
+        position: absolute;
+        z-index: 1;
+        top:190px;
+        left:100px;
+        width: 3px;
+        height: 3px;
+    }
+    .input-group-addon {
+        z-index: 9999;
+    }
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {

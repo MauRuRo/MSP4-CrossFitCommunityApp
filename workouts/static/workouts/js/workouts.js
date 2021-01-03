@@ -327,26 +327,6 @@ $(document).ready(function() {
                 }
             })
        };
-
-    //    function editLog(log_id) {
-    //         $.ajax({
-    //             type:"POST",
-    //             url: "/workouts/0/editLog/",
-    //             data: {
-    //                 log_id:log_id
-    //             },
-    //             dataType: 'json',
-    //             success: function(data){
-    //                 if (data.del_false == "False") {
-    //                     location.reload()
-    //                 }
-                    
-    //             },
-    //             error: function(){
-    //                 console.log("Failed Delete")
-    //             }
-    //         })
-    //    };
        
        $(document).on("click", ".delete-comment", function(){
             // let comment_type = $(this).parent().siblings('.edit-comment-form').find('textarea').attr('class')
@@ -456,23 +436,15 @@ $(document).ready(function() {
             $("#logform-submit-button").show()
         })
         $(document).on("click", ".edit-comment", function(){
-           let clicked_comment = $(this)  //let
-        //    let m_comment_ta = $(this).parent().parent().children('.edit-comment-form').children('form').children('textarea')
+           let clicked_comment = $(this)
            let m_comment_ta = $(this).closest('.col-2').siblings('.card-col').find('textarea')
            let m_comment = m_comment_ta.val()
-        //    if ($(this).parent().parent().children('.edit-comment-form').is(':visible')) {
-            if ($(this).closest('.col-2').siblings('.card-col').find('.edit-comment-form').is(':visible')) {
-                // let clicked_comment_form = $(this).parent().parent().children('.edit-comment-form:visible')              
+            if ($(this).closest('.col-2').siblings('.card-col').find('.edit-comment-form').is(':visible')) {             
                 submitComment(m_comment, m_comment_ta)
                 clicked_comment.removeAttr('id')
             } else if ($(this).attr('id') != 'clicked-edit') {
                 cancelEdit()
-                m_comment_ta.focus()  
-                // clicked_comment.parent().parent().children('.edit-comment-form').removeAttr('hidden').show()
-                // clicked_comment.parent().parent().children('.comment-info').hide()
-                // clicked_comment.parent().parent().children('.edit-comment-form').attr('id', 'active-edit-form')
-                // clicked_comment.parent().parent().children('.comment-info').attr('id', 'active-edit-hidden-info')
-                // clicked_comment.attr('id', 'clicked-edit')
+                m_comment_ta.focus()
                 clicked_comment.closest('.col-2').siblings('.card-col').find('.edit-comment-form').removeAttr('hidden').show()
                 clicked_comment.closest('.col-2').siblings('.card-col').find('.comment-info').hide()
                 clicked_comment.closest('.col-2').siblings('.card-col').find('.edit-comment-form').attr('id', 'active-edit-form')
@@ -490,38 +462,67 @@ $(document).ready(function() {
                 $('#clicked-edit').removeAttr('id')
                 $('#member-comment-form').removeAttr('id')
                 click_const = 0
-                // console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
             }
             $(document).click(function() {               
-            //    console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
                if (click_const != 0) {
                    cancelEdit()
                }
                if ($("#active-edit-form").is(":visible")) {
-                //    console.log("bodyclick if form is visible")
                    click_const = 1
-                //    console.log("active edit buttons: " + $("#clicked-edit").length + " | clickconst " + click_const)
                }
             });
-            // $(".edit-comment-form").click(function(e) {
             $(document).on("click", ".edit-comment-form", function(e) {
-                // console.log("editform click")
-                e.stopPropagation(); // This is the preferred method.
-                        // return false;        // This should not be used unless you do not want
-                            // any click events registering inside the div
+                e.stopPropagation(); 
             });
-            // $("#clicked-edit").click(function(e) {
             $(document).on("click", "#clicked-edit", function(e) {
-                // console.log("active clickbutton click")
-                e.stopPropagation(); // This is the preferred method.
-                // return false;        // This should not be used unless you do not want
-                            // any click events registering inside the div
+                e.stopPropagation(); 
             });
-            // $(".edit-comment").not("#clicked-edit").click(function(e) {
-            //     console.log("OTHER EDIT")
-            //     // cancelEdit()
-            // });
-       
+
+            function maxLogDate() {
+                // https://stackoverflow.com/questions/32378590/set-date-input-fields-max-date-to-today
+                let today = new Date();
+                let dd = today.getDate();
+                let mm = today.getMonth()+1;
+                let yyyy = today.getFullYear();
+                if(dd<10){
+                        dd='0'+dd
+                    } 
+                    if(mm<10){
+                        mm='0'+mm
+                    } 
+                today = yyyy+'-'+mm+'-'+dd;
+                $("#test-date").attr("max", today);
+            }
+            maxLogDate()
+
+            function convertDate(input_date) {
+                let day = input_date.split(" ")[0]
+                let month = input_date.split(" ")[1]
+                let year = input_date.split(" ")[2]
+                let set_month = ''
+                months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"]
+                for( i = 0; i < 13; i++ ) {
+                    if (months[i]==month){
+                        set_month = String(i + 1)
+                        break;
+                    }
+                }
+                if (set_month < 10) {
+                    month = "0" + set_month
+                }else{
+                    month = set_month
+                }
+                converted_date = year + "-" + month + "-" + day
+                return converted_date
+
+            }
+
+            $("#date").change(function(){
+                let log_date = $("#date").val()
+                let c_date = convertDate(log_date)
+                $("#test-date").val(c_date)
+            })
+
 
 
         

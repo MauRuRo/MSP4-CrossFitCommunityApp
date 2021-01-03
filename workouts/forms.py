@@ -37,7 +37,6 @@ class LogForm(forms.ModelForm):
             'user_comment': 'Comment:',
         }
 
-
         for field in self.fields:
             if not (field == 'rx' or field == 'date'):
                 placeholder = placeholders[field]

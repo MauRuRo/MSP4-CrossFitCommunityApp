@@ -24,6 +24,9 @@
 </div>
 <div class="logfield">
     {% include 'includes/date-picker.html' %}
+    <!-- <div class="no-height"> -->
+    <input class="hidden-datefield" type="date" id="test-date" max="{{ date_initial }}">
+    <!-- </div> -->
 </div>
 <div class="logfield">
         {{ form_log.user_comment|as_crispy_field }}
