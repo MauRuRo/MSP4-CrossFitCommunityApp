@@ -203,6 +203,23 @@ def workouts(request, wod_id):
             return redirect(reverse('workouts', args=wod_id))
 
 
+def deleteLog(request):
+    if request.is_ajax() and request.POST:
+        log_id = request.POST["log_id"]
+        log = Log.objects.get(pk=log_id)
+        if request.user == log.user:
+            log.delete()
+            data = {"message": "Your log is deleted."}
+            messages.success(request, "Your log is deleted.")
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            data = {"message": "You cannot delete another user's log."}
+            messages.success(request, "You cannot delete another member's log.")
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        return JsonResponse({"error": "Delete Failed"}, status=400)
+
+
 def deleteCommentMember(request):
     if request.is_ajax() and request.POST:
         comment_id = request.POST["comment_id"]

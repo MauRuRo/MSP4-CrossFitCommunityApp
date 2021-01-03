@@ -283,17 +283,35 @@ $(document).ready(function() {
                 },
                 dataType: 'json',
                 success: function(data){
-                    console.log(data.del_false)
                     if (data.del_false == "False") {
                         location.reload()
                     }
-                    console.log(data.message)
                 },
                 error: function(){
                     console.log("Failed Delete")
                 }
             })
        };
+
+       function deleteLog(log_id) {
+            $.ajax({
+                type:"POST",
+                url: "/workouts/0/deleteLog/",
+                data: {
+                    log_id:log_id
+                },
+                dataType: 'json',
+                success: function(data){
+                    if (data.del_false == "False") {
+                        location.reload()
+                    }
+                },
+                error: function(){
+                    console.log("Failed Delete")
+                }
+            })
+       };
+
        
        $(document).on("click", ".delete-comment", function(){
             // let comment_type = $(this).parent().siblings('.edit-comment-form').find('textarea').attr('class')
@@ -306,7 +324,17 @@ $(document).ready(function() {
 
         })
 
-       $(document).on("click", ".edit-comment", function(){
+        $(document).on("click", ".delete-log", function(){
+            let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
+            deleteLog(log_id)
+            location.reload()
+        })
+        // $(document).on("click", ".edit-log", function(){
+        //     let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
+        //     editLog(log_id)
+        // })
+
+        $(document).on("click", ".edit-comment", function(){
            let clicked_comment = $(this)  //let
         //    let m_comment_ta = $(this).parent().parent().children('.edit-comment-form').children('form').children('textarea')
            let m_comment_ta = $(this).closest('.col-2').siblings('.card-col').find('textarea')
