@@ -21,20 +21,21 @@ admin.site.register(Workout, WorkoutAdmin)
 class LogAdmin(admin.ModelAdmin):
 
     list_display = (
-        'wod_name',
+        'workout',
         'user',
         'date',
-        'amrap_result'
+        'amrap_result',
+        'ft_result',
+        'mw_result'
     )
 
     readonly_fields = (
-        'wod_name',
         'user',
         'personal_record',
     )
 
     fields = (
-        'wod_name',
+        'workout',
         'user',
         'date',
         'ft_result',
@@ -44,6 +45,8 @@ class LogAdmin(admin.ModelAdmin):
         'user_comment',
         'personal_record'
     )
+
+
 admin.site.register(Log, LogAdmin)
 
 
@@ -59,4 +62,6 @@ class MemberCommentAdmin(admin.ModelAdmin):
         'message',
         'log_id'
     )
+
+
 admin.site.register(MemberComment, MemberCommentAdmin)

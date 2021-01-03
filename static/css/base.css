@@ -605,6 +605,10 @@ ol#rank-nav li {
         resize: none;
         width:100%;
     }
+
+    #profile-circle-container {
+        height:150px;
+    }
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {
@@ -612,6 +616,9 @@ ol#rank-nav li {
   body {
     background-position-y: 90px;
   }
+  #profile-circle-container {
+        height:90px;
+    }
   #profile-circle {
     height: 120px;
     width: 120px;

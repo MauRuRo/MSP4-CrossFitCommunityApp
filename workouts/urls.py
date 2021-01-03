@@ -8,5 +8,7 @@ urlpatterns = [
     path('0/commentMember/', views.commentMember, name='commentMember'),
     path('0/deleteCommentMember/', views.deleteCommentMember, name='deleteCommentMember'),
     path('0/deleteLog/', views.deleteLog, name='deleteLog'),
+    path('0/dateInput/', views.dateInput, name='dateInput'),
+    path('0/editLog/', views.editLog, name='editLog'),
     # url(r'^comment/$', views.comment, name='comment'),
 ]

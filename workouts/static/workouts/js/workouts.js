@@ -12,10 +12,21 @@ $(document).ready(function() {
         }
 
         $('#log-workout-button').click(function() {
+            if ($("#logform-edit-button").is(":visible")){
+                $("#logform-edit-button").hide()
+                $("#logform-submit-button").show()
+            }
             $('#logform-div').toggle()
             $('#log-ranking-div').toggle()
             let tp = $('#block-1').offset().top
             setTimeout(function() {window.scrollTo(0, tp-150);},1)
+            $('#id_ft_result').val("")
+            $('#id_amrap_result').val("")
+            $('#id_mw_result').val("")
+            initial_date = $('#date').attr('data-initial')
+            $("#date").val(initial_date)
+            $('#id_rx').prop('checked', true)
+            $('#id_user_comment').text("")
         });
 
         $('#cancel-log').click(function() {
@@ -145,39 +156,43 @@ $(document).ready(function() {
                 $(main_card).prev('.m-log-id').attr('id', 'm-log-id');
             }
         })
-        let comment_field = ''
+
+        
         $('.member-comment').focus(function() {
-            comment_field = $(this)
             $('#member-comment-form').removeAttr('id')
             $(this).parent().attr("id", "member-comment-form")
         })
 
-        if ($('.member-comment').focus()) {            
-            let shift = false
-            $('.member-comment').on('keydown', function (e) {
-                if(e.which === 16){
-                    shift = true
+        function focusFields() {
+            if ($('.member-comment').focus()) { 
+                    console.log("has focus")           
+                    let shift = false
+                    $('.member-comment').on('keydown', function (e) {
+                        if(e.which === 16){
+                            console.log("shift")
+                            shift = true
+                        }
+                    });
+                    $('.member-comment').on('keyup', function (e) {
+                        if(e.which === 16){
+                            shift = false
+                        }
+                    });
+                    $('.member-comment').on('keypress', function (e) {
+                        let m_comment_ta = $(this)
+                        let m_comment = m_comment_ta.val()
+                        if(e.which === 13 && shift == false){
+                            //Disable textbox to prevent multiple submit
+                            $(this).attr("disabled", "disabled");
+                            //Do Stuff, submit, etc..
+                            submitComment(m_comment, m_comment_ta)
+                            //Enable the textbox again if needed.
+                            $(this).removeAttr("disabled");                   
+                        }
+                    });
                 }
-            });
-            $('.member-comment').on('keyup', function (e) {
-                if(e.which === 16){
-                    shift = false
-                }
-            });
-            $('.member-comment').on('keypress', function (e) {
-                let m_comment_ta = $(this)
-                let m_comment = m_comment_ta.val()
-                if(e.which === 13 && shift == false){
-                    //Disable textbox to prevent multiple submit
-                    $(this).attr("disabled", "disabled");
-                    //Do Stuff, submit, etc..
-                    submitComment(m_comment, m_comment_ta)
-                    //Enable the textbox again if needed.
-                    $(this).removeAttr("disabled");                   
-                }
-            });
-        }
-        
+        };
+        focusFields()
 
         if ($('.user-comment').focus()) {            
             let shift = false
@@ -218,7 +233,6 @@ $(document).ready(function() {
             if (m_comment_ta.parent('form').parent('.edit-comment-form').attr('name') == 'edit-comment-form-user'){
                 is_main_comment = true
             }
-            console.log(is_main_comment)
             let crud_info = m_comment_ta.parent('form').attr('class')
             let comment_id = ''
             if (crud_info != "comment-upload") {
@@ -242,13 +256,14 @@ $(document).ready(function() {
                         let nci = $('#comment-id').parent('form:visible').children('#comment-id')
                         nci.removeAttr('id')
                         let template = $('#hidden-row-template').html()
-                        $('#member-comment-form').parent().parent().parent().before(template)
-                        $('#new-comment').text('"'+data.message+'"')
+                        $('#member-comment-form').closest('.row').before(template)
+                        let newrow = $('#member-comment-form').closest('.row').prev(".row")
+                        newrow.find('.new-comment').text('"' + data.message + '"')
                         $('#member-comment-ta').text(data.message)
                         let commenting_member = $('#profile-name').html()
-                        $('#new-comment-member').text(commenting_member + ":")
-                        $('#new-comment-member').not(':hidden').removeAttr('id')
-                        $('#new-comment').not(':hidden').removeAttr('id')
+                        newrow.find('.new-comment-member').text(commenting_member + ":")
+                        // $('#new-comment-member').not(':hidden').removeAttr('id')
+                        // $('#new-comment').not(':hidden').removeAttr('id')
                         $('#member-comment-form').removeAttr('id')
                         $('#member-comment-ta').removeAttr('id')
                         let new_row = $('.new-row:visible')
@@ -256,14 +271,15 @@ $(document).ready(function() {
                         new_row.attr('class', old_row)                    
                         m_comment_ta.val("")
                     }else if (crud_info == 'comment-edit'){
-                        m_comment_ta.parent().parent().parent().children('.comment-info').children('em').text('"'+data.message+'"')
-                        m_comment_ta.parent().parent('.edit-comment-form').hide()
-                        m_comment_ta.parent().parent().parent().children('.comment-info').show()
+                        m_comment_ta.closest(".x-info").find('.comment-log').text('"'+data.message+'"')
+                        m_comment_ta.closest('.edit-comment-form').hide()
+                        m_comment_ta.closest(".x-info").find('.comment-info').show()
                     }
                 $('#active-edit-form').removeAttr('id')
                 $('#active-edit-hidden-info').removeAttr('id')
                 $("#clicked-edit").removeAttr('id')
                 $('#member-comment-form').removeAttr('id')
+                focusFields()
                 click_const=0
                     
                 },
@@ -312,6 +328,25 @@ $(document).ready(function() {
             })
        };
 
+    //    function editLog(log_id) {
+    //         $.ajax({
+    //             type:"POST",
+    //             url: "/workouts/0/editLog/",
+    //             data: {
+    //                 log_id:log_id
+    //             },
+    //             dataType: 'json',
+    //             success: function(data){
+    //                 if (data.del_false == "False") {
+    //                     location.reload()
+    //                 }
+                    
+    //             },
+    //             error: function(){
+    //                 console.log("Failed Delete")
+    //             }
+    //         })
+    //    };
        
        $(document).on("click", ".delete-comment", function(){
             // let comment_type = $(this).parent().siblings('.edit-comment-form').find('textarea').attr('class')
@@ -324,16 +359,102 @@ $(document).ready(function() {
 
         })
 
+        function getDate(log_date) {
+            console.log("getDate")
+            $.ajax({
+                type:"POST",
+                url: "/workouts/0/dateInput/",
+                data: {
+                    log_date:log_date
+                },
+                dataType: 'json',
+                success: function(data){
+                    console.log("checking!")
+                    console.log(data.date_input)
+                    $('#date').val(data.date_input )
+                    return data.date_input                    
+                },
+                error: function(){
+                    console.log("Failed Date Getting")
+                }
+            })
+        };
+
         $(document).on("click", ".delete-log", function(){
             let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
             deleteLog(log_id)
             location.reload()
         })
-        // $(document).on("click", ".edit-log", function(){
-        //     let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
-        //     editLog(log_id)
-        // })
+        
+        $("#logform-edit-button").click(function(e){
+            e.preventDefault()
+            let result = $(".score-result:visible").val()
+            console.log(result)
+            let rx = $("#id_rx").prop('checked')
+            console.log(rx)
+            let date = $("#date").val()
+            console.log(date)
+            let comment = $("#id_user_comment").val()
+            let log_id = $("#log-to-edit-id").text()
+            $.ajax({
+                type:"POST",
+                url: "/workouts/0/editLog/",
+                data: {
+                    log_id:log_id,
+                    result:result,
+                    rx:rx,
+                    date:date,
+                    comment:comment
+                },
+                dataType: 'json',
+                success: function(data){
+                    location.reload()              
+                },
+                error: function(){
+                    console.log("Failed Log Edit")
+                }
+            })
+        })
 
+        $(document).on("click", ".edit-log", function(){
+            let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
+            $("#log-to-edit-id").html(log_id)
+            let info = $(this).closest('.rank-card').children('.card-col')
+            let result = info.find('.r-log')
+            let result_type = result.attr('class').split(" ")[0]
+            let result_log= result.text()
+            let extra_info = $(this).closest('.rank-card').next('.extra-log-info')
+            let log_date = extra_info.find('.log-date').html()
+            getDate(log_date)
+            let rx_log = extra_info.find('.log-rx').text()
+            let comment_log = extra_info.next('.extra-log-info').find('.comment-log').text().slice(1,-1)
+            if (result_type == 'ft_log'){
+                $('#id_ft_result').val(result_log)
+            } else if (result_type == 'amrap_log') {
+                $('#id_amrap_result').val(result_log)
+            } else {
+                $('#id_mw_result').val(result_log)
+            }
+            if (rx_log == "Scaled") {
+                $('#id_rx').prop('checked', false)
+            }
+            $('#id_user_comment').text(comment_log)
+            $("#logform-submit-button").hide()
+            $("#logform-edit-button").show().removeAttr('hidden')
+            $('#logform-div').toggle()
+            $('#log-ranking-div').toggle()
+        })
+        $("#cancel-log").click(function(e) {
+            e.preventDefault()
+            $('#id_ft_result').val("")
+            $('#id_amrap_result').val("")
+            $('#id_mw_result').val("")
+            $('#date').val("")
+            $('#id_rx').prop('checked', true)
+            $('#id_user_comment').text("")
+            $("#logform-edit-button").hide()
+            $("#logform-submit-button").show()
+        })
         $(document).on("click", ".edit-comment", function(){
            let clicked_comment = $(this)  //let
         //    let m_comment_ta = $(this).parent().parent().children('.edit-comment-form').children('form').children('textarea')
@@ -362,7 +483,6 @@ $(document).ready(function() {
             
             let click_const = 0
             function cancelEdit() {
-                console.log("bodyclick if clickconst 1 or edit button click; clickcons= " + click_const);
                 $("#active-edit-form").hide()
                 $("#active-edit-hidden-info").show()
                 $('#active-edit-form').removeAttr('id')

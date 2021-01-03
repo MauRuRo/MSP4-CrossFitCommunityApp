@@ -36,7 +36,7 @@ class Workout(models.Model):
 
 class Log(models.Model):
     """ a model for workout logs """
-    wod_name = models.CharField(blank=False, null=False, max_length=100, default="WOD")
+    workout = models.ForeignKey(Workout, blank=False, null=False, on_delete=models.CASCADE, default='1')
     ft_result = models.DurationField(blank=False, null=True)
     amrap_result = models.DecimalField(blank=False, decimal_places=2, max_digits=5)
     mw_result = models.DecimalField(blank=False, decimal_places=2, max_digits=5)
@@ -49,7 +49,7 @@ class Log(models.Model):
 
 
     def __str__(self):
-        return self.wod_name + " | " + self.user.username
+        return self.workout.workout_name + " | " + self.user.username
 
 
 class MemberComment(models.Model):

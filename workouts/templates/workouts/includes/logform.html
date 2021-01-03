@@ -29,7 +29,9 @@
         {{ form_log.user_comment|as_crispy_field }}
 </div>
 <div class="justify-content-end logfield">
-    <button class="btn rounded-0 btn-black" type="submit">Log</button>
+    <button class="btn rounded-0 btn-black" id="logform-submit-button" type="submit">Log</button>
+    <button class="btn rounded-0 btn-black" id="logform-edit-button" hidden>Edit Log</button>
     <button class="btn btn-outline-black rounded-0" id="cancel-log">Cancel</button>
 </div>     
-</form>   
+</form>
+<div id="log-to-edit-id" hidden></div> 

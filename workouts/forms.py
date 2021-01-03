@@ -37,6 +37,7 @@ class LogForm(forms.ModelForm):
             'user_comment': 'Comment:',
         }
 
+
         for field in self.fields:
             if not (field == 'rx' or field == 'date'):
                 placeholder = placeholders[field]
@@ -46,7 +47,11 @@ class LogForm(forms.ModelForm):
                     self.fields[field].label = False
                 else:
                     self.fields[field].label = label
-            self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
+            if field == "ft_result" or field == "amrap_result" or field =="mw_result":
+                self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input score-result'
+            else:
+                self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
+            
 
 
 class MemberCommentForm(forms.ModelForm):

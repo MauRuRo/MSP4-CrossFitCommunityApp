@@ -55,6 +55,17 @@ def striphours(duration):
     return no_hours
 
 
+def dateInput(request):
+    if request.is_ajax and request.method == "POST":
+        date_input = request.POST["log_date"]
+        date_log = datetime.strptime(date_input, "%b. %d, %Y")
+        date_log_s = datetime.strftime(date_log, "%d %b %Y")
+        data = {"date_input": date_log_s}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        return JsonResponse({"error": "Date failed"}, status=400)
+
+
 def workouts(request, wod_id):
     # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
@@ -81,19 +92,24 @@ def workouts(request, wod_id):
             all_men.append(man.user.username)
         # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
         all_logs = Log.objects.all().order_by('-date')
-        all_logs_wod = all_logs.filter(wod_name=wod.workout_name)
+        # all_logs_wod = all_logs.filter(wod_name=wod.workout_name)
+        all_logs_wod = all_logs.filter(workout=wod)
         user_logs = all_logs.filter(user=request.user)
-        user_logs_wod = user_logs.filter(wod_name=wod.workout_name)
+        # user_logs_wod = user_logs.filter(wod_name=wod.workout_name)
+        user_logs_wod = user_logs.filter(workout=wod)
         log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
         # For rank list, find out type of wod, set proper result field and order.
         if wod.workout_type == 'FT':
-            all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('ft_result')
+            # all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('ft_result')
+            all_logs_rank = Log.objects.filter(workout=wod).order_by('ft_result')
             rank_result = 'ft_result'
         elif wod.workout_type == 'AMRAP':
-            all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-amrap_result')
+            # all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-amrap_result')
+            all_logs_rank = Log.objects.filter(workout=wod).order_by('-amrap_result')
             rank_result = 'amrap_result'
         else:
-            all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-mw_result')
+            # all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-mw_result')
+            all_logs_rank = Log.objects.filter(workout=wod).order_by('-mw_result')
             rank_result = 'mw_result'
         # filter out all logs that are not Rx
         filter_rx = all_logs_rank.filter(rx=True)
@@ -154,16 +170,17 @@ def workouts(request, wod_id):
             'date': datetime.strptime(request.POST.get('date'), "%d %b %Y"),
             'user_comment': request.POST['user_comment'],
         }
-        
         log_form = LogForm(form_data)
         # fresult = request.POST[f"{result}"]
         if log_form.is_valid():  #  and fresult != '':
             new_log = log_form.save(commit=False)
-            new_log.wod_name = wod.workout_name
+            # new_log.wod_name = wod.workout_name
+            new_log.workout = wod
             new_log.user = request.user
             if wod.workout_type == "FT":
                 new_result = new_log.ft_result.seconds
-                max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Min('ft_result'))
+                # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Min('ft_result'))
+                max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Min('ft_result'))
                 if max_result['ft_result__min'] == None:
                     new_log.personal_record = True
                 else:
@@ -174,7 +191,8 @@ def workouts(request, wod_id):
                         new_log.personal_record = False
             elif wod.workout_type == "AMRAP":
                 new_result = new_log.amrap_result
-                max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('amrap_result'))
+                # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('amrap_result'))
+                max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Max('amrap_result'))
                 if max_result['amrap_result__max'] == None:
                     new_log.personal_record = True
                 else:
@@ -185,7 +203,8 @@ def workouts(request, wod_id):
                         new_log.personal_record = False
             else:
                 new_result = new_log.mw_result
-                max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('mw_result'))
+                # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('mw_result'))
+                max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Max('mw_result'))
                 if max_result['mw_result__max'] == None:
                     new_log.personal_record = True
                 else:
@@ -203,6 +222,44 @@ def workouts(request, wod_id):
             return redirect(reverse('workouts', args=wod_id))
 
 
+def editLog(request):
+    if request.is_ajax() and request.POST:
+        log_id = request.POST["log_id"]
+        log = Log.objects.get(pk=log_id)
+        if log.user == request.user:
+            wod_type = log.workout.workout_type
+            rx_input = request.POST["rx"]
+            date = datetime.strptime(request.POST["date"], "%d %b %Y")
+            if rx_input == "false":
+                rx_input = False
+            else:
+                rx_input = True
+            if request.user == log.user:
+                if wod_type == "FT":
+                    Log.objects.filter(pk=log_id).update(ft_result=request.POST["result"])
+                elif wod_type == "AMRAP":
+                    Log.objects.filter(pk=log_id).update(amrap_result=request.POST["result"])
+                else:
+                    Log.objects.filter(pk=log_id).update(mw_result=request.POST["result"])
+                Log.objects.filter(pk=log_id).update(rx=rx_input)
+                Log.objects.filter(pk=log_id).update(date=date)
+                Log.objects.filter(pk=log_id).update(user_comment=request.POST["comment"])
+                # messages.success(request, "Log edited.")
+                # return redirect(reverse('workouts', args=str(log.workout.pk)))
+                data = {"message": "Succesfull edit"}
+                messages.success(request, "Your log was updated successfully.")
+                return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            data = {"message": "Succesfull edit"}
+            messages.error(request, "You cannot update another member's log.")
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        data = {"message": "Succesfull edit"}
+        messages.error(request, "Your update failed.")
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+
 def deleteLog(request):
     if request.is_ajax() and request.POST:
         log_id = request.POST["log_id"]
@@ -214,7 +271,7 @@ def deleteLog(request):
             return HttpResponse(json.dumps(data), content_type='application/json')
         else:
             data = {"message": "You cannot delete another user's log."}
-            messages.success(request, "You cannot delete another member's log.")
+            messages.error(request, "You cannot delete another member's log.")
             return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         return JsonResponse({"error": "Delete Failed"}, status=400)
@@ -266,8 +323,7 @@ def commentMember(request):
                 # ser_instance = serializers.serialize('json', [instance, ])
                 # send to client side.
                 new_comment_id = new_comment.pk
-                print(new_comment_id)
-                data = {"message": form_data['message'], "new_comment_id": new_comment_id}
+                data = {"message": form_data["message"], "new_comment_id": new_comment_id}
                 return HttpResponse(json.dumps(data), content_type='application/json')
             else:
                 # some form errors occured.
@@ -276,7 +332,6 @@ def commentMember(request):
             # get the form data
             comment_id = request.POST["id_comment"]
             if request.POST["main_comment"] == 'true':
-                print("correct")
                 db_comment = get_object_or_404(Log, pk=comment_id)
                 if db_comment.user == request.user:
                     Log.objects.filter(pk=db_comment.pk).update(user_comment=request.POST["member_comment"])
@@ -287,7 +342,6 @@ def commentMember(request):
                     messages.error(request, "You cannot edit another member's post.")
                     return HttpResponse(json.dumps(data), content_type='application/json')
             else:
-                print("incorrect")
                 db_comment = get_object_or_404(MemberComment, pk=comment_id)
                 if db_comment.member == request.user:
                     form_data = {

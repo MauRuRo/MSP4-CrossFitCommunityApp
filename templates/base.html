@@ -91,7 +91,7 @@
                                 </div>
                             </nav>
                     </div>
-                <div class="col-6 col-lg-3 d-flex justify-content-center">
+                <div class="col-6 col-lg-3 d-flex justify-content-center" id="profile-circle-container">
                         <a href="{% url 'home' %}"><div id="profile-circle" style="background: url({% if request.user.is_authenticated %}{{ image }}{% else %}'/media/herocommunitylogo.jpg'{% endif %}) no-repeat; background-size: cover">
                         </div></a>
                         {% if request.user.is_authenticated == False %}
