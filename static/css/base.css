@@ -404,12 +404,13 @@ label[for='image-clear_id'] {
     overflow: overlay;
     max-height: none;
     max-height: 400px;
-    padding: 0 8px;
+    padding: 0 8px 8px 8px;
 }
 
 .block-header {
     background-color:white;
     padding-top: 8px;
+    z-index:1000!important;
 }
 .log-ranking,
 .log-history {
@@ -428,8 +429,8 @@ label[for='image-clear_id'] {
     border: 1px solid grey;
     border-radius: 3px;
     padding-left:2px;
-    /* testing */
-    height: 200px;
+    /* testing
+    height: 200px; */
 }
 
 /* .log-ranking .rank-card:before {
@@ -556,11 +557,18 @@ label[for='image-clear_id'] {
 
 .block-title{
     text-align:center;
+    cursor: pointer;
+}
+
+.period,
+.gender{
+    cursor:pointer;
 }
 #rank-nav {
     font-size: 0.8rem;
     text-align: center;
     padding-left:0;
+    margin-bottom:10px;
 }
 ol#rank-nav li {
     display:inline;

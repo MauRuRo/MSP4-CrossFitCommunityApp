@@ -1,3 +1,4 @@
+<div class="block-header justify-content-center">
 <h4 class="block-title">
     {% if wod.workout_type == 'FT' %}
         For Time Result:
@@ -7,6 +8,7 @@
         Max Weight Result:
     {% endif %}
 </h4>
+</div>
 <form id="log-workout-form" method="post" action="{% url 'workouts' wod.id %}">
 {% csrf_token %}
 <div class="logfield" id="log-block">

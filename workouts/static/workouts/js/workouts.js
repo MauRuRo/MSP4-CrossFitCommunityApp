@@ -25,8 +25,11 @@ $(document).ready(function() {
             }
             $('#logform-div').toggle()
             $('#log-ranking-div').toggle()
-            let tp = $('#block-1').offset().top
-            setTimeout(function() {window.scrollTo(0, tp-150);},1)
+            pagec = $(".page-content").offset().top
+            scroll = $("#block-1").offset().top
+            $('html, body').animate({
+                        scrollTop: ($("#block-1").offset().top - pagec -70)
+                    }, 800)            
             $('#id_ft_result').val("")
             $('#id_amrap_result').val("")
             $('#id_mw_result').val("")
@@ -566,6 +569,14 @@ $(document).ready(function() {
             
                 
             });
+            $("#block-1").scroll(function(){
+                if ($("#block-1").scrollTop() > 4){
+                    $(".block-header").css('border-bottom', 'dotted 3px grey')
+                }else{
+                    $(".block-header").css('border-bottom', '')
+                }
+            });
+
             function  scrollToTopRank(){
                 $("#block-1").animate({
                     scrollTop: 0}, 800)

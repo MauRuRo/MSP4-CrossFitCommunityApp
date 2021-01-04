@@ -186,7 +186,6 @@ def workouts(request, wod_id):
                 new_log.user = request.user
                 if wod.workout_type == "FT":
                     new_result = new_log.ft_result.seconds
-                    # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Min('ft_result'))
                     max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Min('ft_result'))
                     if max_result['ft_result__min'] == None:
                         new_log.personal_record = True
@@ -198,7 +197,6 @@ def workouts(request, wod_id):
                             new_log.personal_record = False
                 elif wod.workout_type == "AMRAP":
                     new_result = new_log.amrap_result
-                    # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('amrap_result'))
                     max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Max('amrap_result'))
                     if max_result['amrap_result__max'] == None:
                         new_log.personal_record = True
@@ -210,7 +208,6 @@ def workouts(request, wod_id):
                             new_log.personal_record = False
                 else:
                     new_result = new_log.mw_result
-                    # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('mw_result'))
                     max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Max('mw_result'))
                     if max_result['mw_result__max'] == None:
                         new_log.personal_record = True
@@ -244,15 +241,51 @@ def editLog(request):
             if request.user == log.user:
                 if wod_type == "FT":
                     Log.objects.filter(pk=log_id).update(ft_result=request.POST["result"])
+                    new_result = request.POST["result"]
+                    max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Min('ft_result'))
+                    if max_result['ft_result__min'] == None:
+                        Log.objects.filter(pk=log_id).update(personal_record= True)
+                    else:
+                        best_result = max_result['ft_result__min'].seconds
+                        if best_result > new_result:
+                            Log.objects.filter(pk=log_id).update(personal_record= True)
+                        else:
+                            Log.objects.filter(pk=log_id).update(personal_record= False)
+
                 elif wod_type == "AMRAP":
                     Log.objects.filter(pk=log_id).update(amrap_result=request.POST["result"])
+                    new_result = request.POST["result"]
+                    max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('amrap_result'))
+                    if max_result['amrap_result__max'] == None:
+                        Log.objects.filter(pk=log_id).update(personal_record= True)
+                    else:
+                        best_result = max_result['amrap_result__max']
+                        if best_result < new_result:
+                            Log.objects.filter(pk=log_id).update(personal_record= True)
+                        else:
+                            Log.objects.filter(pk=log_id).update(personal_record= False)
                 else:
+                    print("check1")
                     Log.objects.filter(pk=log_id).update(mw_result=request.POST["result"])
+                    new_result = float(request.POST["result"])
+                    max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('mw_result'))
+                    if max_result['mw_result__max'] == None:
+                        print("check2")
+                        Log.objects.filter(pk=log_id).update(personal_record= True)
+                    else:
+                        print("check3")
+                        best_result = max_result['mw_result__max']
+                        print(best_result)
+                        print(new_result)
+                        if best_result < new_result:
+                            Log.objects.filter(pk=log_id).update(personal_record= True)
+                            print("check4")
+                        else:
+                            Log.objects.filter(pk=log_id).update(personal_record= False)
+                            print("check5")
                 Log.objects.filter(pk=log_id).update(rx=rx_input)
                 Log.objects.filter(pk=log_id).update(date=date)
                 Log.objects.filter(pk=log_id).update(user_comment=request.POST["comment"])
-                # messages.success(request, "Log edited.")
-                # return redirect(reverse('workouts', args=str(log.workout.pk)))
                 data = {"message": "Succesfull edit"}
                 messages.success(request, "Your log was updated successfully.")
                 return HttpResponse(json.dumps(data), content_type='application/json')
