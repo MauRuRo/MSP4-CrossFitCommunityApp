@@ -1,13 +1,15 @@
-<h4 class="block-title">WOD Ranking</h4>
+<div class="block-header sticky-top justify-content-center">
+    <h4 class="block-title" id="rank-title">WOD Ranking</h4>
     <ol id="rank-nav">
-    <li id="rank-all-time" class="period">Year</li>
-    -
-    <li id="rank-today" class="period">Today</li>
-    |
-    <li id="rank-men" class="gender">Men</li>
-    -
-    <li id="rank-women" class="gender">Women</li>
-</ol>
+        <li id="rank-all-time" class="period">Year</li>
+        -
+        <li id="rank-today" class="period">Today</li>
+        |
+        <li id="rank-men" class="gender">Men</li>
+        -
+        <li id="rank-women" class="gender">Women</li>
+    </ol>
+</div>
         {% for r_group in rank_groups %}
             <ol class="log-ranking log-rank">
             {% for member_r_log in r_group %}  

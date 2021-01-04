@@ -404,8 +404,13 @@ label[for='image-clear_id'] {
     overflow: overlay;
     max-height: none;
     max-height: 400px;
+    padding: 0 8px;
 }
 
+.block-header {
+    background-color:white;
+    padding-top: 8px;
+}
 .log-ranking,
 .log-history {
     list-style: none;
@@ -423,6 +428,8 @@ label[for='image-clear_id'] {
     border: 1px solid grey;
     border-radius: 3px;
     padding-left:2px;
+    /* testing */
+    height: 200px;
 }
 
 /* .log-ranking .rank-card:before {

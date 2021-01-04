@@ -56,6 +56,9 @@ $(document).ready(function() {
         
         // rank-logs navigator:
         $('#rank-all-time').click(function(){
+            if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
+                scrollToTopRankFast()
+            }
             $('.period').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-all-time').css({'font-weight': '700', 'text-decoration': 'underline'})
             if (gender == "F") {
@@ -65,9 +68,14 @@ $(document).ready(function() {
                 $('.log-ranking').hide()
                 $('.log-rank-1').show()
             }
-            period = 'alltime'           
+            period = 'alltime'
+            scrollMyRank()     
+                 
         })
         $('#rank-today').click(function(){
+            if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
+                scrollToTopRankFast()
+            }
             $('.period').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-today').css({'font-weight': '700', 'text-decoration': 'underline'})
             if (gender == "F") {
@@ -78,8 +86,12 @@ $(document).ready(function() {
                 $('.log-rank-3').show()
             }
             period = 'today'
+            scrollMyRank()  
         })
         $('#rank-men').click(function(){
+            if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
+                scrollToTopRankFast()
+            }
             $('.gender').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-men').css({'font-weight': '700', 'text-decoration': 'underline'})
             if (period == "today") {
@@ -90,8 +102,12 @@ $(document).ready(function() {
                 $('.log-rank-1').show()
             }
             gender = 'M'
+            scrollMyRank()  
         })
         $('#rank-women').click(function(){
+            if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
+                scrollToTopRankFast()
+            }
             $('.gender').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-women').css({'font-weight': '700', 'text-decoration': 'underline'})
             if (period == "today") {
@@ -102,6 +118,7 @@ $(document).ready(function() {
                 $('.log-rank-2').show()
             }
             gender = 'F'
+            scrollMyRank()  
         })
         // log-history navigator:
         $('.log-history').hide()
@@ -549,15 +566,14 @@ $(document).ready(function() {
             
                 
             });
-
-            // $(".log-ranking").each(function(){
-            //     if ($(this).children(".rank-card").length == 0){
-            //         console.log("TEST")
-            //         $(this).append("<h4>NO LOGS AVAILABLE</h4>")
-            //     }
-            //     console.log("log-ranking")
-            // }) 
-
+            function  scrollToTopRank(){
+                $("#block-1").animate({
+                    scrollTop: 0}, 800)
+            };
+            function  scrollToTopRankFast(){
+                $("#block-1").animate({
+                    scrollTop: 0}, 0)
+            };
             function scrollMyRank(){
                 try{
                     let uid = $("#user-id-no").attr("data")
@@ -565,26 +581,32 @@ $(document).ready(function() {
                     let group_no = group.split("-")[2]
                     let memberid = "#member-id-" + uid + "-group-" + group_no
                     $(memberid).children(".rank-counter").css({"color": "#ffc107", "text-shadow": "2px 2px 1px blue"})
-                    let scroll = $(memberid).scrollTop()
+                    let scroll = $(".block-header").offset().top + 67
                     $("#block-1").animate({
-                        scrollTop: $(memberid).offset().top
+                        scrollTop: ($(memberid).offset().top - scroll)
                     }, 800)
                 }catch{
                     console.log("No scrollable element found.")
+
                 }              
             };
 
             $(".block-title").click(function() {
-                scrollMyRank()
+                scrollToTopRank()
             });
                scrollMyRank()
               
             $(".log-ranking").each(function(){
                 if ($(this).children(".rank-card").length == 0){
-                    console.log("TEST")
                     $(this).append("<h4 class='no-logs'>NO LOGS AVAILABLE YET.</h4>")
                 }
-                console.log("log-ranking")
             }) 
+            $("#block-1").scroll(function() {
+                if ($("block-1").scrolTop > 4){
+                    $("block-header").css("border-bottom", "solid 3px black")
+                }else{
+                    $("block-header").css("border-bottom", "")
+                }
+            });
             
 });
