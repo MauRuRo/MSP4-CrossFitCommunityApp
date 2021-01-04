@@ -413,27 +413,37 @@ label[for='image-clear_id'] {
 
 .log-ranking {
     /* https://css-tricks.com/custom-list-number-styling/ */
-    counter-reset: my-awesome-counter;
+    /* counter-reset: my-awesome-counter; */
     padding-left:0px;
     font-size:0.75rem;
 }
 
 .rank-card {
-    counter-increment: my-awesome-counter;
+    /* counter-increment: my-awesome-counter; */
     border: 1px solid grey;
     border-radius: 3px;
     padding-left:2px;
 }
 
-.log-ranking .rank-card:before {
+/* .log-ranking .rank-card:before {
     content: counter(my-awesome-counter);
     color: #ffc107;;
     font-weight: bold;
     font-size:1.5rem;
     margin-left:2px;
     width:25px;
-}
+} */
 
+.rank-counter {
+    color: #ffc107;;
+    font-weight: bold;
+    font-size:1.5rem;
+}
+.rank-counter span {
+    position: absolute;
+    top: -18px;
+    left: 5px;
+}
 .new-row,
 .extra-log-info {
     /* counter-increment: my-awesome-counter; */
@@ -459,7 +469,7 @@ label[for='image-clear_id'] {
     border-bottom-right-radius: 3px;
 }
 
-.new-row:before,
+/* .new-row:before,
 .extra-log-info:before {
     content: counter(my-awesome-counter);
     color: rgba(255,255,255,0);
@@ -467,7 +477,7 @@ label[for='image-clear_id'] {
     font-size:1.5rem;
     margin-left:3px;
     width:30px;
-}
+} */
 
 .new-row hr,
 .extra-log-info hr {
@@ -598,6 +608,7 @@ ol#rank-nav li {
     }
     .comment-info p {
         white-space: pre-wrap;
+        overflow-wrap: break-word;
     }
 
 

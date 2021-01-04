@@ -11,8 +11,9 @@
         {% for r_group in rank_groups %}
             <ol class="log-ranking log-rank">
             {% for member_r_log in r_group %}  
-                <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
+                    <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_r_log.id }}" id="log-id-{{ member_r_log.id }}">
+                        <div class="col-1 rank-counter" data-counter="0"><span>1</span></div>
                         <div class="card-col col-8 px-1">
                             <p class='rank-name'><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
                             {% if rank_result == 'ft_result' %}

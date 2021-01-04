@@ -165,7 +165,6 @@ $(document).ready(function() {
 
         function focusFields() {
             if ($('.member-comment').focus()) { 
-                    console.log("has focus")           
                     let shift = false
                     $('.member-comment').on('keydown', function (e) {
                         if(e.which === 16){
@@ -522,5 +521,40 @@ $(document).ready(function() {
                 let c_date = convertDate(log_date)
                 $("#test-date").val(c_date)
             })
-        
+            
+            // ALLOW FOR TIES IN RANKING
+            $(".rank-counter").each(function(){
+                let curr = $(this)
+                let par = curr.closest(".log-ranking")
+                let parrank = par.find(".rank-card:first").find(".rank-counter:first")
+                let rankname = parrank.next().children(".rank-name").text()
+                console.log(rankname)
+                
+                if ( parrank.is(curr)){
+                    console.log("FIRST")
+                }else{    
+                    let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log")
+                    console.log(prevscore.text())
+                    let currscore = $(this).closest(".rank-card").find(".r-log")
+                    let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter")
+                    let currcount = $(this)
+                    if (prevscore.text() == currscore.text()){
+                        let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
+                        currcount.attr("data-counter", newtiecount)
+                        let prevrank = parseInt(prevcount.text())
+                        let newrank = prevrank
+                        currcount.children("span").text(newrank)
+                    }else{
+                        console.log("made it here1")
+                        let addcount = parseInt(prevcount.attr("data-counter"))
+                        let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
+                        currcount.children("span").text(newrank)
+                        currcount.attr("data-counter", "0")
+                    }
+                    console.log("entered in general")
+                }
+            
+                
+            });
+                
 });
