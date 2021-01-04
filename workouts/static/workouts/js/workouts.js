@@ -522,8 +522,5 @@ $(document).ready(function() {
                 let c_date = convertDate(log_date)
                 $("#test-date").val(c_date)
             })
-
-
-
         
 });

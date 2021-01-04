@@ -170,56 +170,63 @@ def workouts(request, wod_id):
             'date': datetime.strptime(request.POST.get('date'), "%d %b %Y"),
             'user_comment': request.POST['user_comment'],
         }
-        log_form = LogForm(form_data)
-        # fresult = request.POST[f"{result}"]
-        if log_form.is_valid():  #  and fresult != '':
-            new_log = log_form.save(commit=False)
-            # new_log.wod_name = wod.workout_name
-            new_log.workout = wod
-            new_log.user = request.user
-            if wod.workout_type == "FT":
-                new_result = new_log.ft_result.seconds
-                # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Min('ft_result'))
-                max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Min('ft_result'))
-                if max_result['ft_result__min'] == None:
-                    new_log.personal_record = True
-                else:
-                    best_result = max_result['ft_result__min'].seconds
-                    if best_result > new_result:
-                        new_log.personal_record = True
-                    else:
-                        new_log.personal_record = False
-            elif wod.workout_type == "AMRAP":
-                new_result = new_log.amrap_result
-                # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('amrap_result'))
-                max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Max('amrap_result'))
-                if max_result['amrap_result__max'] == None:
-                    new_log.personal_record = True
-                else:
-                    best_result = max_result['amrap_result__max']
-                    if best_result < new_result:
-                        new_log.personal_record = True
-                    else:
-                        new_log.personal_record = False
-            else:
-                new_result = new_log.mw_result
-                # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('mw_result'))
-                max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Max('mw_result'))
-                if max_result['mw_result__max'] == None:
-                    new_log.personal_record = True
-                else:
-                    best_result = max_result['mw_result__max']
-                    if best_result < new_result:
-                        new_log.personal_record = True
-                    else:
-                        new_log.personal_record = False
-            new_log.save()
-            messages.success(request, 'Workout logged: Great work!')
-            return redirect(reverse('workouts', args=(wod_id,)))
-        else:
-            messages.error(request, 'There was an error with your form. \
-                Please double check your information.')
+
+        tday = date.today().strftime("%Y-%m-%d")
+        today = datetime.strptime(tday, "%Y-%m-%d")
+        if form_data["date"] > today:
+            messages.error(request, 'You cannot log for a future date.')
             return redirect(reverse('workouts', args=wod_id))
+        else:
+            log_form = LogForm(form_data)
+            # fresult = request.POST[f"{result}"]
+            if log_form.is_valid():  #  and fresult != '':
+                new_log = log_form.save(commit=False)
+                # new_log.wod_name = wod.workout_name
+                new_log.workout = wod
+                new_log.user = request.user
+                if wod.workout_type == "FT":
+                    new_result = new_log.ft_result.seconds
+                    # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Min('ft_result'))
+                    max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Min('ft_result'))
+                    if max_result['ft_result__min'] == None:
+                        new_log.personal_record = True
+                    else:
+                        best_result = max_result['ft_result__min'].seconds
+                        if best_result > new_result:
+                            new_log.personal_record = True
+                        else:
+                            new_log.personal_record = False
+                elif wod.workout_type == "AMRAP":
+                    new_result = new_log.amrap_result
+                    # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('amrap_result'))
+                    max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Max('amrap_result'))
+                    if max_result['amrap_result__max'] == None:
+                        new_log.personal_record = True
+                    else:
+                        best_result = max_result['amrap_result__max']
+                        if best_result < new_result:
+                            new_log.personal_record = True
+                        else:
+                            new_log.personal_record = False
+                else:
+                    new_result = new_log.mw_result
+                    # max_result = Log.objects.filter(user=request.user, wod_name=wod.workout_name).aggregate(Max('mw_result'))
+                    max_result = Log.objects.filter(user=request.user, workout=wod).aggregate(Max('mw_result'))
+                    if max_result['mw_result__max'] == None:
+                        new_log.personal_record = True
+                    else:
+                        best_result = max_result['mw_result__max']
+                        if best_result < new_result:
+                            new_log.personal_record = True
+                        else:
+                            new_log.personal_record = False
+                new_log.save()
+                messages.success(request, 'Workout logged: Great work!')
+                return redirect(reverse('workouts', args=(wod_id,)))
+            else:
+                messages.error(request, 'There was an error with your form. \
+                    Please double check your information.')
+                return redirect(reverse('workouts', args=wod_id))
 
 
 def editLog(request):
