@@ -434,6 +434,11 @@ label[for='image-clear_id'] {
     width:25px;
 } */
 
+.no-logs{
+    color: #ffc107;;
+    text-align: center;
+    padding: 15px;
+}
 .rank-counter {
     color: #ffc107;;
     font-weight: bold;

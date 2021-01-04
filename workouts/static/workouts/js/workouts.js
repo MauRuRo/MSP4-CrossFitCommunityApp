@@ -56,7 +56,6 @@ $(document).ready(function() {
         
         // rank-logs navigator:
         $('#rank-all-time').click(function(){
-            // console.log($('#rank-nav').children().css('font-weight'))
             $('.period').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-all-time').css({'font-weight': '700', 'text-decoration': 'underline'})
             if (gender == "F") {
@@ -175,7 +174,6 @@ $(document).ready(function() {
                     let shift = false
                     $('.member-comment').on('keydown', function (e) {
                         if(e.which === 16){
-                            console.log("shift")
                             shift = true
                         }
                     });
@@ -346,7 +344,6 @@ $(document).ready(function() {
         })
 
         function getDate(log_date) {
-            console.log("getDate")
             $.ajax({
                 type:"POST",
                 url: "/workouts/0/dateInput/",
@@ -355,8 +352,6 @@ $(document).ready(function() {
                 },
                 dataType: 'json',
                 success: function(data){
-                    console.log("checking!")
-                    console.log(data.date_input)
                     $('#date').val(data.date_input )
                     return data.date_input                    
                 },
@@ -375,11 +370,8 @@ $(document).ready(function() {
         $("#logform-edit-button").click(function(e){
             e.preventDefault()
             let result = $(".score-result:visible").val()
-            console.log(result)
             let rx = $("#id_rx").prop('checked')
-            console.log(rx)
             let date = $("#date").val()
-            console.log(date)
             let comment = $("#id_user_comment").val()
             let log_id = $("#log-to-edit-id").text()
             $.ajax({
@@ -534,14 +526,10 @@ $(document).ready(function() {
                 let curr = $(this)
                 let par = curr.closest(".log-ranking")
                 let parrank = par.find(".rank-card:first").find(".rank-counter:first")
-                let rankname = parrank.next().children(".rank-name").text()
-                console.log(rankname)
-                
+                let rankname = parrank.next().children(".rank-name").text()                
                 if ( parrank.is(curr)){
-                    console.log("FIRST")
                 }else{    
                     let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log")
-                    console.log(prevscore.text())
                     let currscore = $(this).closest(".rank-card").find(".r-log")
                     let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter")
                     let currcount = $(this)
@@ -552,32 +540,51 @@ $(document).ready(function() {
                         let newrank = prevrank
                         currcount.children("span").text(newrank)
                     }else{
-                        console.log("made it here1")
                         let addcount = parseInt(prevcount.attr("data-counter"))
                         let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
                         currcount.children("span").text(newrank)
                         currcount.attr("data-counter", "0")
                     }
-                    console.log("entered in general")
                 }
             
                 
             });
 
-            $(".block-title").click(function() {
-                let uid = $("#user-id-no").attr("data")
-                let group = $(".log-ranking:visible").attr("class").split(" ")[1]
-                let group_no = group.split("-")[2]
-                let memberid = "#member-id-" + uid + "-group-" + group_no
-                console.log(uid)
-                console.log(memberid)
-                $(memberid).children(".rank-counter").css({"color": "#ffc107", "text-shadow": "2px 2px 1px blue"})
-                let scroll = $(memberid).scrollTop()
-                console.log(scroll)
-                $("#block-1").animate({
-                    scrollTop: $(memberid).offset().top
-                }, 800)
+            // $(".log-ranking").each(function(){
+            //     if ($(this).children(".rank-card").length == 0){
+            //         console.log("TEST")
+            //         $(this).append("<h4>NO LOGS AVAILABLE</h4>")
+            //     }
+            //     console.log("log-ranking")
+            // }) 
 
+            function scrollMyRank(){
+                try{
+                    let uid = $("#user-id-no").attr("data")
+                    let group = $(".log-ranking:visible").attr("class").split(" ")[1]
+                    let group_no = group.split("-")[2]
+                    let memberid = "#member-id-" + uid + "-group-" + group_no
+                    $(memberid).children(".rank-counter").css({"color": "#ffc107", "text-shadow": "2px 2px 1px blue"})
+                    let scroll = $(memberid).scrollTop()
+                    $("#block-1").animate({
+                        scrollTop: $(memberid).offset().top
+                    }, 800)
+                }catch{
+                    console.log("No scrollable element found.")
+                }              
+            };
+
+            $(".block-title").click(function() {
+                scrollMyRank()
             });
-                
+               scrollMyRank()
+              
+            $(".log-ranking").each(function(){
+                if ($(this).children(".rank-card").length == 0){
+                    console.log("TEST")
+                    $(this).append("<h4 class='no-logs'>NO LOGS AVAILABLE YET.</h4>")
+                }
+                console.log("log-ranking")
+            }) 
+            
 });
