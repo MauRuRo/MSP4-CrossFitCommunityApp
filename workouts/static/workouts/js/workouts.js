@@ -10,6 +10,13 @@ $(document).ready(function() {
             group.removeClass('log-rank')
             group.addClass('log-rank-' + i)
         }
+        
+        $(".rank-card").each(function(){
+            let group_no = $(this).parent(".log-ranking").attr("class").slice(-1)
+            let currid= $(this).attr("id")
+            let newid= currid + "-group-" + group_no
+            $(this).attr("id", newid)
+        })
 
         $('#log-workout-button').click(function() {
             if ($("#logform-edit-button").is(":visible")){
@@ -555,6 +562,22 @@ $(document).ready(function() {
                 }
             
                 
+            });
+
+            $(".block-title").click(function() {
+                let uid = $("#user-id-no").attr("data")
+                let group = $(".log-ranking:visible").attr("class").split(" ")[1]
+                let group_no = group.split("-")[2]
+                let memberid = "#member-id-" + uid + "-group-" + group_no
+                console.log(uid)
+                console.log(memberid)
+                $(memberid).children(".rank-counter").css({"color": "#ffc107", "text-shadow": "2px 2px 1px blue"})
+                let scroll = $(memberid).scrollTop()
+                console.log(scroll)
+                $("#block-1").animate({
+                    scrollTop: $(memberid).offset().top
+                }, 800)
+
             });
                 
 });
