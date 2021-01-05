@@ -418,17 +418,19 @@ $(document).ready(function() {
             let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
             $("#log-to-edit-id").html(log_id)
             let info = $(this).closest('.rank-card').children('.card-col')
-            let result = info.find('.r-log')
+            let result = info.find('.r-log:first')
             let result_type = result.attr('class').split(" ")[0]
+            console.log(result_type)
             let result_log= result.text()
+            console.log(result_log)
             let extra_info = $(this).closest('.rank-card').next('.extra-log-info')
             let log_date = extra_info.find('.log-date').html()
             getDate(log_date)
             let rx_log = extra_info.find('.log-rx').text()
             let comment_log = extra_info.next('.extra-log-info').find('.comment-log').text().slice(1,-1)
-            if (result_type == 'ft_log'){
+            if (result_type == 'ft-log'){
                 $('#id_ft_result').val(result_log)
-            } else if (result_type == 'amrap_log') {
+            } else if (result_type == 'amrap-log') {
                 $('#id_amrap_result').val(result_log)
             } else {
                 $('#id_mw_result').val(result_log)

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, time
 from profiles.models import UserProfile, User
 from .models import Workout, MemberComment, Log
 from .forms import LogForm, MemberCommentForm
@@ -162,6 +162,7 @@ def workouts(request, wod_id):
             result = 'mw_result'
             non_result_1 = 'amrap_result'
             non_result_2 = 'ft_result'
+        print("The result is: " + request.POST[f"{result}"])
         form_data = {
             f"{result}": request.POST[f"{result}"],
             f"{non_result_1}": 0,
@@ -238,66 +239,62 @@ def editLog(request):
                 rx_input = False
             else:
                 rx_input = True
-            if request.user == log.user:
-                if wod_type == "FT":
-                    Log.objects.filter(pk=log_id).update(ft_result=request.POST["result"])
-                    new_result = request.POST["result"]
-                    max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Min('ft_result'))
-                    if max_result['ft_result__min'] == None:
-                        Log.objects.filter(pk=log_id).update(personal_record= True)
-                    else:
-                        best_result = max_result['ft_result__min'].seconds
-                        if best_result > new_result:
-                            Log.objects.filter(pk=log_id).update(personal_record= True)
-                        else:
-                            Log.objects.filter(pk=log_id).update(personal_record= False)
-
-                elif wod_type == "AMRAP":
-                    Log.objects.filter(pk=log_id).update(amrap_result=request.POST["result"])
-                    new_result = request.POST["result"]
-                    max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('amrap_result'))
-                    if max_result['amrap_result__max'] == None:
-                        Log.objects.filter(pk=log_id).update(personal_record= True)
-                    else:
-                        best_result = max_result['amrap_result__max']
-                        if best_result < new_result:
-                            Log.objects.filter(pk=log_id).update(personal_record= True)
-                        else:
-                            Log.objects.filter(pk=log_id).update(personal_record= False)
+            if wod_type == "FT":
+                new_result = parse_duration(request.POST["result"])
+                if new_result == None:
+                    data = {"message": "Error"}
+                    messages.error(request, "Your update failed.")
+                    return HttpResponse(json.dumps(data), content_type='application/json')
+                max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Min('ft_result'))
+                Log.objects.filter(pk=log_id).update(ft_result=new_result)
+                if max_result['ft_result__min'] == None:
+                    Log.objects.filter(pk=log_id).update(personal_record= True)
                 else:
-                    print("check1")
-                    Log.objects.filter(pk=log_id).update(mw_result=request.POST["result"])
-                    new_result = float(request.POST["result"])
-                    max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('mw_result'))
-                    if max_result['mw_result__max'] == None:
-                        print("check2")
+                    best_result = max_result['ft_result__min'].seconds
+                    new_result_s = new_result.seconds
+                    if best_result > new_result_s:
                         Log.objects.filter(pk=log_id).update(personal_record= True)
                     else:
-                        print("check3")
-                        best_result = max_result['mw_result__max']
-                        print(best_result)
-                        print(new_result)
-                        if best_result < new_result:
-                            Log.objects.filter(pk=log_id).update(personal_record= True)
-                            print("check4")
-                        else:
-                            Log.objects.filter(pk=log_id).update(personal_record= False)
-                            print("check5")
-                Log.objects.filter(pk=log_id).update(rx=rx_input)
-                Log.objects.filter(pk=log_id).update(date=date)
-                Log.objects.filter(pk=log_id).update(user_comment=request.POST["comment"])
-                data = {"message": "Succesfull edit"}
-                messages.success(request, "Your log was updated successfully.")
-                return HttpResponse(json.dumps(data), content_type='application/json')
-        else:
+                        Log.objects.filter(pk=log_id).update(personal_record= False)
+
+            elif wod_type == "AMRAP":
+                max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('amrap_result'))
+                Log.objects.filter(pk=log_id).update(amrap_result=request.POST["result"])
+                new_result = float(request.POST["result"])
+                if max_result['amrap_result__max'] == None:
+                    Log.objects.filter(pk=log_id).update(personal_record= True)
+                else:
+                    best_result = max_result['amrap_result__max']
+                    if best_result < new_result:
+                        Log.objects.filter(pk=log_id).update(personal_record= True)
+                    else:
+                        Log.objects.filter(pk=log_id).update(personal_record= False)
+            else:
+                max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('mw_result'))
+                Log.objects.filter(pk=log_id).update(mw_result=request.POST["result"])
+                new_result = float(request.POST["result"])
+                if max_result['mw_result__max'] == None:
+                    Log.objects.filter(pk=log_id).update(personal_record= True)
+                else:
+                    best_result = max_result['mw_result__max']
+                    if best_result < new_result:
+                        Log.objects.filter(pk=log_id).update(personal_record= True)
+                    else:
+                        Log.objects.filter(pk=log_id).update(personal_record= False)
+            Log.objects.filter(pk=log_id).update(rx=rx_input)
+            Log.objects.filter(pk=log_id).update(date=date)
+            Log.objects.filter(pk=log_id).update(user_comment=request.POST["comment"])
             data = {"message": "Succesfull edit"}
+            messages.success(request, "Your log was updated successfully.")
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            data = {"message": "Error"}
             messages.error(request, "You cannot update another member's log.")
             return HttpResponse(json.dumps(data), content_type='application/json')
     else:
-        data = {"message": "Succesfull edit"}
+        data = {"message": "Error"}
         messages.error(request, "Your update failed.")
         return HttpResponse(json.dumps(data), content_type='application/json')
-
 
 
 def deleteLog(request):
