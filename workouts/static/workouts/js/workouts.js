@@ -11,7 +11,7 @@ $(document).ready(function() {
             group.addClass('log-rank-' + i)
         }
         
-        $(".rank-card").each(function(){
+        $(".log-ranking").find(".rank-card").each(function(){
             let group_no = $(this).parent(".log-ranking").attr("class").slice(-1)
             let currid= $(this).attr("id")
             let newid= currid + "-group-" + group_no
@@ -56,11 +56,82 @@ $(document).ready(function() {
         }
         $('#rank-today').css({'font-weight': '700', 'text-decoration': 'underline'})
         let period = 'today'
-        
+        let people = 'everybody'
+        let wodhistory = 'thiswod'
+
+        // history-logs navigator:
+          $('#his-everybody').click(function(){
+            if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
+                element =$("#block-3")
+                scrollToTopRankFast(element)
+            }
+            $('.his-people').css({'font-weight': '400', 'text-decoration': 'none'})
+            $('#his-everybody').css({'font-weight': '700', 'text-decoration': 'underline'})
+            if (wodhistory == "thiswod") {
+                $('.log-history').hide()
+                $('.log-his-2').show()
+            } else {
+                $('.log-history').hide()
+                $('.log-his-1').show()
+            }
+            people = 'everybody'               
+        })
+        $('#his-me').click(function(){
+            if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
+                element =$("#block-3")
+                scrollToTopRankFast(element)
+            }
+            $('.his-people').css({'font-weight': '400', 'text-decoration': 'none'})
+            $('#his-me').css({'font-weight': '700', 'text-decoration': 'underline'})
+            if (wodhistory == "thiswod") {
+                $('.log-history').hide()
+                $('.log-his-4').show()
+            } else {
+                $('.log-history').hide()
+                $('.log-his-3').show()
+            }
+            people = 'me'
+        })
+        $('#his-all-wod').click(function(){
+            if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
+                element =$("#block-3")
+                scrollToTopRankFast(element)
+            }
+            $('.his-wods').css({'font-weight': '400', 'text-decoration': 'none'})
+            $('#his-all-wod').css({'font-weight': '700', 'text-decoration': 'underline'})
+            if (people == "everybody") {
+                $('.log-history').hide()
+                $('.log-his-1').show()
+            } else {
+                $('.log-history').hide()
+                $('.log-his-3').show()
+            }
+            wodhistory = 'allwods'
+        })
+        $('#his-this-wod').click(function(){
+            if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
+                element =$("#block-3")
+                scrollToTopRankFast(element)
+            }
+            $('.his-wods').css({'font-weight': '400', 'text-decoration': 'none'})
+            $('#his-this-wod').css({'font-weight': '700', 'text-decoration': 'underline'})
+            if (people == "everybody") {
+                $('.log-history').hide()
+                $('.log-his-2').show()
+            } else {
+                $('.log-history').hide()
+                $('.log-his-4').show()
+            }
+            wodhistory = 'thiswod'
+        })
+        $("#his-everybody").trigger("click")
+        $("#his-this-wod").trigger("click")
+
         // rank-logs navigator:
         $('#rank-all-time').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
-                scrollToTopRankFast()
+                element =$("#block-1")
+                scrollToTopRankFast(element)
             }
             $('.period').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-all-time').css({'font-weight': '700', 'text-decoration': 'underline'})
@@ -77,7 +148,8 @@ $(document).ready(function() {
         })
         $('#rank-today').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
-                scrollToTopRankFast()
+                element =$("#block-1")
+                scrollToTopRankFast(element)
             }
             $('.period').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-today').css({'font-weight': '700', 'text-decoration': 'underline'})
@@ -93,7 +165,8 @@ $(document).ready(function() {
         })
         $('#rank-men').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
-                scrollToTopRankFast()
+                element =$("#block-1")
+                scrollToTopRankFast(element)
             }
             $('.gender').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-men').css({'font-weight': '700', 'text-decoration': 'underline'})
@@ -109,7 +182,8 @@ $(document).ready(function() {
         })
         $('#rank-women').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
-                scrollToTopRankFast()
+                element =$("#block-1")
+                scrollToTopRankFast(element)
             }
             $('.gender').css({'font-weight': '400', 'text-decoration': 'none'})
             $('#rank-women').css({'font-weight': '700', 'text-decoration': 'underline'})
@@ -123,25 +197,25 @@ $(document).ready(function() {
             gender = 'F'
             scrollMyRank()  
         })
-        // log-history navigator:
-        $('.log-history').hide()
-        $('.log-his-2').show()
-        $('#all-all').click(function(){
-            $('.log-history').hide()
-            $('.log-his-1').show()
-        })
-        $('#all-wod').click(function(){
-            $('.log-history').hide()
-            $('.log-his-2').show()
-        })
-        $('#user-all').click(function(){
-            $('.log-history').hide()
-            $('.log-his-3').show()
-        })
-        $('#user-wod').click(function(){
-            $('.log-history').hide()
-            $('.log-his-4').show()
-        })
+        // // log-history navigator:
+        // $('.log-history').hide()
+        // $('.log-his-2').show()
+        // $('#all-all').click(function(){
+        //     $('.log-history').hide()
+        //     $('.log-his-1').show()
+        // })
+        // $('#all-wod').click(function(){
+        //     $('.log-history').hide()
+        //     $('.log-his-2').show()
+        // })
+        // $('#user-all').click(function(){
+        //     $('.log-history').hide()
+        //     $('.log-his-3').show()
+        // })
+        // $('#user-wod').click(function(){
+        //     $('.log-history').hide()
+        //     $('.log-his-4').show()
+        // })
         $('.r-log').each(function(){
             if (!$(this).hasClass('ft-log')) {
                 while ($(this).text().slice(-1) == '0' || $(this).text().slice(-1) == '.') {
@@ -156,17 +230,20 @@ $(document).ready(function() {
                 }
             }
         })
+
         $('.extra-log-info').each(function(){
             let group_class_name = $(this).parent().attr('class')
             let group_id = group_class_name.split(" ")[1]
             $(this).addClass(group_id + "X")
         })
+
         $('.extra-log-info').hide()
+
         $('.rank-card').children('.card-col').click(function(){
             let main_card = "#" + $(this).parent().attr('id')
             let log_name = $(this).parents().attr('name')
             let log_name_class = "." + log_name
-            let group_class_name = $(this).parent().parent().attr('class')
+            let group_class_name = $(this).closest(".log-ranking, .log-history").attr('class')
             let group_id = log_name_class + "." + group_class_name.split(" ")[1] + "X"
             let extra_info_cards = $(group_id);
             // let last_info_card = extra_info_cards.last()
@@ -177,6 +254,7 @@ $(document).ready(function() {
             if ($(this).parent().hasClass('remove-borders-main')) {
                 $(this).parent().removeClass('remove-borders-main');
                 $(main_card).prev('.m-log-id').removeAttr('id');
+                $(this).parent().css("border-bottom", "1px solid grey")
             }else{
                 $(this).parent().addClass('remove-borders-main');
                 $(main_card).prev('.m-log-id').attr('id', 'm-log-id');
@@ -189,20 +267,50 @@ $(document).ready(function() {
             $(this).parent().attr("id", "member-comment-form")
         })
 
-        function focusFields() {
-            if ($('.member-comment').focus()) { 
+        // function focusFields() {
+        //     if ($('.member-comment').focus()) { 
+        //             let shift = false
+        //             $('.member-comment').on('keydown', function (e) {
+        //                 if(e.which === 16){
+        //                     shift = true
+        //                 }
+        //             });
+        //             $('.member-comment').on('keyup', function (e) {
+        //                 if(e.which === 16){
+        //                     shift = false
+        //                 }
+        //             });
+        //             $('.member-comment').on('keypress', function (e) {
+        //                 let m_comment_ta = $(this)
+        //                 let m_comment = m_comment_ta.val()
+        //                 if(e.which === 13 && shift == false){
+        //                     //Disable textbox to prevent multiple submit
+        //                     $(this).attr("disabled", "disabled");
+        //                     //Do Stuff, submit, etc..
+        //                     submitComment(m_comment, m_comment_ta)
+        //                     //Enable the textbox again if needed.
+        //                     $(this).removeAttr("disabled");                   
+        //                 }
+        //             });
+        //         }
+        // };
+        // focusFields()
+
+            // $(document).on("focus", ".member-comment", function(){
+            //     console.log("RUNNIG FOCUS")
                     let shift = false
-                    $('.member-comment').on('keydown', function (e) {
+                    $(document).on('keydown', '.member-comment', function (e) {
                         if(e.which === 16){
                             shift = true
+                            console.log("SHIFT")
                         }
                     });
-                    $('.member-comment').on('keyup', function (e) {
+                    $(document).on('keyup', '.member-comment', function (e) {
                         if(e.which === 16){
                             shift = false
                         }
                     });
-                    $('.member-comment').on('keypress', function (e) {
+                    $(document).on('keypress', '.member-comment', function (e) {
                         let m_comment_ta = $(this)
                         let m_comment = m_comment_ta.val()
                         if(e.which === 13 && shift == false){
@@ -214,11 +322,11 @@ $(document).ready(function() {
                             $(this).removeAttr("disabled");                   
                         }
                     });
-                }
-        };
-        focusFields()
+                // })
+        // };
+    
 
-        if ($('.user-comment').focus()) {            
+        if ($('.user-comment').focus()) {
             let shift = false
             $('.user-comment').on('keydown', function (e) {
                 if(e.which === 16){
@@ -262,6 +370,7 @@ $(document).ready(function() {
             if (crud_info != "comment-upload") {
                 comment_id = m_comment_ta.prev('.comment-id').text()
             }
+            // let m_log_id = m_comment_ta.closest(".row").prevAll('.m-log-id').attr('data')
             let m_log_id = $('#m-log-id').attr('data')
             $.ajax({
                 type:"POST",
@@ -277,35 +386,38 @@ $(document).ready(function() {
                 success: function(data){
                     if (crud_info == 'comment-upload'){
                         $('#comment-id').text(data.new_comment_id)
-                        let nci = $('#comment-id').parent('form:visible').children('#comment-id')
-                        nci.removeAttr('id')
+                        $('#comment-id').attr("data-comment-id", data.new_comment_id)
                         let template = $('#hidden-row-template').html()
-                        $('#member-comment-form').closest('.row').before(template)
-                        let newrow = $('#member-comment-form').closest('.row').prev(".row")
-                        newrow.find('.new-comment').text('"' + data.message + '"')
-                        $('#member-comment-ta').text(data.message)
+                        let log_card_name = m_comment_ta.closest(".row").prevAll(".rank-card:first").attr('name')
+                        let last_rows = $(`.add-border-last[data-logid=${log_card_name}]`).find("textarea")
+                        last_rows.closest(".row").before(template)
+                        let newrow = last_rows.closest('.row').prev(".row")
+                        newrow.hide()
+                        let newrow_curr = m_comment_ta.closest('.row').prev(".row")
+                        newrow_curr.show()
+                        newrow.find('.new-comment:first').text('"' + data.message + '"')
+                        newrow.find("textarea").text(data.message)
                         let commenting_member = $('#profile-name').html()
-                        newrow.find('.new-comment-member').text(commenting_member + ":")
-                        // $('#new-comment-member').not(':hidden').removeAttr('id')
-                        // $('#new-comment').not(':hidden').removeAttr('id')
-                        $('#member-comment-form').removeAttr('id')
-                        $('#member-comment-ta').removeAttr('id')
-                        let new_row = $('.new-row:visible')
-                        let old_row = $('.new-row:visible').prev('.row').attr('class')
-                        new_row.attr('class', old_row)                    
+                        newrow.find('.new-comment-member:first').text(commenting_member + ":")
+                        m_comment_ta.closest("form").removeAttr("id")
+                        newrow.find("textarea").removeAttr('id')
+                        let hidden_row = $("#hidden-row-template").find(".new-row")
+                        let new_rows = $(".new-row").not(hidden_row)
+                        new_rows.each(function(){
+                            old_row = $(this).prev('.row').attr('class')
+                            $(this).attr("class", old_row)
+                        })               
                         m_comment_ta.val("")
                     }else if (crud_info == 'comment-edit'){
-                        m_comment_ta.closest(".x-info").find('.comment-log').text('"'+data.message+'"')
+                        m_comment_ta.closest(".x-info").find('.comment-log:first').text('"'+data.message+'"')
                         m_comment_ta.closest('.edit-comment-form').hide()
-                        m_comment_ta.closest(".x-info").find('.comment-info').show()
+                        m_comment_ta.closest(".x-info").find('.comment-info:first').show()
                     }
                 $('#active-edit-form').removeAttr('id')
                 $('#active-edit-hidden-info').removeAttr('id')
                 $("#clicked-edit").removeAttr('id')
                 $('#member-comment-form').removeAttr('id')
-                focusFields()
                 click_const=0
-                    
                 },
                 error: function(){
                     console.log("Failed")
@@ -353,13 +465,14 @@ $(document).ready(function() {
        };
        
        $(document).on("click", ".delete-comment", function(){
-            // let comment_type = $(this).parent().siblings('.edit-comment-form').find('textarea').attr('class')
-            // let comment_id = $(this).parent().siblings('.edit-comment-form').find('.comment-id').text()
-            let comment_type = $(this).closest('.col-2').siblings('.card-col').find('textarea').attr('class')            
-            let comment_id = $(this).closest('.col-2').siblings('.card-col').find('.comment-id').text()
+            let comment_type = $(this).closest('.col-2').siblings('.card-col').find('textarea:first').attr('class')            
+            let comment_id = $(this).closest('.col-2').siblings('.card-col').find('.comment-id:first').text()
+            let comment_id_data = $(this).closest(".col-2").siblings(".card-col").find(".comment-id:first").attr("data-comment-id")
+            let same_comments = $(`.comment-id[data-comment-id=${comment_id_data}]`).closest(".extra-log-info")
+            console.log(comment_id_data)
             deleteComment(comment_id, comment_type)
-            // $(this).closest('.extra-log-info').remove()
-             $(this).closest('.extra-log-info').remove()
+            same_comments.remove()
+            //  $(this).closest('.extra-log-info').remove()
 
         })
 
@@ -394,6 +507,7 @@ $(document).ready(function() {
             let date = $("#date").val()
             let comment = $("#id_user_comment").val()
             let log_id = $("#log-to-edit-id").text()
+            console.log(log_id)
             $.ajax({
                 type:"POST",
                 url: "/workouts/0/editLog/",
@@ -418,16 +532,16 @@ $(document).ready(function() {
             let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
             $("#log-to-edit-id").html(log_id)
             let info = $(this).closest('.rank-card').children('.card-col')
-            let result = info.find('.r-log:first')
+            let result = info.find('.r-log:first, .h-log:first')
             let result_type = result.attr('class').split(" ")[0]
             console.log(result_type)
             let result_log= result.text()
             console.log(result_log)
             let extra_info = $(this).closest('.rank-card').next('.extra-log-info')
-            let log_date = extra_info.find('.log-date').html()
+            let log_date = extra_info.find('.log-date:first').html()
             getDate(log_date)
-            let rx_log = extra_info.find('.log-rx').text()
-            let comment_log = extra_info.next('.extra-log-info').find('.comment-log').text().slice(1,-1)
+            let rx_log = extra_info.find('.log-rx:first').text()
+            let comment_log = extra_info.next('.extra-log-info').find('.comment-log:first').text().slice(1,-1)
             if (result_type == 'ft-log'){
                 $('#id_ft_result').val(result_log)
             } else if (result_type == 'amrap-log') {
@@ -457,12 +571,16 @@ $(document).ready(function() {
         })
         $(document).on("click", ".edit-comment", function(){
            let clicked_comment = $(this)
-           let m_comment_ta = $(this).closest('.col-2').siblings('.card-col').find('textarea')
+           let m_comment_ta = $(this).closest('.col-2').siblings('.card-col').find('textarea:first')
            let m_comment = m_comment_ta.val()
-            if ($(this).closest('.col-2').siblings('.card-col').find('.edit-comment-form').is(':visible')) {             
+            //    Check if the form is currently visible/open
+            // if ($(this).closest('.col-2').siblings('.card-col').find('.edit-comment-form').is(':visible')) {         
+            if ($(this).attr('id') == 'clicked-edit') {         
                 submitComment(m_comment, m_comment_ta)
                 clicked_comment.removeAttr('id')
             } else if ($(this).attr('id') != 'clicked-edit') {
+                console.log("test")
+                console.log(m_comment)
                 cancelEdit()
                 m_comment_ta.focus()
                 clicked_comment.closest('.col-2').siblings('.card-col').find('.edit-comment-form').removeAttr('hidden').show()
@@ -544,16 +662,16 @@ $(document).ready(function() {
             })
             
             // ALLOW FOR TIES IN RANKING
-            $(".rank-counter").each(function(){
+            $(".log-ranking").find(".rank-counter").each(function(){
                 let curr = $(this)
                 let par = curr.closest(".log-ranking")
                 let parrank = par.find(".rank-card:first").find(".rank-counter:first")
                 let rankname = parrank.next().children(".rank-name").text()                
                 if ( parrank.is(curr)){
                 }else{    
-                    let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log")
-                    let currscore = $(this).closest(".rank-card").find(".r-log")
-                    let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter")
+                    let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
+                    let currscore = $(this).closest(".rank-card").find(".r-log:first")
+                    let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter:first")
                     let currcount = $(this)
                     if (prevscore.text() == currscore.text()){
                         let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
@@ -571,20 +689,21 @@ $(document).ready(function() {
             
                 
             });
-            $("#block-1").scroll(function(){
-                if ($("#block-1").scrollTop() > 4){
-                    $(".block-header").css('border-bottom', 'dotted 3px grey')
+            $("#block-1, #block-3").scroll(function(){
+                if ($(this).scrollTop() > 4){
+                    $(this).find(".block-header").css('border-bottom', 'dotted 3px grey')
                 }else{
-                    $(".block-header").css('border-bottom', '')
+                    $(this).find(".block-header").css('border-bottom', '')
                 }
             });
 
-            function  scrollToTopRank(){
-                $("#block-1").animate({
+            function  scrollToTopRank(element){
+                console.log("TEST")
+                element.animate({
                     scrollTop: 0}, 800)
             };
-            function  scrollToTopRankFast(){
-                $("#block-1").animate({
+            function  scrollToTopRankFast(element){
+                element.animate({
                     scrollTop: 0}, 0)
             };
             function scrollMyRank(){
@@ -605,7 +724,8 @@ $(document).ready(function() {
             };
 
             $(".block-title").click(function() {
-                scrollToTopRank()
+                element = $(this).closest(".fillblock")
+                scrollToTopRank(element)
             });
                scrollMyRank()
               
@@ -621,5 +741,62 @@ $(document).ready(function() {
                     $("block-header").css("border-bottom", "")
                 }
             });
+
+            $(".his-date").each(function() {
+                let date = $(this).text()
+                let month = ''
+                let day = ''
+                try {
+                    month = date.split(".")[0]
+                    day = date.split(". ")[1].split(",")[0]
+                    let year = date.split(", ")[1].slice(-2)
+                }catch{
+                    month = date.split(" ")[0].slice(0, -1)
+                    day = date.split(" ")[1].split(",")[0]
+                    let year = date.split(", ")[1].slice(-2)
+                }
+                $(this).html(`<div class='display-month'>${month}</div><div class='display-day'>${day}</div>`)
+            })
+            
+            function sizeLargeNumbers(number) {
+                no = parseInt(number.text())
+                if ( no > 9 && no < 100) {
+                    number.addClass("size-ten")
+                }else if (no > 99 && no < 1000 ){
+                    number.addClass("size-hundred")
+                }else if (no > 999 && no < 10000){
+                    number.addClass("size-thousand")
+                }else if (no > 9999 && no < 100000){
+                    number.addClass("size-tenK")
+                }else if (no > 99999){
+                    number.addClass("size-hunK")
+                }
+            }
+
+            $(".rank-counter").children("span").each(function(){
+                sizeLargeNumbers($(this))
+            })
+
+            $(".card-col").mouseenter(function(){
+                console.log("BEST")
+                if ($(this).closest(".rank-card").next(".extra-log-info").is(":visible")){
+                    console.log("TEST")
+                    $(this).closest(".rank-card").css("border-color", "blue")
+                    $(this).closest(".rank-card").css("border-bottom", "none")
+                    $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-color", "blue")
+                    $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-top", "none")
+                    $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-bottom", "none")
+                    $(this).closest(".rank-card").nextAll(".add-border-last:first").css("border-color", "blue")
+                    $(this).closest(".rank-card").nextAll(".add-border-last:first").css("border-top", "none")
+                }else{
+                    $(this).closest(".rank-card").css("border-color", "blue");
+                }
+            })
+            $(".card-col").mouseleave(function(){
+                $(this).closest(".rank-card").css("border-color", "");
+                $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-color", "")
+                $(this).closest(".rank-card").find(".add-border-last:first").css("border-color", "")
+            })
+
             
 });

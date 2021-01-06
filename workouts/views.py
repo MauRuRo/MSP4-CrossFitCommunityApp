@@ -92,23 +92,18 @@ def workouts(request, wod_id):
             all_men.append(man.user.username)
         # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
         all_logs = Log.objects.all().order_by('-date')
-        # all_logs_wod = all_logs.filter(wod_name=wod.workout_name)
         all_logs_wod = all_logs.filter(workout=wod)
         user_logs = all_logs.filter(user=request.user)
-        # user_logs_wod = user_logs.filter(wod_name=wod.workout_name)
         user_logs_wod = user_logs.filter(workout=wod)
         log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
         # For rank list, find out type of wod, set proper result field and order.
         if wod.workout_type == 'FT':
-            # all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('ft_result')
             all_logs_rank = Log.objects.filter(workout=wod).order_by('ft_result')
             rank_result = 'ft_result'
         elif wod.workout_type == 'AMRAP':
-            # all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-amrap_result')
             all_logs_rank = Log.objects.filter(workout=wod).order_by('-amrap_result')
             rank_result = 'amrap_result'
         else:
-            # all_logs_rank = Log.objects.filter(wod_name=wod.workout_name).order_by('-mw_result')
             all_logs_rank = Log.objects.filter(workout=wod).order_by('-mw_result')
             rank_result = 'mw_result'
         # filter out all logs that are not Rx
@@ -127,13 +122,6 @@ def workouts(request, wod_id):
         all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
         # list queries to pass to context
         rank_groups = [all_logs_rank_men, all_logs_rank_women, all_logs_rank_men_today, all_logs_rank_women_today]
-        # ##### REDUNDANT CODE?
-        # if log is None:
-        #     result = "No logs for this WOD"
-        # else:
-        #     duration = str(log.ft_result)
-        #     result = striphours(duration)
-        #######
         # Get todays date and convert it to string
         date_today = date.today()
         date_initial = date_today.strftime("%d %b %Y")

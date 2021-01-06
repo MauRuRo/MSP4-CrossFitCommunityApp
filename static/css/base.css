@@ -412,16 +412,47 @@ label[for='image-clear_id'] {
     padding-top: 8px;
     z-index:1000!important;
 }
-.log-ranking,
-.log-history {
-    list-style: none;
-}
 
+.log-history,
 .log-ranking {
     /* https://css-tricks.com/custom-list-number-styling/ */
     /* counter-reset: my-awesome-counter; */
     padding-left:0px;
     font-size:0.75rem;
+    list-style: none;
+}
+
+.rank-name-spacing a {
+    text-decoration: none;
+    color: black;
+}
+.rank-name-spacing a:hover {
+    color:blue;
+}
+
+.rank-card .card-col{
+    cursor:pointer;
+}
+
+.display-month{
+    font-size: 1.0rem;
+    font-family: 'Bungee';
+    letter-spacing: -2px;
+    position: absolute;
+    top: -19px;
+    left: 0;
+    color: rgba(128, 128, 128, 0.8);
+    /* text-shadow: 1px 1px rgba(0, 0, 0, 0.5); */
+}
+.display-day{
+    font-size: 1.5rem;
+    font-family: 'Bungee';
+    letter-spacing: -2px;
+    position: absolute;
+    top: -9px;
+    left: 1px;
+    color: rgba(255, 193, 7,0.8);
+    /* text-shadow: 1px 1px rgba(0, 0, 0, 0.5); */
 }
 
 .rank-card {
@@ -449,8 +480,8 @@ label[for='image-clear_id'] {
 }
 .rank-counter {
     color: #ffc107;;
-    font-weight: bold;
     font-size:1.5rem;
+    font-family: 'Bungee';
 }
 .rank-counter span {
     position: absolute;
@@ -560,6 +591,8 @@ label[for='image-clear_id'] {
     cursor: pointer;
 }
 
+.his-wods,
+.his-people,
 .period,
 .gender{
     cursor:pointer;
@@ -575,8 +608,13 @@ ol#rank-nav li {
     list-style:none;
 }
 
+.his-wod-name,
 .rank-name{
     margin-top:4px;
+}
+
+.his-wod-name{
+    font-family: 'Bungee';
 }
 .x-info {
     font-size:0.7rem;
@@ -622,6 +660,11 @@ ol#rank-nav li {
         float:left;
         width:95%;
     }
+
+    .rank-name-spacing{
+        float:left;
+        width:73%;
+    }
     .comment-info p strong {
         color: grey;
         margin-bottom: 3px;
@@ -651,6 +694,26 @@ ol#rank-nav li {
     }
     .input-group-addon {
         z-index: 9999;
+    }
+
+    .size-ten {
+        font-size:1.4rem;
+    }
+    .size-hundred {
+        font-size:1.0rem;
+        margin-top:1px;
+    }
+    .size-thousand {
+        font-size:0.75rem;
+        margin-top:2px;
+    }
+    .size-tenK {
+        font-size:0.6rem;
+        margin-top:3px;
+    }
+    .size-hunK {
+        font-size:0.5rem;
+        margin-top:3px;
     }
 /* MEDIAQUERIES */
 

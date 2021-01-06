@@ -20,12 +20,9 @@
                     <div class="row">
                         <p class="workout-description">{{ wod.description }}</p>
                     </div>
-                    <!-- <div class="row mr-2 justify-content-end">
-                        <a class="btn btn-black rounded-0" href="#" id="log-workout-button">Log Workout</a>
-                    </div>                     -->
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-3 content-block align-self-start order-2 order-md-3">
+            <div class="col-sm-6 col-lg-3 content-block align-self-start order-2 order-sm-3">
                 <div class="fillblock mb-3" id="block-1">
                     <div id="log-ranking-div">
                         {% include 'workouts/includes/log-ranking.html' %} 
@@ -35,15 +32,20 @@
                     </div>           
                 </div>
             </div>           
-            <div class="col-sm-6 col-lg-3 content-block align-self-start order-3 order-md-2 order-lg-1">
-                <div class="fillblock p-2 mb-3" id="block-3">
+            <div class="col-sm-6 col-lg-3 content-block align-self-start order-3 order-sm-2 order-lg-1">
+                <div class="fillblock mb-3" id="block-3">
+
+                    <div id="log-history-div">
+                        {% include 'workouts/includes/log-history.html' %} 
+                    </div>
+<!--                     
                     Activity History
                     <span id="all-all">All</span><br>
                     <span id="all-wod">All-WOD</span><br>
                     <span id="user-all">{{ profile.full_name}}</span><br>
                     <span id="user-wod">{{ profile.full_name }}-WOD</span><br>
-                    <!-- '1' is a temporary placeholder for search value -->
-                    <a href="{% url 'workouts' 1 %}">New WOD1</a>
+                    '1' is a temporary placeholder for search value -->
+                    <!-- <a href="{% url 'workouts' 1 %}">New WOD1</a>
                     <a href="{% url 'workouts' 2 %}">New WOD2</a>
                     <a href="{% url 'workouts' 3 %}">New WOD3</a>
                     <a href="{% url 'workouts' 4 %}">New WOD4</a>
@@ -57,7 +59,7 @@
                                     <li>{{ member_log.date }}</li>
                                 {% endfor %}
                                 </ul>
-                        {% endfor %}
+                        {% endfor %} -->
                 </div>
             </div>
         </div>

@@ -1,41 +1,42 @@
 <div class="block-header sticky-top justify-content-center">
-    <h4 class="block-title">WOD Ranking</h4>
+    <h4 class="block-title">WOD Activity</h4>
     <ol id="rank-nav">
-        <li id="rank-all-time" class="period">Year</li>
+        <li id="his-everybody" class="his-people">Everybody</li>
         -
-        <li id="rank-today" class="period">Today</li>
+        <li id="his-me" class="his-people">Me</li>
         |
-        <li id="rank-men" class="gender">Men</li>
+        <li id="his-all-wod" class="his-wods">All WODs</li>
         -
-        <li id="rank-women" class="gender">Women</li>
+        <li id="his-this-wod" class="his-wods">This WOD</li>
     </ol>
 </div>
-        {% for r_group in rank_groups %}
-            <ol class="log-ranking log-rank">
-            {% for member_r_log in r_group %}  
-                    <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
-                    <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_r_log.id }}" id="member-id-{{ member_r_log.user.pk }}">
-                        <div class="col-1 rank-counter" data-counter="0"><span>1</span></div>
+        {% for h_group in log_groups %}
+            <ol class="log-history log-his">
+            {% for member_h_log in h_group %}  
+                    <div class="m-log-id" data="{{ member_h_log.pk }}" hidden></div>              
+                    <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_h_log.id }}" id="his-member-id-{{ member_h_log.user.pk }}">
+                        <div class="col-1 his-date">{{ member_h_log.date }}</div>
                         <div class="card-col col-8 px-1">
                             <div class="rank-name-spacing">
-                                <p class="rank-name"><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
-                                {% if rank_result == 'ft_result' %}
-                                <p><span class="ft-log r-log">{{ member_r_log.ft_result }}</span></p>
-                                {% elif rank_result == 'amrap_result' %}
-                                <p><span class="amrap-log r-log">{{ member_r_log.amrap_result }}</span> rounds</p>
+                                <p class="rank-name"><strong>{{ member_h_log.user.userprofile.full_name }}</strong></p>
+                                <a href="{% url 'workouts' member_h_log.workout.pk %}"><p class="his-wod-name"><strong>{{ member_h_log.workout.workout_name }}</strong></p></a>
+                                {% if member_h_log.workout.workout_type == 'FT' %}
+                                <p><span class="ft-log h-log">{{ member_h_log.ft_result }}</span></p>
+                                {% elif member_h_log.workout.workout_type == 'AMRAP' %}
+                                <p><span class="amrap-log h-log">{{ member_h_log.amrap_result }}</span> rounds</p>
                                 {% else %}
-                                <p><span class="mw-log r-log">{{ member_r_log.mw_result }}</span>kg</p>
+                                <p><span class="mw-log h-log">{{ member_h_log.mw_result }}</span>kg</p>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="col-2 px-0 align-self-center justify-content-end">
-                            <div class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
+                            <div class="pf-rnk-circle" style="background: url('{{member_h_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
                             </div>
-                            <i class="fflag fflag-{{ member_r_log.user.userprofile.country.code }} ff-lg ff-round rank-flag" aria-label="{{ member_r_log.user.userprofile.country.code }}"></i>
-                            {% if member_r_log.personal_record %}
+                            <i class="fflag fflag-{{ member_h_log.user.userprofile.country.code }} ff-lg ff-round rank-flag" aria-label="{{ member_h_log.user.userprofile.country.code }}"></i>
+                            {% if member_h_log.personal_record %}
                             <div class="pr-logo-circle" style="background: url('/media/herocommunitylogo-PR-lean.jpg') no-repeat; background-size: cover"></div>
                             {% endif %}
-                            {% if member_r_log.user == request.user %}
+                            {% if member_h_log.user == request.user %}
                             <div class="crud-icons-log">
                                 <i class="far fa-edit edit-log"></i><br>
                                 <i class="far fa-trash-alt delete-log"></i>
@@ -44,14 +45,14 @@
                         </div>
                     </div>
                     <!-- EXTRA INFO -->
-                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_h_log.id }}">
                         <div class="col-1"></div>
                         <div class="card-col col-8 px-1">
                             <hr> 
                             <div class="x-info">
                                 <strong>
-                                    <span class='log-date'>{{ member_r_log.date }}</span><br>
-                                    <span class='log-rx'>{% if member_r_log.rx %}
+                                    <span class='log-date'>{{ member_h_log.date }}</span><br>
+                                    <span class='log-rx'>{% if member_h_log.rx %}
                                         As prescribed</span><br>
                                         {% else %}
                                         Scaled</span><br>
@@ -63,30 +64,30 @@
                         </div>
                     </div>
                     <!-- USER COMMENT -->
-                    {% if member_r_log.user_comment != '' %}
-                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                    {% if member_h_log.user_comment != '' %}
+                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_h_log.id }}">
                         <div class="col-1"></div>
                         <div class="card-col col-8 px-1">
                             <hr>
                             <div class="x-info">
                                 <div class="comment-info">
-                                    <p><strong>{{ member_r_log.user.userprofile.full_name }}:</strong></p>
-                                    <p class="comment-log">"{{ member_r_log.user_comment }}"</p>
+                                    <p><strong>{{ member_h_log.user.userprofile.full_name }}:</strong></p>
+                                    <p class="comment-log">"{{ member_h_log.user_comment }}"</p>
                                 </div>
                                 <div class="edit-comment-form" name="edit-comment-form-user" hidden>
                                         <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
                                             {% csrf_token %}
-                                            <div class="comment-id"  data-comment-id="{{ member_r_log.pk }}" hidden>{{ member_r_log.pk }}</div>
-                                            <textarea name="user_comment" class="user-comment">{{ member_r_log.user_comment }}</textarea>
+                                            <div class="comment-id" data-comment-id="{{ member_h_log.pk }}" hidden>{{ member_h_log.pk }}</div>
+                                            <textarea name="user_comment" class="user-comment">{{ member_h_log.user_comment }}</textarea>
                                             <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
                                         </form>
                                     </div>
                             </div>
                         </div>
                         <div class="col-2 px-0 align-self-center justify-content-end">
-                            <div class="pf-rnk-circle prc-tm" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
+                            <div class="pf-rnk-circle prc-tm" style="background: url('{{member_h_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
                             </div>
-                            {% if profile.user == member_r_log.user %}
+                            {% if profile.user == member_h_log.user %}
                                 <div class="crud-icons">
                                     <i class="far fa-edit edit-comment"></i><br>
                                     <i class="far fa-trash-alt delete-comment"></i>
@@ -97,8 +98,8 @@
                     {% endif %}
                     <!-- MEMBER COMMENT -->
                     {% for member_comment in member_comments %}
-                        {% if member_comment.log_id.pk == member_r_log.pk %}
-                        <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }}">
+                        {% if member_comment.log_id.pk == member_h_log.pk %}
+                        <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_h_log.id }}">
                             <div class="col-1"></div>
                             <div class="card-col col-8 px-1">
                                 <hr>
@@ -131,7 +132,7 @@
                         {% endif %}
                     {% endfor %}
                     <!-- LEAVE A COMMENT -->
-                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info add-border-last log-id-{{ member_r_log.id }}" data-logid="log-id-{{ member_r_log.pk }}">
+                    <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info add-border-last log-id-{{ member_h_log.id }}" data-logid="log-id-{{ member_h_log.pk }}">
                         <div class="col-1"></div>
                         <div class="card-col col-8 px-1">
                             <hr>
@@ -149,10 +150,10 @@
             {% endfor %}
             </ol>
         {% endfor %}
-            <div id="gender" hidden>{{ profile.gender }}</div>
-            <div id="profile-name" hidden>{{ profile.full_name }}</div>
+            <!-- <div id="gender" hidden>{{ profile.gender }}</div>
+            <div id="profile-name" hidden>{{ profile.full_name }}</div> -->
             <!-- TEMPLATE FOR NEW COMMENT ROWS -->
-            <div id="hidden-row-template" hidden>
+            <!-- <div class="hidden-row-template" hidden>
                 <div class = "row mx-0 my-1 align-items-center justify-content-between new-row log-id-new}">
                     <div class="col-1"></div>
                         <div class="card-col col-8 px-1">
@@ -182,4 +183,4 @@
                                 </div>
                         </div>
                     </div>
-            </div>
+            </div> -->
