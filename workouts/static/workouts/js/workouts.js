@@ -643,8 +643,10 @@ $(document).ready(function() {
                     let curr = $(this)
                     let par = curr.closest(".log-ranking")
                     let parrank = par.find(".rank-card:first").find(".rank-counter:first")
-                    let rankname = parrank.next().children(".rank-name").text()                
+                    // let rankname = parrank.next().children(".rank-name").text()                
                     if ( parrank.is(curr)){
+                        parrank.children("span").text("1")
+                        parrank.attr("data-counter", 0)
                     }else{    
                         let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
                         let currscore = $(this).closest(".rank-card").find(".r-log:first")
@@ -669,7 +671,7 @@ $(document).ready(function() {
                     let curr = $(this)
                     let par = curr.closest(".log-ranking")
                     let parrank = par.find(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
-                    let rankname = parrank.next().children(".rank-name").text()                
+                    // let rankname = parrank.next().children(".rank-name").text()                
                     if ( parrank.is(curr)){
                     }else{    
                         let prevscore = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".r-log:first")
