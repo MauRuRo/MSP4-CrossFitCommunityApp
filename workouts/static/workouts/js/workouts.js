@@ -1,4 +1,6 @@
 $(document).ready(function() {
+
+    var country_select = false
         // add classes to log history groups.
         for( i = 1; i < 5; i++) {
             let group = $('.log-his').first()
@@ -632,33 +634,89 @@ $(document).ready(function() {
             })
             
             // ALLOW FOR TIES IN RANKING
-            $(".log-ranking").find(".rank-counter").each(function(){
-                let curr = $(this)
-                let par = curr.closest(".log-ranking")
-                let parrank = par.find(".rank-card:first").find(".rank-counter:first")
-                let rankname = parrank.next().children(".rank-name").text()                
-                if ( parrank.is(curr)){
-                }else{    
-                    let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
-                    let currscore = $(this).closest(".rank-card").find(".r-log:first")
-                    let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter:first")
-                    let currcount = $(this)
-                    if (prevscore.text() == currscore.text()){
-                        let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
-                        currcount.attr("data-counter", newtiecount)
-                        let prevrank = parseInt(prevcount.text())
-                        let newrank = prevrank
-                        currcount.children("span").text(newrank)
-                    }else{
-                        let addcount = parseInt(prevcount.attr("data-counter"))
-                        let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
-                        currcount.children("span").text(newrank)
-                        currcount.attr("data-counter", "0")
+            function rankCounting(country) {
+                console.log(country_select)
+                console.log("check")
+                if (country_select == false){
+                    console.log("check2")
+                    $(".log-ranking").find(".rank-counter").each(function(){
+                    let curr = $(this)
+                    let par = curr.closest(".log-ranking")
+                    let parrank = par.find(".rank-card:first").find(".rank-counter:first")
+                    let rankname = parrank.next().children(".rank-name").text()                
+                    if ( parrank.is(curr)){
+                    }else{    
+                        let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
+                        let currscore = $(this).closest(".rank-card").find(".r-log:first")
+                        let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter:first")
+                        let currcount = $(this)
+                        if (prevscore.text() == currscore.text()){
+                            let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
+                            currcount.attr("data-counter", newtiecount)
+                            let prevrank = parseInt(prevcount.text())
+                            let newrank = prevrank
+                            currcount.children("span").text(newrank)
+                        }else{
+                            let addcount = parseInt(prevcount.attr("data-counter"))
+                            let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
+                            currcount.children("span").text(newrank)
+                            currcount.attr("data-counter", "0")
+                        }
                     }
-                }
-            
-                
-            });
+                })
+            } else {
+                $(".log-ranking").find(".rank-counter").each(function(){
+                    let curr = $(this)
+                    let par = curr.closest(".log-ranking")
+                    let parrank = par.find(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
+                    let rankname = parrank.next().children(".rank-name").text()                
+                    if ( parrank.is(curr)){
+                    }else{    
+                        let prevscore = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".r-log:first")
+                        let currscore = $(this).closest(`.rank-card[data-country=${country}]`).find(".r-log:first")
+                        let prevcount = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
+                        let currcount = $(this)
+                        if (prevscore.text() == currscore.text()){
+                            let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
+                            currcount.attr("data-counter", newtiecount)
+                            let prevrank = parseInt(prevcount.text())
+                            let newrank = prevrank
+                            currcount.children("span").text(newrank)
+                        }else{
+                            let addcount = parseInt(prevcount.attr("data-counter"))
+                            let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
+                            currcount.children("span").text(newrank)
+                            currcount.attr("data-counter", "0")
+                        }
+                    }
+                })
+            }
+        };
+            rankCounting(null)
+            // $(".log-ranking").find(".rank-counter").each(function(){
+            //     let curr = $(this)
+            //     let par = curr.closest(".log-ranking")
+            //     let parrank = par.find(".rank-card:first").find(".rank-counter:first")
+            //     let rankname = parrank.next().children(".rank-name").text()                
+            //     if ( parrank.is(curr)){
+            //     }else{    
+            //         let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
+            //         let currscore = $(this).closest(".rank-card").find(".r-log:first")
+            //         let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter:first")
+            //         let currcount = $(this)
+            //         if (prevscore.text() == currscore.text()){
+            //             let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
+            //             currcount.attr("data-counter", newtiecount)
+            //             let prevrank = parseInt(prevcount.text())
+            //             let newrank = prevrank
+            //             currcount.children("span").text(newrank)
+            //         }else{
+            //             let addcount = parseInt(prevcount.attr("data-counter"))
+            //             let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
+            //             currcount.children("span").text(newrank)
+            //             currcount.attr("data-counter", "0")
+            //         }
+            //     }
             $("#block-1, #block-3").scroll(function(){
                 if ($(this).scrollTop() > 4){
                     $(this).find(".block-header").css('border-bottom', 'dotted 3px grey')
@@ -774,6 +832,24 @@ $(document).ready(function() {
                 $(this).closest(".rank-card").css("border-color", "");
                 $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-color", "")
                 $(this).closest(".rank-card").nextAll(".add-border-last:first").css("border-color", "")
+            })
+
+            // SELECT BY COUNTRY
+            var country_filter = ''
+            $(document).on("click", "i.fflag", function(){
+                if (country_select == false){
+                    console.log("false")
+                    let country = $(this).attr("aria-label")
+                    let same_c_logs = $(`.rank-card[data-country=${country}`)
+                    $(".rank-card").not(same_c_logs).hide()
+                    country_select = true
+                    rankCounting(country)
+                }else{
+                    $(".rank-card").show()
+                    country_select = false
+                    rankCounting("All")
+                }
+                
             })
 
             
