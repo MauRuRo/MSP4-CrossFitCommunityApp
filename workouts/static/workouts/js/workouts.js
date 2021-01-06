@@ -255,9 +255,12 @@ $(document).ready(function() {
                 $(this).parent().removeClass('remove-borders-main');
                 $(main_card).prev('.m-log-id').removeAttr('id');
                 $(this).parent().css("border-bottom", "1px solid grey")
+                $(this).parent().css("box-shadow", "0px 0px 3px black")
             }else{
                 $(this).parent().addClass('remove-borders-main');
                 $(main_card).prev('.m-log-id').attr('id', 'm-log-id');
+                // console.log("test")
+                // $(this).parent().css("box-shadow", "")
             }
         })
 

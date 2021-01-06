@@ -460,6 +460,7 @@ label[for='image-clear_id'] {
     border: 1px solid grey;
     border-radius: 3px;
     padding-left:2px;
+    box-shadow: 0px 0px 3px black;
     /* testing
     height: 200px; */
 }
@@ -505,6 +506,7 @@ label[for='image-clear_id'] {
     border-bottom-color: rgba(255,255,255,0);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    box-shadow:0px 0px 0px 0px white!important;
 }
 
 .add-border-last {
