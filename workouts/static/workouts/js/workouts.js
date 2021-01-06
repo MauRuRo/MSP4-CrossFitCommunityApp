@@ -270,64 +270,31 @@ $(document).ready(function() {
             $(this).parent().attr("id", "member-comment-form")
         })
 
-        // function focusFields() {
-        //     if ($('.member-comment').focus()) { 
-        //             let shift = false
-        //             $('.member-comment').on('keydown', function (e) {
-        //                 if(e.which === 16){
-        //                     shift = true
-        //                 }
-        //             });
-        //             $('.member-comment').on('keyup', function (e) {
-        //                 if(e.which === 16){
-        //                     shift = false
-        //                 }
-        //             });
-        //             $('.member-comment').on('keypress', function (e) {
-        //                 let m_comment_ta = $(this)
-        //                 let m_comment = m_comment_ta.val()
-        //                 if(e.which === 13 && shift == false){
-        //                     //Disable textbox to prevent multiple submit
-        //                     $(this).attr("disabled", "disabled");
-        //                     //Do Stuff, submit, etc..
-        //                     submitComment(m_comment, m_comment_ta)
-        //                     //Enable the textbox again if needed.
-        //                     $(this).removeAttr("disabled");                   
-        //                 }
-        //             });
-        //         }
-        // };
-        // focusFields()
 
-            // $(document).on("focus", ".member-comment", function(){
-            //     console.log("RUNNIG FOCUS")
-                    let shift = false
-                    $(document).on('keydown', '.member-comment', function (e) {
-                        if(e.which === 16){
-                            shift = true
-                            console.log("SHIFT")
-                        }
-                    });
-                    $(document).on('keyup', '.member-comment', function (e) {
-                        if(e.which === 16){
-                            shift = false
-                        }
-                    });
-                    $(document).on('keypress', '.member-comment', function (e) {
-                        let m_comment_ta = $(this)
-                        let m_comment = m_comment_ta.val()
-                        if(e.which === 13 && shift == false){
-                            //Disable textbox to prevent multiple submit
-                            $(this).attr("disabled", "disabled");
-                            //Do Stuff, submit, etc..
-                            submitComment(m_comment, m_comment_ta)
-                            //Enable the textbox again if needed.
-                            $(this).removeAttr("disabled");                   
-                        }
-                    });
-                // })
-        // };
-    
+        let shift = false
+        $(document).on('keydown', '.member-comment', function (e) {
+            if(e.which === 16){
+                shift = true
+                console.log("SHIFT")
+            }
+        });
+        $(document).on('keyup', '.member-comment', function (e) {
+            if(e.which === 16){
+                shift = false
+            }
+        });
+        $(document).on('keypress', '.member-comment', function (e) {
+            let m_comment_ta = $(this)
+            let m_comment = m_comment_ta.val()
+            if(e.which === 13 && shift == false){
+                //Disable textbox to prevent multiple submit
+                $(this).attr("disabled", "disabled");
+                //Do Stuff, submit, etc..
+                submitComment(m_comment, m_comment_ta)
+                //Enable the textbox again if needed.
+                $(this).removeAttr("disabled");                   
+            }
+        });    
 
         if ($('.user-comment').focus()) {
             let shift = false
@@ -795,10 +762,18 @@ $(document).ready(function() {
                     $(this).closest(".rank-card").css("border-color", "blue");
                 }
             })
+
             $(".card-col").mouseleave(function(){
                 $(this).closest(".rank-card").css("border-color", "");
                 $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-color", "")
-                $(this).closest(".rank-card").find(".add-border-last:first").css("border-color", "")
+                $(this).closest(".rank-card").nextAll(".add-border-last:first").css("border-color", "")
+            })
+
+            // To correct for mobile devices without a cursor.
+            $(".card-col").mouseup(function(){
+                $(this).closest(".rank-card").css("border-color", "");
+                $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-color", "")
+                $(this).closest(".rank-card").nextAll(".add-border-last:first").css("border-color", "")
             })
 
             
