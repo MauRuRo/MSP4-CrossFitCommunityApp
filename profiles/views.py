@@ -2,15 +2,18 @@ from django.shortcuts import (
     render, redirect, reverse
 )
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from .models import UserProfile
+from .models import UserProfile, User
+from allauth.account.models import EmailAddress
 from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
+from django.core.files import File
 from django.contrib import messages
 from django.conf import settings
 from datetime import date, datetime
 from django.core.exceptions import ValidationError
-# from django.core.validators import RegexValidator
-
+import decimal
+import random
+import urllib.request
 import stripe
 import json
 
@@ -134,3 +137,76 @@ def test(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         raise Http404
+
+
+# def populate(request):
+#     print("populating")
+#     # if request.is_ajax() and request.POST:
+#     print("TEST")
+#     f = open("userpopulate.json", "w")
+#     print("Test2")
+#     # print(request.POST["printout"])
+#     printout = request.POST["printout"]
+#     print("Test3")
+#     f.write(request.POST["printout"])
+#     f.close()
+#     return redirect('edit_profile')
+
+def populate(request):
+    f = open("static/userpopulate.txt")
+    file = json.load(f)
+
+    for item in file["results"]:
+        firstname = item["name"]["first"]
+        lastname = item["name"]["last"]
+        username = item["login"]["username"]
+        password = item["login"]["password"]
+        full_name = firstname + " " + lastname
+        town_or_city = item["location"]["city"]
+        country = item["nat"]
+        email = item["email"]
+        birthday = item["dob"]["date"][0:10]
+        gender = item["gender"].title()
+        # firstname = file["results"][0]["name"]["first"]
+        # lastname = file["results"][0]["name"]["last"]
+        # username = file["results"][0]["login"]["username"]
+        # password = file["results"][0]["login"]["password"]
+        # full_name = firstname + " " + lastname
+        # town_or_city = file["results"][0]["location"]["city"]
+        # country = file["results"][0]["nat"]
+        # email = file["results"][0]["email"]
+        # birthday = file["results"][0]["dob"]["date"][0:9]
+        # gender = file["results"][0]["gender"].title()
+        if gender == "Male":
+            gender = "M"
+            weight = 60 + decimal.Decimal(random.randrange(0, 50))
+        else:
+            gender = "F"
+            weight = 40 + decimal.Decimal(random.randrange(0, 40))
+        # image_url = file["results"][0]["picture"]["large"]
+        image_url = item["picture"]["large"]
+        result = urllib.request.urlretrieve(image_url)
+        userdata={
+            "username":username,
+            "password":password,
+        }
+        newuser = User.objects.create(username=username)
+        newuser.password = password
+        newuser.save()
+        newuserprofile = UserProfile.objects.create(user=newuser, weight=weight)
+        newuserprofile.full_name = full_name
+        newuserprofile.email = email
+        newuserprofile.town_or_city = town_or_city
+        newuserprofile.country = country
+        newuserprofile.gender = gender
+        newuserprofile.birthdate = birthday
+        newuserprofile.weight = weight
+        newuserprofile.save()
+        with open(result[0], 'rb') as d_image:
+            newuserprofile.image.save(f'media/{username}.jpg', File(d_image))
+        newemail = EmailAddress.objects.create(user=newuser)
+        newemail.email = email
+        newemail.verified = True
+        newemail.primary = True
+        newemail.save()
+    return redirect('profile')

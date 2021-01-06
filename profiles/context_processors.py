@@ -8,7 +8,11 @@ def user_info(request):
         try:
             profile = UserProfile.objects.get(user=request.user)
             try:
-                image = profile.image.url
+                if isinstance(profile.image, str):
+                    image = profile.image
+                    print("TEST PROFILE PIC")
+                else:
+                    image = profile.image.url
             except ValueError:
                 image = '/media/noprofpic.jpg'
         except UserProfile.DoesNotExist:

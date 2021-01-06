@@ -24,12 +24,9 @@
             </div>
             <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
                 <div class="fillblock p-2">
-                    <input type="date" id="test-date" max="2021-01-03" placeholder="03-01-2021">
-                    <form id="test-form">
-                        {% csrf_token %}
-                        <input type="text">
-                        <input type="submit" value="Submit" id="test-submit-button">
-                    </form>
+                    <button id="user-populate">get users</button>
+                    <textarea name="" id="printout" cols="30" rows="10"></textarea>
+                    <a href="{% url 'populate' %}"><button>upload</button></a>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
@@ -59,5 +56,29 @@ $('#test-submit-button').click(function(e) {
         }
     })
 })
+$('#user-populate').click(function() {
+$.ajax({
+  url: 'https://randomuser.me/api/?results=500&format=json&dl',
+  dataType: 'json',
+  success: function(data) {
+    console.log(data);
+    let p_data=JSON.stringify(data)
+    $("#printout").val(p_data)
+    // $.ajax({
+    //     url: '/profile/populate/',
+    //     data: {
+    //         printout:p_data
+    //     },
+    //     dataType: 'json',
+    //     succes: function(){
+    //         console.log("Succesfully uploaded userfile1")
+    //     }
+
+    // })
+    console.log("Succesfully uploaded userfile2")
+  }
+});
+});
+      
 </script>
 {% endblock %}
