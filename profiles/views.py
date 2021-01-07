@@ -3,20 +3,22 @@ from django.shortcuts import (
 )
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import UserProfile, User
+from workouts.models import Workout, Log
 from allauth.account.models import EmailAddress
 from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
 from django.core.files import File
 from django.contrib import messages
 from django.conf import settings
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from django.core.exceptions import ValidationError
+from django.db.models import Avg, Max, Min, Sum
 import decimal
 import random
 import urllib.request
 import stripe
 import json
-
+import statistics
 
 # @require_POST
 # def cache_payment_create_profile(request):
@@ -138,20 +140,6 @@ def test(request):
     else:
         raise Http404
 
-
-# def populate(request):
-#     print("populating")
-#     # if request.is_ajax() and request.POST:
-#     print("TEST")
-#     f = open("userpopulate.json", "w")
-#     print("Test2")
-#     # print(request.POST["printout"])
-#     printout = request.POST["printout"]
-#     print("Test3")
-#     f.write(request.POST["printout"])
-#     f.close()
-#     return redirect('edit_profile')
-
 def populate(request):
     f = open("static/userpopulate.txt")
     file = json.load(f)
@@ -167,23 +155,12 @@ def populate(request):
         email = item["email"]
         birthday = item["dob"]["date"][0:10]
         gender = item["gender"].title()
-        # firstname = file["results"][0]["name"]["first"]
-        # lastname = file["results"][0]["name"]["last"]
-        # username = file["results"][0]["login"]["username"]
-        # password = file["results"][0]["login"]["password"]
-        # full_name = firstname + " " + lastname
-        # town_or_city = file["results"][0]["location"]["city"]
-        # country = file["results"][0]["nat"]
-        # email = file["results"][0]["email"]
-        # birthday = file["results"][0]["dob"]["date"][0:9]
-        # gender = file["results"][0]["gender"].title()
         if gender == "Male":
             gender = "M"
             weight = 60 + decimal.Decimal(random.randrange(0, 50))
         else:
             gender = "F"
             weight = 40 + decimal.Decimal(random.randrange(0, 40))
-        # image_url = file["results"][0]["picture"]["large"]
         image_url = item["picture"]["large"]
         result = urllib.request.urlretrieve(image_url)
         userdata={
@@ -209,4 +186,67 @@ def populate(request):
         newemail.verified = True
         newemail.primary = True
         newemail.save()
+    return redirect('profile')
+
+
+def logPopulation(request):
+    # users = User.objects.all().exclude(pk <= 17)
+    users = User.objects.filter(pk=34)
+    current_year = datetime.strftime(date.today(), "%Y")
+    current_year = int(current_year)
+    for i in range(11):
+        for user in users:
+            workout = Workout.objects.get(workout_name="Deadlift: 1 Rep Max")
+            if user.userprofile.gender == "M":
+                gender_factor = 1
+            else:
+                gender_factor = 0
+            # print(gender_factor)
+            level_factor = int(user.username[-1])/10
+            # print(level_factor)
+            dob = int(datetime.strftime(user.userprofile.birthdate, "%Y"))
+            # print(dob)
+            age_factor = 1-((current_year - dob)/100)
+            # print(age_factor)
+            # age_factor = 0.5
+            random_factor = random.randrange(40,60)/100
+            # print(random_factor)
+            p_logs = Log.objects.filter(workout=workout).filter(user=user)
+            prev_logs = p_logs.count()
+            print(prev_logs)
+            prev_logs = i
+            if prev_logs > 9:
+                prev_logs = 9
+            prev_result_factor = (prev_logs + 1)/9
+            print(prev_result_factor)
+            # print(prev_result_factor)
+            factors = [gender_factor, level_factor, age_factor, prev_result_factor, random_factor, level_factor, gender_factor]
+            variance_factor = statistics.mean(factors)
+            # print(variance_factor)
+            min_result = 40
+            max_add_result = 210
+            final_result = min_result + variance_factor * max_add_result
+            final_result = 0.5 * round(final_result/0.5)
+            print(final_result)
+            max_result = p_logs.aggregate(Max('mw_result'))
+            if max_result['mw_result__max'] == None:
+                personal_record = True
+            else:
+                best_result = max_result['mw_result__max']
+                if best_result < final_result:
+                    personal_record = True
+                else:
+                    personal_record = False
+            null_ft = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+            next_days = i * 80
+            log_date = datetime.strptime("01-10-2018", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+            new_log = Log(workout=workout)
+            new_log.rx = True
+            new_log.date = log_date
+            new_log.mw_result = final_result
+            new_log.amrap_result = 0
+            new_log.ft_result = null_ft
+            new_log.personal_record = personal_record
+            new_log.save()
+
     return redirect('profile')
