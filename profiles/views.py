@@ -190,11 +190,11 @@ def populate(request):
 
 
 def logPopulation(request):
-    # users = User.objects.all().exclude(pk <= 17)
-    users = User.objects.filter(pk=34)
+    users = User.objects.all().exclude(pk__lte=17)
+    # users = User.objects.filter(pk=34)
     current_year = datetime.strftime(date.today(), "%Y")
     current_year = int(current_year)
-    for i in range(11):
+    for i in range(10):
         for user in users:
             workout = Workout.objects.get(workout_name="Deadlift: 1 Rep Max")
             if user.userprofile.gender == "M":
@@ -209,25 +209,25 @@ def logPopulation(request):
             age_factor = 1-((current_year - dob)/100)
             # print(age_factor)
             # age_factor = 0.5
-            random_factor = random.randrange(40,60)/100
+            random_factor = random.randrange(30,70)/100
             # print(random_factor)
             p_logs = Log.objects.filter(workout=workout).filter(user=user)
             prev_logs = p_logs.count()
-            print(prev_logs)
+            # print(prev_logs)
             prev_logs = i
-            if prev_logs > 9:
-                prev_logs = 9
+            if prev_logs > 8:
+                prev_logs = 8
             prev_result_factor = (prev_logs + 1)/9
-            print(prev_result_factor)
             # print(prev_result_factor)
-            factors = [gender_factor, level_factor, age_factor, prev_result_factor, random_factor, level_factor, gender_factor]
+            # print(prev_result_factor)
+            factors = [gender_factor, level_factor, level_factor, level_factor, level_factor, age_factor, prev_result_factor, prev_result_factor, random_factor, level_factor, gender_factor]
             variance_factor = statistics.mean(factors)
             # print(variance_factor)
             min_result = 40
             max_add_result = 210
             final_result = min_result + variance_factor * max_add_result
             final_result = 0.5 * round(final_result/0.5)
-            print(final_result)
+            # print(final_result)
             max_result = p_logs.aggregate(Max('mw_result'))
             if max_result['mw_result__max'] == None:
                 personal_record = True
@@ -241,6 +241,8 @@ def logPopulation(request):
             next_days = i * 80
             log_date = datetime.strptime("01-10-2018", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
             new_log = Log(workout=workout)
+            # print(user)
+            new_log.user = user
             new_log.rx = True
             new_log.date = log_date
             new_log.mw_result = final_result
