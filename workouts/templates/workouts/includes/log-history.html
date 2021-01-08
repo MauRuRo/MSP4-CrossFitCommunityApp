@@ -1,13 +1,13 @@
 <div class="block-header sticky-top justify-content-center">
-    <h4 class="block-title" id="next-page" data-page="2">WOD Activity</h4>
+    <h4 class="block-title">WOD Activity</h4>
     <ol id="rank-nav">
-        <li id="his-everybody" class="his-people">Everybody</li>
+        <li id="his-everybody" class="his-people" data-page="2">Everybody</li>
         -
-        <li id="his-me" class="his-people">Me</li>
+        <li id="his-me" class="his-people" data-page="2">Me</li>
         |
-        <li id="his-all-wod" class="his-wods">All WODs</li>
+        <li id="his-all-wod" class="his-wods" data-page="2">All WODs</li>
         -
-        <li id="his-this-wod" class="his-wods">This WOD</li>
+        <li id="his-this-wod" class="his-wods" data-page="2">This WOD</li>
     </ol>
 </div>
         {% for h_group in log_groups %}
@@ -15,7 +15,7 @@
             {% for member_h_log in h_group %}
             {% if forloop.counter <= 25 %}
                     <div class="m-log-id" data="{{ member_h_log.pk }}" hidden></div>              
-                    <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_h_log.id }}" id="his-member-id-{{ member_h_log.user.pk }}" data-country="{{ member_h_log.user.userprofile.country.code }}">
+                    <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_h_log.id }}" id="his-user-{{ member_h_log.user.pk }}-log-{{ member_h_log.id }}" data-country="{{ member_h_log.user.userprofile.country.code }}">
                         <div class="col-1 his-date">{{ member_h_log.date }}</div>
                         <div class="card-col col-8 px-1">
                             <div class="rank-name-spacing">

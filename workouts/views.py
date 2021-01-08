@@ -404,53 +404,46 @@ def listResponse(request):
 
 
 def loopList(request):
-    print("CHECKING VIEW")
-    wod_id=request.POST["wod"]
+    wod_id = request.POST["wod"]
     wod = int(wod_id)
     page = request.POST.get('page')
-    # create list of all user id's
-    user_l = user_list()
-    # check which date is exactly a year ago
-    lapse_date = date.today() - timedelta(days=365)
-    # make query of all women and one of all men
-    all_women_q = UserProfile.objects.filter(gender='F')
-    all_men_q = UserProfile.objects.filter(gender='M')
-    # get all comments
-    member_comments = MemberComment.objects.all()
-    # make lists of all women/men
-    all_women = []
-    for woman in all_women_q:
-        all_women.append(woman.user.username)
-    all_men = []
-    for man in all_men_q:
-        all_men.append(man.user.username)
     # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+    called_group = request.POST["call_group"]
     all_logs = Log.objects.all().order_by('-date')
-    all_logs_wod = all_logs.filter(workout=wod)
-    user_logs = all_logs.filter(user=request.user)
-    user_logs_wod = user_logs.filter(workout=wod)
-    log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
+    print(all_logs.count())
+    print(called_group)
+    if called_group == "this_everybody":
+        calling_group = all_logs.filter(workout=wod)
+    elif called_group == "all_everybody":
+        calling_group = all_logs
+    elif called_group == "all_me":
+        calling_group = all_logs.filter(user=request.user)
+    else:
+        calling_group = all_logs.filter(user=request.user).filter(workout=wod)
+        
 
     # use Django's pagination
     # https://docs.djangoproject.com/en/dev/topics/pagination/
 
     results_per_page = 25
-
-    paginator_all_logs_wod = Paginator(all_logs_wod, results_per_page)
+    no_more = False
+    paginator_calling_group = Paginator(calling_group, results_per_page)
     try:
-        all_logs_wod = paginator_all_logs_wod.page(page)
+        calling_group = paginator_calling_group.page(page)
     except PageNotAnInteger:
-        all_logs_wod = paginator_all_logs_wod.page(2)
+        calling_group = paginator_calling_group.page(2)
     except EmptyPage:
-        all_logs_wod = paginator_all_logs_wod.page(paginator_all_logs_wod.num_pages)
+        no_more = True
+        print("ERROR LAST PAGE")
+        calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
     # build a html posts list with the paginated posts
-    all_logs_wod_html = loader.render_to_string(
+    calling_group_html = loader.render_to_string(
         'workouts/includes/historyloop.html',
-        {'h_group': all_logs_wod}
+        {'h_group': calling_group}
     )
     # package output data and return it as a JSON object
     output_data = {
-        'all_logs_wod_html': all_logs_wod_html,
-        'has_next': all_logs_wod.has_next()
+        'calling_group_html': calling_group_html,
+        'has_next': calling_group.has_next()
     }
     return JsonResponse(output_data)

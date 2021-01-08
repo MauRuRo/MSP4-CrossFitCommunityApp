@@ -62,6 +62,13 @@ $(document).ready(function() {
         let wodhistory = 'thiswod'
 
         // history-logs navigator:
+        let scroll_level = 1
+        $(".his-people, .his-wods").click(function() {
+            scroll_level = 1
+            $(".rank-card").show()
+            country_select = false
+            rankCounting("All")
+        })
           $('#his-everybody').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
                 element =$("#block-3")
@@ -704,30 +711,6 @@ $(document).ready(function() {
             }
         };
             rankCounting(null)
-            // $(".log-ranking").find(".rank-counter").each(function(){
-            //     let curr = $(this)
-            //     let par = curr.closest(".log-ranking")
-            //     let parrank = par.find(".rank-card:first").find(".rank-counter:first")
-            //     let rankname = parrank.next().children(".rank-name").text()                
-            //     if ( parrank.is(curr)){
-            //     }else{    
-            //         let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
-            //         let currscore = $(this).closest(".rank-card").find(".r-log:first")
-            //         let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter:first")
-            //         let currcount = $(this)
-            //         if (prevscore.text() == currscore.text()){
-            //             let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
-            //             currcount.attr("data-counter", newtiecount)
-            //             let prevrank = parseInt(prevcount.text())
-            //             let newrank = prevrank
-            //             currcount.children("span").text(newrank)
-            //         }else{
-            //             let addcount = parseInt(prevcount.attr("data-counter"))
-            //             let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
-            //             currcount.children("span").text(newrank)
-            //             currcount.attr("data-counter", "0")
-            //         }
-            //     }
             $("#block-1, #block-3").scroll(function(){
                 if ($(this).scrollTop() > 4){
                     $(this).find(".block-header").css('border-bottom', 'dotted 3px grey')
@@ -737,7 +720,6 @@ $(document).ready(function() {
             });
 
             function  scrollToTopRank(element){
-                console.log("TEST")
                 element.animate({
                     scrollTop: 0}, 800)
             };
@@ -792,6 +774,9 @@ $(document).ready(function() {
                     let year = date.split(", ")[1].slice(-2)
                 }catch{
                     month = date.split(" ")[0].slice(0, -1)
+                    if (month == "Apri") {
+                        month = month.slice(0, -1)
+                    }
                     day = date.split(" ")[1].split(",")[0]
                     let year = date.split(", ")[1].slice(-2)
                 }
@@ -821,7 +806,6 @@ $(document).ready(function() {
             })
 
             $(".card-col").mouseenter(function(){
-                console.log("BEST")
                 if ($(this).closest(".rank-card").next(".extra-log-info").is(":visible")){
                     console.log("TEST")
                     $(this).closest(".rank-card").css("border-color", "blue")
@@ -866,12 +850,36 @@ $(document).ready(function() {
                 }
                 
             })
+            
+            // $(".workout-name").click(function() {
+            //     console.log($("#his-user-15-log-122").offset().top)
+            // })
 
-            $("#next-page").click(function() {
-                console.log("list exTEND!")
-                
-                var button = $(this);
-                var pageno = button.data('page');
+            // let scroll_level = 1
+            $("#block-3").scroll(function(){
+                if ($(this).scrollTop() > (scroll_level * 1500)){
+                    lazyLoadLogs()
+                    scroll_level += 1
+                }else{
+                }
+            });
+
+            function lazyLoadLogs() {                
+                if ($("#his-everybody").css("text-decoration").split(" ")[0] == "underline" && $("#his-this-wod").css("text-decoration").split(" ")[0] == "underline"){
+                    pagedata = $("#his-everybody")
+                    call_group = "this_everybody"
+                }else if ($("#his-me").css("text-decoration").split(" ")[0] == "underline" && $("#his-this-wod").css("text-decoration").split(" ")[0] == "underline"){
+                    pagedata = $("#his-me")
+                    call_group = "this_me"
+                }else if ($("#his-everybody").css("text-decoration").split(" ")[0] == "underline" && $("#his-all-wod").css("text-decoration").split(" ")[0] == "underline") {
+                    pagedata = $("#his-all-wod")
+                    call_group = "all_everybody"
+                }else{
+                    pagedata = $("#his-this-wod")
+                    call_group = "all_me"
+                }
+                var pageno = pagedata.data('page');
+                console.log("pagenumber: " + pageno)
                 var wod = $("#wod-id-no").attr("data")
                 // var page = 2;
                 $.ajax({
@@ -880,7 +888,7 @@ $(document).ready(function() {
                 data: {
                     page: pageno,
                     wod: wod,
-                    // 'csrfmiddlewaretoken': window.CSRF_TOKEN // from index.html
+                    call_group: call_group,
                 },
                 dataType: "json",
                 success: function(data) {
@@ -888,17 +896,19 @@ $(document).ready(function() {
                     // add 1 to the "Load More Posts" link's page data attribute
                     // else hide the link
                     if (data.has_next) {
-                        button.data('page', pageno+1);
+                        pagedata.data('page', pageno+1);
+                        console.log("pagenumber after succes: " + pagedata.data('page'))
                     } else {
-                    button.hide();
+                        console.log("NO MORE PAGES>>>>>>>>>>>>>>>")
                     }
                     // append html to the posts div
-                    $('.log-his-2:first').append(data.all_logs_wod_html);
+                    appendlist = $(".log-history:visible").attr("class").split(" ")[1]
+                    $('.log-history:visible').append(data.calling_group_html);
                     $('.extra-log-info').hide()
                     dateStyling($(".his-date-new"))
                     $(".his-date-new").addClass("his-date")
                     $(".his-date-new").removeClass("his-date-new")
-                    $(".log-his-XX").addClass("log-his-2X")
+                    $(".log-his-XX").addClass(appendlist)
                     $(".log-his-XX").removeClass(".log-his-XX")
                 },
                 error: function(xhr, status, error) {
@@ -906,6 +916,7 @@ $(document).ready(function() {
                 }
                 });
                 
-        });
+        };
+        
             
 });
