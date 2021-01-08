@@ -1,5 +1,5 @@
 <div class="block-header sticky-top justify-content-center">
-    <h4 class="block-title" id="next-page" data-page="2">WOD Activity</h4>
+    <h4 class="block-title">WOD Activity</h4>
     <ol id="rank-nav">
         <li id="his-everybody" class="his-people">Everybody</li>
         -
@@ -12,8 +12,7 @@
 </div>
         {% for h_group in log_groups %}
             <ol class="log-history log-his">
-            {% for member_h_log in h_group %}
-            {% if forloop.counter <= 25 %}
+            {% for member_h_log in h_group %}  
                     <div class="m-log-id" data="{{ member_h_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_h_log.id }}" id="his-member-id-{{ member_h_log.user.pk }}" data-country="{{ member_h_log.user.userprofile.country.code }}">
                         <div class="col-1 his-date">{{ member_h_log.date }}</div>
@@ -147,9 +146,41 @@
                         </div>
                         <div class="col-2 px-0 align-self-center justify-content-end">
                         </div>
-                    </div>
-                    {% else %}
-                    {% endif %}                    
+                    </div>                    
             {% endfor %}
             </ol>
         {% endfor %}
+            <!-- <div id="gender" hidden>{{ profile.gender }}</div>
+            <div id="profile-name" hidden>{{ profile.full_name }}</div> -->
+            <!-- TEMPLATE FOR NEW COMMENT ROWS -->
+            <!-- <div class="hidden-row-template" hidden>
+                <div class = "row mx-0 my-1 align-items-center justify-content-between new-row log-id-new}">
+                    <div class="col-1"></div>
+                        <div class="card-col col-8 px-1">
+                            <hr>
+                            <div class="x-info">
+                                <div class="comment-info">
+                                    
+                                    <p><strong class="new-comment-member"></strong></p>
+                                    <p class="new-comment comment-log"></p>
+                                </div>
+                                <div class="edit-comment-form" hidden>
+                                    <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
+                                        {% csrf_token %}
+                                        <div class="comment-id" id="comment-id" hidden>{{ member_comment.pk }}</div>
+                                        <textarea name="member_comment" class="member-comment" id="member-comment-ta">{{ member_comment.message }}</textarea>
+                                        <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 px-0 align-self-center justify-content-end">
+                                <div class="pf-rnk-circle  prc-tm" style="background: url('{{profile.image.url}}') no-repeat; background-size: cover">
+                                </div>
+                                <div class="crud-icons">
+                                    <i class="far fa-edit edit-comment"></i><br>
+                                    <i class="far fa-trash-alt delete-comment"></i>
+                                </div>
+                        </div>
+                    </div>
+            </div> -->

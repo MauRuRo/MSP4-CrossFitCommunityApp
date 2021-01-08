@@ -10,5 +10,7 @@ urlpatterns = [
     path('0/deleteLog/', views.deleteLog, name='deleteLog'),
     path('0/dateInput/', views.dateInput, name='dateInput'),
     path('0/editLog/', views.editLog, name='editLog'),
+    path('0/listResponse/', views.listResponse, name='listResponse'),
+    path('0/loopList/', views.loopList, name='loopList'),
     # url(r'^comment/$', views.comment, name='comment'),
 ]

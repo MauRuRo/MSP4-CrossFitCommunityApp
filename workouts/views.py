@@ -9,8 +9,10 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.core import serializers
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
+from django.template import loader
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 # Create your views here.
 
@@ -136,6 +138,7 @@ def workouts(request, wod_id):
             'date_initial': date_initial,
         }
         template = "workouts/workouts.html"
+        print("DONE PERFORMING QUERIES")
         return render(request, template, context)
     else:
         if wod.workout_type == 'FT':
@@ -389,3 +392,65 @@ def commentMember(request):
                     return HttpResponse(json.dumps(data), content_type='application/json') 
         else:
             return JsonResponse({"error": "No edit, no upload"}, status=400)
+
+
+def listResponse(request):
+    context={
+        "start_of_loop": 26,
+        "end_of_loop": 50,
+        "status_code": 200
+    }
+    return context
+
+
+def loopList(request):
+    print("CHECKING VIEW")
+    wod_id=request.POST["wod"]
+    wod = int(wod_id)
+    page = request.POST.get('page')
+    # create list of all user id's
+    user_l = user_list()
+    # check which date is exactly a year ago
+    lapse_date = date.today() - timedelta(days=365)
+    # make query of all women and one of all men
+    all_women_q = UserProfile.objects.filter(gender='F')
+    all_men_q = UserProfile.objects.filter(gender='M')
+    # get all comments
+    member_comments = MemberComment.objects.all()
+    # make lists of all women/men
+    all_women = []
+    for woman in all_women_q:
+        all_women.append(woman.user.username)
+    all_men = []
+    for man in all_men_q:
+        all_men.append(man.user.username)
+    # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+    all_logs = Log.objects.all().order_by('-date')
+    all_logs_wod = all_logs.filter(workout=wod)
+    user_logs = all_logs.filter(user=request.user)
+    user_logs_wod = user_logs.filter(workout=wod)
+    log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
+
+    # use Django's pagination
+    # https://docs.djangoproject.com/en/dev/topics/pagination/
+
+    results_per_page = 25
+
+    paginator_all_logs_wod = Paginator(all_logs_wod, results_per_page)
+    try:
+        all_logs_wod = paginator_all_logs_wod.page(page)
+    except PageNotAnInteger:
+        all_logs_wod = paginator_all_logs_wod.page(2)
+    except EmptyPage:
+        all_logs_wod = paginator_all_logs_wod.page(paginator_all_logs_wod.num_pages)
+    # build a html posts list with the paginated posts
+    all_logs_wod_html = loader.render_to_string(
+        'workouts/includes/historyloop.html',
+        {'h_group': all_logs_wod}
+    )
+    # package output data and return it as a JSON object
+    output_data = {
+        'all_logs_wod_html': all_logs_wod_html,
+        'has_next': all_logs_wod.has_next()
+    }
+    return JsonResponse(output_data)

@@ -241,28 +241,35 @@ $(document).ready(function() {
 
         $('.extra-log-info').hide()
 
-        $('.rank-card').children('.card-col').click(function(){
-            let main_card = "#" + $(this).parent().attr('id')
-            let log_name = $(this).parents().attr('name')
-            let log_name_class = "." + log_name
-            let group_class_name = $(this).closest(".log-ranking, .log-history").attr('class')
-            let group_id = log_name_class + "." + group_class_name.split(" ")[1] + "X"
-            let extra_info_cards = $(group_id);
-            // let last_info_card = extra_info_cards.last()
-            // last_info_card.addClass('add-border-last')
-            extra_info_cards.slideToggle(100)
-            $('.extra-log-info').not(group_id).slideUp()
-           $('.rank-card').not(main_card).removeClass('remove-borders-main')
-            if ($(this).parent().hasClass('remove-borders-main')) {
-                $(this).parent().removeClass('remove-borders-main');
-                $(main_card).prev('.m-log-id').removeAttr('id');
-                $(this).parent().css("border-bottom", "1px solid grey")
-                $(this).parent().css("box-shadow", "0px 0px 3px black")
+        // $('.rank-card').children('.card-col').click(function(){
+        let card_col_click = $('.rank-card').children('.card-col')
+        $(document).on("click", ".card-col", function(){
+            if ($(this).parent().hasClass('rank-card') == true){
+                let main_card = "#" + $(this).parent().attr('id')
+                let log_name = $(this).parents().attr('name')
+                let log_name_class = "." + log_name
+                let group_class_name = $(this).closest(".log-ranking, .log-history").attr('class')
+                let group_id = log_name_class + "." + group_class_name.split(" ")[1] + "X"
+                let extra_info_cards = $(group_id);
+                // let last_info_card = extra_info_cards.last()
+                // last_info_card.addClass('add-border-last')
+                extra_info_cards.slideToggle(100)
+                $('.extra-log-info').not(group_id).slideUp()
+            $('.rank-card').not(main_card).removeClass('remove-borders-main')
+                if ($(this).parent().hasClass('remove-borders-main')) {
+                    $(this).parent().removeClass('remove-borders-main');
+                    $(main_card).prev('.m-log-id').removeAttr('id');
+                    $(this).parent().css("border-bottom", "1px solid grey")
+                    $(this).parent().css("box-shadow", "0px 0px 3px black")
+                }else{
+                    $(this).parent().addClass('remove-borders-main');
+                    $(main_card).prev('.m-log-id').attr('id', 'm-log-id');
+                    // console.log("test")
+                    // $(this).parent().css("box-shadow", "")
+                }
             }else{
-                $(this).parent().addClass('remove-borders-main');
-                $(main_card).prev('.m-log-id').attr('id', 'm-log-id');
-                // console.log("test")
-                // $(this).parent().css("box-shadow", "")
+                console.log("Did not fire")
+                console.log($(this).parent().hasClass('.rank-card'))
             }
         })
 
@@ -774,7 +781,8 @@ $(document).ready(function() {
                 }
             });
 
-            $(".his-date").each(function() {
+        function dateStyling(element){
+            $(element).each(function() {
                 let date = $(this).text()
                 let month = ''
                 let day = ''
@@ -789,6 +797,9 @@ $(document).ready(function() {
                 }
                 $(this).html(`<div class='display-month'>${month}</div><div class='display-day'>${day}</div>`)
             })
+        }
+        dateStyling($(".his-date"))
+            
             
             function sizeLargeNumbers(number) {
                 no = parseInt(number.text())
@@ -856,5 +867,45 @@ $(document).ready(function() {
                 
             })
 
+            $("#next-page").click(function() {
+                console.log("list exTEND!")
+                
+                var button = $(this);
+                var pageno = button.data('page');
+                var wod = $("#wod-id-no").attr("data")
+                // var page = 2;
+                $.ajax({
+                type: 'POST',
+                url: '/workouts/0/loopList/',
+                data: {
+                    page: pageno,
+                    wod: wod,
+                    // 'csrfmiddlewaretoken': window.CSRF_TOKEN // from index.html
+                },
+                dataType: "json",
+                success: function(data) {
+                    // if there are still more pages to load,
+                    // add 1 to the "Load More Posts" link's page data attribute
+                    // else hide the link
+                    if (data.has_next) {
+                        button.data('page', pageno+1);
+                    } else {
+                    button.hide();
+                    }
+                    // append html to the posts div
+                    $('.log-his-2:first').append(data.all_logs_wod_html);
+                    $('.extra-log-info').hide()
+                    dateStyling($(".his-date-new"))
+                    $(".his-date-new").addClass("his-date")
+                    $(".his-date-new").removeClass("his-date-new")
+                    $(".log-his-XX").addClass("log-his-2X")
+                    $(".log-his-XX").removeClass(".log-his-XX")
+                },
+                error: function(xhr, status, error) {
+                    // shit happens friends!
+                }
+                });
+                
+        });
             
 });

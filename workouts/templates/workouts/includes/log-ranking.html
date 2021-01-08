@@ -12,7 +12,8 @@
 </div>
         {% for r_group in rank_groups %}
             <ol class="log-ranking log-rank">
-            {% for member_r_log in r_group %}  
+            {% for member_r_log in r_group %}
+            {% if forloop.counter <= 25 %}  
                     <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_r_log.id }}" id="member-id-{{ member_r_log.user.pk }}" data-country="{{ member_r_log.user.userprofile.country.code }}">
                         <div class="col-1 rank-counter" data-counter="0"><span>1</span></div>
@@ -146,6 +147,8 @@
                         <div class="col-2 px-0 align-self-center justify-content-end">
                         </div>
                     </div>
+                    {% else %}
+                    {% endif %}
             {% endfor %}
             </ol>
         {% endfor %}

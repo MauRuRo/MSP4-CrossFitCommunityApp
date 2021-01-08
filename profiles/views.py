@@ -194,7 +194,7 @@ def logPopulation(request):
     # users = User.objects.filter(pk=34)
     current_year = datetime.strftime(date.today(), "%Y")
     current_year = int(current_year)
-    for i in range(10):
+    for i in range(2):
         for user in users:
             workout = Workout.objects.get(workout_name="Deadlift: 1 Rep Max")
             if user.userprofile.gender == "M":
@@ -239,7 +239,7 @@ def logPopulation(request):
                     personal_record = False
             null_ft = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
             next_days = i * 80
-            log_date = datetime.strptime("01-10-2018", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+            log_date = datetime.strptime("01-02-2020", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
             new_log = Log(workout=workout)
             # print(user)
             new_log.user = user
@@ -250,5 +250,10 @@ def logPopulation(request):
             new_log.ft_result = null_ft
             new_log.personal_record = personal_record
             new_log.save()
+    print("DONE UPLOADING")
+    return redirect('profile')
 
+def deleteLogs(request):
+    workout = Workout.objects.get(workout_name="Deadlift: 1 Rep Max")
+    Log.objects.filter(workout=workout).delete()
     return redirect('profile')
