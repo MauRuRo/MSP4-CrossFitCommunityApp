@@ -68,12 +68,40 @@ def dateInput(request):
         return JsonResponse({"error": "Date failed"}, status=400)
 
 
-all_men_index = 1
-all_men_today_index = 1
-all_women_index = 1
-all_women_today_index = 1
+# all_men_index = 1
+# all_men_today_index = 1
+# all_women_index = 1
+# all_women_today_index = 1
+# rlistmenall = []
+# rlismentoday = []
+# rlistwomenall = []
+# rlistwomentoday = []
+
+# def resetIndex():
+#     global all_men_index
+#     global all_men_today_index
+#     global all_women_index
+#     global all_women_today_index
+#     global rlistmenall
+#     global rlismentoday
+#     global rlistwomenall
+#     global rlistwomentoday
+#     all_men_index = 1
+#     all_men_today_index = 1
+#     all_women_index = 1
+#     all_women_today_index = 1
+#     rlistmenall = []
+#     rlismentoday = []
+#     rlistwomenall = []
+#     rlistwomentoday = []
+
 
 def workouts(request, wod_id):
+    # resetIndex()
+    # all_men_index = 1
+    # all_men_today_index = 1
+    # all_women_index = 1
+    # all_women_today_index = 1
     # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
         wod = Workout.objects.get(workout_is_wod=True)
@@ -136,47 +164,88 @@ def workouts(request, wod_id):
         all_men_today_end = 25
         all_women_end = 25
         all_women_today_end = 25
-        if request.user.userprofile.gender == "M":
-            for log in all_logs_rank_men:
-                global all_men_index
-                if log.user == request.user:
-                    break
-                else:
-                    all_men_index += 1
-            for log in all_logs_rank_men_today:
-                global all_men_today_index
-                if log.user == request.user:
-                    break
-                else:
-                    all_men_today_index += 1
-            if all_men_index - 12 > 0:
-                all_men_start = all_men_index - 12
-                all_men_end = all_men_index + 13
-            if all_men_today_index - 12 > 0:
-                all_men_today_start = all_men_today_index - 12
-                all_men_today_end = all_men_today_index + 13
-        else:
-            for log in all_logs_rank_women:
-                global all_women_index
-                if log.user == request.user:
-                    break
-                else:
-                    all_women_index += 1
-            for log in all_logs_rank_women_today:
-                global all_women_today_index
-                if log.user == request.user:
-                    break
-                else:
-                    all_women_today_index += 1
-            if all_women_index - 12 > 0:
-                all_women_start = all_women_index - 12
-                all_women_end = all_women_index + 13
-            if all_women_today_index - 12 > 0:
-                all_women_today_start = all_women_today_index - 12
-                all_women_today_end = all_women_today_index + 13
-        print("ALL MEN BEGIN AND END")
-        print(all_men_start)
-        print(all_men_end)
+        all_men_index_user = 0
+        all_men_today_index_user = 0
+        all_women_index_user = 0
+        all_women_today_index_user = 0
+    # if request.user.userprofile.gender == "M" and (all_logs_rank_men.filter(user=request.user).count() > 0):
+        rank = 0
+        prevresult = [0,0]
+        all_men_index = 1
+        all_men_today_index = 1
+        all_women_index = 1
+        all_women_today_index = 1
+        rlistmenall = []
+        rlistmentoday = []
+        rlistwomenall = []
+        rlistwomentoday = []
+        for log in all_logs_rank_men:
+            if getattr(log, rank_result) == prevresult[0]:
+                prevresult[1] += 1
+            else:
+                rank = rank + 1 + prevresult[1]
+                prevresult[1] = 0
+            prevresult[0] = log.mw_result
+            rlistmenall.append([log.pk, rank])
+            if log.user == request.user:
+                all_men_index_user = all_men_index
+            else:
+                all_men_index += 1
+        # if all_logs_rank_men_today.filter(user=request.user).count() > 0:
+        prevresult = [0, 0]
+        rank = 0
+        for log in all_logs_rank_men_today:
+            if getattr(log, rank_result) == prevresult[0]:
+                prevresult[1] += 1
+            else:
+                rank = rank + 1 + prevresult[1]
+                prevresult[1] = 0
+            prevresult[0] = log.mw_result
+            rlistmentoday.append([log.pk, rank])
+            if log.user == request.user:
+                all_men_today_index_user = all_men_today_index
+            else:
+                all_men_today_index += 1
+        if all_men_index_user - 12 > 0:
+            all_men_start = all_men_index_user - 12
+            all_men_end = all_men_index_user + 13
+        if all_men_today_index_user - 12 > 0:
+            all_men_today_start = all_men_today_index_user - 12
+            all_men_today_end = all_men_today_index_user + 13
+        prevresult = [0,0]
+        rank = 0
+        for log in all_logs_rank_women:
+            if getattr(log, rank_result) == prevresult[0]:
+                prevresult[1] += 1
+            else:
+                rank = rank + 1 + prevresult[1]
+                prevresult[1] = 0
+            prevresult[0] = log.mw_result
+            rlistwomenall.append([log.pk, rank])
+            if log.user == request.user:
+                all_women_index_user = all_women_index
+            else:
+                all_women_index += 1
+        prev_result=[0,0]
+        rank = 0
+        for log in all_logs_rank_women_today:
+            if getattr(log, rank_result) == prevresult[0]:
+                prevresult[1] += 1
+            else:
+                rank = rank + 1 + prevresult[1]
+                prevresult[1] = 0
+            prevresult[0] = log.mw_result
+            rlistwomentoday.append([log.pk, rank])
+            if log.user == request.user:
+                all_women_today_index_user = all_women_today_index
+            else:
+                all_women_today_index += 1
+        if all_women_index_user - 12 > 0:
+            all_women_start = all_women_index_user - 12
+            all_women_end = all_women_index_user + 13
+        if all_women_today_index_user - 12 > 0:
+            all_women_today_start = all_women_today_index_user - 12
+            all_women_today_end = all_women_today_index_user + 13
         rank_groups = [all_logs_rank_men[all_men_start:all_men_end], all_logs_rank_women[all_women_start:all_women_end], all_logs_rank_men_today[all_men_today_start:all_men_today_end], all_logs_rank_women_today[all_women_today_start:all_women_today_end]]
         # rank_groups = [all_logs_rank_men[:25], all_logs_rank_women[:25], all_logs_rank_men_today[:25], all_logs_rank_women_today[:25]]
         # Get todays date and convert it to string
@@ -191,6 +260,10 @@ def workouts(request, wod_id):
             'rank_result': rank_result,
             'form_log': form_log,
             'date_initial': date_initial,
+            "rlistmenall": rlistmenall,
+            "rlistmentoday": rlistmentoday,
+            "rlistwomenall": rlistwomenall,
+            "rlistwomentoday": rlistwomentoday
         }
         template = "workouts/workouts.html"
         print("DONE PERFORMING QUERIES")

@@ -67,7 +67,7 @@ $(document).ready(function() {
             scroll_level = 1
             $(".rank-card").show()
             country_select = false
-            rankCounting("All")
+            // rankCounting("All")
         })
           $('#his-everybody').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -152,7 +152,8 @@ $(document).ready(function() {
                 $('.log-rank-1').show()
             }
             period = 'alltime'
-            scrollMyRank()     
+            scrollMyRank()
+            ranker()     
                  
         })
         $('#rank-today').click(function(){
@@ -170,7 +171,8 @@ $(document).ready(function() {
                 $('.log-rank-3').show()
             }
             period = 'today'
-            scrollMyRank()  
+            scrollMyRank()
+            ranker()    
         })
         $('#rank-men').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -187,7 +189,8 @@ $(document).ready(function() {
                 $('.log-rank-1').show()
             }
             gender = 'M'
-            scrollMyRank()  
+            scrollMyRank()
+            ranker()    
         })
         $('#rank-women').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -204,7 +207,8 @@ $(document).ready(function() {
                 $('.log-rank-2').show()
             }
             gender = 'F'
-            scrollMyRank()  
+            scrollMyRank()
+            ranker()    
         })
         // // log-history navigator:
         // $('.log-history').hide()
@@ -715,7 +719,7 @@ $(document).ready(function() {
                 })
             }
         };
-            rankCounting(null)
+            // rankCounting(null)
             $("#block-1, #block-3").scroll(function(){
                 if ($(this).scrollTop() > 4){
                     $(this).find(".block-header").css('border-bottom', 'dotted 3px grey')
@@ -807,9 +811,13 @@ $(document).ready(function() {
                 }
             }
 
-            $(".rank-counter").children("span").each(function(){
+            function resizeRanks(){
+                $(".rank-counter").children("span").each(function(){
                 sizeLargeNumbers($(this))
             })
+            }   
+            resizeRanks()
+            
 
             $(".card-col").mouseenter(function(){
                 if ($(this).closest(".rank-card").next(".extra-log-info").is(":visible")){
@@ -848,11 +856,11 @@ $(document).ready(function() {
                     let same_c_logs = $(`.rank-card[data-country=${country}`)
                     $(".rank-card").not(same_c_logs).hide()
                     country_select = true
-                    rankCounting(country)
+                    // rankCounting(country)
                 }else{
                     $(".rank-card").show()
                     country_select = false
-                    rankCounting("All")
+                    // rankCounting("All")
                 }
                 
             })
@@ -924,5 +932,43 @@ $(document).ready(function() {
                 
         };
         
+        function test(){
+            list = $("#rlistmenall").data('list')
+            item1 = list[0]
+            item1id= item1[0]
+            item1rank= item1[1]
+            console.log(list)
+            console.log(item1)
+            console.log(item1id)
+            console.log(item1rank)
+        }
+
+        $(".workout-name").click(function(){
+            test()
+        })
+
+        function ranker(){
+            console.log("RANKER GOING")
+            $(".rank-log").each(function(){
+                logid = $(this).attr("name").split("-")[2]
+                if ($(this).parent().hasClass("log-rank-1")){
+                    list = $("#rlistmenall").data('list')
+                }else if ($(this).parent().hasClass("log-rank-2")){
+                    list = $("#rlistwomenall").data('list')
+                }else if ($(this).parent().hasClass("log-rank-3")){
+                    list = $("#rlistmentoday").data('list')
+                }else{
+                    list = $("#rlistwomentoday").data('list')
+                }
+                for (i = 0; i < list.length; i++){
+                    if (list[i][0] == logid){
+                        $(this).children(".rank-counter").children("span").text(list[i][1])
+                        break
+                    }
+                }
+            })
+            resizeRanks()
+        }
+        ranker()
             
 });
