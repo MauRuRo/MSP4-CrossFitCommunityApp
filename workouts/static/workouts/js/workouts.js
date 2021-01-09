@@ -249,14 +249,19 @@ $(document).ready(function() {
         $('.extra-log-info').hide()
 
         // $('.rank-card').children('.card-col').click(function(){
-        let card_col_click = $('.rank-card').children('.card-col')
+        // let card_col_click = $('.rank-card').children('.card-col')
         $(document).on("click", ".card-col", function(){
+            console.log("CLICK")
             if ($(this).parent().hasClass('rank-card') == true){
                 let main_card = "#" + $(this).parent().attr('id')
+                console.log(main_card)
                 let log_name = $(this).parents().attr('name')
+                console.log(log_name)
                 let log_name_class = "." + log_name
                 let group_class_name = $(this).closest(".log-ranking, .log-history").attr('class')
+                console.log(group_class_name)
                 let group_id = log_name_class + "." + group_class_name.split(" ")[1] + "X"
+                console.log(group_id)
                 let extra_info_cards = $(group_id);
                 // let last_info_card = extra_info_cards.last()
                 // last_info_card.addClass('add-border-last')
@@ -732,7 +737,8 @@ $(document).ready(function() {
                     let uid = $("#user-id-no").attr("data")
                     let group = $(".log-ranking:visible").attr("class").split(" ")[1]
                     let group_no = group.split("-")[2]
-                    let memberid = "#member-id-" + uid + "-group-" + group_no
+                    // let memberid = "#member-id-" + uid + "-group-" + group_no
+                    let memberid = "#rank-user-" + uid + "-group-" + group_no
                     $(memberid).children(".rank-counter").css({"color": "#ffc107", "text-shadow": "2px 2px 1px blue"})
                     let scroll = $(".block-header").offset().top + 67
                     $("#block-1").animate({
@@ -908,8 +914,8 @@ $(document).ready(function() {
                     dateStyling($(".his-date-new"))
                     $(".his-date-new").addClass("his-date")
                     $(".his-date-new").removeClass("his-date-new")
-                    $(".log-his-XX").addClass(appendlist)
-                    $(".log-his-XX").removeClass(".log-his-XX")
+                    $(".log-his-XX").addClass(appendlist+"X")
+                    $(".log-his-XX").removeClass("log-his-XX")
                 },
                 error: function(xhr, status, error) {
                     // shit happens friends!
