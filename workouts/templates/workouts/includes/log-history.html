@@ -13,7 +13,7 @@
         {% for h_group in log_groups %}
             <ol class="log-history log-his">
             {% for member_h_log in h_group %}
-            {% if forloop.counter <= 25 %}
+            <!-- {% if forloop.counter <= 25 %} -->
                     <div class="m-log-id" data="{{ member_h_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between" name="log-id-{{ member_h_log.id }}" id="his-user-{{ member_h_log.user.pk }}-log-{{ member_h_log.id }}" data-country="{{ member_h_log.user.userprofile.country.code }}">
                         <div class="col-1 his-date">{{ member_h_log.date }}</div>
@@ -148,8 +148,8 @@
                         <div class="col-2 px-0 align-self-center justify-content-end">
                         </div>
                     </div>
-                    {% else %}
-                    {% endif %}                    
+                    <!-- {% else %}
+                    {% endif %}                     -->
             {% endfor %}
             </ol>
         {% endfor %}

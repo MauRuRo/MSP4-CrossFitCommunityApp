@@ -68,6 +68,11 @@ def dateInput(request):
         return JsonResponse({"error": "Date failed"}, status=400)
 
 
+all_men_index = 1
+all_men_today_index = 1
+all_women_index = 1
+all_women_today_index = 1
+
 def workouts(request, wod_id):
     # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
@@ -97,7 +102,7 @@ def workouts(request, wod_id):
         all_logs_wod = all_logs.filter(workout=wod)
         user_logs = all_logs.filter(user=request.user)
         user_logs_wod = user_logs.filter(workout=wod)
-        log_groups = [all_logs, all_logs_wod, user_logs, user_logs_wod]
+        log_groups = [all_logs[:25], all_logs_wod[:25], user_logs[:25], user_logs_wod[:25]]
         # For rank list, find out type of wod, set proper result field and order.
         if wod.workout_type == 'FT':
             all_logs_rank = Log.objects.filter(workout=wod).order_by('ft_result')
@@ -123,7 +128,57 @@ def workouts(request, wod_id):
         all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
         all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
         # list queries to pass to context
-        rank_groups = [all_logs_rank_men, all_logs_rank_women, all_logs_rank_men_today, all_logs_rank_women_today]
+        all_men_start = 0
+        all_men_today_start = 0
+        all_women_start = 0
+        all_women_today_start = 0
+        all_men_end = 25
+        all_men_today_end = 25
+        all_women_end = 25
+        all_women_today_end = 25
+        if request.user.userprofile.gender == "M":
+            for log in all_logs_rank_men:
+                global all_men_index
+                if log.user == request.user:
+                    break
+                else:
+                    all_men_index += 1
+            for log in all_logs_rank_men_today:
+                global all_men_today_index
+                if log.user == request.user:
+                    break
+                else:
+                    all_men_today_index += 1
+            if all_men_index - 12 > 0:
+                all_men_start = all_men_index - 12
+                all_men_end = all_men_index + 13
+            if all_men_today_index - 12 > 0:
+                all_men_today_start = all_men_today_index - 12
+                all_men_today_end = all_men_today_index + 13
+        else:
+            for log in all_logs_rank_women:
+                global all_women_index
+                if log.user == request.user:
+                    break
+                else:
+                    all_women_index += 1
+            for log in all_logs_rank_women_today:
+                global all_women_today_index
+                if log.user == request.user:
+                    break
+                else:
+                    all_women_today_index += 1
+            if all_women_index - 12 > 0:
+                all_women_start = all_women_index - 12
+                all_women_end = all_women_index + 13
+            if all_women_today_index - 12 > 0:
+                all_women_today_start = all_women_today_index - 12
+                all_women_today_end = all_women_today_index + 13
+        print("ALL MEN BEGIN AND END")
+        print(all_men_start)
+        print(all_men_end)
+        rank_groups = [all_logs_rank_men[all_men_start:all_men_end], all_logs_rank_women[all_women_start:all_women_end], all_logs_rank_men_today[all_men_today_start:all_men_today_end], all_logs_rank_women_today[all_women_today_start:all_women_today_end]]
+        # rank_groups = [all_logs_rank_men[:25], all_logs_rank_women[:25], all_logs_rank_men_today[:25], all_logs_rank_women_today[:25]]
         # Get todays date and convert it to string
         date_today = date.today()
         date_initial = date_today.strftime("%d %b %Y")
@@ -394,15 +449,7 @@ def commentMember(request):
             return JsonResponse({"error": "No edit, no upload"}, status=400)
 
 
-def listResponse(request):
-    context={
-        "start_of_loop": 26,
-        "end_of_loop": 50,
-        "status_code": 200
-    }
-    return context
-
-
+# https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
 def loopList(request):
     wod_id = request.POST["wod"]
     wod = int(wod_id)
