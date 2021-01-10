@@ -1,19 +1,18 @@
 <div class="block-header sticky-top justify-content-center">
     <h4 class="block-title">WOD Ranking</h4>
     <ol id="rank-nav">
-        <li id="rank-all-time" class="period">Year</li>
+        <li id="rank-all-time" class="period" data-page="{{ all_men_page }}" data-pageup="{{ all_men_page }}" >Year</li>
         -
-        <li id="rank-today" class="period">Today</li>
+        <li id="rank-today" class="period" data-page="{{ all_men_today_page }}" data-pageup="{{ all_men_today_page }}">Today</li>
         |
-        <li id="rank-men" class="gender">Men</li>
+        <li id="rank-men" class="gender" data-page="{{ all_women_page }}" data-pageup="{{ all_women_page }}">Men</li>
         -
-        <li id="rank-women" class="gender">Women</li>
+        <li id="rank-women" class="gender" data-page="{{ all_women_today_page }}" data-pageup="{{ all_women_today_page }}">Women</li>
     </ol>
 </div>
         {% for r_group in rank_groups %}
             <ol class="log-ranking log-rank">
             {% for member_r_log in r_group %}
-            <!-- {% if forloop.counter <= 25 %}   -->
                     <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between rank-log" name="log-id-{{ member_r_log.id }}" id="rank-user-{{ member_r_log.user.pk }}" data-country="{{ member_r_log.user.userprofile.country.code }}">
                         <div class="col-1 rank-counter" data-counter="0"><span>1</span></div>
@@ -147,8 +146,6 @@
                         <div class="col-2 px-0 align-self-center justify-content-end">
                         </div>
                     </div>
-                    <!-- {% else %}
-                    {% endif %} -->
             {% endfor %}
             </ol>
         {% endfor %}

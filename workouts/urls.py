@@ -11,4 +11,5 @@ urlpatterns = [
     path('0/dateInput/', views.dateInput, name='dateInput'),
     path('0/editLog/', views.editLog, name='editLog'),
     path('0/loopList/', views.loopList, name='loopList'),
+    path('0/loopListRank/', views.loopListRank, name='loopListRank'),
 ]

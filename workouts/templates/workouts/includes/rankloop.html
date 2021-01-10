@@ -1,0 +1,135 @@
+{% for member_r_log in r_group %}
+        <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
+        <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between rank-log" name="log-id-{{ member_r_log.id }}" id="rank-user-{{ member_r_log.user.pk }}" data-country="{{ member_r_log.user.userprofile.country.code }}">
+            <div class="col-1 rank-counter" data-counter="0"><span>1</span></div>
+            <div class="card-col col-8 px-1">
+                <div class="rank-name-spacing">
+                    <p class="rank-name"><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
+                    {% if rank_result == 'ft_result' %}
+                    <p><span class="ft-log r-log">{{ member_r_log.ft_result }}</span></p>
+                    {% elif rank_result == 'amrap_result' %}
+                    <p><span class="amrap-log r-log">{{ member_r_log.amrap_result }}</span> rounds</p>
+                    {% else %}
+                    <p><span class="mw-log r-log">{{ member_r_log.mw_result }}</span>kg</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-2 px-0 align-self-center justify-content-end">
+                <div class="pf-rnk-circle" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
+                </div>
+                <i class="fflag fflag-{{ member_r_log.user.userprofile.country.code }} ff-lg ff-round rank-flag" aria-label="{{ member_r_log.user.userprofile.country.code }}"></i>
+                {% if member_r_log.personal_record %}
+                <div class="pr-logo-circle" style="background: url('/media/herocommunitylogo-PR-lean.jpg') no-repeat; background-size: cover"></div>
+                {% endif %}
+                {% if member_r_log.user == request.user %}
+                <div class="crud-icons-log">
+                    <i class="far fa-edit edit-log"></i><br>
+                    <i class="far fa-trash-alt delete-log"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- EXTRA INFO -->
+        <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }} log-rank-XX">
+            <div class="col-1"></div>
+            <div class="card-col col-8 px-1">
+                <hr> 
+                <div class="x-info">
+                    <strong>
+                        <span class='log-date'>{{ member_r_log.date }}</span><br>
+                        <span class='log-rx'>{% if member_r_log.rx %}
+                            As prescribed</span><br>
+                            {% else %}
+                            Scaled</span><br>
+                        {% endif %}
+                    </strong>
+                </div>
+            </div>
+            <div class="col-2 px-0 align-self-center justify-content-end">
+            </div>
+        </div>
+        <!-- USER COMMENT -->
+        {% if member_r_log.user_comment != '' %}
+        <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }} log-rank-XX">
+            <div class="col-1"></div>
+            <div class="card-col col-8 px-1">
+                <hr>
+                <div class="x-info">
+                    <div class="comment-info">
+                        <p><strong>{{ member_r_log.user.userprofile.full_name }}:</strong></p>
+                        <p class="comment-log">"{{ member_r_log.user_comment }}"</p>
+                    </div>
+                    <div class="edit-comment-form" name="edit-comment-form-user" hidden>
+                            <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
+                                {% csrf_token %}
+                                <div class="comment-id"  data-comment-id="{{ member_r_log.pk }}" hidden>{{ member_r_log.pk }}</div>
+                                <textarea name="user_comment" class="user-comment">{{ member_r_log.user_comment }}</textarea>
+                                <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
+                            </form>
+                        </div>
+                </div>
+            </div>
+            <div class="col-2 px-0 align-self-center justify-content-end">
+                <div class="pf-rnk-circle prc-tm" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
+                </div>
+                {% if profile.user == member_r_log.user %}
+                    <div class="crud-icons">
+                        <i class="far fa-edit edit-comment"></i><br>
+                        <i class="far fa-trash-alt delete-comment"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <!-- MEMBER COMMENT -->
+        {% for member_comment in member_comments %}
+            {% if member_comment.log_id.pk == member_r_log.pk %}
+            <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info log-id-{{ member_r_log.id }} log-rank-XX">
+                <div class="col-1"></div>
+                <div class="card-col col-8 px-1">
+                    <hr>
+                    <div class="x-info">
+                        <div class="comment-info">
+                            <p><strong>{{ member_comment.member.userprofile.full_name }}:</strong></p>
+                            <p class="comment-log">"{{ member_comment.message }}"</p>
+                        </div>
+                        <div class="edit-comment-form" hidden>
+                            <form action="/ajax/post/commentMember" method="POST" class="comment-edit">
+                                {% csrf_token %}
+                                <div class="comment-id" data-comment-id="{{ member_comment.pk }}" hidden>{{ member_comment.pk }}</div>
+                                <textarea name="member_comment" class="member-comment">{{ member_comment.message }}</textarea>
+                                <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 px-0 align-self-center justify-content-end">
+                        <div class="pf-rnk-circle  prc-tm" style="background: url('{{member_comment.member.userprofile.image.url}}') no-repeat; background-size: cover">
+                        </div>
+                        {% if profile.user == member_comment.member %}
+                            <div class="crud-icons">
+                                <i class="far fa-edit edit-comment"></i><br>
+                                <i class="far fa-trash-alt delete-comment"></i>
+                            </div>
+                        {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        <!-- LEAVE A COMMENT -->
+        <div class = "row mx-0 my-1 align-items-center justify-content-between extra-log-info add-border-last log-id-{{ member_r_log.id }} log-rank-XX" data-logid="log-id-{{ member_r_log.pk }}">
+            <div class="col-1"></div>
+            <div class="card-col col-8 px-1">
+                <hr>
+                <div class="x-info">
+                    <form action="/ajax/post/commentMember" method="POST" class="comment-upload">
+                        {% csrf_token %}
+                        <textarea name="member_comment" placeholder="Leave a comment" class="member-comment"></textarea>
+                        <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit" hidden>Comment</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-2 px-0 align-self-center justify-content-end">
+            </div>
+        </div>
+{% endfor %}

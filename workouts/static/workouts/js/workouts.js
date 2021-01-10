@@ -63,11 +63,16 @@ $(document).ready(function() {
 
         // history-logs navigator:
         let scroll_level = 1
+        let scroll_level_rank = 1
         $(".his-people, .his-wods").click(function() {
             scroll_level = 1
             $(".rank-card").show()
             country_select = false
-            // rankCounting("All")
+        })
+        $(".period, .gender").click(function() {
+            scroll_level_rank = 1
+            $(".rank-card").show()
+            country_select = false
         })
           $('#his-everybody').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -734,7 +739,7 @@ $(document).ready(function() {
             };
             function  scrollToTopRankFast(element){
                 element.animate({
-                    scrollTop: 0}, 0)
+                    scrollTop: 4}, 0)
             };
             function scrollMyRank(){
                 try{
@@ -865,17 +870,22 @@ $(document).ready(function() {
                 
             })
             
-            // $(".workout-name").click(function() {
-            //     console.log($("#his-user-15-log-122").offset().top)
-            // })
-
-            // let scroll_level = 1
             $("#block-3").scroll(function(){
                 if ($(this).scrollTop() > (scroll_level * 1500)){
                     lazyLoadLogs()
                     scroll_level += 1
-                }else{
                 }
+            });
+            $("#block-1").scroll(function(){
+                if ($(this).scrollTop() > (scroll_level_rank * 1000)){
+                    console.log("Scrolling")
+                    lazyLoadLogsRank("down")
+                    scroll_level_rank += 1
+                }else if ($(this).scrollTop() < 4){
+                    lazyLoadLogsRank("up")
+                }
+             
+               
             });
 
             function lazyLoadLogs() {                
@@ -931,21 +941,66 @@ $(document).ready(function() {
                 });
                 
         };
-        
-        function test(){
-            list = $("#rlistmenall").data('list')
-            item1 = list[0]
-            item1id= item1[0]
-            item1rank= item1[1]
-            console.log(list)
-            console.log(item1)
-            console.log(item1id)
-            console.log(item1rank)
-        }
 
-        $(".workout-name").click(function(){
-            test()
-        })
+        function lazyLoadLogsRank(direction) {                
+                if ($("#rank-all-time").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
+                    pagedata = $("#rank-all-time")
+                    call_group = "men_year"
+                    console.log($("#rank-all-time").attr("data-page"))
+                }else if ($("#rank-today").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
+                    pagedata = $("#rank-today")
+                    call_group = "men_today"
+                }else if ($("#rank-all-time").css("text-decoration").split(" ")[0] == "underline" && $("#rank-women").css("text-decoration").split(" ")[0] == "underline") {
+                    pagedata = $("#rank-men")
+                    call_group = "women_year"
+                }else{
+                    pagedata = $("#rank-women")
+                    call_group = "women_today"
+                }
+                console.log(direction)
+                if (direction == "down"){
+                    console.log("MADE IT HERE")
+                    var pageno = pagedata.data('page') + 1;
+                }else{
+                    var pageno = pagedata.data('pageup') - 1;
+                    if (pageno==0){
+                        return;
+                    }
+                }
+                console.log("Pagenumber to Ajax")
+                console.log(pageno)
+                var wod = $("#wod-id-no").attr("data")
+                $.ajax({
+                type: 'POST',
+                url: '/workouts/0/loopListRank/',
+                data: {
+                    page: pageno,
+                    wod: wod,
+                    call_group: call_group,
+                },
+                dataType: "json",
+                success: function(data) {
+                    appendlist = $(".log-ranking:visible").attr("class").split(" ")[1]
+                    if (direction == "up"){
+                        pagedata.data('pageup', pageno);
+                        $('.log-ranking:visible').prepend(data.calling_group_html);
+                    }else{
+                        if (data.has_next) {
+                        pagedata.data('page', pageno);
+                        }
+                        $('.log-ranking:visible').append(data.calling_group_html);
+                    }
+                    $('.extra-log-info').hide()
+                    $(".log-rank-XX").addClass(appendlist+"X")
+                    $(".log-rank-XX").removeClass("log-rank-XX")
+                    ranker()
+                },
+                error: function(xhr, status, error) {
+                    // shit happens friends!
+                }
+                });
+                
+        };
 
         function ranker(){
             console.log("RANKER GOING")

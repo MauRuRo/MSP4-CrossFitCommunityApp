@@ -14,6 +14,7 @@ from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
+import math
 # Create your views here.
 
 
@@ -26,6 +27,7 @@ def user_list():
 
 
 def id_list(userlist, queryset, wodtype):
+    """Create list of Log id's that are best results for each user"""
     log_id_list = []
     if wodtype == 'FT':
         for log_user in userlist:
@@ -68,46 +70,12 @@ def dateInput(request):
         return JsonResponse({"error": "Date failed"}, status=400)
 
 
-# all_men_index = 1
-# all_men_today_index = 1
-# all_women_index = 1
-# all_women_today_index = 1
-# rlistmenall = []
-# rlismentoday = []
-# rlistwomenall = []
-# rlistwomentoday = []
-
-# def resetIndex():
-#     global all_men_index
-#     global all_men_today_index
-#     global all_women_index
-#     global all_women_today_index
-#     global rlistmenall
-#     global rlismentoday
-#     global rlistwomenall
-#     global rlistwomentoday
-#     all_men_index = 1
-#     all_men_today_index = 1
-#     all_women_index = 1
-#     all_women_today_index = 1
-#     rlistmenall = []
-#     rlismentoday = []
-#     rlistwomenall = []
-#     rlistwomentoday = []
-
-
 def workouts(request, wod_id):
-    # resetIndex()
-    # all_men_index = 1
-    # all_men_today_index = 1
-    # all_women_index = 1
-    # all_women_today_index = 1
     # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
         wod = Workout.objects.get(workout_is_wod=True)
     else:
         wod = Workout.objects.get(id=wod_id)
-
     if request.method == "GET":
         # create list of all user id's
         user_l = user_list()
@@ -206,13 +174,17 @@ def workouts(request, wod_id):
                 all_men_today_index_user = all_men_today_index
             else:
                 all_men_today_index += 1
-        if all_men_index_user - 12 > 0:
-            all_men_start = all_men_index_user - 12
-            all_men_end = all_men_index_user + 13
-        if all_men_today_index_user - 12 > 0:
-            all_men_today_start = all_men_today_index_user - 12
-            all_men_today_end = all_men_today_index_user + 13
-        prevresult = [0,0]
+        all_men_page = math.ceil(all_men_index_user / 25)
+        all_men_today_page = math.ceil(all_men_today_index_user / 25)
+
+        # if all_men_index_user - 12 > 0:
+        #     all_men_start = all_men_index_user - 12
+        #     all_men_end = all_men_index_user + 13
+        # if all_men_today_index_user - 12 > 0:
+        #     all_men_today_start = all_men_today_index_user - 12
+        #     all_men_today_end = all_men_today_index_user + 13
+
+        prevresult = [0, 0]
         rank = 0
         for log in all_logs_rank_women:
             if getattr(log, rank_result) == prevresult[0]:
@@ -240,14 +212,35 @@ def workouts(request, wod_id):
                 all_women_today_index_user = all_women_today_index
             else:
                 all_women_today_index += 1
-        if all_women_index_user - 12 > 0:
-            all_women_start = all_women_index_user - 12
-            all_women_end = all_women_index_user + 13
-        if all_women_today_index_user - 12 > 0:
-            all_women_today_start = all_women_today_index_user - 12
-            all_women_today_end = all_women_today_index_user + 13
-        rank_groups = [all_logs_rank_men[all_men_start:all_men_end], all_logs_rank_women[all_women_start:all_women_end], all_logs_rank_men_today[all_men_today_start:all_men_today_end], all_logs_rank_women_today[all_women_today_start:all_women_today_end]]
-        # rank_groups = [all_logs_rank_men[:25], all_logs_rank_women[:25], all_logs_rank_men_today[:25], all_logs_rank_women_today[:25]]
+        all_women_page = math.ceil(all_women_index_user / 25)
+        all_women_today_page = math.ceil(all_women_today_index_user / 25)
+        if all_women_page == 0:
+            all_women_page = 1
+        if all_women_today_page == 0:
+            all_women_today_page = 1
+        if all_men_today_page == 0:
+            all_men_today_page = 1
+        if all_men_page == 0:
+            all_men_page = 1
+        p_my = Paginator(all_logs_rank_men, 25)
+        p_all_logs_rank_men = p_my.page(all_men_page)
+        p_wy = Paginator(all_logs_rank_women, 25)
+        print(all_women_page)
+        p_all_logs_rank_women = p_wy.page(all_women_page)
+        p_mt = Paginator(all_logs_rank_men_today, 25)
+        p_all_logs_rank_men_today = p_mt.page(all_men_today_page)
+        p_wt = Paginator(all_logs_rank_women_today, 25)
+        p_all_logs_rank_women_today = p_wt.page(all_women_today_page)
+        rank_groups = [p_all_logs_rank_men, p_all_logs_rank_women, p_all_logs_rank_men_today, p_all_logs_rank_women_today]
+
+        # if all_women_index_user - 12 > 0:
+        #     all_women_start = all_women_index_user - 12
+        #     all_women_end = all_women_index_user + 13
+        # if all_women_today_index_user - 12 > 0:
+        #     all_women_today_start = all_women_today_index_user - 12
+        #     all_women_today_end = all_women_today_index_user + 13
+        # rank_groups = [all_logs_rank_men[all_men_start:all_men_end], all_logs_rank_women[all_women_start:all_women_end], all_logs_rank_men_today[all_men_today_start:all_men_today_end], all_logs_rank_women_today[all_women_today_start:all_women_today_end]]
+
         # Get todays date and convert it to string
         date_today = date.today()
         date_initial = date_today.strftime("%d %b %Y")
@@ -263,7 +256,11 @@ def workouts(request, wod_id):
             "rlistmenall": rlistmenall,
             "rlistmentoday": rlistmentoday,
             "rlistwomenall": rlistwomenall,
-            "rlistwomentoday": rlistwomentoday
+            "rlistwomentoday": rlistwomentoday,
+            "all_men_page": all_men_page,
+            "all_women_page": all_women_page,
+            "all_men_today_page": all_men_today_page,
+            "all_women_today_page": all_women_today_page
         }
         template = "workouts/workouts.html"
         print("DONE PERFORMING QUERIES")
@@ -290,7 +287,6 @@ def workouts(request, wod_id):
             'date': datetime.strptime(request.POST.get('date'), "%d %b %Y"),
             'user_comment': request.POST['user_comment'],
         }
-
         tday = date.today().strftime("%Y-%m-%d")
         today = datetime.strptime(tday, "%Y-%m-%d")
         if form_data["date"] > today:
@@ -375,7 +371,6 @@ def editLog(request):
                         Log.objects.filter(pk=log_id).update(personal_record= True)
                     else:
                         Log.objects.filter(pk=log_id).update(personal_record= False)
-
             elif wod_type == "AMRAP":
                 max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('amrap_result'))
                 Log.objects.filter(pk=log_id).update(amrap_result=request.POST["result"])
@@ -530,8 +525,6 @@ def loopList(request):
     # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
     called_group = request.POST["call_group"]
     all_logs = Log.objects.all().order_by('-date')
-    print(all_logs.count())
-    print(called_group)
     if called_group == "this_everybody":
         calling_group = all_logs.filter(workout=wod)
     elif called_group == "all_everybody":
@@ -540,11 +533,88 @@ def loopList(request):
         calling_group = all_logs.filter(user=request.user)
     else:
         calling_group = all_logs.filter(user=request.user).filter(workout=wod)
-        
-
     # use Django's pagination
     # https://docs.djangoproject.com/en/dev/topics/pagination/
+    results_per_page = 25
+    paginator_calling_group = Paginator(calling_group, results_per_page)
+    try:
+        calling_group = paginator_calling_group.page(page)
+    except PageNotAnInteger:
+        calling_group = paginator_calling_group.page(2)
+    except EmptyPage:
+        print("ERROR LAST PAGE")
+        calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
+    # build a html posts list with the paginated posts
+    calling_group_html = loader.render_to_string(
+        'workouts/includes/historyloop.html',
+        {'h_group': calling_group}
+    )
+    # package output data and return it as a JSON object
+    output_data = {
+        'calling_group_html': calling_group_html,
+        'has_next': calling_group.has_next()
+    }
+    return JsonResponse(output_data)
 
+
+def loopListRank(request):
+    wod_id = request.POST["wod"]
+    workout = int(wod_id)
+    wod = Workout.objects.get(pk=workout)
+    page = request.POST.get('page')
+    print("Page number in view")
+    print(page)
+    # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+    called_group = request.POST["call_group"]
+    user_l = user_list()
+    # check which date is exactly a year ago
+    lapse_date = date.today() - timedelta(days=365)
+    # make query of all women and one of all men
+    all_women_q = UserProfile.objects.filter(gender='F')
+    all_men_q = UserProfile.objects.filter(gender='M')
+    # get all comments
+    member_comments = MemberComment.objects.all()
+    # make lists of all women/men
+    all_women = []
+    for woman in all_women_q:
+        all_women.append(woman.user.username)
+    all_men = []
+    for man in all_men_q:
+        all_men.append(man.user.username)
+    # For rank list, find out type of wod, set proper result field and order.
+    if wod.workout_type == 'FT':
+        all_logs_rank = Log.objects.filter(workout=wod).order_by('ft_result')
+        rank_result = 'ft_result'
+    elif wod.workout_type == 'AMRAP':
+        all_logs_rank = Log.objects.filter(workout=wod).order_by('-amrap_result')
+        rank_result = 'amrap_result'
+    else:
+        all_logs_rank = Log.objects.filter(workout=wod).order_by('-mw_result')
+        rank_result = 'mw_result'
+    # filter out all logs that are not Rx
+    filter_rx = all_logs_rank.filter(rx=True)
+    # filter out all logs that are more than a year old
+    filter_lapsed = filter_rx.filter(date__gt=lapse_date)
+    # create list of log id's max result for this workout for every user
+    log_id_list = id_list(user_l, filter_lapsed, wod.workout_type)
+    # filter out all none max results from query
+    all_logs_rank = filter_lapsed.filter(id__in=log_id_list)
+    # create query for today's logs, for women, for men, and rank logs for the whole past year.
+    all_logs_rank_today = filter_rx.filter(date=date.today())
+    # all_logs_rank_women = all_logs_rank.filter(user__username__in=all_women)
+    # all_logs_rank_men = all_logs_rank.filter(user__username__in=all_men)
+    # all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
+    # all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
+    if called_group == "men_year":
+        calling_group = all_logs_rank.filter(user__username__in=all_men)
+    elif called_group == "women_year":
+        calling_group = all_logs_rank.filter(user__username__in=all_women)
+    elif called_group == "men_today":
+        calling_group = all_logs_rank_today.filter(user__username__in=all_men)
+    else:
+        calling_group = all_logs_rank_today.filter(user__username__in=all_women)
+    # use Django's pagination
+    # https://docs.djangoproject.com/en/dev/topics/pagination/
     results_per_page = 25
     no_more = False
     paginator_calling_group = Paginator(calling_group, results_per_page)
@@ -558,8 +628,8 @@ def loopList(request):
         calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
     # build a html posts list with the paginated posts
     calling_group_html = loader.render_to_string(
-        'workouts/includes/historyloop.html',
-        {'h_group': calling_group}
+        'workouts/includes/rankloop.html',
+        {'r_group': calling_group}
     )
     # package output data and return it as a JSON object
     output_data = {
