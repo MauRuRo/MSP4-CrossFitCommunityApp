@@ -740,17 +740,30 @@ ol#rank-nav li {
     }
     #categories-div ul{
         list-style: none;
-        padding-left:10px;
+        padding:0 10px 0 10px;
     }
     .cat{
         font-family: 'Bungee';
         color:#ffc107;
+        cursor:pointer;
     }
+    .cat:hover{
+        text-shadow: blue 2px 2px 1px;
+    }
+    .cat-wods:hover{
+        text-shadow: none;
+    }
+    .search-cat,
     .cat-wods{
         color:grey;
         font-size:0.8rem;
+        cursor:pointer;
+        font-family:'Bungee';
     }
 
+    .search-wod{
+        margin-bottom:5px;
+    }
 
 
 

@@ -5,7 +5,8 @@ $(document).ready(function() {
     let country_count = ""
     let scroll_constant = true
     $("#categories-div").hide()
-    // $(".cat-wods").hide()
+    $(".cat-wods").hide()
+    $(".search-cat").hide()
 
         // add classes to log history groups.
         for( i = 1; i < 5; i++) {
@@ -1139,8 +1140,42 @@ $(document).ready(function() {
                 $("#log-history-div").show()
                 $("#categories-div").hide()
                 $("#toggle-workouts-button").text("Workouts")
+            }            
+        })
+
+        $(".cat").click(function(){
+            if ($(this).next(".cat-wods").is(":visible")){
+                $(this).next(".cat-wods").hide()
+            }else{
+                $(this).next(".cat-wods").show()
             }
-            
+        })
+        $(".search-wod").keypress(function(e){
+            if (e.which===13){
+                e.preventDefault()
+            }            
+        })
+        $(".search-wod").on("input", function(e){
+            if ($(".search-wod").val()!=""){
+                $(".search-cat").show()
+                $(".cat-div").hide()
+                sctext = $(".search-wod").val().toLowerCase()
+                console.log(sctext)
+                $(".search-cat-item").each(function(){
+                    thistext = $(this).text().toLowerCase()
+                    incl = thistext.includes(sctext)
+                    if (incl == true){
+                        console.log("check")
+                        $(this).show()
+                    }else{
+                        $(this).hide()
+                    }
+                })
+            }else{
+                console.log("TO SOON")
+                $(".cat-div").show()
+                $(".search-cat").hide()
+            }
         })
 
 });
