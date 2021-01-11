@@ -439,6 +439,16 @@ label[for='image-clear_id'] {
     cursor:pointer;
 }
 
+.direction {
+    border: solid 1px grey;
+    border-radius: 3px;  
+    background-color: lightgrey;
+    cursor:pointer;
+}
+.direction i {
+    padding: 4px;
+    color: grey;
+}
 .display-month{
     font-size: 1.0rem;
     font-family: 'Bungee';

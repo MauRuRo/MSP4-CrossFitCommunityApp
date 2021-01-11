@@ -1,6 +1,9 @@
 $(document).ready(function() {
 
-    var country_select = false
+    let country_select = false
+    let country_selected = ""
+    let country_count = ""
+    let scroll_constant = true
         // add classes to log history groups.
         for( i = 1; i < 5; i++) {
             let group = $('.log-his').first()
@@ -158,7 +161,8 @@ $(document).ready(function() {
             }
             period = 'alltime'
             scrollMyRank()
-            ranker()     
+            ranker()  
+            directionArrow()   
                  
         })
         $('#rank-today').click(function(){
@@ -178,6 +182,7 @@ $(document).ready(function() {
             period = 'today'
             scrollMyRank()
             ranker()    
+            directionArrow()
         })
         $('#rank-men').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -195,7 +200,8 @@ $(document).ready(function() {
             }
             gender = 'M'
             scrollMyRank()
-            ranker()    
+            ranker()
+            directionArrow()
         })
         $('#rank-women').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -213,27 +219,9 @@ $(document).ready(function() {
             }
             gender = 'F'
             scrollMyRank()
-            ranker()    
+            ranker()
+            directionArrow()  
         })
-        // // log-history navigator:
-        // $('.log-history').hide()
-        // $('.log-his-2').show()
-        // $('#all-all').click(function(){
-        //     $('.log-history').hide()
-        //     $('.log-his-1').show()
-        // })
-        // $('#all-wod').click(function(){
-        //     $('.log-history').hide()
-        //     $('.log-his-2').show()
-        // })
-        // $('#user-all').click(function(){
-        //     $('.log-history').hide()
-        //     $('.log-his-3').show()
-        // })
-        // $('#user-wod').click(function(){
-        //     $('.log-history').hide()
-        //     $('.log-his-4').show()
-        // })
         $('.r-log').each(function(){
             if (!$(this).hasClass('ft-log')) {
                 while ($(this).text().slice(-1) == '0' || $(this).text().slice(-1) == '.') {
@@ -257,8 +245,6 @@ $(document).ready(function() {
 
         $('.extra-log-info').hide()
 
-        // $('.rank-card').children('.card-col').click(function(){
-        // let card_col_click = $('.rank-card').children('.card-col')
         $(document).on("click", ".card-col", function(){
             console.log("CLICK")
             if ($(this).parent().hasClass('rank-card') == true){
@@ -272,8 +258,6 @@ $(document).ready(function() {
                 let group_id = log_name_class + "." + group_class_name.split(" ")[1] + "X"
                 console.log(group_id)
                 let extra_info_cards = $(group_id);
-                // let last_info_card = extra_info_cards.last()
-                // last_info_card.addClass('add-border-last')
                 extra_info_cards.slideToggle(100)
                 $('.extra-log-info').not(group_id).slideUp()
             $('.rank-card').not(main_card).removeClass('remove-borders-main')
@@ -285,8 +269,6 @@ $(document).ready(function() {
                 }else{
                     $(this).parent().addClass('remove-borders-main');
                     $(main_card).prev('.m-log-id').attr('id', 'm-log-id');
-                    // console.log("test")
-                    // $(this).parent().css("box-shadow", "")
                 }
             }else{
                 console.log("Did not fire")
@@ -662,69 +644,69 @@ $(document).ready(function() {
             })
             
             // ALLOW FOR TIES IN RANKING
-            function rankCounting(country) {
-                console.log(country_select)
-                console.log("check")
-                if (country_select == false){
-                    console.log("check2")
-                    $(".log-ranking").find(".rank-counter").each(function(){
-                    let curr = $(this)
-                    let par = curr.closest(".log-ranking")
-                    let parrank = par.find(".rank-card:first").find(".rank-counter:first")
-                    // let rankname = parrank.next().children(".rank-name").text()                
-                    if ( parrank.is(curr)){
-                        parrank.children("span").text("1")
-                        parrank.attr("data-counter", 0)
-                    }else{    
-                        let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
-                        let currscore = $(this).closest(".rank-card").find(".r-log:first")
-                        let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter:first")
-                        let currcount = $(this)
-                        if (prevscore.text() == currscore.text()){
-                            let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
-                            currcount.attr("data-counter", newtiecount)
-                            let prevrank = parseInt(prevcount.text())
-                            let newrank = prevrank
-                            currcount.children("span").text(newrank)
-                        }else{
-                            let addcount = parseInt(prevcount.attr("data-counter"))
-                            let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
-                            currcount.children("span").text(newrank)
-                            currcount.attr("data-counter", "0")
-                        }
-                    }
-                })
-            } else {
-                $(".log-ranking").find(".rank-counter").each(function(){
-                    let curr = $(this)
-                    let par = curr.closest(".log-ranking")
-                    let parrank = par.find(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
-                    // let rankname = parrank.next().children(".rank-name").text()                
-                    if ( parrank.is(curr)){
-                        parrank.children("span").text("1")
-                        parrank.attr("data-counter", 0)
-                    }else{    
-                        let prevscore = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".r-log:first")
-                        let currscore = $(this).closest(`.rank-card[data-country=${country}]`).find(".r-log:first")
-                        let prevcount = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
-                        let currcount = $(this)
-                        if (prevscore.text() == currscore.text()){
-                            let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
-                            currcount.attr("data-counter", newtiecount)
-                            let prevrank = parseInt(prevcount.text())
-                            let newrank = prevrank
-                            currcount.children("span").text(newrank)
-                        }else{
-                            let addcount = parseInt(prevcount.attr("data-counter"))
-                            let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
-                            currcount.children("span").text(newrank)
-                            currcount.attr("data-counter", "0")
-                        }
-                    }
-                })
-            }
-        };
-            // rankCounting(null)
+        //     function rankCounting(country) {
+        //         console.log(country_select)
+        //         console.log("check")
+        //         if (country_select == false){
+        //             console.log("check2")
+        //             $(".log-ranking").find(".rank-counter").each(function(){
+        //             let curr = $(this)
+        //             let par = curr.closest(".log-ranking")
+        //             let parrank = par.find(".rank-card:first").find(".rank-counter:first")
+        //             // let rankname = parrank.next().children(".rank-name").text()                
+        //             if ( parrank.is(curr)){
+        //                 parrank.children("span").text("1")
+        //                 parrank.attr("data-counter", 0)
+        //             }else{    
+        //                 let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
+        //                 let currscore = $(this).closest(".rank-card").find(".r-log:first")
+        //                 let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter:first")
+        //                 let currcount = $(this)
+        //                 if (prevscore.text() == currscore.text()){
+        //                     let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
+        //                     currcount.attr("data-counter", newtiecount)
+        //                     let prevrank = parseInt(prevcount.text())
+        //                     let newrank = prevrank
+        //                     currcount.children("span").text(newrank)
+        //                 }else{
+        //                     let addcount = parseInt(prevcount.attr("data-counter"))
+        //                     let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
+        //                     currcount.children("span").text(newrank)
+        //                     currcount.attr("data-counter", "0")
+        //                 }
+        //             }
+        //         })
+        //     } else {
+        //         $(".log-ranking").find(".rank-counter").each(function(){
+        //             let curr = $(this)
+        //             let par = curr.closest(".log-ranking")
+        //             let parrank = par.find(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
+        //             // let rankname = parrank.next().children(".rank-name").text()                
+        //             if ( parrank.is(curr)){
+        //                 parrank.children("span").text("1")
+        //                 parrank.attr("data-counter", 0)
+        //             }else{    
+        //                 let prevscore = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".r-log:first")
+        //                 let currscore = $(this).closest(`.rank-card[data-country=${country}]`).find(".r-log:first")
+        //                 let prevcount = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
+        //                 let currcount = $(this)
+        //                 if (prevscore.text() == currscore.text()){
+        //                     let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
+        //                     currcount.attr("data-counter", newtiecount)
+        //                     let prevrank = parseInt(prevcount.text())
+        //                     let newrank = prevrank
+        //                     currcount.children("span").text(newrank)
+        //                 }else{
+        //                     let addcount = parseInt(prevcount.attr("data-counter"))
+        //                     let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
+        //                     currcount.children("span").text(newrank)
+        //                     currcount.attr("data-counter", "0")
+        //                 }
+        //             }
+        //         })
+        //     }
+        // };
+        //     // rankCounting(null)
             $("#block-1, #block-3").scroll(function(){
                 if ($(this).scrollTop() > 4){
                     $(this).find(".block-header").css('border-bottom', 'dotted 3px grey')
@@ -838,55 +820,68 @@ $(document).ready(function() {
                     $(this).closest(".rank-card").css("border-color", "blue");
                 }
             })
-
             $(".card-col").mouseleave(function(){
                 $(this).closest(".rank-card").css("border-color", "");
                 $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-color", "")
                 $(this).closest(".rank-card").nextAll(".add-border-last:first").css("border-color", "")
             })
-
             // To correct for mobile devices without a cursor.
             $(".card-col").mouseup(function(){
                 $(this).closest(".rank-card").css("border-color", "");
                 $(this).closest(".rank-card").nextUntil(".add-border-last").css("border-color", "")
                 $(this).closest(".rank-card").nextAll(".add-border-last:first").css("border-color", "")
             })
-
             // SELECT BY COUNTRY
-            var country_filter = ''
             $(document).on("click", "i.fflag", function(){
                 if (country_select == false){
-                    console.log("false")
                     let country = $(this).attr("aria-label")
-                    let same_c_logs = $(`.rank-card[data-country=${country}`)
+                    country_selected = country
+                    let same_c_logs = $(`.rank-card[data-country=${country}]`)
                     $(".rank-card").not(same_c_logs).hide()
                     country_select = true
-                    // rankCounting(country)
                 }else{
                     $(".rank-card").show()
                     country_select = false
-                    // rankCounting("All")
+                    country_selected = ""
                 }
                 
             })
             
             $("#block-3").scroll(function(){
-                if ($(this).scrollTop() > (scroll_level * 1500)){
+                if ($(this).scrollTop() > (scroll_level * 1500) && scroll_constant == true){
+                    scroll_constant = false
                     lazyLoadLogs()
                     scroll_level += 1
                 }
             });
             $("#block-1").scroll(function(){
-                if ($(this).scrollTop() > (scroll_level_rank * 1000)){
-                    console.log("Scrolling")
+                if ($(this).scrollTop() > (scroll_level_rank * 1000) && scroll_constant == true){
+                    scroll_constant=false
                     lazyLoadLogsRank("down")
                     scroll_level_rank += 1
-                }else if ($(this).scrollTop() < 4){
-                    lazyLoadLogsRank("up")
                 }
-             
-               
-            });
+            })
+            function goScrollDown(){
+                        if (scroll_constant == true){
+                            scroll_constant = false
+                            if (country_select == true){
+                                country_count = $(".log-ranking").children(`.rank-card[data-country=${country_selected}]:visible`).length
+                            }
+                            lazyLoadLogsRank("down")
+                        }
+                    }
+             $(document).on("click", ".direction-down.direction-rank", function () {
+                    goScrollDown()
+                })
+
+            $(document).on("click", ".direction-up", function () {
+                if (scroll_constant == true){
+                        scroll_constant = false
+                        lazyLoadLogsRank("up")
+                    }
+                })
+
+
 
             function lazyLoadLogs() {                
                 if ($("#his-everybody").css("text-decoration").split(" ")[0] == "underline" && $("#his-this-wod").css("text-decoration").split(" ")[0] == "underline"){
@@ -903,6 +898,10 @@ $(document).ready(function() {
                     call_group = "all_me"
                 }
                 var pageno = pagedata.data('page');
+                if (pageno == "x"){
+                    scroll_constant = true
+                    return;
+                }
                 console.log("pagenumber: " + pageno)
                 var wod = $("#wod-id-no").attr("data")
                 // var page = 2;
@@ -923,7 +922,7 @@ $(document).ready(function() {
                         pagedata.data('page', pageno+1);
                         console.log("pagenumber after succes: " + pagedata.data('page'))
                     } else {
-                        console.log("NO MORE PAGES>>>>>>>>>>>>>>>")
+                        pagedata.data('page', "x");
                     }
                     // append html to the posts div
                     appendlist = $(".log-history:visible").attr("class").split(" ")[1]
@@ -934,6 +933,7 @@ $(document).ready(function() {
                     $(".his-date-new").removeClass("his-date-new")
                     $(".log-his-XX").addClass(appendlist+"X")
                     $(".log-his-XX").removeClass("log-his-XX")
+                    scroll_constant = true
                 },
                 error: function(xhr, status, error) {
                     // shit happens friends!
@@ -946,7 +946,6 @@ $(document).ready(function() {
                 if ($("#rank-all-time").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
                     pagedata = $("#rank-all-time")
                     call_group = "men_year"
-                    console.log($("#rank-all-time").attr("data-page"))
                 }else if ($("#rank-today").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
                     pagedata = $("#rank-today")
                     call_group = "men_today"
@@ -957,13 +956,18 @@ $(document).ready(function() {
                     pagedata = $("#rank-women")
                     call_group = "women_today"
                 }
-                console.log(direction)
+                console.log(pagedata.data('pageup'))
                 if (direction == "down"){
-                    console.log("MADE IT HERE")
-                    var pageno = pagedata.data('page') + 1;
+                    var pageno = pagedata.data('page')
+                    if (pageno == "x"){
+                        scroll_constant = true
+                        return;
+                    } 
+                    pageno = pageno + 1;
                 }else{
                     var pageno = pagedata.data('pageup') - 1;
                     if (pageno==0){
+                        scroll_constant = true
                         return;
                     }
                 }
@@ -984,16 +988,40 @@ $(document).ready(function() {
                     if (direction == "up"){
                         pagedata.data('pageup', pageno);
                         $('.log-ranking:visible').prepend(data.calling_group_html);
+                        $('.log-ranking:visible').prepend('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-up direction-rank"><i class="fas fa-angle-double-up"></i></div>')
+                        if (pageno == 1){
+                            $(".direction-up").remove()
+                        }else{
+                            $(".rank-dir-up:visible").remove()
+                        $(".direction-up").addClass('rank-dir-up')
+                        }
                     }else{
                         if (data.has_next) {
-                        pagedata.data('page', pageno);
+                            $('.log-ranking:visible').append(data.calling_group_html);
+                            $('.log-ranking:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down direction-rank"><i class="fas fa-angle-double-down"></i></div>')
+                            pagedata.data('page', pageno);
+                            $(".rank-dir-down:visible").remove()
+                            $(".direction-down").addClass('rank-dir-down')
+                            if (country_select==true){
+                                if (country_count == $(".log-ranking").children(`.rank-card[data-country=${country_selected}]:visible`).length){
+                                    scroll_constant = true
+                                    goScrollDown()
+                                    console.log("GO AGAIN FOR COUNTRY")
+                                }
+                            }                         
+                        }else{
+                            $(".direction-down").remove()
                         }
-                        $('.log-ranking:visible').append(data.calling_group_html);
                     }
                     $('.extra-log-info').hide()
                     $(".log-rank-XX").addClass(appendlist+"X")
                     $(".log-rank-XX").removeClass("log-rank-XX")
+                    if (country_select==true){
+                        let same_c_logs = $(`.rank-card[data-country=${country_selected}`)
+                    $(".rank-card").not(same_c_logs).hide()
+                    }
                     ranker()
+                    scroll_constant = true
                 },
                 error: function(xhr, status, error) {
                     // shit happens friends!
@@ -1025,5 +1053,31 @@ $(document).ready(function() {
             resizeRanks()
         }
         ranker()
-            
+        
+        function directionArrow(){
+            $(".direction-up").each(function(){
+                if ($("#rank-all-time").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
+                        pagedata = $("#rank-all-time")
+                    }else if ($("#rank-today").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
+                        pagedata = $("#rank-today")
+                    }else if ($("#rank-all-time").css("text-decoration").split(" ")[0] == "underline" && $("#rank-women").css("text-decoration").split(" ")[0] == "underline") {
+                        pagedata = $("#rank-men")
+                    }else{
+                        pagedata = $("#rank-women")
+                    }
+                if (pagedata.data('pageup') == 1) {
+                    $(this).hide()
+                }else{
+                    $(this).show()
+                }
+            })
+            if ($(".log-ranking").children(".rank-card:visible").length < 1){
+                $(".direction-down").hide()
+            }else{
+                $(".direction-down").show()
+            }
+        }
+        directionArrow()
+    
+
 });

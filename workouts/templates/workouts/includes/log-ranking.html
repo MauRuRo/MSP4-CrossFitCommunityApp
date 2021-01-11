@@ -12,6 +12,7 @@
 </div>
         {% for r_group in rank_groups %}
             <ol class="log-ranking log-rank">
+                <div class="row mx-0 my-1 align-items-center justify-content-center direction direction-up direction-rank rank-dir-up"><i class="fas fa-angle-double-up"></i></div>
             {% for member_r_log in r_group %}
                     <div class="m-log-id" data="{{ member_r_log.pk }}" hidden></div>              
                     <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between rank-log" name="log-id-{{ member_r_log.id }}" id="rank-user-{{ member_r_log.user.pk }}" data-country="{{ member_r_log.user.userprofile.country.code }}">
@@ -147,6 +148,7 @@
                         </div>
                     </div>
             {% endfor %}
+                <div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down direction-rank rank-dir-down"><i class="fas fa-angle-double-down"></i></div>
             </ol>
         {% endfor %}
             <div id="gender" hidden>{{ profile.gender }}</div>
