@@ -12,6 +12,17 @@ def calc_age(birth_date):
     age = (current_day.year - birth_date.year)
     return age
 
+
+@register.filter(name="space_remove")
+def space_remove(value):
+    string_list = value.split(" ")
+    print(string_list)
+    new_string = ""
+    for i in string_list:
+        new_string = new_string + i
+    new_string = new_string.lower()
+    return new_string
+
 # class DurationInput(TextInput):
 
 #     def calc_duration(self, value):

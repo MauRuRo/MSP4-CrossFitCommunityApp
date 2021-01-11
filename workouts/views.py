@@ -13,9 +13,10 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# from django.template import Library
+# from django.template.defaultfilters import stringfilter
 import json
 import math
-# Create your views here.
 
 
 def user_list():
@@ -136,7 +137,6 @@ def workouts(request, wod_id):
         all_men_today_index_user = 0
         all_women_index_user = 0
         all_women_today_index_user = 0
-    # if request.user.userprofile.gender == "M" and (all_logs_rank_men.filter(user=request.user).count() > 0):
         rank = 0
         prevresult = [0,0]
         all_men_index = 1
@@ -159,7 +159,6 @@ def workouts(request, wod_id):
                 all_men_index_user = all_men_index
             else:
                 all_men_index += 1
-        # if all_logs_rank_men_today.filter(user=request.user).count() > 0:
         prevresult = [0, 0]
         rank = 0
         for log in all_logs_rank_men_today:
@@ -176,14 +175,6 @@ def workouts(request, wod_id):
                 all_men_today_index += 1
         all_men_page = math.ceil(all_men_index_user / 25)
         all_men_today_page = math.ceil(all_men_today_index_user / 25)
-
-        # if all_men_index_user - 12 > 0:
-        #     all_men_start = all_men_index_user - 12
-        #     all_men_end = all_men_index_user + 13
-        # if all_men_today_index_user - 12 > 0:
-        #     all_men_today_start = all_men_today_index_user - 12
-        #     all_men_today_end = all_men_today_index_user + 13
-
         prevresult = [0, 0]
         rank = 0
         for log in all_logs_rank_women:
@@ -225,26 +216,18 @@ def workouts(request, wod_id):
         p_my = Paginator(all_logs_rank_men, 25)
         p_all_logs_rank_men = p_my.page(all_men_page)
         p_wy = Paginator(all_logs_rank_women, 25)
-        print(all_women_page)
         p_all_logs_rank_women = p_wy.page(all_women_page)
         p_mt = Paginator(all_logs_rank_men_today, 25)
         p_all_logs_rank_men_today = p_mt.page(all_men_today_page)
         p_wt = Paginator(all_logs_rank_women_today, 25)
         p_all_logs_rank_women_today = p_wt.page(all_women_today_page)
         rank_groups = [p_all_logs_rank_men, p_all_logs_rank_women, p_all_logs_rank_men_today, p_all_logs_rank_women_today]
-
-        # if all_women_index_user - 12 > 0:
-        #     all_women_start = all_women_index_user - 12
-        #     all_women_end = all_women_index_user + 13
-        # if all_women_today_index_user - 12 > 0:
-        #     all_women_today_start = all_women_today_index_user - 12
-        #     all_women_today_end = all_women_today_index_user + 13
-        # rank_groups = [all_logs_rank_men[all_men_start:all_men_end], all_logs_rank_women[all_women_start:all_women_end], all_logs_rank_men_today[all_men_today_start:all_men_today_end], all_logs_rank_women_today[all_women_today_start:all_women_today_end]]
-
         # Get todays date and convert it to string
         date_today = date.today()
         date_initial = date_today.strftime("%d %b %Y")
         form_log = LogForm()
+        wod_collection = Workout.objects.all()
+        categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         context = {
             'wod': wod,
             'member_comments': member_comments,
@@ -260,7 +243,9 @@ def workouts(request, wod_id):
             "all_men_page": all_men_page,
             "all_women_page": all_women_page,
             "all_men_today_page": all_men_today_page,
-            "all_women_today_page": all_women_today_page
+            "all_women_today_page": all_women_today_page,
+            "wod_collection": wod_collection,
+            "categories": categories
         }
         template = "workouts/workouts.html"
         print("DONE PERFORMING QUERIES")

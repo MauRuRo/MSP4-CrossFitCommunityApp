@@ -7,16 +7,26 @@
             <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
                 <div class="fillblock px-4 py-3 mb-3" id="block-2">
                     <div class="row">
-                        <div class="col-10 px-0">
+                        <div class="col-9 px-0">
+                            <div class="row pl-3">
                             <h3 class="workout-name">{% if wod.workout_is_wod %}<span>Workout of the Day:</span><br>{% endif %}{{ wod.workout_name }}</h3>
+                            </div>
+                            <div class="row pl-3">
+                                <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
+                            </div>
                         </div>
-                        <div class="col-2 px-0 justify-content-end">
-                            <a class="btn btn-black rounded-0" id="log-workout-button">Log</a>
+                        <div class="col-3 px-1 justify-content-end">
+                            <div class="row justify-content-end">
+                                <button class="btn btn-black rounded-1" id="toggle-workouts-button">Workouts</button>
+                            </div>     
+                            <div class="row justify-content-end">
+                                <button class="btn btn-black rounded-1" id="toggle-log-button">Log</button>
+                            </div>                                                   
                         </div>      
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
-                    </div>
+                    </div> -->
                     <div class="row">
                         <p class="workout-description">{{ wod.description }}</p>
                     </div>
@@ -34,9 +44,11 @@
             </div>           
             <div class="col-sm-6 col-lg-3 content-block align-self-start order-3 order-sm-2 order-lg-1">
                 <div class="fillblock mb-3" id="block-3">
-
                     <div id="log-history-div">
                         {% include 'workouts/includes/log-history.html' %} 
+                    </div>
+                    <div id="categories-div">
+                        {% include 'workouts/includes/categories.html' %} 
                     </div>
                 </div>
             </div>

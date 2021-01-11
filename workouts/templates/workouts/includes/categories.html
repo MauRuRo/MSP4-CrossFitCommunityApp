@@ -1,0 +1,44 @@
+<div class="block-header sticky-top justify-content-center">
+    <h4 class="block-title">Explore WODs</h4>
+</div>
+<div class="row pt-1 justify-content-center">
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    </form>
+</div>
+<div class="row pl-2 pt-2">
+    {% for cat in categories %}
+    <ul>
+        <li id="{{ cat|lower }}" class="cat">{{ cat }}            
+            <ul class="cat-wods">
+                {% for wod in wod_collection %}
+                {% if wod.get_workout_category_display == cat %}
+                <li>{{ wod.workout_name }}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </li>
+        <!-- <li id="olympiclifts" class="cat">Olympic Lifts
+            <ul><li>Workouts</li></ul>
+        </li>
+        <li id="bodyweight" class="cat">Body Weight
+            <ul><li>Workouts</li></ul>
+        </li>
+        <li id="heavy" class="cat">Heavy
+            <ul><li>Workouts</li></ul>
+        </li>
+        <li id="light" class="cat"></li>Light
+            <ul><li>Workouts</li></ul>
+        </li>
+        <li id="long" class="cat">Long
+            <ul><li>Workouts</li></ul>
+        </li>
+        <li id="speed" class="cat">Speed
+            <ul><li>Workouts</li></ul>
+        </li>
+        <li id="endurance" class="cat">Endurance
+            <ul><li>Workouts</li></ul>
+        </li> -->
+    </ul>
+    {% endfor %}
+</div>

@@ -47,9 +47,9 @@ class LogForm(forms.ModelForm):
                 else:
                     self.fields[field].label = label
             if field == "ft_result" or field == "amrap_result" or field =="mw_result":
-                self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input score-result'
+                self.fields[field].widget.attrs['class'] = 'border-black rounded-1 profile-form-input score-result'
             else:
-                self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
+                self.fields[field].widget.attrs['class'] = 'border-black rounded-1 profile-form-input'
             
 
 

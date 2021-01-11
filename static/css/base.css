@@ -119,9 +119,9 @@ h1, h2, h3, h4, h5, h6 {
 .category-name {
     color: #ffc107;
 }
-#log-workout-button {
-    position: absolute;
-    right: 0;
+#toggle-log-button,
+#toggle-workouts-button {
+   margin:0 10px 5px 0;
 }
 /* .logfield {
     display: none;
@@ -733,6 +733,27 @@ ol#rank-nav li {
         font-size:0.5rem;
         margin-top:3px;
     }
+    #date {
+        /* border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px; */
+        border-color: black!important;
+    }
+    #categories-div ul{
+        list-style: none;
+        padding-left:10px;
+    }
+    .cat{
+        font-family: 'Bungee';
+        color:#ffc107;
+    }
+    .cat-wods{
+        color:grey;
+        font-size:0.8rem;
+    }
+
+
+
+
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {

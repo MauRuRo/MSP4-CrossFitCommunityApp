@@ -4,6 +4,8 @@ $(document).ready(function() {
     let country_selected = ""
     let country_count = ""
     let scroll_constant = true
+    $("#categories-div").hide()
+    // $(".cat-wods").hide()
 
         // add classes to log history groups.
         for( i = 1; i < 5; i++) {
@@ -24,13 +26,18 @@ $(document).ready(function() {
             $(this).attr("id", newid)
         })
 
-        $('#log-workout-button').click(function() {
+        $('#toggle-log-button').click(function() {
             if ($("#logform-edit-button").is(":visible")){
                 $("#logform-edit-button").hide()
                 $("#logform-submit-button").show()
             }
             $('#logform-div').toggle()
             $('#log-ranking-div').toggle()
+            if ($('#logform-div').is(":visible")){
+                $("#toggle-log-button").text("Ranking")
+            }else{
+                $("#toggle-log-button").text("Log")
+            }
             pagec = $(".page-content").offset().top
             scroll = $("#block-1").offset().top
             $('html, body').animate({
@@ -48,6 +55,7 @@ $(document).ready(function() {
         $('#cancel-log').click(function() {
             $('#logform-div').css('display', 'none')
             $('#log-ranking-div').css('display', 'block')
+            $("#toggle-log-button").text("Log")
         });
 
         // set visibility on page elements
@@ -871,7 +879,6 @@ $(document).ready(function() {
                     if (country_select == true){
                         country_count = $(".log-history").children(`.rank-card[data-country=${country_selected}]:visible`).length
                     }
-                    console.log(country_count)
                     lazyLoadLogs()
                 }
             }
@@ -896,16 +903,13 @@ $(document).ready(function() {
                 goScrollDownHis()
             })
             $(document).on("click", ".direction-up", function () {
-                // if (scroll_constant == true){
-                //         scroll_constant = false
-                //         lazyLoadLogsRank("up")
-                //     }
                 goScrollUp()
                 })
 
 
 
-            function lazyLoadLogs() {                
+            function lazyLoadLogs() {
+                console.log("loading")                
                 if ($("#his-everybody").css("text-decoration").split(" ")[0] == "underline" && $("#his-this-wod").css("text-decoration").split(" ")[0] == "underline"){
                     pagedata = $("#his-everybody")
                     call_group = "this_everybody"
@@ -949,8 +953,12 @@ $(document).ready(function() {
                     appendlist = $(".log-history:visible").attr("class").split(" ")[1]
                     $('.log-history:visible').append(data.calling_group_html);
                     $('.log-history:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down direction-his"><i class="fas fa-angle-double-down"></i></div>')
-                    $(".his-dir-down:visible").remove()
-                    $(".direction-down").addClass('his-dir-down')
+                    if (pagedata.data('page')=="x"){
+                        $(".direction-down").remove()
+                    }else{
+                        $(".his-dir-down:visible").remove()
+                        $(".direction-down").addClass('his-dir-down')
+                    }
                     $('.extra-log-info').hide()
                     dateStyling($(".his-date-new"))
                     $(".his-date-new").addClass("his-date")
@@ -1121,5 +1129,18 @@ $(document).ready(function() {
             }
         }
         directionArrow()
+
+        $("#toggle-workouts-button").click(function(){
+            if ($("#log-history-div").is(":visible")){
+                $("#log-history-div").hide()
+                $("#categories-div").show()
+                $("#toggle-workouts-button").text("Activity")
+            }else{
+                $("#log-history-div").show()
+                $("#categories-div").hide()
+                $("#toggle-workouts-button").text("Workouts")
+            }
+            
+        })
 
 });
