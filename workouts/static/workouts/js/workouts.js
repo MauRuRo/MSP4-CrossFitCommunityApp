@@ -4,6 +4,7 @@ $(document).ready(function() {
     let country_selected = ""
     let country_count = ""
     let scroll_constant = true
+
         // add classes to log history groups.
         for( i = 1; i < 5; i++) {
             let group = $('.log-his').first()
@@ -846,21 +847,6 @@ $(document).ready(function() {
                 }
                 
             })
-            
-            $("#block-3").scroll(function(){
-                if ($(this).scrollTop() > (scroll_level * 1500) && scroll_constant == true){
-                    scroll_constant = false
-                    lazyLoadLogs()
-                    scroll_level += 1
-                }
-            });
-            $("#block-1").scroll(function(){
-                if ($(this).scrollTop() > (scroll_level_rank * 1000) && scroll_constant == true){
-                    scroll_constant=false
-                    lazyLoadLogsRank("down")
-                    scroll_level_rank += 1
-                }
-            })
             function goScrollDown(){
                         if (scroll_constant == true){
                             scroll_constant = false
@@ -870,15 +856,51 @@ $(document).ready(function() {
                             lazyLoadLogsRank("down")
                         }
                     }
-             $(document).on("click", ".direction-down.direction-rank", function () {
+            function goScrollUp(){
+                if (scroll_constant == true){
+                    scroll_constant = false
+                    if (country_select == true){
+                        country_count = $(".log-ranking").children(`.rank-card[data-country=${country_selected}]:visible`).length
+                    }
+                    lazyLoadLogsRank("up")
+                }
+            }
+            function goScrollDownHis(){
+                if (scroll_constant == true){
+                    scroll_constant = false
+                    if (country_select == true){
+                        country_count = $(".log-history").children(`.rank-card[data-country=${country_selected}]:visible`).length
+                    }
+                    console.log(country_count)
+                    lazyLoadLogs()
+                }
+            }
+            $("#block-3").scroll(function(){
+                if ($(this).scrollTop() > (scroll_level * 1500) && scroll_constant == true){
+                    goScrollDownHis()
+                    scroll_level += 1
+                }
+            });
+            $("#block-1").scroll(function(){
+                if ($(this).scrollTop() > (scroll_level_rank * 1000) && scroll_constant == true){
+                    // scroll_constant=false
+                    // lazyLoadLogsRank("down")
+                    goScrollDown()
+                    scroll_level_rank += 1
+                }
+            })
+             $(document).on("click", ".rank-dir-down", function () {
                     goScrollDown()
                 })
-
+            $(document).on("click", ".his-dir-down", function () {
+                goScrollDownHis()
+            })
             $(document).on("click", ".direction-up", function () {
-                if (scroll_constant == true){
-                        scroll_constant = false
-                        lazyLoadLogsRank("up")
-                    }
+                // if (scroll_constant == true){
+                //         scroll_constant = false
+                //         lazyLoadLogsRank("up")
+                //     }
+                goScrollUp()
                 })
 
 
@@ -920,19 +942,32 @@ $(document).ready(function() {
                     // else hide the link
                     if (data.has_next) {
                         pagedata.data('page', pageno+1);
-                        console.log("pagenumber after succes: " + pagedata.data('page'))
                     } else {
                         pagedata.data('page', "x");
                     }
                     // append html to the posts div
                     appendlist = $(".log-history:visible").attr("class").split(" ")[1]
                     $('.log-history:visible').append(data.calling_group_html);
+                    $('.log-history:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down direction-his"><i class="fas fa-angle-double-down"></i></div>')
+                    $(".his-dir-down:visible").remove()
+                    $(".direction-down").addClass('his-dir-down')
                     $('.extra-log-info').hide()
                     dateStyling($(".his-date-new"))
                     $(".his-date-new").addClass("his-date")
                     $(".his-date-new").removeClass("his-date-new")
                     $(".log-his-XX").addClass(appendlist+"X")
                     $(".log-his-XX").removeClass("log-his-XX")
+                    if (country_select==true){
+                        let same_c_logs = $(`.rank-card[data-country=${country_selected}`)
+                    $(".rank-card").not(same_c_logs).hide()
+                    }
+                    if (country_select==true){
+                            if (country_count == $(".log-history").children(`.rank-card[data-country=${country_selected}]:visible`).length){
+                                console.log("checking")
+                                scroll_constant = true
+                                goScrollDownHis()
+                            }
+                        } 
                     scroll_constant = true
                 },
                 error: function(xhr, status, error) {
@@ -971,8 +1006,6 @@ $(document).ready(function() {
                         return;
                     }
                 }
-                console.log("Pagenumber to Ajax")
-                console.log(pageno)
                 var wod = $("#wod-id-no").attr("data")
                 $.ajax({
                 type: 'POST',
@@ -993,8 +1026,14 @@ $(document).ready(function() {
                             $(".direction-up").remove()
                         }else{
                             $(".rank-dir-up:visible").remove()
-                        $(".direction-up").addClass('rank-dir-up')
+                            $(".direction-up").addClass('rank-dir-up')
                         }
+                        if (country_select==true){
+                                if (country_count == $(".log-ranking").children(`.rank-card[data-country=${country_selected}]:visible`).length){
+                                    scroll_constant = true
+                                    goScrollUp()
+                                }
+                            }    
                     }else{
                         if (data.has_next) {
                             $('.log-ranking:visible').append(data.calling_group_html);
@@ -1006,11 +1045,10 @@ $(document).ready(function() {
                                 if (country_count == $(".log-ranking").children(`.rank-card[data-country=${country_selected}]:visible`).length){
                                     scroll_constant = true
                                     goScrollDown()
-                                    console.log("GO AGAIN FOR COUNTRY")
                                 }
                             }                         
                         }else{
-                            $(".direction-down").remove()
+                            $(".direction-down:visible").remove()
                         }
                     }
                     $('.extra-log-info').hide()
@@ -1072,12 +1110,16 @@ $(document).ready(function() {
                 }
             })
             if ($(".log-ranking").children(".rank-card:visible").length < 1){
-                $(".direction-down").hide()
+                $(".rank-dir-down").hide()
             }else{
-                $(".direction-down").show()
+                $(".rank-dir-down").show()
+            }
+            if ($(".log-history").children(".rank-card:visible").length < 1){
+                $(".his-dir-down").hide()
+            }else{
+                $(".his-dir-down").show()
             }
         }
         directionArrow()
-    
 
 });
