@@ -5,6 +5,7 @@
             <div class="card-col col-8 px-1">
                 <div class="rank-name-spacing">
                     <p class="rank-name"><strong>{{ member_r_log.user.userprofile.full_name }}</strong></p>
+                    {{ rank_result }}
                     {% if rank_result == 'ft_result' %}
                     <p><span class="ft-log r-log">{{ member_r_log.ft_result }}</span></p>
                     {% elif rank_result == 'amrap_result' %}

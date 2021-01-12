@@ -547,8 +547,6 @@ def loopListRank(request):
     workout = int(wod_id)
     wod = Workout.objects.get(pk=workout)
     page = request.POST.get('page')
-    print("Page number in view")
-    print(page)
     # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
     called_group = request.POST["call_group"]
     user_l = user_list()
@@ -567,6 +565,7 @@ def loopListRank(request):
     for man in all_men_q:
         all_men.append(man.user.username)
     # For rank list, find out type of wod, set proper result field and order.
+    print(wod.workout_type)
     if wod.workout_type == 'FT':
         all_logs_rank = Log.objects.filter(workout=wod).order_by('ft_result')
         rank_result = 'ft_result'
@@ -614,7 +613,10 @@ def loopListRank(request):
     # build a html posts list with the paginated posts
     calling_group_html = loader.render_to_string(
         'workouts/includes/rankloop.html',
-        {'r_group': calling_group}
+        {
+        'r_group': calling_group,
+        'rank_result': rank_result
+        }
     )
     # package output data and return it as a JSON object
     output_data = {

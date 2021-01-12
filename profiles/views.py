@@ -190,71 +190,112 @@ def populate(request):
     return redirect('profile')
 
 
+# def logPopulation(request):
+#     users = User.objects.all().exclude(pk__lte=17)
+#     current_year = datetime.strftime(date.today(), "%Y")
+#     current_year = int(current_year)
+#     for i in range(4):
+#         for user in users:
+#             workout = Workout.objects.get(workout_name="Wilmot")
+#             if user.userprofile.gender == "M":
+#                 gender_factor = 0  #HERe
+#             else:
+#                 gender_factor = 1  #HERe
+#             level_factor = 1 - int(user.username[-1])/10  #HERe
+#             dob = int(datetime.strftime(user.userprofile.birthdate, "%Y"))
+#             age_factor = 1 - 1-((current_year - dob)/100)  #HERe
+#             random_factor = 1 - random.randrange(30,70)/100  #HERe
+#             p_logs = Log.objects.filter(workout=workout).filter(user=user)
+#             prev_logs = p_logs.count()
+#             prev_logs = i
+#             if prev_logs > 8:
+#                 prev_logs = 8
+#             prev_result_factor = 1 - (prev_logs + 1)/9  #HERe 
+#             factors = [gender_factor, level_factor, level_factor, level_factor, level_factor, age_factor, prev_result_factor, prev_result_factor, random_factor, level_factor, gender_factor]
+#             variance_factor = statistics.mean(factors)
+#             min_result = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=10, hours=0, weeks=0)
+#             max_add_result = 2040
+#             # max_add_result = timedelta(days=0, seconds=32, microseconds=0, milliseconds=0, minutes=2, hours=0, weeks=0)
+#             # max_add_result_s = max_add_result.seconds
+#             final_result = min_result + timedelta(seconds=round(variance_factor * max_add_result))  #HERe
+#             # final_result = 0.1 * round(final_result/0.1)
+#             max_result = p_logs.aggregate(Min('ft_result'))  #HERe
+#             if max_result['ft_result__min'] == None: #HERe
+#                 personal_record = True
+#             else:
+#                 best_result = max_result['ft_result__min'] #HERe
+#                 if best_result > final_result: #HERe
+#                     personal_record = True
+#                 else:
+#                     personal_record = False
+#             null_ft = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+#             next_days = i * 80
+#             log_date = datetime.strptime("24-12-2019", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+#             new_log = Log(workout=workout)
+#             new_log.user = user
+#             new_log.rx = True
+#             new_log.date = log_date
+#             new_log.mw_result = 0
+#             new_log.amrap_result = 0
+#             new_log.ft_result = final_result
+#             new_log.personal_record = personal_record
+#             new_log.save()
+#     print("DONE WITH UPLOADING")
+#     return redirect('profile')
 def logPopulation(request):
     users = User.objects.all().exclude(pk__lte=17)
-    # users = User.objects.filter(pk=34)
     current_year = datetime.strftime(date.today(), "%Y")
     current_year = int(current_year)
-    for i in range(2):
+    for i in range(4):
         for user in users:
-            workout = Workout.objects.get(workout_name="Deadlift: 1 Rep Max")
+            workout = Workout.objects.get(workout_name="Rankel")
             if user.userprofile.gender == "M":
-                gender_factor = 1
+                gender_factor = 1  #HERe
             else:
-                gender_factor = 0
-            # print(gender_factor)
-            level_factor = int(user.username[-1])/10
-            # print(level_factor)
+                gender_factor = 0  #HERe
+            level_factor = int(user.username[-1])/10  #HERe
             dob = int(datetime.strftime(user.userprofile.birthdate, "%Y"))
-            # print(dob)
-            age_factor = 1-((current_year - dob)/100)
-            # print(age_factor)
-            # age_factor = 0.5
-            random_factor = random.randrange(30,70)/100
-            # print(random_factor)
+            age_factor = 1-((current_year - dob)/100)  #HERe
+            random_factor = random.randrange(30,70)/100  #HERe
             p_logs = Log.objects.filter(workout=workout).filter(user=user)
             prev_logs = p_logs.count()
-            # print(prev_logs)
             prev_logs = i
             if prev_logs > 8:
                 prev_logs = 8
-            prev_result_factor = (prev_logs + 1)/9
-            # print(prev_result_factor)
-            # print(prev_result_factor)
+            prev_result_factor = (prev_logs + 1)/9  #HERe 
             factors = [gender_factor, level_factor, level_factor, level_factor, level_factor, age_factor, prev_result_factor, prev_result_factor, random_factor, level_factor, gender_factor]
             variance_factor = statistics.mean(factors)
-            # print(variance_factor)
-            min_result = 40
-            max_add_result = 210
-            final_result = min_result + variance_factor * max_add_result
-            final_result = 0.5 * round(final_result/0.5)
-            # print(final_result)
-            max_result = p_logs.aggregate(Max('mw_result'))
-            if max_result['mw_result__max'] == None:
+            min_result = 3 
+            max_add_result = 6
+            # max_add_result = timedelta(days=0, seconds=32, microseconds=0, milliseconds=0, minutes=2, hours=0, weeks=0)
+            # max_add_result_s = max_add_result.seconds
+            final_result = min_result + variance_factor * max_add_result  #HERe
+            final_result = 0.1 * round(final_result/0.1)
+            max_result = p_logs.aggregate(Max('amrap_result'))  #HERe
+            if max_result['amrap_result__max'] == None: #HERe
                 personal_record = True
             else:
-                best_result = max_result['mw_result__max']
-                if best_result < final_result:
+                best_result = max_result['amrap_result__max'] #HERe
+                if best_result < final_result: #HERe
                     personal_record = True
                 else:
                     personal_record = False
             null_ft = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
             next_days = i * 80
-            log_date = datetime.strptime("01-02-2020", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+            log_date = datetime.strptime("27-12-2019", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
             new_log = Log(workout=workout)
-            # print(user)
             new_log.user = user
             new_log.rx = True
             new_log.date = log_date
-            new_log.mw_result = final_result
-            new_log.amrap_result = 0
+            new_log.mw_result = 0
+            new_log.amrap_result = final_result
             new_log.ft_result = null_ft
             new_log.personal_record = personal_record
             new_log.save()
-    print("DONE UPLOADING")
+    print("DONE WITH UPLOADING")
     return redirect('profile')
 
 def deleteLogs(request):
-    workout = Workout.objects.get(workout_name="Deadlift: 1 Rep Max")
+    workout = Workout.objects.get(workout_name="Run 1 km")
     Log.objects.filter(workout=workout).delete()
     return redirect('profile')

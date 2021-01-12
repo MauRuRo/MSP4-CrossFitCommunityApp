@@ -1141,7 +1141,12 @@ $(document).ready(function() {
                 $("#log-history-div").show()
                 $("#categories-div").hide()
                 $("#toggle-workouts-button").text("Workouts")
-            }            
+            }
+            pagec = $(".page-content").offset().top
+            scroll = $("#block-3").offset().top
+            $('html, body').animate({
+                        scrollTop: ($("#block-3").offset().top - pagec -70)
+                    }, 800)              
         })
 
         $(".cat").click(function(){
