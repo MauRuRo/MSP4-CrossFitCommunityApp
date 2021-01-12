@@ -1234,6 +1234,27 @@ $(document).ready(function() {
                 }
             })
         })
+
+        $("#toggle-delete-wod-button").click(function(e){
+            e.preventDefault()
+            wod_id=$("#wod-id-no").attr('data')     
+            $.ajax({
+                type:"POST",
+                url: "/workouts/0/deleteWorkout/",
+                data: {
+                    wod_id:wod_id
+                },
+                dataType: 'json',
+                success: function(data){
+                    window.location.replace("/workouts/0")
+                    console.log("CHECK RELOAD")
+                    // location.reload()              
+                },
+                error: function(){
+                    console.log("Failed Delete")
+                }
+            })
+        })
         
 
 });

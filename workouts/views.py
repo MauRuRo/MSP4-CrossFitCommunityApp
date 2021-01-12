@@ -625,17 +625,13 @@ def loopListRank(request):
 
 
 def createWorkout(request, wod_id):
-    print("CHECK GOT HER")
     if request.method == "POST":
         form = WorkoutForm(request.POST)
-        print("CHECK GOT HERE2")
         if form.is_valid:
-            print("CHECK GOT HERe3")
             new = form.save()
             print(new)
             new_wod_id = new.pk
             print(new_wod_id)
-            print("CHECK GOT HERE4")
             messages.success(request, "The workout was created successfully.")
             return redirect(reverse('workouts', args=(new_wod_id,)))
         else:
@@ -656,4 +652,27 @@ def editWorkout(request):
     else:
         data = {"message": "Error"}
         messages.error(request, "Your form was not filled out correctly.")
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def deleteWorkout(request):
+    if request.is_ajax() and request.POST:
+        print("CHECK HERE")
+        wod = get_object_or_404(Workout, pk=request.POST["wod_id"])
+        if wod.workout_is_wod is True:
+            print("CHECK HERE2")
+            new_wod = Workout.objects.all().first()
+            new_wod.update(workout_is_wod=True)
+            print("CHECK HERE3")
+        wod.delete()
+        print("CHECK HERE4")
+        data = {"message": "Succesfull edit"}
+        messages.success(request, "The workout was deleted successfully.")
+        # return redirect(reverse('workouts', args=(0,)))
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        print("CHECK HERE5")
+        data = {"message": "Error"}
+        messages.error(request, "Something went wrong. Workout not deleted.")
+        # return redirect(reverse('workouts', args=(request.POST["wod_id"],)))
         return HttpResponse(json.dumps(data), content_type='application/json')
