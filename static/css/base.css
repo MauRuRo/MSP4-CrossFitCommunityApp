@@ -764,12 +764,20 @@ ol#rank-nav li {
         list-style: none;
         padding:0 10px 0 10px;
     }
+
+    #workout-of-the-day-cat {
+        text-shadow: 2px 2px 1px red;
+    }
+   .wod-cat-wods li a {
+        font-size:1.3rem;
+    }
     .cat{
         font-family: 'Bungee';
         color:#ffc107;
         cursor:pointer;
         font-size:1.3rem;
     }
+    #workout-of-the-day-cat:hover,
     .cat:hover{
         text-shadow: blue 2px 2px 1px;
     }

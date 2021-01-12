@@ -507,6 +507,14 @@ def loopList(request):
     wod_id = request.POST["wod"]
     wod = int(wod_id)
     page = request.POST.get('page')
+    # get all comments
+    member_comments = MemberComment.objects.all()
+    # check for superuser
+    superuser = False
+    if request.user.is_superuser:
+        superuser = True
+    # check profile
+    profile = request.user
     # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
     called_group = request.POST["call_group"]
     all_logs = Log.objects.all().order_by('-date')
@@ -532,7 +540,12 @@ def loopList(request):
     # build a html posts list with the paginated posts
     calling_group_html = loader.render_to_string(
         'workouts/includes/historyloop.html',
-        {'h_group': calling_group}
+        {
+        'h_group': calling_group,
+        'member_comments':member_comments,
+        'superuser': superuser,
+        "profile": profile
+        }
     )
     # package output data and return it as a JSON object
     output_data = {
@@ -557,6 +570,12 @@ def loopListRank(request):
     all_men_q = UserProfile.objects.filter(gender='M')
     # get all comments
     member_comments = MemberComment.objects.all()
+    # check for superuser
+    superuser = False
+    if request.user.is_superuser:
+        superuser = True
+    # check profile
+    profile = request.user
     # make lists of all women/men
     all_women = []
     for woman in all_women_q:
@@ -615,7 +634,10 @@ def loopListRank(request):
         'workouts/includes/rankloop.html',
         {
         'r_group': calling_group,
-        'rank_result': rank_result
+        'rank_result': rank_result,
+        'member_comments':member_comments,
+        'superuser': superuser,
+        "profile": profile
         }
     )
     # package output data and return it as a JSON object

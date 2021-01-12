@@ -6,6 +6,7 @@ $(document).ready(function() {
     let scroll_constant = true
     $("#categories-div").hide()
     $(".cat-wods").hide()
+    $(".wod-cat-wods").show()
     $(".search-cat").hide()
     $(".workout-form-div").hide()
 

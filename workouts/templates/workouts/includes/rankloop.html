@@ -21,7 +21,7 @@
                 {% if member_r_log.personal_record %}
                 <div class="pr-logo-circle" style="background: url('/media/herocommunitylogo-PR-lean.jpg') no-repeat; background-size: cover"></div>
                 {% endif %}
-                {% if member_r_log.user == request.user or request.user.is_superuser %}
+                {% if member_r_log.user == profile or superuser %}
                 <div class="crud-icons-log">
                     <i class="far fa-edit edit-log"></i><br>
                     <i class="far fa-trash-alt delete-log"></i>
@@ -72,7 +72,7 @@
             <div class="col-2 px-0 align-self-center justify-content-end">
                 <div class="pf-rnk-circle prc-tm" style="background: url('{{member_r_log.user.userprofile.image.url}}') no-repeat; background-size: cover">
                 </div>
-                {% if profile.user == member_r_log.user or request.user.is_superuser %}
+                {% if profile == member_r_log.user or superuser %}
                     <div class="crud-icons">
                         <i class="far fa-edit edit-comment"></i><br>
                         <i class="far fa-trash-alt delete-comment"></i>
@@ -106,7 +106,7 @@
                 <div class="col-2 px-0 align-self-center justify-content-end">
                         <div class="pf-rnk-circle  prc-tm" style="background: url('{{member_comment.member.userprofile.image.url}}') no-repeat; background-size: cover">
                         </div>
-                        {% if profile.user == member_comment.member or request.user.is_superuser %}
+                        {% if profile == member_comment.member or superuser %}
                             <div class="crud-icons">
                                 <i class="far fa-edit edit-comment"></i><br>
                                 <i class="far fa-trash-alt delete-comment"></i>
