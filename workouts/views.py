@@ -125,14 +125,14 @@ def workouts(request, wod_id):
         all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
         all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
         # list queries to pass to context
-        all_men_start = 0
-        all_men_today_start = 0
-        all_women_start = 0
-        all_women_today_start = 0
-        all_men_end = 25
-        all_men_today_end = 25
-        all_women_end = 25
-        all_women_today_end = 25
+        # all_men_start = 0
+        # all_men_today_start = 0
+        # all_women_start = 0
+        # all_women_today_start = 0
+        # all_men_end = 25
+        # all_men_today_end = 25
+        # all_women_end = 25
+        # all_women_today_end = 25
         all_men_index_user = 0
         all_men_today_index_user = 0
         all_women_index_user = 0
@@ -504,6 +504,7 @@ def commentMember(request):
 
 # https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
 def loopList(request):
+    no_page = False
     wod_id = request.POST["wod"]
     wod = int(wod_id)
     page = request.POST.get('page')
@@ -537,6 +538,7 @@ def loopList(request):
     except EmptyPage:
         print("ERROR LAST PAGE")
         calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
+        no_page = True
     # build a html posts list with the paginated posts
     calling_group_html = loader.render_to_string(
         'workouts/includes/historyloop.html',
@@ -550,7 +552,8 @@ def loopList(request):
     # package output data and return it as a JSON object
     output_data = {
         'calling_group_html': calling_group_html,
-        'has_next': calling_group.has_next()
+        'has_next': calling_group.has_next(),
+        "no_page":no_page
     }
     return JsonResponse(output_data)
 

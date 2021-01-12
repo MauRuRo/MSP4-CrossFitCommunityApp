@@ -912,6 +912,7 @@ $(document).ready(function() {
 
 
             function lazyLoadLogs() {
+                $(".his-dir-down:visible").html('<i class="fas fa-circle-notch fa-spin"></i>')
                 console.log("loading")                
                 if ($("#his-everybody").css("text-decoration").split(" ")[0] == "underline" && $("#his-this-wod").css("text-decoration").split(" ")[0] == "underline"){
                     pagedata = $("#his-everybody")
@@ -944,6 +945,13 @@ $(document).ready(function() {
                 },
                 dataType: "json",
                 success: function(data) {
+                    console.log(data.no_page)
+                    if (data.no_page==true){
+                        console.log("NOPAGE")
+                        scroll_constant = true
+                        $(".his-dir-down:visible").remove()
+                        return;
+                    }
                     // if there are still more pages to load,
                     // add 1 to the "Load More Posts" link's page data attribute
                     // else hide the link
@@ -955,12 +963,12 @@ $(document).ready(function() {
                     // append html to the posts div
                     appendlist = $(".log-history:visible").attr("class").split(" ")[1]
                     $('.log-history:visible').append(data.calling_group_html);
-                    $('.log-history:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down direction-his"><i class="fas fa-angle-double-down"></i></div>')
+                    $('.log-history:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down-his direction-his"><i class="fas fa-angle-double-down"></i></div>')
                     if (pagedata.data('page')=="x"){
-                        $(".direction-down").remove()
+                        $(".direction-down-his:visible").remove()
                     }else{
                         $(".his-dir-down:visible").remove()
-                        $(".direction-down").addClass('his-dir-down')
+                        $(".direction-down-his").addClass('his-dir-down')
                     }
                     $('.extra-log-info').hide()
                     dateStyling($(".his-date-new"))
@@ -1004,6 +1012,7 @@ $(document).ready(function() {
                 }
                 console.log(pagedata.data('pageup'))
                 if (direction == "down"){
+                    $(".rank-dir-down:visible").html('<i class="fas fa-circle-notch fa-spin"></i>')
                     var pageno = pagedata.data('page')
                     if (pageno == "x"){
                         scroll_constant = true
@@ -1011,6 +1020,7 @@ $(document).ready(function() {
                     } 
                     pageno = pageno + 1;
                 }else{
+                    $(".rank-dir-up:visible").html('<i class="fas fa-circle-notch fa-spin"></i>')
                     var pageno = pagedata.data('pageup') - 1;
                     if (pageno==0){
                         scroll_constant = true
