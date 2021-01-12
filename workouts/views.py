@@ -657,22 +657,31 @@ def editWorkout(request):
 
 def deleteWorkout(request):
     if request.is_ajax() and request.POST:
-        print("CHECK HERE")
         wod = get_object_or_404(Workout, pk=request.POST["wod_id"])
         if wod.workout_is_wod is True:
-            print("CHECK HERE2")
             new_wod = Workout.objects.all().first()
             new_wod.update(workout_is_wod=True)
-            print("CHECK HERE3")
         wod.delete()
-        print("CHECK HERE4")
-        data = {"message": "Succesfull edit"}
+        data = {"message": "Succesfull"}
         messages.success(request, "The workout was deleted successfully.")
         # return redirect(reverse('workouts', args=(0,)))
         return HttpResponse(json.dumps(data), content_type='application/json')
     else:
-        print("CHECK HERE5")
         data = {"message": "Error"}
         messages.error(request, "Something went wrong. Workout not deleted.")
         # return redirect(reverse('workouts', args=(request.POST["wod_id"],)))
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def setWod(request):
+    if request.is_ajax() and request.POST:
+        wod = Workout.objects.filter(pk=request.POST["wod_id"])
+        Workout.objects.all().update(workout_is_wod=False)
+        wod.update(workout_is_wod=True)
+        data = {"message": "Succesfull"}
+        messages.success(request, "The workout was set as WOD successfully.")
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        data = {"message": "Error"}
+        messages.error(request, "Something went wrong. Workout not set as WOD")
         return HttpResponse(json.dumps(data), content_type='application/json')

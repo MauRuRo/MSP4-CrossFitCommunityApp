@@ -15,4 +15,5 @@ urlpatterns = [
     path('0/editWorkout/', views.editWorkout, name='editWorkout'),
     path('0/createWorkout/<wod_id>/', views.createWorkout, name='createWorkout'),
     path('0/deleteWorkout/', views.deleteWorkout, name='deleteWorkout'),
+    path('0/setWod/', views.setWod, name='setWod'),
 ]

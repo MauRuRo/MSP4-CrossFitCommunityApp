@@ -105,11 +105,10 @@ h1, h2, h3, h4, h5, h6 {
     height: 4em;
 }
 .workout-name {
-    color: #000;
-}
-
-.workout-name span {
     color: #6c757d;
+}
+#workout-name {
+    color: #000;
 }
 
 .workout-description {
@@ -122,10 +121,12 @@ h1, h2, h3, h4, h5, h6 {
 #set-wod-button,
 #toggle-delete-wod-button,
 #toggle-edit-wod-button,
-#toggle-create-wod-button,
+#toggle-create-wod-button {
+   margin:0 0px 5px 10px;
+}
 #toggle-log-button,
 #toggle-workouts-button {
-   margin:0 10px 5px 0;
+   margin:0 10px 5px 0px;
 }
 #set-wod-button{
     background-color: grey;
@@ -134,7 +135,6 @@ h1, h2, h3, h4, h5, h6 {
 #toggle-delete-wod-button{
     background-color: red;
     color:white;
-    margin-right:0px;
 }
 #toggle-edit-wod-button{
     background-color: blue;

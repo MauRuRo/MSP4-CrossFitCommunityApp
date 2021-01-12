@@ -1247,11 +1247,27 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data){
                     window.location.replace("/workouts/0")
-                    console.log("CHECK RELOAD")
-                    // location.reload()              
                 },
                 error: function(){
                     console.log("Failed Delete")
+                }
+            })
+        })
+        $("#set-wod-button").click(function(e){
+            e.preventDefault()
+            wod_id=$("#wod-id-no").attr('data')     
+            $.ajax({
+                type:"POST",
+                url: "/workouts/0/setWod/",
+                data: {
+                    wod_id:wod_id
+                },
+                dataType: 'json',
+                success: function(data){
+                    location.reload()              
+                },
+                error: function(){
+                    console.log("Failed Wodset")
                 }
             })
         })
