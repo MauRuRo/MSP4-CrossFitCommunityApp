@@ -1,5 +1,5 @@
 from django import forms
-from .models import Log, MemberComment
+from .models import Log, MemberComment, Workout
 from datetime import date, datetime
 
 
@@ -50,7 +50,6 @@ class LogForm(forms.ModelForm):
                 self.fields[field].widget.attrs['class'] = 'border-black rounded-1 profile-form-input score-result'
             else:
                 self.fields[field].widget.attrs['class'] = 'border-black rounded-1 profile-form-input'
-            
 
 
 class MemberCommentForm(forms.ModelForm):
@@ -61,3 +60,18 @@ class MemberCommentForm(forms.ModelForm):
             'message',
             'log_id',
             )
+
+
+class WorkoutForm(forms.ModelForm):
+    class Meta:
+        model = Workout
+        fields = (
+            'workout_name',
+            'workout_type',
+            'workout_category',
+            'description',
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["description"].widget.attrs['rows'] = '3'

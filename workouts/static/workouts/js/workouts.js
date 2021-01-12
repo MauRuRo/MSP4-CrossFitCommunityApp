@@ -7,6 +7,7 @@ $(document).ready(function() {
     $("#categories-div").hide()
     $(".cat-wods").hide()
     $(".search-cat").hide()
+    $(".workout-form-div").hide()
 
         // add classes to log history groups.
         for( i = 1; i < 5; i++) {
@@ -1160,22 +1161,79 @@ $(document).ready(function() {
                 $(".search-cat").show()
                 $(".cat-div").hide()
                 sctext = $(".search-wod").val().toLowerCase()
-                console.log(sctext)
                 $(".search-cat-item").each(function(){
                     thistext = $(this).text().toLowerCase()
                     incl = thistext.includes(sctext)
                     if (incl == true){
-                        console.log("check")
                         $(this).show()
                     }else{
                         $(this).hide()
                     }
                 })
             }else{
-                console.log("TO SOON")
                 $(".cat-div").show()
                 $(".search-cat").hide()
             }
         })
+        $("#toggle-create-wod-button").click(function(){
+            $(".main-wod-div").hide()
+            $(".superuser-buttons").hide()
+            $(".workout-form-div").show()
+            $("#edit-wod-submit").hide()
+            $("#create-wod-submit").show()
+        })
+        $("#toggle-edit-wod-button").click(function(){
+            $(".main-wod-div").hide()
+            $(".superuser-buttons").hide()
+            $(".workout-form-div").show()
+            $("#create-wod-submit").hide()
+            $("#edit-wod-submit").show()
+            setWodEditForm()
+        })
+        $("#cancel-wod-submit").click(function(){
+            $(".main-wod-div").show()
+            $(".superuser-buttons").show()
+            $(".workout-form-div").hide()
+            $("#create-wod-submit").show()
+        })
+
+        function setWodEditForm(){
+            name = $("#workout-name").text()
+            $("#id_workout_name").val(name)
+            type = $("#wod-type").text()
+            $("#id_workout_type").val(type)
+            category = $("#wod-cat").text()
+            $("#id_workout_category").val(category)
+            description = $(".workout-description").text()
+            $("#id_description").val(description)
+        }
+
+        $("#edit-wod-submit").click(function(e){
+            e.preventDefault()
+            workout_name=$("#id_workout_name").val()
+            workout_type=$("#id_workout_type").val()
+            workout_category=$("#id_workout_category").val()
+            description = $("#id_description").val()
+            wod_id=$("#wod-id-no").attr('data')     
+            $.ajax({
+                type:"POST",
+                url: "/workouts/0/editWorkout/",
+                data: {
+                    workout_name:workout_name,
+                    workout_type:workout_type,
+                    workout_category:workout_category,
+                    description:description,
+                    wod_id:wod_id
+                },
+                dataType: 'json',
+                success: function(data){
+                    location.reload()              
+                },
+                error: function(){
+                    console.log("Failed Log Edit")
+                }
+            })
+        })
+        
 
 });

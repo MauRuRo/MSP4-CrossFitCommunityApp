@@ -119,13 +119,34 @@ h1, h2, h3, h4, h5, h6 {
 .category-name {
     color: #ffc107;
 }
+#set-wod-button,
+#toggle-delete-wod-button,
+#toggle-edit-wod-button,
+#toggle-create-wod-button,
 #toggle-log-button,
 #toggle-workouts-button {
    margin:0 10px 5px 0;
 }
-/* .logfield {
-    display: none;
-} */
+#set-wod-button{
+    background-color: grey;
+    color:white;
+}
+#toggle-delete-wod-button{
+    background-color: red;
+    color:white;
+}
+#toggle-edit-wod-button{
+    background-color: blue;
+    color:white;
+}
+#toggle-create-wod-button{
+    background-color: #ffc107;
+    color:white;
+}
+.btn:hover{
+    box-shadow: 3px 3px 3px grey;
+}
+
 #logform-div {
     display:none;
 }
@@ -756,9 +777,26 @@ ol#rank-nav li {
     .search-cat,
     .cat-wods{
         color:grey;
-        font-size:0.8rem;
+        font-size:0.9rem;
         cursor:pointer;
         font-family:'Bungee';
+    }
+
+    .cat-wods li a{
+        color:blue!important;
+    }
+    .cat-wods li a:hover{
+        text-shadow: #ffc107 2px 2px 1px;
+        /* color:blue!important; */
+        text-decoration: none;
+    }
+    .search-cat-item a {
+        color:blue;
+        font-size:0.9rem;
+    }
+    .search-cat-item a:hover {
+        text-shadow: #ffc107 2px 2px 1px;
+        text-decoration: none;
     }
 
     .search-wod{

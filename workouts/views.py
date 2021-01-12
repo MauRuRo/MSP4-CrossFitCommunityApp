@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from datetime import date, datetime, timedelta, time
 from profiles.models import UserProfile, User
 from .models import Workout, MemberComment, Log
-from .forms import LogForm, MemberCommentForm
+from .forms import LogForm, MemberCommentForm, WorkoutForm
 from django.utils.dateparse import parse_duration
 from django.db.models import Avg, Max, Min, Sum
 from django.contrib import messages
@@ -226,6 +226,7 @@ def workouts(request, wod_id):
         date_today = date.today()
         date_initial = date_today.strftime("%d %b %Y")
         form_log = LogForm()
+        workout_form = WorkoutForm()
         wod_collection = Workout.objects.all()
         categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         context = {
@@ -245,10 +246,10 @@ def workouts(request, wod_id):
             "all_men_today_page": all_men_today_page,
             "all_women_today_page": all_women_today_page,
             "wod_collection": wod_collection,
-            "categories": categories
+            "categories": categories,
+            "workout_form": workout_form
         }
         template = "workouts/workouts.html"
-        print("DONE PERFORMING QUERIES")
         return render(request, template, context)
     else:
         if wod.workout_type == 'FT':
@@ -263,7 +264,6 @@ def workouts(request, wod_id):
             result = 'mw_result'
             non_result_1 = 'amrap_result'
             non_result_2 = 'ft_result'
-        print("The result is: " + request.POST[f"{result}"])
         form_data = {
             f"{result}": request.POST[f"{result}"],
             f"{non_result_1}": 0,
@@ -622,3 +622,32 @@ def loopListRank(request):
         'has_next': calling_group.has_next()
     }
     return JsonResponse(output_data)
+
+
+def createWorkout(request, wod_id):
+    if request.method == "POST":
+        form = WorkoutForm(request.POST)
+        if form.is_valid:
+            form.save()
+            new_wod_id=form.pk
+            messages.success(request, "The workout was created successfully.")
+            return redirect(reverse('workouts', args=new_wod_id))
+        else:
+            messages.error(request, "Your form was not filled out correctly.")
+            return redirect(reverse('workouts', args=wod_id))
+
+
+def editWorkout(request):
+    if request.is_ajax() and request.POST:
+        wod = Workout.objects.filter(pk=request.POST["wod_id"])
+        wod.update(workout_name=request.POST["workout_name"])
+        wod.update(workout_type=request.POST["workout_type"])
+        wod.update(workout_category=request.POST["workout_category"])
+        wod.update(description=request.POST["description"])
+        data = {"message": "Succesfull edit"}
+        messages.success(request, "The workout was updated successfully.")
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        data = {"message": "Error"}
+        messages.error(request, "Your form was not filled out correctly.")
+        return HttpResponse(json.dumps(data), content_type='application/json')

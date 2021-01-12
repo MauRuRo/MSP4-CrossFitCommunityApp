@@ -7,30 +7,47 @@
         <div class="row h-100 align-items-center">
             <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
                 <div class="fillblock px-4 py-3 mb-3" id="block-2">
-                    <div class="row">
-                        <div class="col-9 px-0">
-                            <div class="row pl-3">
-                            <h3 class="workout-name">{% if wod.workout_is_wod %}<span>Workout of the Day:</span><br>{% endif %}{{ wod.workout_name }}</h3>
+                    <div class="main-wod-div">
+                        <div class="row">
+                            <div class="col-9 px-0">
+                                <div class="row pl-3">
+                                <h3 class="workout-name">{% if wod.workout_is_wod %}<span>Workout of the Day:</span><br>{% endif %}<span id="workout-name">{{ wod.workout_name }}</span></h3>
+                                </div>
+                                <div id="wod-type" hidden>{{ wod.workout_type }}</div>
+                                <div id="wod-cat" hidden>{{ wod.workout_category }}</div>
+                                <div class="row pl-3">
+                                    <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
+                                </div>
                             </div>
-                            <div class="row pl-3">
-                                <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
-                            </div>
+                            <div class="col-3 px-1 justify-content-end">
+                                <div class="row justify-content-end">
+                                    <button class="btn btn-black rounded-1" id="toggle-workouts-button">Workouts</button>
+                                </div>     
+                                <div class="row justify-content-end">
+                                    <button class="btn btn-black rounded-1" id="toggle-log-button">Log</button>
+                                </div>                                                   
+                            </div>      
                         </div>
-                        <div class="col-3 px-1 justify-content-end">
-                            <div class="row justify-content-end">
-                                <button class="btn btn-black rounded-1" id="toggle-workouts-button">Workouts</button>
-                            </div>     
-                            <div class="row justify-content-end">
-                                <button class="btn btn-black rounded-1" id="toggle-log-button">Log</button>
-                            </div>                                                   
-                        </div>      
+                        <div class="row">
+                            <p class="workout-description">{{ wod.description }}</p>
+                        </div>
                     </div>
-                    <!-- <div class="row">
-                        <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
-                    </div> -->
-                    <div class="row">
-                        <p class="workout-description">{{ wod.description }}</p>
+                    {% if request.user.is_superuser %}
+                    <div class="row justify-content-end superuser-buttons">
+                        <button class="btn rounded-1" id="set-wod-button">Set as WOD</button>                       
+                        <button class="btn rounded-1" id="toggle-create-wod-button">Create</button>
+                        <button class="btn rounded-1" id="toggle-edit-wod-button">Edit</button>
+                        <button class="btn rounded-1" id="toggle-delete-wod-button">Delete</button>
                     </div>
+                    <div class="workout-form-div">
+                        <form action="{% url 'createWorkout' %}" method="POST" id="create-wod-form">
+                        {{ workout_form|crispy }}
+                        </form>
+                        <a href=""><button class="btn btn-black rounded-1" id="create-wod-submit" type="submit">Create</button></a>
+                        <button class="btn btn-black rounded-1" id="edit-wod-submit">Edit</button>
+                        <a href=""><button class="btn btn-outline-black rounded-1" id="cancel-wod-submit">Cancel</button></a>
+                    </div>   
+                    {% endif %}
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 content-block align-self-start order-2 order-sm-3">
