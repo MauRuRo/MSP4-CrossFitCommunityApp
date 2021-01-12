@@ -134,6 +134,7 @@ h1, h2, h3, h4, h5, h6 {
 #toggle-delete-wod-button{
     background-color: red;
     color:white;
+    margin-right:0px;
 }
 #toggle-edit-wod-button{
     background-color: blue;

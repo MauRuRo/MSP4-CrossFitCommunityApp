@@ -40,12 +40,13 @@
                         <button class="btn rounded-1" id="toggle-delete-wod-button">Delete</button>
                     </div>
                     <div class="workout-form-div">
-                        <form action="{% url 'createWorkout' %}" method="POST" id="create-wod-form">
+                        <form action="{% url 'createWorkout' wod.id %}" method="POST" id="create-wod-form">
+                        {% csrf_token %}
                         {{ workout_form|crispy }}
-                        </form>
-                        <a href=""><button class="btn btn-black rounded-1" id="create-wod-submit" type="submit">Create</button></a>
+                        <button class="btn btn-black rounded-1" id="create-wod-submit" type="submit">Create</button>
                         <button class="btn btn-black rounded-1" id="edit-wod-submit">Edit</button>
-                        <a href=""><button class="btn btn-outline-black rounded-1" id="cancel-wod-submit">Cancel</button></a>
+                        <button class="btn btn-outline-black rounded-1" id="cancel-wod-submit">Cancel</button>
+                        </form>
                     </div>   
                     {% endif %}
                 </div>

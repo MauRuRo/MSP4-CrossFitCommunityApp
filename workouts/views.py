@@ -625,13 +625,19 @@ def loopListRank(request):
 
 
 def createWorkout(request, wod_id):
+    print("CHECK GOT HER")
     if request.method == "POST":
         form = WorkoutForm(request.POST)
+        print("CHECK GOT HERE2")
         if form.is_valid:
-            form.save()
-            new_wod_id=form.pk
+            print("CHECK GOT HERe3")
+            new = form.save()
+            print(new)
+            new_wod_id = new.pk
+            print(new_wod_id)
+            print("CHECK GOT HERE4")
             messages.success(request, "The workout was created successfully.")
-            return redirect(reverse('workouts', args=new_wod_id))
+            return redirect(reverse('workouts', args=(new_wod_id,)))
         else:
             messages.error(request, "Your form was not filled out correctly.")
             return redirect(reverse('workouts', args=wod_id))

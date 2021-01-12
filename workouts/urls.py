@@ -13,5 +13,5 @@ urlpatterns = [
     path('0/loopList/', views.loopList, name='loopList'),
     path('0/loopListRank/', views.loopListRank, name='loopListRank'),
     path('0/editWorkout/', views.editWorkout, name='editWorkout'),
-    path('0/createWorkout/', views.createWorkout, name='createWorkout'),
+    path('0/createWorkout/<wod_id>/', views.createWorkout, name='createWorkout'),
 ]
