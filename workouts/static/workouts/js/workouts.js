@@ -655,70 +655,6 @@ $(document).ready(function() {
                 $("#test-date").val(c_date)
             })
             
-            // ALLOW FOR TIES IN RANKING
-        //     function rankCounting(country) {
-        //         console.log(country_select)
-        //         console.log("check")
-        //         if (country_select == false){
-        //             console.log("check2")
-        //             $(".log-ranking").find(".rank-counter").each(function(){
-        //             let curr = $(this)
-        //             let par = curr.closest(".log-ranking")
-        //             let parrank = par.find(".rank-card:first").find(".rank-counter:first")
-        //             // let rankname = parrank.next().children(".rank-name").text()                
-        //             if ( parrank.is(curr)){
-        //                 parrank.children("span").text("1")
-        //                 parrank.attr("data-counter", 0)
-        //             }else{    
-        //                 let prevscore = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".r-log:first")
-        //                 let currscore = $(this).closest(".rank-card").find(".r-log:first")
-        //                 let prevcount = $(this).closest(".rank-card").prevAll(".rank-card:first").find(".rank-counter:first")
-        //                 let currcount = $(this)
-        //                 if (prevscore.text() == currscore.text()){
-        //                     let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
-        //                     currcount.attr("data-counter", newtiecount)
-        //                     let prevrank = parseInt(prevcount.text())
-        //                     let newrank = prevrank
-        //                     currcount.children("span").text(newrank)
-        //                 }else{
-        //                     let addcount = parseInt(prevcount.attr("data-counter"))
-        //                     let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
-        //                     currcount.children("span").text(newrank)
-        //                     currcount.attr("data-counter", "0")
-        //                 }
-        //             }
-        //         })
-        //     } else {
-        //         $(".log-ranking").find(".rank-counter").each(function(){
-        //             let curr = $(this)
-        //             let par = curr.closest(".log-ranking")
-        //             let parrank = par.find(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
-        //             // let rankname = parrank.next().children(".rank-name").text()                
-        //             if ( parrank.is(curr)){
-        //                 parrank.children("span").text("1")
-        //                 parrank.attr("data-counter", 0)
-        //             }else{    
-        //                 let prevscore = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".r-log:first")
-        //                 let currscore = $(this).closest(`.rank-card[data-country=${country}]`).find(".r-log:first")
-        //                 let prevcount = $(this).closest(`.rank-card[data-country=${country}]`).prevAll(`.rank-card[data-country=${country}]:first`).find(".rank-counter:first")
-        //                 let currcount = $(this)
-        //                 if (prevscore.text() == currscore.text()){
-        //                     let newtiecount = parseInt(prevcount.attr("data-counter")) + 1
-        //                     currcount.attr("data-counter", newtiecount)
-        //                     let prevrank = parseInt(prevcount.text())
-        //                     let newrank = prevrank
-        //                     currcount.children("span").text(newrank)
-        //                 }else{
-        //                     let addcount = parseInt(prevcount.attr("data-counter"))
-        //                     let newrank = parseInt(prevcount.children("span").text()) + addcount + 1
-        //                     currcount.children("span").text(newrank)
-        //                     currcount.attr("data-counter", "0")
-        //                 }
-        //             }
-        //         })
-        //     }
-        // };
-        //     // rankCounting(null)
             $("#block-1, #block-3").scroll(function(){
                 if ($(this).scrollTop() > 4){
                     $(this).find(".block-header").css('border-bottom', 'dotted 3px grey')
@@ -733,7 +669,7 @@ $(document).ready(function() {
             };
             function  scrollToTopRankFast(element){
                 element.animate({
-                    scrollTop: 4}, 0)
+                    scrollTop: 0}, 0)
             };
             function scrollMyRank(){
                 try{
@@ -945,9 +881,7 @@ $(document).ready(function() {
                 },
                 dataType: "json",
                 success: function(data) {
-                    console.log(data.no_page)
                     if (data.no_page==true){
-                        console.log("NOPAGE")
                         scroll_constant = true
                         $(".his-dir-down:visible").remove()
                         return;
