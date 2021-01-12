@@ -155,7 +155,7 @@ def workouts(request, wod_id):
                 prevresult[1] = 0
             prevresult[0] = log.mw_result
             rlistmenall.append([log.pk, rank])
-            if log.user == request.user:
+            if log.user == request.user or request.user.is_superuser:
                 all_men_index_user = all_men_index
             else:
                 all_men_index += 1
@@ -169,7 +169,7 @@ def workouts(request, wod_id):
                 prevresult[1] = 0
             prevresult[0] = log.mw_result
             rlistmentoday.append([log.pk, rank])
-            if log.user == request.user:
+            if log.user == request.user or request.user.is_superuser:
                 all_men_today_index_user = all_men_today_index
             else:
                 all_men_today_index += 1
@@ -185,7 +185,7 @@ def workouts(request, wod_id):
                 prevresult[1] = 0
             prevresult[0] = log.mw_result
             rlistwomenall.append([log.pk, rank])
-            if log.user == request.user:
+            if log.user == request.user or request.user.is_superuser:
                 all_women_index_user = all_women_index
             else:
                 all_women_index += 1
@@ -199,7 +199,7 @@ def workouts(request, wod_id):
                 prevresult[1] = 0
             prevresult[0] = log.mw_result
             rlistwomentoday.append([log.pk, rank])
-            if log.user == request.user:
+            if log.user == request.user or request.user.is_superuser:
                 all_women_today_index_user = all_women_today_index
             else:
                 all_women_today_index += 1
@@ -331,7 +331,7 @@ def editLog(request):
     if request.is_ajax() and request.POST:
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
-        if log.user == request.user:
+        if log.user == request.user or request.user.is_superuser:
             wod_type = log.workout.workout_type
             rx_input = request.POST["rx"]
             date = datetime.strptime(request.POST["date"], "%d %b %Y")
@@ -400,7 +400,7 @@ def deleteLog(request):
     if request.is_ajax() and request.POST:
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
-        if request.user == log.user:
+        if request.user == log.user or request.user.is_superuser:
             log.delete()
             data = {"message": "Your log is deleted."}
             messages.success(request, "Your log is deleted.")
@@ -419,7 +419,7 @@ def deleteCommentMember(request):
         comment_type = request.POST["comment_type"]
         if comment_type == 'user-comment':
             db_comment = get_object_or_404(Log, pk=comment_id)
-            if db_comment.user == request.user:
+            if db_comment.user == request.user or request.user.is_superuser:
                 Log.objects.filter(pk=db_comment.pk).update(user_comment='')
                 data = {"message": comment_id}
                 return HttpResponse(json.dumps(data), content_type='application/json')
@@ -429,7 +429,7 @@ def deleteCommentMember(request):
                 return HttpResponse(json.dumps(data), content_type='application/json')
         else:
             db_comment = get_object_or_404(MemberComment, pk=comment_id)
-            if db_comment.member == request.user:
+            if db_comment.member == request.user or request.user.is_superuser:
                 MemberComment.objects.filter(pk=comment_id).delete()
                 data = {"message": comment_id}
                 return HttpResponse(json.dumps(data), content_type='application/json')
@@ -469,7 +469,7 @@ def commentMember(request):
             comment_id = request.POST["id_comment"]
             if request.POST["main_comment"] == 'true':
                 db_comment = get_object_or_404(Log, pk=comment_id)
-                if db_comment.user == request.user:
+                if db_comment.user == request.user or request.user.is_superuser:
                     Log.objects.filter(pk=db_comment.pk).update(user_comment=request.POST["member_comment"])
                     data = {"message": request.POST["member_comment"]}
                     return HttpResponse(json.dumps(data), content_type='application/json')
@@ -479,7 +479,7 @@ def commentMember(request):
                     return HttpResponse(json.dumps(data), content_type='application/json')
             else:
                 db_comment = get_object_or_404(MemberComment, pk=comment_id)
-                if db_comment.member == request.user:
+                if db_comment.member == request.user or request.user.is_superuser:
                     form_data = {
                         "message": request.POST["member_comment"],
                         "member": request.user,
@@ -627,7 +627,7 @@ def loopListRank(request):
 
 
 def createWorkout(request, wod_id):
-    if request.method == "POST":
+    if request.method == "POST" and request.user.is_superuser:
         form = WorkoutForm(request.POST)
         if form.is_valid:
             new = form.save()
@@ -642,7 +642,7 @@ def createWorkout(request, wod_id):
 
 
 def editWorkout(request):
-    if request.is_ajax() and request.POST:
+    if request.is_ajax() and request.POST and request.user.is_superuser:
         wod = Workout.objects.filter(pk=request.POST["wod_id"])
         wod.update(workout_name=request.POST["workout_name"])
         wod.update(workout_type=request.POST["workout_type"])
@@ -658,7 +658,7 @@ def editWorkout(request):
 
 
 def deleteWorkout(request):
-    if request.is_ajax() and request.POST:
+    if request.is_ajax() and request.POST and request.user.is_superuser:
         wod = get_object_or_404(Workout, pk=request.POST["wod_id"])
         if wod.workout_is_wod is True:
             new_wod = Workout.objects.all().first()
@@ -676,7 +676,7 @@ def deleteWorkout(request):
 
 
 def setWod(request):
-    if request.is_ajax() and request.POST:
+    if request.is_ajax() and request.POST and request.user.is_superuser:
         wod = Workout.objects.filter(pk=request.POST["wod_id"])
         Workout.objects.all().update(workout_is_wod=False)
         wod.update(workout_is_wod=True)

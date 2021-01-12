@@ -768,6 +768,7 @@ ol#rank-nav li {
         font-family: 'Bungee';
         color:#ffc107;
         cursor:pointer;
+        font-size:1.3rem;
     }
     .cat:hover{
         text-shadow: blue 2px 2px 1px;
