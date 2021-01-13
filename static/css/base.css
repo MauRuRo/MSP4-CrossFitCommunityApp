@@ -236,6 +236,20 @@ h1, h2, h3, h4, h5, h6 {
 .bg-black {
     background: #000 !important;
 }
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
 /* check for actual use */
 /* .overlay {
     height:100%;

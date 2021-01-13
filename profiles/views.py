@@ -41,8 +41,11 @@ def profile(request):
     try:
         profile = UserProfile.objects.get(user=request.user)
         template = 'profiles/profile.html'
+        profile = UserProfile.objects.get(user=request.user)
+        form = UserProfileForm(instance=profile)
         context = {
             'profile': profile,
+            'form': form
         }
         return render(request, template, context)
     except UserProfile.DoesNotExist:

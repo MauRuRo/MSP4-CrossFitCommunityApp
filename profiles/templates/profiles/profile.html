@@ -1,24 +1,30 @@
 {% extends "base.html" %}
 {% load static %}
 {% load calc_functions %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'profiles/css/profiles.css' %}">
+{% endblock %}
 
 {% block content %}
     <div class="container-fluid page-content">
         <div class="row h-100 align-items-center">
             <div class="col-sm-6 col-lg-3 content-block order-lg-3 align-self-start">
                 <div class="fillblock p-2">
-                    <div class="container">
+                    <div class="container" id="user-info-block">
                         <div class="row">
+                        <h4 class="block-title">{{ profile.full_name }}</h4>
                             <ul class="list-unstyled">
-                                <li><h5>{{ profile.full_name }}</h5></li>
                                 <li>Age: {{ profile.birthdate | calc_age }}</li>
                                 <li>{{ profile.town_or_city }} <i class="fflag fflag-{{ profile.country.code }} ff-lg ff-round" aria-label="{{ profile.country.code }}"></i></li>
                                 <li>{{ profile.weight }}kg</li>
                             </ul>
                         </div>
                         <div class="row justify-content-end">
-                             <a href="{% url 'edit_profile' %}">Edit Profile</a>
+                             <button class="btn btn-black rounded-1" id="toggle-edit-profile-button">Edit Profile</button>
                         </div>
+                    </div>
+                    <div id="edit-form-block" hidden>
+                        {% include 'profiles/includes/edit_profile_include.html' %}
                     </div>
                 </div>
             </div>
@@ -32,7 +38,9 @@
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
-                <div class="fillblock p-2"></div>
+                <div class="fillblock p-2">
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -41,7 +49,24 @@
 {% block postloadjs %}
 {{ block.super }}
 <script type="text/javascript" src="{% static 'profiles/js/token.js' %}"></script>
+<script type="text/javascript" src="{% static 'profiles/js/unselected_select_field.js' %}"></script>
 <script type="text/javascript">
+$('#new-image').change(function() {
+    var file = $('#new-image')[0].files[0];
+    $('#filename').text(`Image will be set to: ${file.name}`);
+});
+$("#toggle-edit-profile-button").click(function(){
+    $("#user-info-block").hide()
+    $("#edit-form-block").removeAttr('hidden')
+    $("#edit-form-block").show()
+
+})
+$("#cancel-profile-edit").click(function(e){
+    e.preventDefault()
+    $("#user-info-block").show()
+    $("#edit-form-block").hide()
+
+})
 $('#test-submit-button').click(function(e) {
     e.preventDefault()
     $.ajax({

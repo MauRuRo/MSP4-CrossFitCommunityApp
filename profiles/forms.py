@@ -1,4 +1,5 @@
 from django import forms
+from profiles.widgets import CustomClearableFileInput
 from .models import User,  UserProfile
 
 
@@ -9,7 +10,8 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ('full_name', 'town_or_city', 'country',
                   'gender', 'weight', 'image')  # 'birthdate',
-   
+
+    image = forms.ImageField(label='Image', required=False, widget=CustomClearableFileInput)
 
     def __init__(self, *args, **kwargs):
         """
@@ -33,5 +35,5 @@ class UserProfileForm(forms.ModelForm):
                 else:
                     placeholder = placeholders[field]
                 self.fields[field].widget.attrs['placeholder'] = placeholder
-            self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
+            self.fields[field].widget.attrs['class'] = 'border-black rounded-1 profile-form-input'
             self.fields[field].label = False
