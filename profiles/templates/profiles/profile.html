@@ -13,14 +13,16 @@
                     <div class="container" id="user-info-block">
                         <div class="row">
                         <h4 class="block-title">{{ profile.full_name }}</h4>
-                            <ul class="list-unstyled">
+                            <ul class="list-unstyled profile-info-list">
+                                <li>{% if profile.gender == "M" %}<i class="fas fa-mars"></i>{% else %}<i class="fas fa-venus"></i>{% endif %}</li>
                                 <li>Age: {{ profile.birthdate | calc_age }}</li>
-                                <li>{{ profile.town_or_city }} <i class="fflag fflag-{{ profile.country.code }} ff-lg ff-round" aria-label="{{ profile.country.code }}"></i></li>
+                                <li>{{ profile.town_or_city }},</li>
+                                <li>{{ profile.get_country_display }}  <i class="fflag fflag-{{ profile.country.code }} ff-lg ff-round" aria-label="{{ profile.country.code }}"></i></li>
                                 <li>{{ profile.weight }}kg</li>
                             </ul>
                         </div>
                         <div class="row justify-content-end">
-                             <button class="btn btn-black rounded-1" id="toggle-edit-profile-button">Edit Profile</button>
+                             <button class="btn rounded-1 btn-sm btn-black" id="toggle-edit-profile-button"><i class="far fa-edit fa-edit-profile"></i></button>
                         </div>
                     </div>
                     <div id="edit-form-block" hidden>
@@ -30,6 +32,7 @@
             </div>
             <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
                 <div class="fillblock p-2">
+                    {% include 'profiles/includes/herolevel.html' %}
                     <!-- <button id="user-populate">get users</button>
                     <textarea name="" id="printout" cols="30" rows="10"></textarea>
                     <a href="#"><button>upload</button></a>

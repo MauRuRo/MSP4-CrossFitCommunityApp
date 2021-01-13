@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <h3>Hero Level:</h3>
+    </div>
+    <div class="row row-levels">
+        {% for cat in cat_levels %}
+        <div class="col-6 col-md-4 col-lg-3 justify-content-center col-levels">
+            <div class="level-bar-box">
+                <div class="level-bar acc-{{ cat.acc }}"></div>
+                <div class="level-number">{{ cat.perc }}</div>
+            </div>
+            <div class="level-cat-name">{{ cat.cat }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div id="level-data" data-levels="{{ cat_levels }}"></div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".level-bar").each(function(){
+        console.log("setting height")
+        let height = $(this).next().text() + "px"
+        $(this).css("min-height", height)
+    })
+    
+})
+</script>

@@ -638,10 +638,15 @@ label[for='image-clear_id'] {
     width:30px !important;
     z-index: 0;
 }
+.profile-info-list{
+    width:100%;
+    text-align: center
+}
 
 .block-title{
     text-align:center;
     cursor: pointer;
+    width:100%;
 }
 
 .his-wods,
@@ -694,9 +699,51 @@ ol#rank-nav li {
     .fa-trash-alt {
         padding-right:3px!important;
     }
-
+    .profile-info-list li .fa-mars {
+        font-size:1.6rem;
+    }
+    .level-bar-box{
+        width: 100%;
+        height:100px;
+        /* background-color:grey; */
+        border: dotted 1px grey;
+        border-bottom: solid 3px black;
+        display:flex;
+        flex-direction:column-reverse;
+        flex-wrap:nowrap;
+        
+        /* vertical-align: bottom; */
+    }
+    .level-bar{
+        /* position:absolute;
+        bottom:0; */
+        margin:0 auto;
+        width: 50px;
+        min-height:76px;
+        background-color:grey;
+        /* border: solid 1px grey; */
+    }
+    .level-number{
+        margin:0 auto;
+        width:50px;
+        text-align:center;
+    }
+    .level-cat-name{
+        font-family:'Bungee';
+        color:#ffc107;
+        /* white-space: nowrap; */
+        /* margin-left: -100%;
+        margin-right: -100%; */
+        text-align:center;
+    }
+    .col-levels {
+        margin-top:15px;
+    }
     .fa-edit:hover{
         color:blue;
+    }
+    .fa-edit-profile:hover{
+        color:white;
     }
     .fa-trash-alt:hover {
         color: red;
@@ -780,10 +827,14 @@ ol#rank-nav li {
     }
 
     #workout-of-the-day-cat {
-        text-shadow: 2px 2px 1px red;
+        /* text-shadow: 2px 2px 1px red; */
     }
-   .wod-cat-wods li a {
-        font-size:1.3rem;
+    .wod-cat-wods{
+        color:blue;
+    }
+   .wod-cat-wods a {
+        text-decoration:none;
+        color:blue;
     }
     .cat{
         font-family: 'Bungee';
@@ -792,6 +843,7 @@ ol#rank-nav li {
         font-size:1.3rem;
     }
     #workout-of-the-day-cat:hover,
+    .wod-cat-wods:hover,
     .cat:hover{
         text-shadow: blue 2px 2px 1px;
     }
@@ -809,7 +861,8 @@ ol#rank-nav li {
     .cat-wods li a{
         color:blue!important;
     }
-    .cat-wods li a:hover{
+    .cat-wods li a:hover,
+    .wod-cat-wods a:hover {
         text-shadow: #ffc107 2px 2px 1px;
         /* color:blue!important; */
         text-decoration: none;

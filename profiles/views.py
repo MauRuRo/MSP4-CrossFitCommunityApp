@@ -19,6 +19,7 @@ import urllib.request
 import stripe
 import json
 import statistics
+from workouts.views import id_list, user_list
 
 # @require_POST
 # def cache_payment_create_profile(request):
@@ -43,13 +44,67 @@ def profile(request):
         template = 'profiles/profile.html'
         profile = UserProfile.objects.get(user=request.user)
         form = UserProfileForm(instance=profile)
+        cat_levels = calc_level(request.user)
+        categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         context = {
             'profile': profile,
-            'form': form
+            'form': form,
+            'cat_levels': cat_levels,
+            'categories': categories
         }
         return render(request, template, context)
     except UserProfile.DoesNotExist:
         return redirect(reverse('create_profile'))
+
+
+def calc_level(user):
+    categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
+    cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
+    # categories = ["PL", "OL", "BW", "HE", "LI", "LO", "SP", "EN"]
+    # cat_reverse = dict((v, k) for k, v in WORKOUT_CATEGORY_CHOICES)
+    cat_levels = []
+    for cat in categories:
+        workouts = Workout.objects.filter(workout_category=cat_reverse[cat])
+        percentiles = []
+        for wod in workouts:
+            percentile = getLevels(user, wod)
+            if percentile is not None:
+                percentiles.append(percentile)
+        if len(percentiles) >= 3:
+            accuracy = "high"
+        elif len(percentiles) == 2:
+            accuracy = "medium"
+        elif len(percentiles) == 1:
+            accuracy = "low"
+        else:
+            accuracy = "none"
+        if accuracy != "none":
+            avg_percentile = round(statistics.mean(percentiles))
+        else:
+            avg_percentile = "none"
+        cat_levels.append({"cat": cat, "perc":avg_percentile, "acc":accuracy})
+    return cat_levels
+
+        # lapse_date = date.today() - timedelta(days=365)
+        # community_logs = Log.objects.filter(date_gt=lapse_date)
+        # all_logs = Log.objects.filter(user=request.user).filter(date_gt=lapse_date)
+        # powerlifts = all_logs.filter(workout__workout_category="PL")
+        # olympliclifts = all_logs.filter(workout__workout_category="OL")
+        # bodyweight = all_logs.filter(workout__workout_category="BW")
+        # heavy = all_logs.filter(workout__workout_category="HE")
+        # light = all_logs.filter(workout__workout_category="LI")
+        # long_cat = all_logs.filter(workout__workout_category="LO")
+        # speed = all_logs.filter(workout__workout_category="SP")
+        # endurance = all_logs.filter(workout__workout_category="EN")
+
+        # c_powerlifts = community_logs.filter(workout__workout_category="PL")
+        # c_olympliclifts = community_logs.filter(workout__workout_category="OL")
+        # c_bodyweight = community_logs.filter(workout__workout_category="BW")
+        # c_heavy = community_logs.filter(workout__workout_category="HE")
+        # c_light = community_logs.filter(workout__workout_category="LI")
+        # c_long_cat = community_logs.filter(workout__workout_category="LO")
+        # c_speed = community_logs.filter(workout__workout_category="SP")
+        # c_endurance = community_logs.filter(workout__workout_category="EN")
 
 
 def create_profile(request):
@@ -295,10 +350,52 @@ def logPopulation(request):
             new_log.ft_result = null_ft
             new_log.personal_record = personal_record
             new_log.save()
-    print("DONE WITH UPLOADING")
     return redirect('profile')
 
 def deleteLogs(request):
     workout = Workout.objects.get(workout_name="Run 1 km")
     Log.objects.filter(workout=workout).delete()
     return redirect('profile')
+
+
+def getLevels(user, wod):
+    user_l = user_list()
+    # check which date is exactly a year ago
+    lapse_date = date.today() - timedelta(days=365)
+    if wod.workout_type == 'FT':
+        rank_result = 'ft_result'
+    elif wod.workout_type == 'AMRAP':
+        rank_result = 'amrap_result'
+    else:
+        rank_result = 'mw_result'
+    # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+    all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result}')
+    # create list of log id's max result for this workout for every user
+    log_id_list = id_list(user_l, all_logs, wod.workout_type)
+    # filter out all none max results from query
+    all_logs_rank = all_logs.filter(id__in=log_id_list)
+    all_gender_index_user = 0
+    rank = 0
+    prevresult = [0, 0]
+    all_gender_index = 1
+    rlistgenderall = []
+    user_rank = 0
+    for log in all_logs_rank:
+        if getattr(log, rank_result) == prevresult[0]:
+            prevresult[1] += 1
+        else:
+            rank = rank + 1 + prevresult[1]
+            prevresult[1] = 0
+        prevresult[0] = log.mw_result
+        rlistgenderall.append([log.pk, rank])
+        if log.user == user:
+            all_gender_index_user = all_gender_index
+            user_rank = rank
+        else:
+            all_gender_index += 1
+    if user_rank != 0:
+        last_rank = rlistgenderall[-1][1]
+        percentile = round((1-(user_rank/last_rank)) * 100)
+    else:
+        percentile = None
+    return percentile

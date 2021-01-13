@@ -153,9 +153,9 @@ def workouts(request, wod_id):
             else:
                 rank = rank + 1 + prevresult[1]
                 prevresult[1] = 0
-            prevresult[0] = log.mw_result
+            prevresult[0] = getattr(log, rank_result)
             rlistmenall.append([log.pk, rank])
-            if log.user == request.user or request.user.is_superuser:
+            if log.user == request.user:
                 all_men_index_user = all_men_index
             else:
                 all_men_index += 1
@@ -167,9 +167,9 @@ def workouts(request, wod_id):
             else:
                 rank = rank + 1 + prevresult[1]
                 prevresult[1] = 0
-            prevresult[0] = log.mw_result
+            prevresult[0] = getattr(log, rank_result)
             rlistmentoday.append([log.pk, rank])
-            if log.user == request.user or request.user.is_superuser:
+            if log.user == request.user:
                 all_men_today_index_user = all_men_today_index
             else:
                 all_men_today_index += 1
@@ -183,9 +183,9 @@ def workouts(request, wod_id):
             else:
                 rank = rank + 1 + prevresult[1]
                 prevresult[1] = 0
-            prevresult[0] = log.mw_result
+            prevresult[0] = getattr(log, rank_result)
             rlistwomenall.append([log.pk, rank])
-            if log.user == request.user or request.user.is_superuser:
+            if log.user == request.user:
                 all_women_index_user = all_women_index
             else:
                 all_women_index += 1
@@ -197,9 +197,9 @@ def workouts(request, wod_id):
             else:
                 rank = rank + 1 + prevresult[1]
                 prevresult[1] = 0
-            prevresult[0] = log.mw_result
+            prevresult[0] = lgetattr(log, rank_result)
             rlistwomentoday.append([log.pk, rank])
-            if log.user == request.user or request.user.is_superuser:
+            if log.user == request.user:
                 all_women_today_index_user = all_women_today_index
             else:
                 all_women_today_index += 1
