@@ -496,6 +496,7 @@ $(document).ready(function() {
         
         $("#logform-edit-button").click(function(e){
             e.preventDefault()
+            $("#logform-edit-button").prop("disabled",true)
             let result = $(".score-result:visible").val()
             let rx = $("#id_rx").prop('checked')
             let date = $("#date").val()
@@ -1222,5 +1223,9 @@ $(document).ready(function() {
             })
         })
         
+    $("#log-workout-form").submit(function(){
+        $("#logform-submit-button").prop("disabled", true)
+        return true;
+    })
 
 });

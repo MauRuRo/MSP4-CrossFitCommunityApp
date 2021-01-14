@@ -17,6 +17,7 @@ def user_info(request):
                 image = '/media/noprofpic.jpg'
         except UserProfile.DoesNotExist:
             image = '/media/noprofpic.jpg'
+            profile = None
     else:
         image = ''
         profile = None

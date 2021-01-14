@@ -60,6 +60,15 @@ $(document).ready(function(){
                 $(this).parent().next(".level-cat-name").css("margin-left", "-100%")
                 $(this).parent().next(".level-cat-name").css("margin-right", "-100%")
             }
+            if ($(".acc-high").length > 4) {
+                $("#gen-level").css("color", "blue")
+            }else if ($(".acc-low").length > 3) {
+                $("#gen-level").css("color", "red")
+            }else if ($(".acc-none").length > 3){
+                $("#gen-level").css("color", "red")
+            }else{
+                $("#gen-level").css("color", "#ffc107")
+            }
         })
     }
     updateLevelCSS()
@@ -83,9 +92,19 @@ $(document).ready(function(){
                 },
                 error: function(){
                     console.log("Failed Updating Levels")
+                    $("#level-loader").children("p").html("Failed to get most recent statistics.")
                 }
             })
        };
        updateLevels()
 
+       $(document).on("click", "#level-info-modal", function(){
+           if ($("#level-info").is(":visible")){
+                $("#level-info").hide()
+           }else{
+                $("#level-info").removeAttr('hidden')
+                $("#level-info").show()
+           }
+           
+       })
 })

@@ -33,16 +33,16 @@
             <div class="col-lg-6 content-block order-sm-3 order-lg-2 align-self-start">
                 <div class="fillblock p-2" id="level-block">
                     {% include 'profiles/includes/herolevel.html' %}
-                    <!-- <button id="user-populate">get users</button>
-                    <textarea name="" id="printout" cols="30" rows="10"></textarea>
-                    <a href="#"><button>upload</button></a>
-                    <a href="{% url 'logPopulation' %}"><button>logs</button></a>
-                    <a href="{% url 'deleteLogs' %}"><button>Delete Logs</button></a> -->
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 content-block order-sm-2 order-lg-1 align-self-start">
                 <div class="fillblock p-2">
-                    <a href="{% url 'leveler' %}"><button>leveler</button></a>
+                    <!-- <a href="{% url 'leveler' %}"><button>leveler</button></a> -->
+                    <button id="user-populate">get users</button>
+                    <textarea name="" id="printout" cols="30" rows="10"></textarea>
+                    <a href="#"><button>upload</button></a>
+                    <a href="{% url 'logPopulation' %}"><button>logs</button></a>
+                    <a href="{% url 'deleteLogs' %}"><button>Delete Logs</button></a>
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@
         </form>
     </div>
 </div>
-<div class="row pl-2 pt-2 cat-div justify-content-center">
+<div class="row pt-2 cat-div justify-content-center">
        <ul>
         <li id="workout-of-the-day-cat" class="cat">WOD: <span class="wod-cat-wods">
             {% for wod in wod_collection %}
@@ -36,7 +36,7 @@
         {% endfor %}
     </ul> 
 </div>
-<div class="row pl-2 pt-2">
+<div class="row pt-2 justify-content-center">
     <ul class="search-cat">
         {% for wod in wod_collection %}
         <li class="search-cat-item"><a href="{% url 'workouts' wod.pk %}">{{ wod.workout_name }}</a></li>

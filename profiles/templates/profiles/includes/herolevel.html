@@ -1,9 +1,13 @@
 <div class="container">
     <div class="row justify-content-center" id="level-header">
-        <h3>Hero Level: {{ general_level }}</h3>
+        <h3>Hero Level: <span id="gen-level">{{ general_level }}</span></h3><p><i class="fas fa-info-circle" id="level-info-modal"></i></p>
+    </div>
+    <div class="row justify-content-center" id="level-info" hidden>
+        <p>For every workout your best score is translated to which percentile of the community you belong to for that workout. This means: if you have a level of 60, that means that 40 percent of the community has a higher score than you. You percentiles per category are averaged to give you a level score for every category. Your category levels are averaged to give you an overall fitness level. If you have logged only one workout for a category your level has <span class="acc-low"> LOW accuracy </span>. If you've logged two workouts in a category your level has <span class="acc-medium"> MEDIUM accuracy </span>. If you've logged three or more workouts in a category your level has <span class="acc-high"> HIGH accuracy </span>. Logs that are over a year old do not count.
+        </p>
     </div>
     <div class="row justify-content-center" id="level-loader" hidden>
-        <p>Updating...<i class='fas fa-circle-notch fa-spin'></i></p>
+        <p>Getting most recent statistics...<i class='fas fa-circle-notch fa-spin'></i></p>
     </div>
     <div class="row row-levels justify-content-center">
         {% for cat in cat_levels %}

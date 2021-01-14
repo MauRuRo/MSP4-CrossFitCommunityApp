@@ -78,6 +78,7 @@ def leveler(request):
     print("DONE")
     return
 
+
 @csrf_exempt
 def calc_level(request):
     # print("MADE IT TO CALCLEVEL VIEW")
@@ -114,7 +115,10 @@ def calc_level(request):
         for item in cat_levels:
             if item["perc"] != "none":
                 avg_list.append(item["perc"])
-        general_level = round(statistics.mean(avg_list))
+        if len(avg_list) != 0:
+            general_level = round(statistics.mean(avg_list))
+        else:
+            general_level = 0
         level_data = HeroLevels.objects.filter(user=request.user)
         if level_data.count() != 0:
             level_data.update(level_data=cat_levels)
@@ -127,25 +131,18 @@ def calc_level(request):
             hero_levels.general_level = general_level
             hero_levels.save()
         # return cat_levels
-        data = {"message": "Succesfull update"}
-        # messages.success(request, "Your levels were updated successfully.")
-        
-
+        # data = {"message": "Succesfull update"}
         new_levels_html = loader.render_to_string(
         'profiles/includes/herolevel.html',
         {
             "general_level": general_level,
             "cat_levels": cat_levels
-        }
-         )
+        })
         # package output data and return it as a JSON object
-        output_data = {
+        data = {
             'new_levels_html': new_levels_html
         }
-        print("DONZO")
-        return JsonResponse(output_data)
-
-        # return HttpResponse(json.dumps(data), content_type='application/json')
+        return JsonResponse(data)
     else:
         print("FAILED HERE")
         data = {"message": "Failed update"}
@@ -190,6 +187,11 @@ def create_profile(request):
             new_profile.email = request.user.email
             new_profile.user = request.user
             new_profile.save()
+            hero_l = HeroLevels()
+            hero_l.user = request.user
+            hero_l.general_level = 0
+            hero_l.level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none"}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none"}, {"cat": "Body Weight", "perc": "none", "acc": "none"}, {"cat": "Heavy", "perc": "none", "acc": "none"}, {"cat": "Light", "perc": "none", "acc": "none"}, {"cat": "Long", "perc": "none", "acc": "none"}, {"cat": "Speed", "perc": "none", "acc": "none"}, {"cat": "Endurance", "perc": "none", "acc": "none"}]
+            hero_l.save()
             messages.success(request, 'Profile succesfully created and payment succesfully processed! \
             Please explore and enjoy our digital hero community!')
             return redirect(reverse('profile'))
@@ -346,13 +348,14 @@ def populate(request):
 #             new_log.save()
 #     print("DONE WITH UPLOADING")
 #     return redirect('profile')
+
 def logPopulation(request):
     users = User.objects.all().exclude(pk__lte=17)
     current_year = datetime.strftime(date.today(), "%Y")
     current_year = int(current_year)
     for i in range(4):
         for user in users:
-            workout = Workout.objects.get(workout_name="Rankel")
+            workout = Workout.objects.get(workout_name="Rahoi")
             if user.userprofile.gender == "M":
                 gender_factor = 1  #HERe
             else:
@@ -369,7 +372,7 @@ def logPopulation(request):
             prev_result_factor = (prev_logs + 1)/9  #HERe 
             factors = [gender_factor, level_factor, level_factor, level_factor, level_factor, age_factor, prev_result_factor, prev_result_factor, random_factor, level_factor, gender_factor]
             variance_factor = statistics.mean(factors)
-            min_result = 3 
+            min_result = 3.3 
             max_add_result = 6
             # max_add_result = timedelta(days=0, seconds=32, microseconds=0, milliseconds=0, minutes=2, hours=0, weeks=0)
             # max_add_result_s = max_add_result.seconds
@@ -386,7 +389,7 @@ def logPopulation(request):
                     personal_record = False
             null_ft = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
             next_days = i * 80
-            log_date = datetime.strptime("27-12-2019", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+            log_date = datetime.strptime("30-12-2019", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
             new_log = Log(workout=workout)
             new_log.user = user
             new_log.rx = True
@@ -396,7 +399,7 @@ def logPopulation(request):
             new_log.ft_result = null_ft
             new_log.personal_record = personal_record
             new_log.save()
-    return redirect('profile')
+    # return redirect('profile')
 
 
 def deleteLogs(request):
