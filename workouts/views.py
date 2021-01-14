@@ -345,7 +345,7 @@ def editLog(request):
                     data = {"message": "Error"}
                     messages.error(request, "Your update failed.")
                     return HttpResponse(json.dumps(data), content_type='application/json')
-                max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Min('ft_result'))
+                max_result = Log.objects.filter(user=request.user, workout=log.workout).exclude(pk=log_id).aggregate(Min('ft_result'))
                 Log.objects.filter(pk=log_id).update(ft_result=new_result)
                 if max_result['ft_result__min'] == None:
                     Log.objects.filter(pk=log_id).update(personal_record= True)
@@ -357,7 +357,7 @@ def editLog(request):
                     else:
                         Log.objects.filter(pk=log_id).update(personal_record= False)
             elif wod_type == "AMRAP":
-                max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('amrap_result'))
+                max_result = Log.objects.filter(user=request.user, workout=log.workout).exclude(pk=log_id).aggregate(Max('amrap_result'))
                 Log.objects.filter(pk=log_id).update(amrap_result=request.POST["result"])
                 new_result = float(request.POST["result"])
                 if max_result['amrap_result__max'] == None:
@@ -369,7 +369,7 @@ def editLog(request):
                     else:
                         Log.objects.filter(pk=log_id).update(personal_record= False)
             else:
-                max_result = Log.objects.filter(user=request.user, workout=log.workout).aggregate(Max('mw_result'))
+                max_result = Log.objects.filter(user=request.user, workout=log.workout).exclude(pk=log_id).aggregate(Max('mw_result'))
                 Log.objects.filter(pk=log_id).update(mw_result=request.POST["result"])
                 new_result = float(request.POST["result"])
                 if max_result['mw_result__max'] == None:

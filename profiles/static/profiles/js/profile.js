@@ -92,7 +92,7 @@ $(document).ready(function(){
                 },
                 error: function(){
                     console.log("Failed Updating Levels")
-                    $("#level-loader").children("p").html("Failed to get most recent statistics.")
+                    $("#level-loader").children("p").html("Failed to get most recent statistics. Please refresh page to try again.")
                 }
             })
        };
