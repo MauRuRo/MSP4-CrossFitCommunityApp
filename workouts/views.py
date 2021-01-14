@@ -197,7 +197,7 @@ def workouts(request, wod_id):
             else:
                 rank = rank + 1 + prevresult[1]
                 prevresult[1] = 0
-            prevresult[0] = lgetattr(log, rank_result)
+            prevresult[0] = getattr(log, rank_result)
             rlistwomentoday.append([log.pk, rank])
             if log.user == request.user:
                 all_women_today_index_user = all_women_today_index

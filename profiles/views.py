@@ -67,6 +67,17 @@ def profile(request):
         return redirect(reverse('create_profile'))
 
 
+def leveler(request):
+    users = User.objects.all()
+    for user in users:
+        hero_l = HeroLevels()
+        hero_l.user = user
+        hero_l.general_level = 0
+        hero_l.level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none"}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none"}, {"cat": "Body Weight", "perc": "none", "acc": "none"}, {"cat": "Heavy", "perc": "none", "acc": "none"}, {"cat": "Light", "perc": "none", "acc": "none"}, {"cat": "Long", "perc": "none", "acc": "none"}, {"cat": "Speed", "perc": "none", "acc": "none"}, {"cat": "Endurance", "perc": "none", "acc": "none"}]
+        hero_l.save()
+    print("DONE")
+    return
+
 @csrf_exempt
 def calc_level(request):
     # print("MADE IT TO CALCLEVEL VIEW")
@@ -109,6 +120,7 @@ def calc_level(request):
             level_data.update(level_data=cat_levels)
             level_data.update(general_level=general_level)
         else:
+            print("GET HERE")
             hero_levels = HeroLevels()
             hero_levels.user = user
             hero_levels.data_level = cat_levels

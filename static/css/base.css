@@ -750,7 +750,8 @@ ol#rank-nav li {
         background-color:red!important;
     }
     .col-levels {
-        margin-top:22px;
+        margin-top:5px;
+        margin-bottom:17px;
     }
     .fa-edit:hover{
         color:blue;
