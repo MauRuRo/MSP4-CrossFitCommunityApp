@@ -702,9 +702,12 @@ ol#rank-nav li {
     .profile-info-list li .fa-mars {
         font-size:1.6rem;
     }
+    #level-header h3{
+        display:block;
+    }
     .level-bar-box{
         width: 100%;
-        height:100px;
+        height:104px;
         /* background-color:grey; */
         border: dotted 1px grey;
         border-bottom: solid 3px black;
@@ -727,6 +730,7 @@ ol#rank-nav li {
         margin:0 auto;
         width:50px;
         text-align:center;
+        background-color:white;
     }
     .level-cat-name{
         font-family:'Bungee';
@@ -736,8 +740,17 @@ ol#rank-nav li {
         margin-right: -100%; */
         text-align:center;
     }
+    .acc-high {
+        background-color:blue!important;
+    }
+    .acc-medium {
+        background-color:#ffc107!important;
+    }
+    .acc-low {
+        background-color:red!important;
+    }
     .col-levels {
-        margin-top:15px;
+        margin-top:22px;
     }
     .fa-edit:hover{
         color:blue;

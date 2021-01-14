@@ -65,7 +65,8 @@ $(document).ready(function(){
     updateLevelCSS()
 
     function updateLevels(){
-        $("#level-header").append("<br><p>Updating...<i class='fas fa-circle-notch fa-spin'></i></p>")
+        $("#level-loader").removeAttr("hidden")
+        $("#level-loader").show()
         let userid = $("#user-id-no").attr('data')
          $.ajax({
                 type:"POST",
@@ -76,7 +77,7 @@ $(document).ready(function(){
                 // dataType: 'json',
                 success: function(data){
                   console.log("UPDATED! :D")
-                  $("#level-header").children("p").remove()
+                  $("#level-loader").hide()
                   $("#level-block").html(data.new_levels_html)
                   updateLevelCSS()
                 },

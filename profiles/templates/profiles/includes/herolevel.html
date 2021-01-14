@@ -2,7 +2,10 @@
     <div class="row justify-content-center" id="level-header">
         <h3>Hero Level: {{ general_level }}</h3>
     </div>
-    <div class="row row-levels">
+    <div class="row justify-content-center" id="level-loader" hidden>
+        <p>Updating...<i class='fas fa-circle-notch fa-spin'></i></p>
+    </div>
+    <div class="row row-levels justify-content-center">
         {% for cat in cat_levels %}
         <div class="col-6 col-md-4 col-lg-3 justify-content-center col-levels">
             <div class="level-bar-box">

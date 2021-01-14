@@ -117,7 +117,7 @@ def calc_level(request):
         # return cat_levels
         data = {"message": "Succesfull update"}
         # messages.success(request, "Your levels were updated successfully.")
-        print("DONZO")
+        
 
         new_levels_html = loader.render_to_string(
         'profiles/includes/herolevel.html',
@@ -130,6 +130,7 @@ def calc_level(request):
         output_data = {
             'new_levels_html': new_levels_html
         }
+        print("DONZO")
         return JsonResponse(output_data)
 
         # return HttpResponse(json.dumps(data), content_type='application/json')
