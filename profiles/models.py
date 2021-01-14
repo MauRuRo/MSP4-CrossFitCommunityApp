@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from picklefield.fields import PickledObjectField
+from jsonfield import JSONField
 
 
 def validate_max(value):
@@ -42,3 +44,11 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+class HeroLevels(models.Model):
+    """Save calculated fitness levels for user"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    level_data = JSONField()
+    general_level = models.DecimalField(max_digits=2, decimal_places=0, default=50)
+
+    def __str__(self):
+        return self.user.username

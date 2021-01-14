@@ -10,4 +10,5 @@ urlpatterns = [
     path('populate/', views.populate, name='populate'),
     path('logPopulation/', views.logPopulation, name='logPopulation'),
     path('deleteLogs/', views.deleteLogs, name='deleteLogs'),
+    path('calc_level/', views.calc_level, name='calc_level'),
 ]

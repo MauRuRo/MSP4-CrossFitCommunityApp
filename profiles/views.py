@@ -2,17 +2,20 @@ from django.shortcuts import (
     render, redirect, reverse
 )
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from .models import UserProfile, User
+from .models import UserProfile, User, HeroLevels
 from workouts.models import Workout, Log
 from allauth.account.models import EmailAddress
 from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.core.files import File
 from django.contrib import messages
 from django.conf import settings
 from datetime import date, datetime, timedelta
 from django.core.exceptions import ValidationError
 from django.db.models import Avg, Max, Min, Sum
+from django.template import loader
+from django.http import Http404, HttpResponse, JsonResponse
 import decimal
 import random
 import urllib.request
@@ -44,12 +47,19 @@ def profile(request):
         template = 'profiles/profile.html'
         profile = UserProfile.objects.get(user=request.user)
         form = UserProfileForm(instance=profile)
-        cat_levels = calc_level(request.user)
+        # cat_levels = calc_level(request.user)
+        hero_levels = HeroLevels.objects.get(user=request.user)
+        # print(hero_levels)
+        level_data = hero_levels.level_data
+        general_level = hero_levels.general_level
+        # print(level_data)
+        cat_levels = level_data
         categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         context = {
             'profile': profile,
             'form': form,
             'cat_levels': cat_levels,
+            'general_level': general_level,
             'categories': categories
         }
         return render(request, template, context)
@@ -57,60 +67,83 @@ def profile(request):
         return redirect(reverse('create_profile'))
 
 
-def calc_level(user):
-    categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
-    cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
-    # categories = ["PL", "OL", "BW", "HE", "LI", "LO", "SP", "EN"]
-    # cat_reverse = dict((v, k) for k, v in WORKOUT_CATEGORY_CHOICES)
-    cat_levels = []
-    for cat in categories:
-        workouts = Workout.objects.filter(workout_category=cat_reverse[cat])
-        percentiles = []
-        for wod in workouts:
-            percentile = getLevels(user, wod)
-            if percentile is not None:
-                percentiles.append(percentile)
-        if len(percentiles) >= 3:
-            accuracy = "high"
-        elif len(percentiles) == 2:
-            accuracy = "medium"
-        elif len(percentiles) == 1:
-            accuracy = "low"
+@csrf_exempt
+def calc_level(request):
+    # print("MADE IT TO CALCLEVEL VIEW")
+    if request.is_ajax():
+        # print("MADE IT IN TO AJAX?")
+        categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
+        cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
+        cat_levels = []
+        # cat_levels = {}
+        for cat in categories:
+            workouts = Workout.objects.filter(workout_category=cat_reverse[cat])
+            percentiles = []
+            for wod in workouts:
+                percentile = getLevels(request.user, wod)
+                # print(cat)
+                # print(percentile)
+                if percentile is not None:
+                    percentiles.append(percentile)
+            if len(percentiles) >= 3:
+                accuracy = "high"
+            elif len(percentiles) == 2:
+                accuracy = "medium"
+            elif len(percentiles) == 1:
+                accuracy = "low"
+            else:
+                accuracy = "none"
+            if accuracy != "none":
+                avg_percentile = round(statistics.mean(percentiles))
+            else:
+                avg_percentile = "none"
+            # cat_levels[cat] = {"cat": cat, "perc":avg_percentile, "acc":accuracy}
+            cat_levels.append({"cat": cat, "perc":avg_percentile, "acc":accuracy})
+        avg_list = []
+        for item in cat_levels:
+            if item["perc"] != "none":
+                avg_list.append(item["perc"])
+        general_level = round(statistics.mean(avg_list))
+        level_data = HeroLevels.objects.filter(user=request.user)
+        if level_data.count() != 0:
+            level_data.update(level_data=cat_levels)
+            level_data.update(general_level=general_level)
         else:
-            accuracy = "none"
-        if accuracy != "none":
-            avg_percentile = round(statistics.mean(percentiles))
-        else:
-            avg_percentile = "none"
-        cat_levels.append({"cat": cat, "perc":avg_percentile, "acc":accuracy})
-    return cat_levels
+            hero_levels = HeroLevels()
+            hero_levels.user = user
+            hero_levels.data_level = cat_levels
+            hero_levels.general_level = general_level
+            hero_levels.save()
+        # return cat_levels
+        data = {"message": "Succesfull update"}
+        # messages.success(request, "Your levels were updated successfully.")
+        print("DONZO")
 
-        # lapse_date = date.today() - timedelta(days=365)
-        # community_logs = Log.objects.filter(date_gt=lapse_date)
-        # all_logs = Log.objects.filter(user=request.user).filter(date_gt=lapse_date)
-        # powerlifts = all_logs.filter(workout__workout_category="PL")
-        # olympliclifts = all_logs.filter(workout__workout_category="OL")
-        # bodyweight = all_logs.filter(workout__workout_category="BW")
-        # heavy = all_logs.filter(workout__workout_category="HE")
-        # light = all_logs.filter(workout__workout_category="LI")
-        # long_cat = all_logs.filter(workout__workout_category="LO")
-        # speed = all_logs.filter(workout__workout_category="SP")
-        # endurance = all_logs.filter(workout__workout_category="EN")
+        new_levels_html = loader.render_to_string(
+        'profiles/includes/herolevel.html',
+        {
+            "general_level": general_level,
+            "cat_levels": cat_levels
+        }
+         )
+        # package output data and return it as a JSON object
+        output_data = {
+            'new_levels_html': new_levels_html
+        }
+        return JsonResponse(output_data)
 
-        # c_powerlifts = community_logs.filter(workout__workout_category="PL")
-        # c_olympliclifts = community_logs.filter(workout__workout_category="OL")
-        # c_bodyweight = community_logs.filter(workout__workout_category="BW")
-        # c_heavy = community_logs.filter(workout__workout_category="HE")
-        # c_light = community_logs.filter(workout__workout_category="LI")
-        # c_long_cat = community_logs.filter(workout__workout_category="LO")
-        # c_speed = community_logs.filter(workout__workout_category="SP")
-        # c_endurance = community_logs.filter(workout__workout_category="EN")
+        # return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        print("FAILED HERE")
+        data = {"message": "Failed update"}
+        # messages.success(request, "Your levels were updated successfully.")
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
 
 
 def create_profile(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
-
     if request.method == "GET":
         if UserProfile.objects.filter(user=request.user).exists():
             messages.error(request, 'Your profile is already created.')
@@ -352,6 +385,7 @@ def logPopulation(request):
             new_log.save()
     return redirect('profile')
 
+
 def deleteLogs(request):
     workout = Workout.objects.get(workout_name="Run 1 km")
     Log.objects.filter(workout=workout).delete()
@@ -364,12 +398,15 @@ def getLevels(user, wod):
     lapse_date = date.today() - timedelta(days=365)
     if wod.workout_type == 'FT':
         rank_result = 'ft_result'
+        rank_result_order = 'ft_result'
     elif wod.workout_type == 'AMRAP':
         rank_result = 'amrap_result'
+        rank_result_order = '-amrap_result'
     else:
         rank_result = 'mw_result'
+        rank_result_order = '-mw_result'
     # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
-    all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result}')
+    all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result_order}')
     # create list of log id's max result for this workout for every user
     log_id_list = id_list(user_l, all_logs, wod.workout_type)
     # filter out all none max results from query

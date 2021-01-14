@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile
+from .models import UserProfile, HeroLevels
 
 
 class UserProfileAdmin(admin.ModelAdmin):
@@ -8,3 +8,9 @@ class UserProfileAdmin(admin.ModelAdmin):
                 'gender', 'weight', 'birthdate', 'image')
 
 admin.site.register(UserProfile, UserProfileAdmin)
+
+
+class HeroLevelsAdmin(admin.ModelAdmin):
+    fields = ('user', 'level_data', 'general_level')
+
+admin.site.register(HeroLevels, HeroLevelsAdmin)
