@@ -68,34 +68,33 @@ def profile(request):
 
 
 def leveler(request):
-    users = User.objects.all()
-    for user in users:
-        hero_l = HeroLevels()
-        hero_l.user = user
-        hero_l.general_level = 0
-        hero_l.level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none"}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none"}, {"cat": "Body Weight", "perc": "none", "acc": "none"}, {"cat": "Heavy", "perc": "none", "acc": "none"}, {"cat": "Light", "perc": "none", "acc": "none"}, {"cat": "Long", "perc": "none", "acc": "none"}, {"cat": "Speed", "perc": "none", "acc": "none"}, {"cat": "Endurance", "perc": "none", "acc": "none"}]
-        hero_l.save()
+    level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Body Weight", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Heavy", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Light", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Long", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Speed", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Endurance", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}]
+    HeroLevels.objects.all().update(level_data=level_data)
+    # users = User.objects.all()
+    # for user in users:
+    #     hero_l = HeroLevels()
+    #     hero_l.user = user
+    #     hero_l.general_level = 0
+    #     hero_l.level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Body Weight", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Heavy", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Light", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Long", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Speed", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Endurance", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}]
+    #     hero_l.save()
     print("DONE")
-    return
+    return HttpResponse()
 
 
 @csrf_exempt
 def calc_level(request):
-    # print("MADE IT TO CALCLEVEL VIEW")
     if request.is_ajax():
-        # print("MADE IT IN TO AJAX?")
         categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
         cat_levels = []
-        # cat_levels = {}
         for cat in categories:
             workouts = Workout.objects.filter(workout_category=cat_reverse[cat])
             percentiles = []
+            wod_level = []
             for wod in workouts:
                 percentile = getLevels(request.user, wod)
-                # print(cat)
-                # print(percentile)
                 if percentile is not None:
+                    wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk})
                     percentiles.append(percentile)
             if len(percentiles) >= 3:
                 accuracy = "high"
@@ -109,8 +108,7 @@ def calc_level(request):
                 avg_percentile = round(statistics.mean(percentiles))
             else:
                 avg_percentile = "none"
-            # cat_levels[cat] = {"cat": cat, "perc":avg_percentile, "acc":accuracy}
-            cat_levels.append({"cat": cat, "perc":avg_percentile, "acc":accuracy})
+            cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level":wod_level})
         avg_list = []
         for item in cat_levels:
             if item["perc"] != "none":
@@ -130,15 +128,12 @@ def calc_level(request):
             hero_levels.data_level = cat_levels
             hero_levels.general_level = general_level
             hero_levels.save()
-        # return cat_levels
-        # data = {"message": "Succesfull update"}
         new_levels_html = loader.render_to_string(
         'profiles/includes/herolevel.html',
         {
             "general_level": general_level,
             "cat_levels": cat_levels
         })
-        # package output data and return it as a JSON object
         data = {
             'new_levels_html': new_levels_html
         }
@@ -146,9 +141,7 @@ def calc_level(request):
     else:
         print("FAILED HERE")
         data = {"message": "Failed update"}
-        # messages.success(request, "Your levels were updated successfully.")
         return HttpResponse(json.dumps(data), content_type='application/json')
-
 
 
 def create_profile(request):
@@ -190,7 +183,7 @@ def create_profile(request):
             hero_l = HeroLevels()
             hero_l.user = request.user
             hero_l.general_level = 0
-            hero_l.level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none"}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none"}, {"cat": "Body Weight", "perc": "none", "acc": "none"}, {"cat": "Heavy", "perc": "none", "acc": "none"}, {"cat": "Light", "perc": "none", "acc": "none"}, {"cat": "Long", "perc": "none", "acc": "none"}, {"cat": "Speed", "perc": "none", "acc": "none"}, {"cat": "Endurance", "perc": "none", "acc": "none"}]
+            hero_l.level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Body Weight", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Heavy", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Light", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Long", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Speed", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Endurance", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}]
             hero_l.save()
             messages.success(request, 'Profile succesfully created and payment succesfully processed! \
             Please explore and enjoy our digital hero community!')
@@ -233,179 +226,7 @@ def edit_profile(request):
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
-
         return redirect('edit_profile')
-
-
-# def test(request):
-#     print("MADE IT TO TEST VIEW")
-#     if request.is_ajax() and request.POST:
-#         msg = "This was the message: " + request.POST.get('test')
-#         data = {"message": msg}
-#         return HttpResponse(json.dumps(data), content_type='application/json')
-#     else:
-#         raise Http404
-
-
-def populate(request):
-    f = open("static/userpopulate.txt")
-    file = json.load(f)
-
-    for item in file["results"]:
-        firstname = item["name"]["first"]
-        lastname = item["name"]["last"]
-        username = item["login"]["username"]
-        password = item["login"]["password"]
-        full_name = firstname + " " + lastname
-        town_or_city = item["location"]["city"]
-        country = item["nat"]
-        email = item["email"]
-        birthday = item["dob"]["date"][0:10]
-        gender = item["gender"].title()
-        if gender == "Male":
-            gender = "M"
-            weight = 60 + decimal.Decimal(random.randrange(0, 50))
-        else:
-            gender = "F"
-            weight = 40 + decimal.Decimal(random.randrange(0, 40))
-        image_url = item["picture"]["large"]
-        result = urllib.request.urlretrieve(image_url)
-        userdata={
-            "username":username,
-            "password":password,
-        }
-        newuser = User.objects.create(username=username)
-        newuser.password = password
-        newuser.save()
-        newuserprofile = UserProfile.objects.create(user=newuser, weight=weight)
-        newuserprofile.full_name = full_name
-        newuserprofile.email = email
-        newuserprofile.town_or_city = town_or_city
-        newuserprofile.country = country
-        newuserprofile.gender = gender
-        newuserprofile.birthdate = birthday
-        newuserprofile.weight = weight
-        newuserprofile.save()
-        with open(result[0], 'rb') as d_image:
-            newuserprofile.image.save(f'media/{username}.jpg', File(d_image))
-        newemail = EmailAddress.objects.create(user=newuser)
-        newemail.email = email
-        newemail.verified = True
-        newemail.primary = True
-        newemail.save()
-    return redirect('profile')
-
-
-# def logPopulation(request):
-#     users = User.objects.all().exclude(pk__lte=17)
-#     current_year = datetime.strftime(date.today(), "%Y")
-#     current_year = int(current_year)
-#     for i in range(4):
-#         for user in users:
-#             workout = Workout.objects.get(workout_name="Wilmot")
-#             if user.userprofile.gender == "M":
-#                 gender_factor = 0  #HERe
-#             else:
-#                 gender_factor = 1  #HERe
-#             level_factor = 1 - int(user.username[-1])/10  #HERe
-#             dob = int(datetime.strftime(user.userprofile.birthdate, "%Y"))
-#             age_factor = 1 - 1-((current_year - dob)/100)  #HERe
-#             random_factor = 1 - random.randrange(30,70)/100  #HERe
-#             p_logs = Log.objects.filter(workout=workout).filter(user=user)
-#             prev_logs = p_logs.count()
-#             prev_logs = i
-#             if prev_logs > 8:
-#                 prev_logs = 8
-#             prev_result_factor = 1 - (prev_logs + 1)/9  #HERe 
-#             factors = [gender_factor, level_factor, level_factor, level_factor, level_factor, age_factor, prev_result_factor, prev_result_factor, random_factor, level_factor, gender_factor]
-#             variance_factor = statistics.mean(factors)
-#             min_result = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=10, hours=0, weeks=0)
-#             max_add_result = 2040
-#             # max_add_result = timedelta(days=0, seconds=32, microseconds=0, milliseconds=0, minutes=2, hours=0, weeks=0)
-#             # max_add_result_s = max_add_result.seconds
-#             final_result = min_result + timedelta(seconds=round(variance_factor * max_add_result))  #HERe
-#             # final_result = 0.1 * round(final_result/0.1)
-#             max_result = p_logs.aggregate(Min('ft_result'))  #HERe
-#             if max_result['ft_result__min'] == None: #HERe
-#                 personal_record = True
-#             else:
-#                 best_result = max_result['ft_result__min'] #HERe
-#                 if best_result > final_result: #HERe
-#                     personal_record = True
-#                 else:
-#                     personal_record = False
-#             null_ft = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
-#             next_days = i * 80
-#             log_date = datetime.strptime("24-12-2019", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
-#             new_log = Log(workout=workout)
-#             new_log.user = user
-#             new_log.rx = True
-#             new_log.date = log_date
-#             new_log.mw_result = 0
-#             new_log.amrap_result = 0
-#             new_log.ft_result = final_result
-#             new_log.personal_record = personal_record
-#             new_log.save()
-#     print("DONE WITH UPLOADING")
-#     return redirect('profile')
-
-def logPopulation(request):
-    users = User.objects.all().exclude(pk__lte=17)
-    current_year = datetime.strftime(date.today(), "%Y")
-    current_year = int(current_year)
-    for i in range(4):
-        for user in users:
-            workout = Workout.objects.get(workout_name="Rahoi")
-            if user.userprofile.gender == "M":
-                gender_factor = 1  #HERe
-            else:
-                gender_factor = 0  #HERe
-            level_factor = int(user.username[-1])/10  #HERe
-            dob = int(datetime.strftime(user.userprofile.birthdate, "%Y"))
-            age_factor = 1-((current_year - dob)/100)  #HERe
-            random_factor = random.randrange(30,70)/100  #HERe
-            p_logs = Log.objects.filter(workout=workout).filter(user=user)
-            prev_logs = p_logs.count()
-            prev_logs = i
-            if prev_logs > 8:
-                prev_logs = 8
-            prev_result_factor = (prev_logs + 1)/9  #HERe 
-            factors = [gender_factor, level_factor, level_factor, level_factor, level_factor, age_factor, prev_result_factor, prev_result_factor, random_factor, level_factor, gender_factor]
-            variance_factor = statistics.mean(factors)
-            min_result = 3.3 
-            max_add_result = 6
-            # max_add_result = timedelta(days=0, seconds=32, microseconds=0, milliseconds=0, minutes=2, hours=0, weeks=0)
-            # max_add_result_s = max_add_result.seconds
-            final_result = min_result + variance_factor * max_add_result  #HERe
-            final_result = 0.1 * round(final_result/0.1)
-            max_result = p_logs.aggregate(Max('amrap_result'))  #HERe
-            if max_result['amrap_result__max'] == None: #HERe
-                personal_record = True
-            else:
-                best_result = max_result['amrap_result__max'] #HERe
-                if best_result < final_result: #HERe
-                    personal_record = True
-                else:
-                    personal_record = False
-            null_ft = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
-            next_days = i * 80
-            log_date = datetime.strptime("30-12-2019", "%d-%m-%Y") + timedelta(days=next_days, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
-            new_log = Log(workout=workout)
-            new_log.user = user
-            new_log.rx = True
-            new_log.date = log_date
-            new_log.mw_result = 0
-            new_log.amrap_result = final_result
-            new_log.ft_result = null_ft
-            new_log.personal_record = personal_record
-            new_log.save()
-    # return redirect('profile')
-
-
-def deleteLogs(request):
-    workout = Workout.objects.get(workout_name="Run 1 km")
-    Log.objects.filter(workout=workout).delete()
-    return redirect('profile')
 
 
 def getLevels(user, wod):

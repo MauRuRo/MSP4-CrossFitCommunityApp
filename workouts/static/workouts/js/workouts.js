@@ -685,8 +685,6 @@ $(document).ready(function() {
                         scrollTop: ($(memberid).offset().top - scroll)
                     }, 800)
                 }catch{
-                    console.log("No scrollable element found.")
-
                 }              
             };
 
@@ -925,7 +923,6 @@ $(document).ready(function() {
                     scroll_constant = true
                 },
                 error: function(xhr, status, error) {
-                    // shit happens friends!
                 }
                 });
                 
@@ -945,7 +942,6 @@ $(document).ready(function() {
                     pagedata = $("#rank-women")
                     call_group = "women_today"
                 }
-                console.log(pagedata.data('pageup'))
                 if (direction == "down"){
                     $(".rank-dir-down:visible").html('<i class="fas fa-circle-notch fa-spin"></i>')
                     var pageno = pagedata.data('page')
@@ -1004,6 +1000,17 @@ $(document).ready(function() {
                                 }
                             }                         
                         }else{
+                            $('.log-ranking:visible').append(data.calling_group_html);
+                            $('.log-ranking:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down direction-rank"><i class="fas fa-angle-double-down"></i></div>')
+                            pagedata.data('page', pageno);
+                            $(".rank-dir-down:visible").remove()
+                            $(".direction-down").addClass('rank-dir-down')
+                            if (country_select==true){
+                                if (country_count == $(".log-ranking").children(`.rank-card[data-country=${country_selected}]:visible`).length){
+                                    scroll_constant = true
+                                    goScrollDown()
+                                }
+                            } 
                             $(".direction-down:visible").remove()
                         }
                     }
@@ -1025,7 +1032,6 @@ $(document).ready(function() {
         };
 
         function ranker(){
-            console.log("RANKER GOING")
             $(".rank-log").each(function(){
                 logid = $(this).attr("name").split("-")[2]
                 if ($(this).parent().hasClass("log-rank-1")){
@@ -1295,13 +1301,11 @@ $(document).ready(function() {
         max_slider = parseFloat($("#rangeLevelData").data('best'))
         step_val = 0.1
         $('#rangeLevelSliderVal').html(initial_slider)
-        console.log("not For time check")
     }else{
         min_slider = $("#rangeLevelData").data('best')
         max_slider = $("#rangeLevelData").data('worst') 
         step_val = 1 
         sliderValueTime($("#rangeLevel").data('initial-value'))  
-        console.log("For time check")
     }    
 
     // https://codepen.io/caseymhunt/pen/kertA
@@ -1348,7 +1352,6 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data){
                     $("#rangeLevelSliderLevelVal").html(data.percentile)
-                    console.log("ajax succes!")         
                 },
                 error: function(){
                     $("#rangeLevelSliderLevelVal").html("Failed to get level.")

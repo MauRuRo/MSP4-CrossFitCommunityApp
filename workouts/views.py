@@ -84,17 +84,17 @@ def workouts(request, wod_id):
         # check which date is exactly a year ago
         lapse_date = date.today() - timedelta(days=365)
         # make query of all women and one of all men
-        all_women_q = UserProfile.objects.filter(gender='F')
-        all_men_q = UserProfile.objects.filter(gender='M')
+            # all_women_q = UserProfile.objects.filter(gender='F')
+            # all_men_q = UserProfile.objects.filter(gender='M')
         # get all comments
         member_comments = MemberComment.objects.all()
         # make lists of all women/men
-        all_women = []
-        for woman in all_women_q:
-            all_women.append(woman.user.username)
-        all_men = []
-        for man in all_men_q:
-            all_men.append(man.user.username)
+            # all_women = []
+            # for woman in all_women_q:
+            #     all_women.append(woman.user.username)
+            # all_men = []
+            # for man in all_men_q:
+            #     all_men.append(man.user.username)
         # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
         all_logs = Log.objects.all().order_by('-date')
         all_logs_wod = all_logs.filter(workout=wod)
@@ -121,19 +121,14 @@ def workouts(request, wod_id):
         all_logs_rank = filter_lapsed.filter(id__in=log_id_list)
         # create query for today's logs, for women, for men, and rank logs for the whole past year.
         all_logs_rank_today = filter_rx.filter(date=date.today())
-        all_logs_rank_women = all_logs_rank.filter(user__username__in=all_women)
-        all_logs_rank_men = all_logs_rank.filter(user__username__in=all_men)
-        all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
-        all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
-        # list queries to pass to context
-        # all_men_start = 0
-        # all_men_today_start = 0
-        # all_women_start = 0
-        # all_women_today_start = 0
-        # all_men_end = 25
-        # all_men_today_end = 25
-        # all_women_end = 25
-        # all_women_today_end = 25
+            # all_logs_rank_women = all_logs_rank.filter(user__username__in=all_women)
+            # all_logs_rank_men = all_logs_rank.filter(user__username__in=all_men)
+            # all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
+            # all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
+        all_logs_rank_women = all_logs_rank.filter(user__userprofile__gender="F")
+        all_logs_rank_men = all_logs_rank.filter(user__userprofile__gender="M")
+        all_logs_rank_women_today = all_logs_rank_today.filter(user__userprofile__gender="F")
+        all_logs_rank_men_today = all_logs_rank_today.filter(user__userprofile__gender="M")
         all_men_index_user = 0
         all_men_today_index_user = 0
         all_women_index_user = 0
@@ -190,7 +185,7 @@ def workouts(request, wod_id):
                 all_women_index_user = all_women_index
             else:
                 all_women_index += 1
-        prev_result=[0,0]
+        prevresult = [0, 0]
         rank = 0
         for log in all_logs_rank_women_today:
             if getattr(log, rank_result) == prevresult[0]:
@@ -213,13 +208,9 @@ def workouts(request, wod_id):
             best = getattr(all_logs_rank_women[0], rank_result)
             worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
             worst_rank = rlistwomenall[-1][1]
-        print(worst)
-        print(type(worst))
         if wod.workout_type == "FT":
             best = best.seconds
             worst = worst.seconds
-        print(worst)
-        print(type(worst))
         initial_slider_level = worst + (best-worst)/2
 
         all_women_page = math.ceil(all_women_index_user / 25)
@@ -603,14 +594,13 @@ def loopListRank(request):
     # check profile
     profile = request.user
     # make lists of all women/men
-    all_women = []
-    for woman in all_women_q:
-        all_women.append(woman.user.username)
-    all_men = []
-    for man in all_men_q:
-        all_men.append(man.user.username)
+        # all_women = []
+        # for woman in all_women_q:
+        #     all_women.append(woman.user.username)
+        # all_men = []
+        # for man in all_men_q:
+        #     all_men.append(man.user.username)
     # For rank list, find out type of wod, set proper result field and order.
-    print(wod.workout_type)
     if wod.workout_type == 'FT':
         all_logs_rank = Log.objects.filter(workout=wod).order_by('ft_result')
         rank_result = 'ft_result'
@@ -635,13 +625,13 @@ def loopListRank(request):
     # all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
     # all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
     if called_group == "men_year":
-        calling_group = all_logs_rank.filter(user__username__in=all_men)
+        calling_group = all_logs_rank.filter(user__userprofile__gender="M")
     elif called_group == "women_year":
-        calling_group = all_logs_rank.filter(user__username__in=all_women)
+        calling_group = all_logs_rank.filter(user__userprofile__gender="F")
     elif called_group == "men_today":
-        calling_group = all_logs_rank_today.filter(user__username__in=all_men)
+        calling_group = all_logs_rank_today.filter(user__userprofile__gender="M")
     else:
-        calling_group = all_logs_rank_today.filter(user__username__in=all_women)
+        calling_group = all_logs_rank_today.filter(user__userprofile__gender="F")
     # use Django's pagination
     # https://docs.djangoproject.com/en/dev/topics/pagination/
     results_per_page = 25
@@ -780,10 +770,6 @@ def getSliderLevel(request):
                 if getattr(log, rank_result) <= Decimal(prep_result):
                     if prep_rank == 0:
                         prep_rank = rank
-                    # break
-                # else:
-                    # all_gender_index += 1
-
         if prep_rank != 0:
             last_rank = rlistgenderall[-1][1]
             percentile = round((1-(prep_rank/last_rank)) * 100)

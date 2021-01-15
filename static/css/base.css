@@ -773,6 +773,15 @@ ol#rank-nav li {
     .acc-low {
         background-color:red!important;
     }
+    .acc-high-p {
+        color:blue!important;
+    }
+    .acc-medium-p {
+        color:#ffc107!important;
+    }
+    .acc-low-p {
+        color:red!important;
+    }
     .col-levels {
         margin-top:5px;
         margin-bottom:17px;
@@ -940,6 +949,16 @@ ol#rank-nav li {
         color:black;
         font-weight: bold;
     }
+    .pwod{
+        color:grey;
+    }
+    .pperc{
+        font-weight:bolder;
+    }
+    .popover-header{
+        text-align:center;
+    }
+
 
 
 /* MEDIAQUERIES */
