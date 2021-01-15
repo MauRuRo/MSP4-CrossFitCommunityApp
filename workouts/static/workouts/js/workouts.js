@@ -1228,7 +1228,9 @@ $(document).ready(function() {
                 }
             })
         })
-        
+      
+    // let get_level_const = true    
+
     $("#log-workout-form").submit(function(){
         $("#logform-submit-button").prop("disabled", true)
         return true;
@@ -1240,6 +1242,10 @@ $(document).ready(function() {
          }else{
             $('#rangeLevelSliderVal').html(val)
          }
+        //  if (get_level_const = true){
+            // getWodLevel()
+        //  }
+         
     })
     // $("#rangeLevel").slider();
     $("#rangeLevel").on("slide", function(ui) {
@@ -1328,16 +1334,23 @@ $(document).ready(function() {
 
     $(".tooltip").attr('hidden', 'hidden')
 
-    $(".slider-handle, .slider, .slider-row").mousedown(function(){
+    $(".slider-row").on("touchstart", function(){
+        $(document).on("touchend", function(){
+            getWodLevel()
+            $(document).off("touchend");
+        })
+    })
+
+    $(".slider-row").mousedown(function(){
         $(document).mouseup(function(){
-            // val = $("#rangeLevel").data('value')
-            // $('#rangeLevelSliderVal').html(val)
             getWodLevel()
             $(document).off("mouseup");
         })
     })
 
     function getWodLevel() {
+        console.log("POSTING TO GET LEVELS")
+        // get_level_const = false
         $("#rangeLevelSliderLevelVal").html('<i class="fas fa-circle-notch fa-spin"></i>')
         slider_level = $("#rangeLevel").attr('value')
         
@@ -1352,6 +1365,7 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data){
                     $("#rangeLevelSliderLevelVal").html(data.percentile)
+                    // get_level_const = true
                 },
                 error: function(){
                     $("#rangeLevelSliderLevelVal").html("Failed to get level.")
