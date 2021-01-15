@@ -439,7 +439,8 @@ def getLevels(user, wod):
         else:
             rank = rank + 1 + prevresult[1]
             prevresult[1] = 0
-        prevresult[0] = log.mw_result
+        prevresult[0] = getattr(log, rank_result)
+        # prevresult[0] =log.mw_result
         rlistgenderall.append([log.pk, rank])
         if log.user == user:
             all_gender_index_user = all_gender_index

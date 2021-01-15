@@ -16,4 +16,5 @@ urlpatterns = [
     path('0/createWorkout/<wod_id>/', views.createWorkout, name='createWorkout'),
     path('0/deleteWorkout/', views.deleteWorkout, name='deleteWorkout'),
     path('0/setWod/', views.setWod, name='setWod'),
+    path('0/getSliderLevel/', views.getSliderLevel, name='getSliderLevel'),
 ]

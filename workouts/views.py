@@ -13,6 +13,7 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from decimal import Decimal
 # from django.template import Library
 # from django.template.defaultfilters import stringfilter
 import json
@@ -203,6 +204,24 @@ def workouts(request, wod_id):
                 all_women_today_index_user = all_women_today_index
             else:
                 all_women_today_index += 1
+
+        if request.user.userprofile.gender == "M":
+            best = getattr(all_logs_rank_men[0], rank_result)
+            worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
+            worst_rank = rlistmenall[-1][1]
+        else:
+            best = getattr(all_logs_rank_women[0], rank_result)
+            worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
+            worst_rank = rlistwomenall[-1][1]
+        print(worst)
+        print(type(worst))
+        if wod.workout_type == "FT":
+            best = best.seconds
+            worst = worst.seconds
+        print(worst)
+        print(type(worst))
+        initial_slider_level = worst + (best-worst)/2
+
         all_women_page = math.ceil(all_women_index_user / 25)
         all_women_today_page = math.ceil(all_women_today_index_user / 25)
         if all_women_page == 0:
@@ -247,7 +266,11 @@ def workouts(request, wod_id):
             "all_women_today_page": all_women_today_page,
             "wod_collection": wod_collection,
             "categories": categories,
-            "workout_form": workout_form
+            "workout_form": workout_form,
+            "best": best,
+            "worst": worst,
+            "worst_rank": worst_rank,
+            "initial_slider_level":initial_slider_level
         }
         template = "workouts/workouts.html"
         return render(request, template, context)
@@ -711,4 +734,63 @@ def setWod(request):
     else:
         data = {"message": "Error"}
         messages.error(request, "Something went wrong. Workout not set as WOD")
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def getSliderLevel(request):
+    prep_result = request.POST["prep_result"]
+    wod = request.POST["wod"]
+    if request.is_ajax():
+        wod = Workout.objects.get(pk=wod)
+        user_l = user_list()
+        # check which date is exactly a year ago
+        lapse_date = date.today() - timedelta(days=365)
+        if wod.workout_type == 'FT':
+            rank_result = 'ft_result'
+            rank_result_order = 'ft_result'
+        elif wod.workout_type == 'AMRAP':
+            rank_result = 'amrap_result'
+            rank_result_order = '-amrap_result'
+        else:
+            rank_result = 'mw_result'
+            rank_result_order = '-mw_result'
+        # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+        all_logs = Log.objects.all().filter(user__userprofile__gender=request.user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result_order}')
+        # create list of log id's max result for this workout for every user
+        log_id_list = id_list(user_l, all_logs, wod.workout_type)
+        # filter out all none max results from query
+        all_logs_rank = all_logs.filter(id__in=log_id_list)
+        rank = 0
+        prevresult = [0, 0]
+        rlistgenderall = []
+        prep_rank = 0
+        for log in all_logs_rank:
+            if getattr(log, rank_result) == prevresult[0]:
+                prevresult[1] += 1
+            else:
+                rank = rank + 1 + prevresult[1]
+                prevresult[1] = 0
+            prevresult[0] = getattr(log, rank_result)
+            rlistgenderall.append([log.pk, rank])
+            if wod.workout_type == 'FT':
+                if getattr(log, rank_result).seconds >= int(prep_result):
+                    if prep_rank == 0:
+                        prep_rank = rank
+            else:
+                if getattr(log, rank_result) <= Decimal(prep_result):
+                    if prep_rank == 0:
+                        prep_rank = rank
+                    # break
+                # else:
+                    # all_gender_index += 1
+
+        if prep_rank != 0:
+            last_rank = rlistgenderall[-1][1]
+            percentile = round((1-(prep_rank/last_rank)) * 100)
+        else:
+            percentile = 0
+        data = {"percentile": percentile}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        data = {"percentile": "Failed to get level."}
         return HttpResponse(json.dumps(data), content_type='application/json')

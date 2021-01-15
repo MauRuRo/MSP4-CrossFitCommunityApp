@@ -720,6 +720,7 @@ ol#rank-nav li {
     #level-info-modal{
         color:grey;
         margin-left:3px;
+        cursor: pointer;
     }
     .level-bar-box{
         width: 100%;
@@ -917,6 +918,28 @@ ol#rank-nav li {
         margin-bottom:5px;
     }
 
+    #rangeLevel{
+        width:70%;
+    }
+    .slider-row .slider{
+        width:75%!important;
+    }
+    .slider-selection{
+        display:none;
+    }
+    #rangeLevelCurrentSliderValLabel{
+        text-align:center;
+        color:grey;
+        font-size:0.8rem;
+    }
+    #rangeLevelSliderLevelVal {
+        color:blue;
+        font-weight: bold;
+    }
+    #rangeLevelSliderVal {
+        color:black;
+        font-weight: bold;
+    }
 
 
 /* MEDIAQUERIES */

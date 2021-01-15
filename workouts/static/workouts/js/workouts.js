@@ -1227,5 +1227,136 @@ $(document).ready(function() {
         $("#logform-submit-button").prop("disabled", true)
         return true;
     })
+    $("#rangeLevel").on("change", function(){
+        val= $(".min-slider-handle:first").attr('aria-valuenow')
+         if (parseFloat($("#rangeLevelData").data('worst')) > parseFloat($("#rangeLevelData").data('best'))){
+            sliderValueTime(val)
+         }else{
+            $('#rangeLevelSliderVal').html(val)
+         }
+    })
+    // $("#rangeLevel").slider();
+    $("#rangeLevel").on("slide", function(ui) {
+        val = ui.value
+         if (parseFloat($("#rangeLevelData").data('worst')) > parseFloat($("#rangeLevelData").data('best'))){
+            sliderValueTime(val)
+         }else{
+            $('#rangeLevelSliderVal').html(val)
+         }
+        
+        // var hours = Math.floor(ui.value/3600)
+        // var minutes = Math.floor((ui.value - (3600 * hours)) / 60);
+        // var seconds = ui.value - (minutes * 60);
+        // if (hours.length == 1) hours = '0' + hours;
+        // hours = hours + ":"
+        // if (hours == "00:" || hours == "0:") hours = '';
+        // if (minutes.length == 1) minutes = '0' + minutes;
+        // if (minutes == 0) minutes = '00';
+        // minutes = minutes + ":"
+        // if (seconds <= 9) {
+        //     seconds = '0' + seconds;
+        // }
+        // if (seconds == 0) seconds = '00';
+        // $('#rangeLevelSliderVal').html(hours + minutes + seconds);
+        // $('.tooltip-main').children('tooltip-inner').html(hours + minutes + seconds);
+    });
+
+    function sliderValueTime(val) {
+        var hours = Math.floor(val/3600)
+        var minutes = Math.floor((val - (3600 * hours)) / 60);
+        var seconds = val - (hours * 3600 + minutes * 60);
+        if (hours.length == 1) hours = '0' + hours;
+        hours = hours + ":"
+        if (hours == "00:" || hours == "0:") hours = '';
+        if (minutes <= 9) minutes = '0' + minutes;
+        if (minutes == 0) minutes = '00';
+        minutes = minutes + ":"
+        if (seconds <= 9) {
+            seconds = '0' + seconds;
+        }
+        if (seconds == 0) seconds = '00';
+        $('#rangeLevelSliderVal').html(hours + minutes + seconds);
+        $('.tooltip-main').children('tooltip-inner').html(hours + minutes + seconds);
+    }
+
+    initial_slider = $("#rangeLevel").data('initial-value')
+    
+    
+    // daworst = $("#rangeLevelData").data('worst')
+    // dabest = $("#rangeLevelData").data('best')
+    // console.log("best: " + dabest + ", worst: " + daworst)
+    // if (parseFloat(dabest) > parseFloat(daworst)){
+    //     console.log("best is larger than worst")
+    // }
+    // console.log(typeof dabest)
+
+    if (parseFloat($("#rangeLevelData").data('worst')) < parseFloat($("#rangeLevelData").data('best'))){
+        min_slider = parseFloat($("#rangeLevelData").data('worst'))
+        max_slider = parseFloat($("#rangeLevelData").data('best'))
+        step_val = 0.1
+        $('#rangeLevelSliderVal').html(initial_slider)
+        console.log("not For time check")
+    }else{
+        min_slider = $("#rangeLevelData").data('best')
+        max_slider = $("#rangeLevelData").data('worst') 
+        step_val = 1 
+        sliderValueTime($("#rangeLevel").data('initial-value'))  
+        console.log("For time check")
+    }    
+
+    // https://codepen.io/caseymhunt/pen/kertA
+    $("#rangeLevel").slider({
+    min: min_slider,
+    max: max_slider,
+    value: initial_slider,
+    step: step_val,
+    });
+
+    // if ($("#rangeLevelData").data('worst') < $("#rangeLevelData").data('best')){
+    //     min_slider = $("#rangeLevelData").data('worst')
+    //     max_slider = $("#rangeLevelData").data('best')
+    //     // sliderValueTime($("#rangeLevel").data('initial-value'))
+    // }else{
+    //     min_slider = $("#rangeLevelData").data('best')
+    //     max_slider = $("#rangeLevelData").data('worst')
+    // }
+    // sliderValueTime($("#rangeLevel").data('initial-value'))
+
+    $(".tooltip").attr('hidden', 'hidden')
+
+    $(".slider-handle, .slider, .slider-row").mousedown(function(){
+        $(document).mouseup(function(){
+            // val = $("#rangeLevel").data('value')
+            // $('#rangeLevelSliderVal').html(val)
+            getWodLevel()
+            $(document).off("mouseup");
+        })
+    })
+
+    function getWodLevel() {
+        $("#rangeLevelSliderLevelVal").html('<i class="fas fa-circle-notch fa-spin"></i>')
+        slider_level = $("#rangeLevel").attr('value')
+        
+            wod=$("#wod-id-no").attr('data')
+            $.ajax({
+                type:"POST",
+                url: "/workouts/0/getSliderLevel/",
+                data: {
+                    prep_result: slider_level,
+                    wod: wod
+                },
+                dataType: 'json',
+                success: function(data){
+                    $("#rangeLevelSliderLevelVal").html(data.percentile)
+                    console.log("ajax succes!")         
+                },
+                error: function(){
+                    $("#rangeLevelSliderLevelVal").html("Failed to get level.")
+                    console.log("ajax FAIL")          
+                }
+            })
+    }
+    getWodLevel()
+    
 
 });
