@@ -1002,7 +1002,7 @@ $(document).ready(function() {
                         }else{
                             $('.log-ranking:visible').append(data.calling_group_html);
                             $('.log-ranking:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down direction-rank"><i class="fas fa-angle-double-down"></i></div>')
-                            pagedata.data('page', pageno);
+                            pagedata.data('page', "x");
                             $(".rank-dir-down:visible").remove()
                             $(".direction-down").addClass('rank-dir-down')
                             if (country_select==true){

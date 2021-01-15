@@ -834,8 +834,9 @@ ol#rank-nav li {
 
     .hidden-datefield {
         position: absolute;
+        opacity: 0;
         z-index: 1;
-        top:175px;
+        top:165px;
         left:100px;
         width: 1px;
         height: 1px;
