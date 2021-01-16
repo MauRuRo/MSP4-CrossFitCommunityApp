@@ -14,10 +14,13 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 3px solid black;
     background: url('/media/blackmat.jpg') repeat fixed;
     background-size: 300px 300px;
-    /* background-size: cover; */
-    /* background-color:#000; */
-    color: #DEC19A;
     font-family: 'Bungee';
+    position: fixed;
+    top: 0;
+    z-index: 1020;
+}
+.page-content{
+    margin-top:150px;
 }
 
 .navbar {
@@ -69,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
 #emblem-circle {
     position: absolute;
     top:93px;
-    margin-left:190px;
+    margin-left:-34px;
     margin-top:25px;
     height:60px;
     width:60px;
@@ -959,6 +962,14 @@ ol#rank-nav li {
     .popover-header{
         text-align:center;
     }
+    .popover{
+        max-height:200px;
+        overflow: scroll;
+    }
+
+    /* .row:before, .row:after{
+      display: none;
+    } */
 
 
 
@@ -1011,13 +1022,14 @@ padding-top: 50px;
 
 #emblem-circle {  
     top:42px;
-    margin-left:120px;
+    margin-left:-23px;
     height:40px;
     width:40px;
 }
+.page-content{
+    margin-top:90px;
 }
-
-
+}
 
 @media (max-width: 992px) {
     .navbar-collapse {
@@ -1028,4 +1040,5 @@ padding-top: 50px;
         top: 15px;
         position: relative;
     }
+    
 }

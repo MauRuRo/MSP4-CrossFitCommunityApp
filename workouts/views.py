@@ -73,6 +73,8 @@ def dateInput(request):
 
 
 def workouts(request, wod_id):
+    if not request.user.is_authenticated:
+        return render(request, 'home/index.html')
     # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
         wod = Workout.objects.get(workout_is_wod=True)

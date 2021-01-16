@@ -1,6 +1,5 @@
-{% load static %}
-
 <!doctype html>
+{% load static %}
 <html lang="en">
   <head>
     {% block meta %}
@@ -43,7 +42,7 @@
     <title>Crossfit Community{% block extra_title %}{% endblock %}</title>
   </head>
   <body>
-      <header class="container-fluid sticky-top" id="header-bar">
+      <header class="container-fluid" id="header-bar">
             <div class="row align-items-start">
                 <div class="col-3 col-lg-9 d-flex" id="first-head-col">
                             <nav class="navbar navbar-expand-lg navbar-dark">
@@ -93,14 +92,18 @@
                             </nav>
                     </div>
                 <div class="col-6 col-lg-3 d-flex justify-content-center" id="profile-circle-container">
-                        <a href="{% url 'home' %}"><div id="profile-circle" style="background: url({% if request.user.is_authenticated %}{{ image }}{% else %}'/media/herocommunitylogo.jpg'{% endif %}) no-repeat; background-size: cover">
-                        </div></a>
+                        <a href="{% url 'home' %}">
+                            <div id="profile-circle" style="background: url({% if request.user.is_authenticated %}{{ image }}{% else %}'/media/herocommunitylogo.jpg'{% endif %}) no-repeat; background-size: cover">
+                            </div>
+                        </a>
                         {% if request.user.is_authenticated == False %}
                         <div id="arrow-emblem-home" class="toast"></div>
                         {% endif %}
                         {% if request.user.is_authenticated %}
+                        <div>
                         <div id="emblem-circle" style="background: url('/media/herocommunitylogo.jpg') no-repeat; background-size: cover">
                         <div id="arrow-emblem" class="toast"></div>
+                        </div>
                         </div>
                         {% endif %}
                         {% if messages %}

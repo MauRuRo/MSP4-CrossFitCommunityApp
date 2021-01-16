@@ -42,6 +42,8 @@ from workouts.views import id_list, user_list
 
 def profile(request):
     """ a view to render the profile page """
+    if not request.user.is_authenticated:
+        return render(request, 'home/index.html')
     try:
         profile = UserProfile.objects.get(user=request.user)
         template = 'profiles/profile.html'
@@ -108,7 +110,7 @@ def calc_level(request):
                 avg_percentile = round(statistics.mean(percentiles))
             else:
                 avg_percentile = "none"
-            cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level":wod_level})
+            cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level": wod_level})
         avg_list = []
         for item in cat_levels:
             if item["perc"] != "none":
@@ -118,16 +120,15 @@ def calc_level(request):
         else:
             general_level = 0
         level_data = HeroLevels.objects.filter(user=request.user)
-        if level_data.count() != 0:
-            level_data.update(level_data=cat_levels)
-            level_data.update(general_level=general_level)
-        else:
-            print("GET HERE")
-            hero_levels = HeroLevels()
-            hero_levels.user = user
-            hero_levels.data_level = cat_levels
-            hero_levels.general_level = general_level
-            hero_levels.save()
+        # if level_data.count() != 0:
+        level_data.update(level_data=cat_levels)
+        level_data.update(general_level=general_level)
+        # else:
+        #     hero_levels = HeroLevels()
+        #     hero_levels.user = user
+        #     hero_levels.data_level = cat_levels
+        #     hero_levels.general_level = general_level
+        #     hero_levels.save()
         new_levels_html = loader.render_to_string(
         'profiles/includes/herolevel.html',
         {
@@ -248,10 +249,10 @@ def getLevels(user, wod):
     log_id_list = id_list(user_l, all_logs, wod.workout_type)
     # filter out all none max results from query
     all_logs_rank = all_logs.filter(id__in=log_id_list)
-    all_gender_index_user = 0
+    # all_gender_index_user = 0
     rank = 0
     prevresult = [0, 0]
-    all_gender_index = 1
+    # all_gender_index = 1
     rlistgenderall = []
     user_rank = 0
     for log in all_logs_rank:
@@ -264,10 +265,10 @@ def getLevels(user, wod):
         # prevresult[0] =log.mw_result
         rlistgenderall.append([log.pk, rank])
         if log.user == user:
-            all_gender_index_user = all_gender_index
+            # all_gender_index_user = all_gender_index
             user_rank = rank
-        else:
-            all_gender_index += 1
+        # else:
+            # all_gender_index += 1
     if user_rank != 0:
         last_rank = rlistgenderall[-1][1]
         percentile = round((1-(user_rank/last_rank)) * 100)
