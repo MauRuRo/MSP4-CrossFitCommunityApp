@@ -446,7 +446,7 @@ label[for='image-clear_id'] {
     overflow: overlay;
     max-height: none;
     max-height: 400px;
-    padding: 0 8px 8px 8px;
+    padding: 0 8px 8px 8px!important;
 }
 
 .block-header {
@@ -966,11 +966,17 @@ ol#rank-nav li {
         max-height:200px;
         overflow: scroll;
     }
-
-    /* .row:before, .row:after{
-      display: none;
-    } */
-
+    .week-low,
+    .month-low {
+        color:red;
+    }
+    .week-high,
+    .month-high{
+        color:blue;
+    }
+    .year{
+        color:grey;
+    }
 
 
 /* MEDIAQUERIES */

@@ -11,5 +11,7 @@ urlpatterns = [
     # path('logPopulation/', views.logPopulation, name='logPopulation'),
     # path('deleteLogs/', views.deleteLogs, name='deleteLogs'),
     path('calc_level/', views.calc_level, name='calc_level'),
-    path('leveler/', views.leveler, name='leveler'),
+    # path('leveler/', views.leveler, name='leveler'),
+    path('getPersonalHistory/', views.getPersonalHistory, name='getPersonalHistory'),
+    
 ]

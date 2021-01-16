@@ -3,7 +3,7 @@ from django.shortcuts import (
 )
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import UserProfile, User, HeroLevels
-from workouts.models import Workout, Log
+from workouts.models import Workout, Log, MemberComment
 from allauth.account.models import EmailAddress
 from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
@@ -23,6 +23,8 @@ import stripe
 import json
 import statistics
 from workouts.views import id_list, user_list
+from django.template import loader
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # @require_POST
 # def cache_payment_create_profile(request):
@@ -57,30 +59,35 @@ def profile(request):
         # print(level_data)
         cat_levels = level_data
         categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
+        year_date = date.today() - timedelta(days=365)
+        month_date = date.today() - timedelta(days=30)
+        week_date = date.today() - timedelta(days=7)
+        user_logs_year = Log.objects.filter(user=request.user).filter(date__gt=year_date).count()
+        user_logs_month = Log.objects.filter(user=request.user).filter(date__gt=month_date).count()
+        user_logs_week = Log.objects.filter(user=request.user).filter(date__gt=week_date).count()
+        if (user_logs_year/12) > user_logs_month:
+            perf_month = "low"
+        else:
+            perf_month = "high"
+        if (user_logs_year/52) > user_logs_week:
+            perf_week = "low"
+        else:
+            perf_week = "high"
         context = {
             'profile': profile,
             'form': form,
             'cat_levels': cat_levels,
             'general_level': general_level,
-            'categories': categories
+            'categories': categories,
+            "year": user_logs_year,
+            "month": user_logs_month,
+            "week": user_logs_week,
+            "perfm": perf_month,
+            "perfw": perf_week            
         }
         return render(request, template, context)
     except UserProfile.DoesNotExist:
         return redirect(reverse('create_profile'))
-
-
-def leveler(request):
-    level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Body Weight", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Heavy", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Light", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Long", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Speed", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Endurance", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}]
-    HeroLevels.objects.all().update(level_data=level_data)
-    # users = User.objects.all()
-    # for user in users:
-    #     hero_l = HeroLevels()
-    #     hero_l.user = user
-    #     hero_l.general_level = 0
-    #     hero_l.level_data = [{"cat": "Power Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Olympic Lifts", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Body Weight", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Heavy", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Light", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Long", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Speed", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}, {"cat": "Endurance", "perc": "none", "acc": "none", "wod_level": [{"wod": "none", "wodperc": "none", "wodpk": 0}]}]
-    #     hero_l.save()
-    print("DONE")
-    return HttpResponse()
 
 
 @csrf_exempt
@@ -275,3 +282,45 @@ def getLevels(user, wod):
     else:
         percentile = None
     return percentile
+
+
+@csrf_exempt
+def getPersonalHistory(request):
+    page = request.POST["page"]
+    # create list of all user id's
+    member_comments = MemberComment.objects.filter(log_id__user=request.user)
+    all_logs = Log.objects.all().order_by('-date')
+    calling_group = all_logs.filter(user=request.user)
+    # user_logs[:25]
+    # check for superuser
+    no_page = False
+    superuser = False
+    if request.user.is_superuser:
+        superuser = True
+    profile = request.user
+    results_per_page = 25
+    paginator_calling_group = Paginator(calling_group, results_per_page)
+    try:
+        calling_group = paginator_calling_group.page(page)
+    except PageNotAnInteger:
+        calling_group = paginator_calling_group.page(2)
+    except EmptyPage:
+        print("ERROR LAST PAGE")
+        calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
+        no_page = True
+    calling_group_html = loader.render_to_string(
+        'profiles/includes/personal_history.html',
+        {
+        'h_group': calling_group,
+        'member_comments':member_comments,
+        'superuser': superuser,
+        "profile": profile,
+        "no_page": no_page
+        }
+    )
+    # package output data and return it as a JSON object
+    output_data = {
+        'calling_group_html': calling_group_html,
+        'has_next': calling_group.has_next()
+    }
+    return JsonResponse(output_data)

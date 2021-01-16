@@ -569,7 +569,7 @@ def loopList(request):
     output_data = {
         'calling_group_html': calling_group_html,
         'has_next': calling_group.has_next(),
-        "no_page":no_page
+        "no_page": no_page
     }
     return JsonResponse(output_data)
 
