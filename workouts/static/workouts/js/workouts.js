@@ -1402,4 +1402,3 @@ $(document).ready(function() {
                 $(this).html(`<div class='display-month'>${month}</div><div class='display-day'>${day}</div>`)
             })
         }
-        export { dateStyling };

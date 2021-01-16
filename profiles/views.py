@@ -65,6 +65,9 @@ def profile(request):
         user_logs_year = Log.objects.filter(user=request.user).filter(date__gt=year_date).count()
         user_logs_month = Log.objects.filter(user=request.user).filter(date__gt=month_date).count()
         user_logs_week = Log.objects.filter(user=request.user).filter(date__gt=week_date).count()
+        pry = Log.objects.filter(user=request.user).filter(date__gt=year_date).filter(personal_record=True).count()
+        prm = Log.objects.filter(user=request.user).filter(date__gt=month_date).filter(personal_record=True).count()
+        prw = Log.objects.filter(user=request.user).filter(date__gt=week_date).filter(personal_record=True).count()
         if (user_logs_year/12) > user_logs_month:
             perf_month = "low"
         else:
@@ -83,7 +86,10 @@ def profile(request):
             "month": user_logs_month,
             "week": user_logs_week,
             "perfm": perf_month,
-            "perfw": perf_week            
+            "perfw": perf_week     ,
+            "pry": pry,
+            "prm": prm,
+            "prw": prw       
         }
         return render(request, template, context)
     except UserProfile.DoesNotExist:

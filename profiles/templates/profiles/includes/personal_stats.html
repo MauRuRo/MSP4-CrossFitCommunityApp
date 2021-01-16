@@ -2,10 +2,21 @@
     <div class="row">
     <h4 class="block-title">Workout STATS</h4>
         <ul class="list-unstyled profile-info-list">
-            <li>Workouts this Week: <span class="week-{{ perfw }}">{{ week }}</span></li>
-            <li>Workouts this Month: <span class="month-{{ perfm }}">{{ month }}</span></li>
-            <li>Workouts this Year: <span class="year">{{ year }}</span></li>
-            <li>You're doing great!</li>
+            <li>Week: <span class="week-{{ perfw }}">{{ week }} / PR: {{ prw }}</span></li>
+            <li>Month: <span class="month-{{ perfm }}">{{ month }} / PR: {{ prm }}</span></li>
+            <li>Year: <span class="year">{{ year }} / PR: {{ pry }}</span></li>
         </ul>
+    </div>
+    <div class="row row-stats justify-content-center">
+        {% if perfw == "high" and perfm == "high" %}
+        <div class="col-12 d-flex justify-content-center"><div id="greatjob"></div></div>
+        <div class="col-12 d-flex justify-content-center"><h6>You're doing great!</h6></div>
+        {% elif perfw == "low" and perfm == "high" or perfw == "high" and perfm == "low" %}
+        <div class="col-12 d-flex justify-content-center"><div id="coach"></div></div>
+        <div class="col-12 d-flex justify-content-center"><h6>Keep it up!</h6></div>
+        {% else %}
+        <div class="col-12 d-flex justify-content-center"><div id="drill-seargent"></div></div>
+        <div class="col-12 d-flex justify-content-center"><h6>Get back on that horse!</h6></div>
+        {% endif %}
     </div>
 </div>

@@ -977,6 +977,28 @@ ol#rank-nav li {
     .year{
         color:grey;
     }
+    .row-stats h6{
+        text-align:center;
+        margin-top: 10px;
+    }
+    #greatjob{
+        background: url('/media/greatjob.gif') no-repeat;
+        background-size: contain;
+        width:300px;
+        height:300px;
+    }
+    #coach{
+        background: url('/media/coach.gif') no-repeat;
+        background-size: contain;
+        width:245px;
+        height:245px;
+    }
+    #drill-seargent{
+        background: url('/media/drillseargant.gif') no-repeat;
+        background-size: contain;
+        width:300px;
+        height:150px;
+    }
 
 
 /* MEDIAQUERIES */
