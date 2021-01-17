@@ -103,6 +103,7 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 5px;
     background-color: white;
     box-shadow: inset 0px 0px 7px #000;
+    margin-bottom: 15px;
 }
 
 #id_user_comment {
@@ -977,28 +978,26 @@ ol#rank-nav li {
     .year{
         color:grey;
     }
-    .row-stats h6{
+    .row-stats h5{
         text-align:center;
         margin-top: 10px;
     }
     #greatjob{
-        background: url('/media/greatjob.gif') no-repeat;
-        background-size: contain;
-        width:300px;
-        height:300px;
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
     }
     #coach{
-        background: url('/media/coach.gif') no-repeat;
-        background-size: contain;
-        width:245px;
-        height:245px;
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
     }
     #drill-seargent{
-        background: url('/media/drillseargant.gif') no-repeat;
-        background-size: contain;
-        width:300px;
-        height:150px;
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
     }
+    
 
 
 /* MEDIAQUERIES */

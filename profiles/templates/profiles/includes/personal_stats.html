@@ -9,14 +9,15 @@
     </div>
     <div class="row row-stats justify-content-center">
         {% if perfw == "high" and perfm == "high" %}
-        <div class="col-12 d-flex justify-content-center"><div id="greatjob"></div></div>
-        <div class="col-12 d-flex justify-content-center"><h6>You're doing great!</h6></div>
+        <img src="/media/greatjob.gif" alt="Great Job!" id="greatjob">
+        <!-- <img src="/media/greatjob.gif" alt="Great Job!" id="greatjob"> -->
+        <div class="col-12 d-flex justify-content-center"><h5>You're doing great!</h5></div>
         {% elif perfw == "low" and perfm == "high" or perfw == "high" and perfm == "low" %}
-        <div class="col-12 d-flex justify-content-center"><div id="coach"></div></div>
-        <div class="col-12 d-flex justify-content-center"><h6>Keep it up!</h6></div>
+        <img src="/media/coach.gif" alt="coach" id="coach">
+        <div class="col-12 d-flex justify-content-center"><h5>Keep it up!</h5></div>
         {% else %}
-        <div class="col-12 d-flex justify-content-center"><div id="drill-seargent"></div></div>
-        <div class="col-12 d-flex justify-content-center"><h6>Get back on that horse!</h6></div>
+        <img src="/media/drillseargant.gif" alt="drill-seargent" id="drill-seargent">
+        <div class="col-12 d-flex justify-content-center"><h5>Get back on that horse!</h5></div>
         {% endif %}
     </div>
 </div>
