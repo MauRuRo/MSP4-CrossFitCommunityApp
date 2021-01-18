@@ -1,35 +1,43 @@
 {% load calc_functions %}
-<div class="block-header sticky-top justify-content-center bh-community">
-    <h4 class="block-title">Groups</h4>
-    <!-- <div class="row justify-content-center block-info-text" id="group-main-info">
-        <p>Click group to select as reference for the rest of the website, or check out it's stats and info.</p>
-    </div>     -->
+<div class="block-header sticky-top row justify-content-center bh-community">
+    <h4 class="block-title">Groups</h4><p><i class="fas fa-info-circle" id="level-info-modal"></i></p>
 </div>
+<div class="row justify-content-center block-info-text" id="level-info" hidden>
+    <p>Set filters for website.</p>
+</div>    
 <div class="row justify-content-center group-title"><h5>Location</h5></div>
 <div class="row justify-content-center row-groups location-groups">
-    <div class="col-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center selected-group" role="button" tabindex="0" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p class='p-popover'><i class='far fa-check-circle'></i>   <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i>  <i class='fas fa-info-circle'></i></p>" data-bs-html="true"><h5>Global</h5></div>
-        <!-- <button class="btn btn-black rounded-1">Set Group</button> -->
+    <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
+        <div class="group-select d-flex align-items-center justify-content-center selected-group"><h5>Global</h5></div>
     </div>    
-    <div class="col-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center" role="button" tabindex="0" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p class='p-popover'><i class='far fa-check-circle'></i>   <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i>  <i class='fas fa-info-circle'></i></p>" data-bs-html="true"><h5>{{ profile.get_country_display }}</h5></div>
+    <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
+        <div class="group-select d-flex align-items-center justify-content-center"><h5>{{ profile.get_country_display }}</h5></div>
     </div>
-    <div class="col-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center" role="button" tabindex="0" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p class='p-popover'><i class='far fa-check-circle'></i>   <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i>  <i class='fas fa-info-circle'></i></p>" data-bs-html="true"><h5>{{ profile.town_or_city }}</h5></div>
+    <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
+        <div class="group-select d-flex align-items-center justify-content-center"><h5>{{ profile.town_or_city }}</h5></div>
     </div>
 </div>
 <div class="row justify-content-center group-title"><h5>Age</h5></div>
 <div class="row justify-content-center row-groups age-groups">
-    <div class="col-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center" role="button" tabindex="0" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p class='p-popover'><i class='far fa-check-circle'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i>  <i class='fas fa-info-circle'></i></p>" data-bs-html="true"><h5>{{  profile.birthdate | calc_age }}Your age group</h5></div>
+    <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
+        <div class="group-select d-flex align-items-center justify-content-center"><h5>{{  age_group }}</h5></div>
     </div>
 </div>
 <div class="row justify-content-center group-title"><h5>Custom</h5></div>
-<div class="row justify-content-center row-groups custom-groups">    
-    <div class="col-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center" role="button" tabindex="0" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p class='p-popover'><i class='far fa-check-circle'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i>  <i class='fas fa-info-circle'></i></p>" data-bs-html="true"><h5>Custom Group</h5></div>
+<div class="row justify-content-center row-groups custom-groups">
+    {% for group in groups %}
+    <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
+        <div class="row g-0 justify-content-center custom-row">
+            <div class="group-select d-flex align-items-center justify-content-center" id="{{ group.pk }}"><h5>{{ group.name }}</h5></div>
+        <div class="group-options" hidden>
+            <p class='p-popover'>{% if request.user == group.admin %}<i class='far fa-edit edit-group'>{% endif %}</i><i class='far fa-trash-alt delete-group'></i></p>
+        </div>
+        </div>
     </div>
-    <div class="col-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center add-group"><h5>Add Group +</h5></div>
+    {% endfor %}
+    <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
+        <div class="group-select d-flex align-items-center justify-content-center add-group"><h5>Make Group +</h5></div>
     </div>
 </div>
+        <!-- <div class="group-select d-flex align-items-center justify-content-center" role="button" tabindex="0" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="<p class='p-popover'><i class='far fa-check-circle'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>" data-bs-html="true" id="{{ group.pk }}"><h5>{{ group.name }}</h5></div> -->
+        

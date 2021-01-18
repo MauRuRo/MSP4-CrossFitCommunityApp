@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
+from .models import CustomGroup
 from profiles.models import UserProfile, User, HeroLevels
 from workouts.models import Workout, Log, MemberComment
 from allauth.account.models import EmailAddress
@@ -22,9 +23,28 @@ import statistics
 from workouts.views import id_list, user_list
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from profiles.templatetags.calc_functions import calc_age
+import math
+
+
+def roundup(x):
+    return int(math.ceil(x / 10)) * 10
+
+
+def rounddown(x):
+    return int(math.floor(x / 10)) * 10
 
 
 def community(request):
     template = "community/community.html"
-    context={}
+    groups = CustomGroup.objects.filter(group_users=request.user)
+    age = calc_age(request.user.userprofile.birthdate)
+    age_bottom = str(rounddown(age))
+    age_top = str(roundup(age))
+    age_group = age_bottom + "-" + age_top + " years"
+
+    context = {
+        'groups': groups,
+        'age_group': age_group
+        }
     return render(request, template, context)

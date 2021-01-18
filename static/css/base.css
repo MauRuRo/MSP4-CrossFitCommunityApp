@@ -652,7 +652,7 @@ label[for='image-clear_id'] {
 .block-title{
     text-align:center;
     cursor: pointer;
-    width:100%;
+    /* width:100%; */
 }
 
 .his-wods,
@@ -1000,11 +1000,17 @@ ol#rank-nav li {
         width: 100%;
         height: 100%;
     }
+
+    /* COMMUNITY */
     .bh-community{
         margin-top:-8px;
     }
-
-    /* COMMUNITY */
+    .bh-community p{
+        margin-bottom:5px;
+    }
+    .bh-community h4{
+        margin-bottom:5px;
+    }
     .row-groups .col-6,
     .row-groups .col-md-4{
         margin-bottom:10px;
@@ -1022,9 +1028,14 @@ ol#rank-nav li {
         text-align: center;
         word-break: break-word;
         box-shadow:2px 2px 2px grey;
+        cursor:pointer;
     }
     .add-group{
         background-color: grey;
+    }
+    .disabled-group{
+        background-color:#ffc107;
+        color:grey;
     }
     .group-title{
         color:grey;
@@ -1043,6 +1054,23 @@ ol#rank-nav li {
     }
     .selected-group{
         background-color:blue;
+    }
+    .custom-row {
+        width:100%;
+        height:100%;
+    }
+    .group-options{
+        width: 54px;
+        margin-left: calc(100% - 60px);
+        background-color:grey;
+        color:white;
+        border-bottom-left-radius:5px;
+        border-bottom-right-radius: 5px;
+        font-size: 0.7rem;
+        padding: 2px 10px;
+    }
+    .edit-group{
+        margin-right:8px;
     }
 
 /* MEDIAQUERIES */
