@@ -10,14 +10,17 @@
         <div class="row h-100 align-items-center">
             <div class="col-sm-6 col-lg-3 content-block order-2 order-sm-3 align-self-start">
                 <div class="fillblock p-2">
+                    {% include 'community/includes/groupstats.html' %} 
                 </div>
             </div>
             <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
-                <div class="fillblock p-2" id="level-block">
+                <div class="fillblock p-2">
+                    {% include 'community/includes/groupmain.html' %} 
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 content-block order-3 order-sm-2 order-lg-1 align-self-start">
-                <div class="fillblock p-2">
+                <div class="fillblock p-2 block-info">
+                    {% include 'community/includes/groupmembers.html' %} 
                 </div>
             </div>
         </div>
@@ -26,12 +29,13 @@
 
 {% block postloadjs %}
 {{ block.super }}
-<!-- <script type="text/javascript">
+<script type="text/javascript" src="{% static 'community/js/community.js' %}"></script>
+<script type="text/javascript">
 $(document).ready(function(){
 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
   return new bootstrap.Popover(popoverTriggerEl) 
     })
 })
-</script> -->
+</script>
 {% endblock %}
