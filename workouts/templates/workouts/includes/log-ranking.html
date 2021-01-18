@@ -1,13 +1,13 @@
 <div class="block-header sticky-top justify-content-center">
     <h4 class="block-title">WOD Ranking</h4>
     <ol id="rank-nav">
-        <li id="rank-all-time" class="period" data-page="{{ all_men_page }}" data-pageup="{{ all_men_page }}" >Year</li>
+        <li id="rank-all-time" class="period" data-page="{{ all_men_page.down }}" data-pageup="{{ all_men_page.up }}" >Year</li>
         -
-        <li id="rank-today" class="period" data-page="{{ all_men_today_page }}" data-pageup="{{ all_men_today_page }}">Today</li>
+        <li id="rank-today" class="period" data-page="{{ all_men_today_page.down }}" data-pageup="{{ all_men_today_page.up }}">Today</li>
         |
-        <li id="rank-men" class="gender" data-page="{{ all_women_page }}" data-pageup="{{ all_women_page }}">Men</li>
+        <li id="rank-men" class="gender" data-page="{{ all_women_page.down }}" data-pageup="{{ all_women_page.up }}">Men</li>
         -
-        <li id="rank-women" class="gender" data-page="{{ all_women_today_page }}" data-pageup="{{ all_women_today_page }}">Women</li>
+        <li id="rank-women" class="gender" data-page="{{ all_women_today_page.down }}" data-pageup="{{ all_women_today_page.up }}">Women</li>
     </ol>
 </div>
         {% for r_group in rank_groups %}

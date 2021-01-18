@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from .models import CustomGroup
+from .models import CustomGroup, GroupSelect
 from profiles.models import UserProfile, User, HeroLevels
 from workouts.models import Workout, Log, MemberComment
 from allauth.account.models import EmailAddress
@@ -20,7 +20,7 @@ import urllib.request
 import stripe
 import json
 import statistics
-from workouts.views import id_list, user_list
+# from workouts.views import id_list, user_list
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from profiles.templatetags.calc_functions import calc_age
@@ -42,9 +42,40 @@ def community(request):
     age_bottom = str(rounddown(age))
     age_top = str(roundup(age))
     age_group = age_bottom + "-" + age_top + " years"
-
     context = {
         'groups': groups,
         'age_group': age_group
         }
     return render(request, template, context)
+
+
+@csrf_exempt
+def setGroupSelect(request):
+    if request.is_ajax:
+        age = request.POST["age"]
+        custom = request.POST["custom"]
+        location = request.POST["location"]
+        group_select = {"age": age, "custom": custom, "location": location}
+        try:
+            user_select = GroupSelect.objects.filter(user=request.user)
+            user_select.update(group=group_select)
+        except GroupSelect.DoesNotExist:
+            user_select = GroupSelect.objects.create(user=request.user, group=group_select)
+        data = {"message": "Success"}
+    return JsonResponse(data)
+
+
+
+# @csrf_exempt
+# def popGroup(request):
+#     group = CustomGroup.objects.get(id=1)
+#     users = User.objects.all()[1:25]
+#     user_list = []
+#     user_upload =[]
+#     for user in users:
+#         group.group_users.add(user)
+#         user_list.append(user.username)
+#     for user in group.group_users.all():
+#         user_upload.append(user.username)
+#     data = {"message": user_list, "upload": user_upload, "group": group.name}
+#     return JsonResponse(data)

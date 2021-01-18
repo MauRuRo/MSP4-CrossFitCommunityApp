@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from datetime import date, datetime, timedelta, time
+from community.models import GroupSelect, CustomGroup
 from profiles.models import UserProfile, User
 from .models import Workout, MemberComment, Log
 from .forms import LogForm, MemberCommentForm, WorkoutForm
@@ -14,6 +15,8 @@ from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from decimal import Decimal
+from profiles.templatetags.calc_functions import calc_age
+from community.views import roundup, rounddown
 # from django.template import Library
 # from django.template.defaultfilters import stringfilter
 import json
@@ -72,9 +75,44 @@ def dateInput(request):
         return JsonResponse({"error": "Date failed"}, status=400)
 
 
+def getGroupSelection(request):
+     # Determine group selection
+    group_s = GroupSelect.objects.get(user=request.user)
+    group_select = group_s.group
+    if group_select["custom"] == 'false':
+        print("HERE")
+        if group_select["location"] == "group-global":
+            print("GLOBAL")
+            select_group_logs = Log.objects.all()
+        elif group_select["location"] == "group-country":
+            print("COUNTRY")
+            select_group_logs = Log.objects.filter(user__userprofile__country=request.user.userprofile.country)
+        else:
+            print("CITY")
+            select_group_logs = Log.objects.filter(user__userprofile__town_or_city=request.user.userprofile.town_or_city)
+        if group_select["age"] != 'false':
+            print("AGE")
+            age = calc_age(request.user.userprofile.birthdate)
+            age_bottom = rounddown(age)
+            age_top = roundup(age)
+            young_age_date = date.today() - timedelta(days=age_bottom*365)
+            old_age_date = date.today() - timedelta(days=age_top*365)
+            select_group_logs = select_group_logs.filter(user__userprofile__birthdate__gt=old_age_date).filter(user__userprofile__birthdate__lte=young_age_date)
+    else:
+        print("CUSTOM")
+        custom_group = CustomGroup.objects.get(pk=group_select["custom"])
+        user_group = custom_group.group_users.all()
+        select_group_logs = Log.objects.filter(user__in=user_group)
+    return select_group_logs
+
+
 def workouts(request, wod_id):
     if not request.user.is_authenticated:
         return render(request, 'home/index.html')
+    selected_group = getGroupSelection(request)
+    # for log in selected_group:
+    #     if log.user != request.user:
+    #         print(log.user)
     # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
         wod = Workout.objects.get(workout_is_wod=True)
@@ -85,33 +123,25 @@ def workouts(request, wod_id):
         user_l = user_list()
         # check which date is exactly a year ago
         lapse_date = date.today() - timedelta(days=365)
-        # make query of all women and one of all men
-            # all_women_q = UserProfile.objects.filter(gender='F')
-            # all_men_q = UserProfile.objects.filter(gender='M')
         # get all comments
         member_comments = MemberComment.objects.all()
-        # make lists of all women/men
-            # all_women = []
-            # for woman in all_women_q:
-            #     all_women.append(woman.user.username)
-            # all_men = []
-            # for man in all_men_q:
-            #     all_men.append(man.user.username)
-        # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
-        all_logs = Log.objects.all().order_by('-date')
-        all_logs_wod = all_logs.filter(workout=wod)
-        user_logs = all_logs.filter(user=request.user)
+        # all_logs = Log.objects.all().order_by('-date')
+        # all_logs_wod = all_logs.filter(workout=wod)
+        # user_logs = all_logs.filter(user=request.user)
+        all_logs = selected_group.order_by('-date')
+        all_logs_wod = selected_group.filter(workout=wod)
+        user_logs = selected_group.filter(user=request.user)
         user_logs_wod = user_logs.filter(workout=wod)
         log_groups = [all_logs[:25], all_logs_wod[:25], user_logs[:25], user_logs_wod[:25]]
         # For rank list, find out type of wod, set proper result field and order.
         if wod.workout_type == 'FT':
-            all_logs_rank = Log.objects.filter(workout=wod).order_by('ft_result')
+            all_logs_rank = selected_group.filter(workout=wod).order_by('ft_result')
             rank_result = 'ft_result'
         elif wod.workout_type == 'AMRAP':
-            all_logs_rank = Log.objects.filter(workout=wod).order_by('-amrap_result')
+            all_logs_rank = selected_group.filter(workout=wod).order_by('-amrap_result')
             rank_result = 'amrap_result'
         else:
-            all_logs_rank = Log.objects.filter(workout=wod).order_by('-mw_result')
+            all_logs_rank = selected_group.filter(workout=wod).order_by('-mw_result')
             rank_result = 'mw_result'
         # filter out all logs that are not Rx
         filter_rx = all_logs_rank.filter(rx=True)
@@ -227,12 +257,28 @@ def workouts(request, wod_id):
             all_men_page = 1
         p_my = Paginator(all_logs_rank_men, 25)
         p_all_logs_rank_men = p_my.page(all_men_page)
+        if p_all_logs_rank_men.has_next() == False:
+            all_men_page = {"down": "x", "up": all_men_page}
+        else:
+            all_men_page = {"down": all_men_page, "up": all_men_page}
         p_wy = Paginator(all_logs_rank_women, 25)
         p_all_logs_rank_women = p_wy.page(all_women_page)
+        if p_all_logs_rank_women.has_next() == False:
+            all_women_page = {"down": "x", "up": all_women_page}
+        else:
+            all_women_page = {"down": all_women_page, "up": all_women_page}
         p_mt = Paginator(all_logs_rank_men_today, 25)
         p_all_logs_rank_men_today = p_mt.page(all_men_today_page)
+        if p_all_logs_rank_men_today.has_next() == False:
+            all_men_today_page = {"down": "x", "up": all_men_today_page}
+        else:
+            all_men_today_page = {"down": all_men_today_page, "up": all_men_today_page}
         p_wt = Paginator(all_logs_rank_women_today, 25)
         p_all_logs_rank_women_today = p_wt.page(all_women_today_page)
+        if p_all_logs_rank_women_today.has_next() == False:
+            all_women_today_page = {"down": "x", "up": all_women_today_page}
+        else:
+            all_women_today_page = {"down": all_women_today_page, "up": all_women_today_page}
         rank_groups = [p_all_logs_rank_men, p_all_logs_rank_women, p_all_logs_rank_men_today, p_all_logs_rank_women_today]
         # Get todays date and convert it to string
         date_today = date.today()
@@ -520,6 +566,7 @@ def commentMember(request):
 
 # https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
 def loopList(request):
+    selected_group = getGroupSelection(request)
     no_page = False
     wod_id = request.POST["wod"]
     wod = int(wod_id)
@@ -534,7 +581,7 @@ def loopList(request):
     profile = request.user
     # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
     called_group = request.POST["call_group"]
-    all_logs = Log.objects.all().order_by('-date')
+    all_logs = selected_group.order_by('-date')
     if called_group == "this_everybody":
         calling_group = all_logs.filter(workout=wod)
     elif called_group == "all_everybody":
@@ -575,6 +622,7 @@ def loopList(request):
 
 
 def loopListRank(request):
+    selected_group = getGroupSelection(request)
     wod_id = request.POST["wod"]
     workout = int(wod_id)
     wod = Workout.objects.get(pk=workout)
@@ -585,8 +633,8 @@ def loopListRank(request):
     # check which date is exactly a year ago
     lapse_date = date.today() - timedelta(days=365)
     # make query of all women and one of all men
-    all_women_q = UserProfile.objects.filter(gender='F')
-    all_men_q = UserProfile.objects.filter(gender='M')
+    # all_women_q = UserProfile.objects.filter(gender='F')
+    # all_men_q = UserProfile.objects.filter(gender='M')
     # get all comments
     member_comments = MemberComment.objects.all()
     # check for superuser
@@ -604,13 +652,13 @@ def loopListRank(request):
         #     all_men.append(man.user.username)
     # For rank list, find out type of wod, set proper result field and order.
     if wod.workout_type == 'FT':
-        all_logs_rank = Log.objects.filter(workout=wod).order_by('ft_result')
+        all_logs_rank = selected_group.filter(workout=wod).order_by('ft_result')
         rank_result = 'ft_result'
     elif wod.workout_type == 'AMRAP':
-        all_logs_rank = Log.objects.filter(workout=wod).order_by('-amrap_result')
+        all_logs_rank = selected_group.filter(workout=wod).order_by('-amrap_result')
         rank_result = 'amrap_result'
     else:
-        all_logs_rank = Log.objects.filter(workout=wod).order_by('-mw_result')
+        all_logs_rank = selected_group.filter(workout=wod).order_by('-mw_result')
         rank_result = 'mw_result'
     # filter out all logs that are not Rx
     filter_rx = all_logs_rank.filter(rx=True)

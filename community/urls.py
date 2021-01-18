@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.community, name='community'),
-    # path('create_profile/', views.create_profile, name='create_profile'),
+    path('setGroupSelect/', views.setGroupSelect, name='setGroupSelect'),
+    # path('popGroup/', views.popGroup, name='popGroup'),
 ]

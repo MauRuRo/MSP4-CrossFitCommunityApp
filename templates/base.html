@@ -137,6 +137,7 @@
       {% block content %}
       {% endblock %}
       <div hidden id="user-id-no" data="{{ profile.user.pk }}"></div>
+      <div hidden id="group-select-data" data="{{ group_select }}"></div>
 
       {% block postloadjs %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>

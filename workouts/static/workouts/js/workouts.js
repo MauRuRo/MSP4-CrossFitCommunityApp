@@ -174,7 +174,7 @@ $(document).ready(function() {
             }
             period = 'alltime'
             scrollMyRank()
-            ranker()  
+            ranker() 
             directionArrow()   
                  
         })
@@ -685,6 +685,7 @@ $(document).ready(function() {
                     $("#block-1").animate({
                         scrollTop: ($(memberid).offset().top - scroll)
                     }, 800)
+                    directionArrow()
                 }catch{
                 }              
             };
@@ -947,7 +948,9 @@ $(document).ready(function() {
                     $(".rank-dir-down:visible").html('<i class="fas fa-circle-notch fa-spin"></i>')
                     var pageno = pagedata.data('page')
                     if (pageno == "x"){
+                        console.log("check x")
                         scroll_constant = true
+                        $(".rank-dir-down:visible").remove()
                         return;
                     } 
                     pageno = pageno + 1;
@@ -956,6 +959,7 @@ $(document).ready(function() {
                     var pageno = pagedata.data('pageup') - 1;
                     if (pageno==0){
                         scroll_constant = true
+                        $(".rank-dir-up:visible").remove()
                         return;
                     }
                 }
@@ -1057,34 +1061,42 @@ $(document).ready(function() {
         ranker()
         
         function directionArrow(){
-            $(".direction-up").each(function(){
-                let pagedata = ''
+            console.log("directionArrowfunc")
+            let pagedata = ''
                 if ($("#rank-all-time").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
-                        pagedata = $("#rank-all-time")
-                    }else if ($("#rank-today").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
-                        pagedata = $("#rank-today")
-                    }else if ($("#rank-all-time").css("text-decoration").split(" ")[0] == "underline" && $("#rank-women").css("text-decoration").split(" ")[0] == "underline") {
-                        pagedata = $("#rank-men")
-                    }else{
-                        pagedata = $("#rank-women")
-                    }
+                    pagedata = $("#rank-all-time")
+                }else if ($("#rank-today").css("text-decoration").split(" ")[0] == "underline" && $("#rank-men").css("text-decoration").split(" ")[0] == "underline"){
+                    pagedata = $("#rank-today")
+                }else if ($("#rank-all-time").css("text-decoration").split(" ")[0] == "underline" && $("#rank-women").css("text-decoration").split(" ")[0] == "underline") {
+                    pagedata = $("#rank-men")
+                }else{
+                    pagedata = $("#rank-women")
+                }
+            $(".direction-up").each(function(){
+                
                 if (pagedata.data('pageup') == 1) {
                     $(this).hide()
                 }else{
                     $(this).show()
                 }
-            })
-            if ($(".log-ranking").children(".rank-card:visible").length < 1){
-                $(".rank-dir-down").hide()
-            }else{
-                $(".rank-dir-down").show()
+                })
+                if(pagedata.data('page')=="x"){
+                    console.log("removedown")
+                    $(".direction-down:visible").remove()
+                }
+
+                if ($(".log-ranking").children(".rank-card:visible").length < 1){
+                    $(".rank-dir-down").hide()
+                }else{
+                    $(".rank-dir-down").show()
+                }
+                if ($(""))
+                if ($(".log-history").children(".rank-card:visible").length < 1){
+                    $(".his-dir-down").hide()
+                }else{
+                    $(".his-dir-down").show()
+                }
             }
-            if ($(".log-history").children(".rank-card:visible").length < 1){
-                $(".his-dir-down").hide()
-            }else{
-                $(".his-dir-down").show()
-            }
-        }
         directionArrow()
 
         $("#toggle-workouts-button").click(function(){

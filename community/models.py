@@ -11,3 +11,11 @@ class CustomGroup(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class GroupSelect(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = JSONField()
+
+    def __str__(self):
+        return ("group" + self.user.username)

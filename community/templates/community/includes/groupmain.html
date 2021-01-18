@@ -8,19 +8,19 @@
 <div class="row justify-content-center group-title"><h5>Location</h5></div>
 <div class="row justify-content-center row-groups location-groups">
     <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center selected-group"><h5>Global</h5></div>
+        <div class="group-select d-flex align-items-center justify-content-center selected-group" id="group-global"><h5>Global</h5></div>
     </div>    
     <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center"><h5>{{ profile.get_country_display }}</h5></div>
+        <div class="group-select d-flex align-items-center justify-content-center" id="group-country"><h5>{{ profile.get_country_display }}</h5></div>
     </div>
     <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center"><h5>{{ profile.town_or_city }}</h5></div>
+        <div class="group-select d-flex align-items-center justify-content-center" id="group-city"><h5>{{ profile.town_or_city }}</h5></div>
     </div>
 </div>
 <div class="row justify-content-center group-title"><h5>Age</h5></div>
 <div class="row justify-content-center row-groups age-groups">
     <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center align-items-center">
-        <div class="group-select d-flex align-items-center justify-content-center"><h5>{{  age_group }}</h5></div>
+        <div class="group-select d-flex align-items-center justify-content-center" id="group-age"><h5>{{  age_group }}</h5></div>
     </div>
 </div>
 <div class="row justify-content-center group-title"><h5>Custom</h5></div>

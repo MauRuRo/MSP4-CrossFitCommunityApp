@@ -23,6 +23,7 @@ import statistics
 from workouts.views import id_list, user_list
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .templatetags.calc_functions import calc_age
 
 # @require_POST
 # def cache_payment_create_profile(request):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomGroup
+from .models import CustomGroup, GroupSelect
 from django.contrib.auth.models import User
 
 
@@ -11,3 +11,8 @@ class CustomGroupAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(CustomGroup, CustomGroupAdmin)
+
+class GroupSelectAdmin(admin.ModelAdmin):
+    fields = ('user', 'group')
+
+admin.site.register(GroupSelect, GroupSelectAdmin)
