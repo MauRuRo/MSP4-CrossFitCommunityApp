@@ -103,68 +103,7 @@ $(document).ready(function(){
            }
            
        })
-       $("#his-me").click(function(){
-           console.log("check")
-           lazyLoadLogsPHis()
-       })
-let scroll_constant = true
-function lazyLoadLogsPHis() {
-                let pagedata = $("#his-me")
-                $(".his-dir-down:visible").html('<i class="fas fa-circle-notch fa-spin"></i>')            
-                var pageno = pagedata.data('page');
-                if (pageno == "x"){
-                    scroll_constant = true
-                    return;
-                }
-                var page = 2;
-                $.ajax({
-                type: 'POST',
-                url: '/profile/getPersonalHistory/',
-                data: {
-                    page: pageno,
-                },
-                dataType: "json",
-                success: function(data) {
-                    if (data.no_page==true){
-                        scroll_constant = true
-                        $(".his-dir-down:visible").remove()
-                        return;
-                    }
-                    // if there are still more pages to load,
-                    // add 1 to the "Load More Posts" link's page data attribute
-                    // else hide the link
-                        // if (data.has_next) {
-                        //     pagedata.data('page', pageno+1);
-                        // } else {
-                        //     pagedata.data('page', "x");
-                        // }
-                    // append html to the posts div
-                    let appendlist
-                    appendlist = $(".log-phistory:visible").attr("class").split(" ")[1]
-                    $('.log-phistory:visible').append(data.calling_group_html);
-                    $('.log-phistory:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down-his direction-his"><i class="fas fa-angle-double-down"></i></div>')
-                    // if (pagedata.data('page')=="x"){
-                    //     $(".direction-down-his:visible").remove()
-                    // }else{
-                    //     $(".his-dir-down:visible").remove()
-                    //     $(".direction-down-his").addClass('his-dir-down')
-                    // }
-                    $('.extra-log-info').hide()
-                    dateStyling($(".his-date-new"))
-                    $(".his-date-new").addClass("his-date")
-                    $(".his-date-new").removeClass("his-date-new")
-                    // $(".log-his-XX").addClass(appendlist+"X")
-                    // $(".log-his-XX").removeClass("log-his-XX")
-                    // scroll_constant = true
-                },
-                error: function(xhr, status, error) {
-                }
-                });
-                
-        };
-
 
 
 
 })
-// import { dateStyling } from '/static/js/workouts.js';

@@ -1,6 +1,4 @@
-from django.shortcuts import (
-    render, redirect, reverse
-)
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import UserProfile, User, HeroLevels
 from workouts.models import Workout, Log, MemberComment
@@ -99,6 +97,7 @@ def profile(request):
 @csrf_exempt
 def calc_level(request):
     if request.is_ajax():
+        users = User.objects.all()
         categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
         cat_levels = []
@@ -136,6 +135,8 @@ def calc_level(request):
         # if level_data.count() != 0:
         level_data.update(level_data=cat_levels)
         level_data.update(general_level=general_level)
+            
+
         # else:
         #     hero_levels = HeroLevels()
         #     hero_levels.user = user
