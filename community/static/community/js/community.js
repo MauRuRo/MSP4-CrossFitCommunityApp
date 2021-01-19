@@ -106,6 +106,11 @@ $(document).ready(function(){
                 }
                 console.log(load_constant)
                 scroll_constant = true
+                console.log("going for it")
+                if ($(".search-wait:visible").length == 0 && $(".rank-card:visible").length == 0) {
+                    console.log("check here")
+                    $('.group-members:visible').append("<div class='row justify-content-center no-result-search'>No members found.</div>")
+                }
             },
             error: function(){
                 console.log("ajax FAIL")          
@@ -205,6 +210,7 @@ $(document).ready(function(){
     })
     $(document).on("input", ".search-member", function(e){
         load_constant += 1
+        $(".no-result-search").hide()
         $(".search-wait").removeAttr('hidden').show()
         if ($(".search-member").val()!=""){
             $(".group-dir-down").hide()
@@ -224,6 +230,7 @@ $(document).ready(function(){
                 }
             })
         }else{
+            $(".search-wait").hide()
             $(".rank-card").show()
             $(".group-dir-down").show()
             $(".search-member-item").remove()
