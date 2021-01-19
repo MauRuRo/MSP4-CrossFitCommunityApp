@@ -716,6 +716,7 @@ ol#rank-nav li {
         color:grey;
         padding:3px 15px;
         text-align:center;
+        margin-top:-10px;
     }
     #level-info-modal{
         color:grey;

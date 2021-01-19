@@ -104,8 +104,13 @@ def setGroupSelect(request):
 
 def getGroupSelection(request):
      # Determine group selection
-    group_s = GroupSelect.objects.get(user=request.user)
-    group_select = group_s.group
+    try:
+        group_s = GroupSelect.objects.get(user=request.user)
+        group_select = group_s.group
+    except GroupSelect.DoesNotExist:
+        print("GROUP SELECT DOES NOT EXIST (LOGS)")
+        group_select = {"age": "false", "custom": "false", "location": "group-global"}
+        gs_obj = GroupSelect.objects.create(user=request.user, group=group_select)
     if group_select["custom"] == 'false':
         if group_select["location"] == "group-global":
             select_group_logs = Log.objects.all()
@@ -128,9 +133,13 @@ def getGroupSelection(request):
 
 
 def getGroupSelectionUsers(request):
-     # Determine group selection
-    group_s = GroupSelect.objects.get(user=request.user)
-    group_select = group_s.group
+    # Determine group selection
+    try:
+        group_s = GroupSelect.objects.get(user=request.user)
+        group_select = group_s.group
+    except GroupSelect.DoesNotExist:
+        group_select = {"age": "false", "custom": "false", "location": "group-global"}
+        gs_obj = GroupSelect.objects.create(user=request.user, group=group_select)
     if group_select["custom"] == 'false':
         if group_select["location"] == "group-global":
             select_group_users = User.objects.all()
@@ -146,7 +155,6 @@ def getGroupSelectionUsers(request):
             old_age_date = date.today() - timedelta(days=age_top*365)
             select_group_users = select_group_users.filter(userprofile__birthdate__gt=old_age_date).filter(userprofile__birthdate__lte=young_age_date)
     else:
-        print("CUSTOM")
         custom_group = CustomGroup.objects.get(pk=group_select["custom"])
         user_group = custom_group.group_users.all()
         select_group_users = user_group
@@ -233,8 +241,6 @@ def searchMember(request):
     for user in selected_group:
         name = user.userprofile.full_name.lower()
         if searchtext in name:
-            if user.userprofile.full_name == "Ruben de Roos":
-                print("RUBEN DE ROOS")
             search_group.append(user)
     calling_group_html = loader.render_to_string(
         'community/includes/groupmembersearch.html',

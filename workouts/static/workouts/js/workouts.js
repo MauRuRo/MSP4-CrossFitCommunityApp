@@ -1404,8 +1404,11 @@ $(document).ready(function() {
                     day = date.split(". ")[1].split(",")[0]
                     let year = date.split(", ")[1].slice(-2)
                 }catch{
-                    month = date.split(" ")[0].slice(0, -1)
-                    if (month == "Apri") {
+                    month = date.split(" ")[0]
+                    if (month != "May"){
+                        month = month.slice(0, -1)
+                    }
+                    if (month == "Apri" || month == "Marc") {
                         month = month.slice(0, -1)
                     }
                     day = date.split(" ")[1].split(",")[0]

@@ -6,18 +6,20 @@ $(document).ready(function(){
     group_data = group_data.toString()
     group_data = JSON.parse(group_data)
     $(".selected-group").removeClass('selected-group').addClass('disabled-group')
-    if (group_data["custom"] != "false"){
+    if (group_data["custom"] != false){
         customgroup_id = "#" + group_data["custom"]
         $(customgroup_id).addClass('selected-group')
     } else {
         $(".disabled-group").removeClass("disabled-group")
-        if (group_data["age"] != "false"){
+        if (group_data["age"] != false){
             $("#group-age").addClass('selected-group')
         }
         if (group_data["location"] == "group-city"){
             $("#group-city").addClass('selected-group')
         }else if (group_data["location"] == "group-country"){
             $("#group-country").addClass('selected-group')
+        }else{
+            $("#group-global").addClass('selected-group')
         }
     }
     $(document).on("click", "#level-info-modal", function(){
@@ -62,22 +64,22 @@ $(document).ready(function(){
         }
         setGroupSelection()
     })
-    $(document).on("click", ".fa-check-circle", function(){
-        $(".row-groups:not(.custom-groups)").find(".selected-group").removeClass("selected-group").addClass("disabled-group")
-        $(".group-clicked").addClass("selected-group")
-        $(".group-clicked").attr('data-bs-content', "<p class='p-popover'><i class='far fa-window-close'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>")
-    })
-    $(document).on("click", ".fa-window-close", function(){
-        $(".disabled-group").removeClass("disabled-group").addClass("selected-group")
-        $(".group-clicked").closest(".row-groups").find(".selected-group").removeClass("selected-group")
-        $(".group-clicked").attr('data-bs-content', "<p class='p-popover'><i class='far fa-check-circle'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>")
-    })
+    // $(document).on("click", ".fa-check-circle", function(){
+    //     $(".row-groups:not(.custom-groups)").find(".selected-group").removeClass("selected-group").addClass("disabled-group")
+    //     $(".group-clicked").addClass("selected-group")
+    //     $(".group-clicked").attr('data-bs-content', "<p class='p-popover'><i class='far fa-window-close'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>")
+    // })
+    // $(document).on("click", ".fa-window-close", function(){
+    //     $(".disabled-group").removeClass("disabled-group").addClass("selected-group")
+    //     $(".group-clicked").closest(".row-groups").find(".selected-group").removeClass("selected-group")
+    //     $(".group-clicked").attr('data-bs-content', "<p class='p-popover'><i class='far fa-check-circle'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>")
+    // })
     $(document).on("click", ".fa-edit", function(){
     })
     $(document).on("click", ".fa-trash-alt", function(){
     })
-    $(document).on("click", ".fa-info-circle", function(){
-    })
+    // $(document).on("click", ".fa-info-circle", function(){
+    // })
     
     if ($(".location-groups").find(".selected-group").length == 0 && $(".location-groups").find(".disabled-group").length == 0){
         $("#group-global").addClass("selected-group")
@@ -85,7 +87,6 @@ $(document).ready(function(){
     let load_constant = 0
     function searchMember(input){
         $(".search-member-item").remove()
-        // console.log(input)
         scroll_constant = false
         $.ajax({
             type: "POST",
@@ -95,7 +96,6 @@ $(document).ready(function(){
             },
             dataType: 'json',
             success: function(data){
-                console.log(load_constant)
                 if (load_constant < 2){
                     $('.group-members:visible').append(data.calling_group_html);
                 }
@@ -104,11 +104,8 @@ $(document).ready(function(){
                     load_constant = 0
                     $(".search-wait").hide()
                 }
-                console.log(load_constant)
                 scroll_constant = true
-                console.log("going for it")
                 if ($(".search-wait:visible").length == 0 && $(".rank-card:visible").length == 0) {
-                    console.log("check here")
                     $('.group-members:visible').append("<div class='row justify-content-center no-result-search'>No members found.</div>")
                 }
             },
@@ -147,7 +144,6 @@ $(document).ready(function(){
             success: function(data){
                 $(".block-stats").html(data.stats_html)
                 $(".block-members").html(data.members_html)
-                console.log(data.has_next)
                 if (data.has_next == false){
                     $("#members-title").data('page', 'x')
                     $(".group-dir-down").remove()
@@ -235,7 +231,6 @@ $(document).ready(function(){
             $(".group-dir-down").show()
             $(".search-member-item").remove()
             load_constant = 0
-            console.log(load_constant)
         }
     })
 
