@@ -6,5 +6,7 @@ urlpatterns = [
     path('', views.community, name='community'),
     path('setGroupSelect/', views.setGroupSelect, name='setGroupSelect'),
     path('resetStats/', views.resetStats, name='resetStats'),
+    path('lazyLoadGroup/', views.lazyLoadGroup, name='lazyLoadGroup'),
+    path('searchMember/', views.searchMember, name='searchMember'),
     # path('popGroup/', views.popGroup, name='popGroup'),
 ]

@@ -460,6 +460,7 @@ label[for='image-clear_id'] {
     box-shadow: inset 6px 6px 7px -6px #000, inset -4px 5px 7px -4px #000;
 }
 
+.group-members,
 .log-history,
 .log-ranking {
     /* https://css-tricks.com/custom-list-number-styling/ */
@@ -919,7 +920,7 @@ ol#rank-nav li {
         text-shadow: #ffc107 2px 2px 1px;
         text-decoration: none;
     }
-
+    .search-member,
     .search-wod{
         margin-bottom:5px;
     }
@@ -1072,6 +1073,7 @@ ol#rank-nav li {
         padding-top: 0!important;
         max-height:400px;
         overflow:scroll;
+        overflow-x:hidden;
     }
     /* .hl-head{
         font-family:'Bungee';
@@ -1103,7 +1105,10 @@ ol#rank-nav li {
     .group-level{
         color:#ffc107;
     }
-
+    .search-wait{
+        font-size: 2rem;
+        color:grey;
+    }
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {

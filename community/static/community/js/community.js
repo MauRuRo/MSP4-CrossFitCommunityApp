@@ -1,4 +1,7 @@
 $(document).ready(function(){
+    if ($("#members-title").data('hasnext') == "False"){
+        $(".group-dir-down").remove()
+    }
     let group_data = $("#group-select-data").attr('data')
     group_data = group_data.toString()
     group_data = JSON.parse(group_data)
@@ -33,6 +36,9 @@ $(document).ready(function(){
         }
     })
     $(document).on("click", ".group-select:not(.add-group)", function(){
+            element = $(".block-members:first")
+            scrollToTopFast(element)
+            scroll_level = 1
             $(".group-options:visible").hide()
             $(".custom-row").css('height', '100%')
             $(".group-select").removeClass("group-clicked")
@@ -76,6 +82,36 @@ $(document).ready(function(){
     if ($(".location-groups").find(".selected-group").length == 0 && $(".location-groups").find(".disabled-group").length == 0){
         $("#group-global").addClass("selected-group")
     }
+    let load_constant = 0
+    function searchMember(input){
+        $(".search-member-item").remove()
+        // console.log(input)
+        scroll_constant = false
+        $.ajax({
+            type: "POST",
+            url: "searchMember/",
+            data: {
+                input: input,
+            },
+            dataType: 'json',
+            success: function(data){
+                console.log(load_constant)
+                if (load_constant < 2){
+                    $('.group-members:visible').append(data.calling_group_html);
+                }
+                load_constant -= 1
+                if (load_constant <= 0){
+                    load_constant = 0
+                    $(".search-wait").hide()
+                }
+                console.log(load_constant)
+                scroll_constant = true
+            },
+            error: function(){
+                console.log("ajax FAIL")          
+            }
+        })
+    }
 
     // function popGroup(){
     //     $.ajax({
@@ -106,6 +142,11 @@ $(document).ready(function(){
             success: function(data){
                 $(".block-stats").html(data.stats_html)
                 $(".block-members").html(data.members_html)
+                console.log(data.has_next)
+                if (data.has_next == false){
+                    $("#members-title").data('page', 'x')
+                    $(".group-dir-down").remove()
+                }
                 
             },
             error: function(){
@@ -150,4 +191,113 @@ $(document).ready(function(){
             }
         })
     }
+    $(".fillblock").scroll(function(){
+        if ($(this).scrollTop() > 4){
+            $(this).find(".block-header").css('border-bottom', 'dotted 3px grey')
+        }else{
+            $(this).find(".block-header").css('border-bottom', '')
+        }
+    });
+    $(document).on("keypress", ".search-member", function(e){
+        if (e.which===13){
+            e.preventDefault()
+        }            
+    })
+    $(document).on("input", ".search-member", function(e){
+        load_constant += 1
+        $(".search-wait").removeAttr('hidden').show()
+        if ($(".search-member").val()!=""){
+            $(".group-dir-down").hide()
+            $(".rank-card").hide()
+
+            sctext = $(".search-member").val().toLowerCase()
+
+            searchMember(sctext)
+
+            $(".rank-name").each(function(){
+                thistext = $(this).children("strong").text().toLowerCase()
+                incl = thistext.includes(sctext)
+                if (incl == true){
+                    // $(this).closest(".rank-card").show()
+                }else{
+                    $(this).closest(".rank-card").hide()
+                }
+            })
+        }else{
+            $(".rank-card").show()
+            $(".group-dir-down").show()
+            $(".search-member-item").remove()
+            load_constant = 0
+            console.log(load_constant)
+        }
+    })
+
+
+// loading members
+let scroll_level = 1
+let scroll_constant = true
+// $(document).on("scroll", ".block-members", function(){
+    $(".block-members").scroll(function(){
+        if ($(this).scrollTop() > (scroll_level * 600) && scroll_constant == true){
+            goScrollDownGroup()
+            scroll_level += 1
+        }
+    });
+$(document).on("click", ".group-dir-down", function () {
+        goScrollDownGroup()
+    })
+function goScrollDownGroup(){
+        if (scroll_constant == true){
+            scroll_constant = false
+            lazyLoadGroup()
+        }
+    }
+function lazyLoadGroup() {
+    $(".group-dir-down:visible").html('<i class="fas fa-circle-notch fa-spin"></i>')          
+    pagedata = $("#members-title")
+    var pageno = pagedata.data('page');
+    if (pageno == "x"){
+        scroll_constant = true
+        return;
+    }
+    $.ajax({
+    type: 'POST',
+    url: 'lazyLoadGroup/',
+    data: {
+        page: pageno,
+    },
+    dataType: "json",
+    success: function(data) {
+        if (data.no_page==true){
+            scroll_constant = true
+            $(".group-dir-down:visible").remove()
+            return;
+        }
+        if (data.has_next) {
+            pagedata.data('page', pageno+1);
+        } else {
+            pagedata.data('page', "x");
+        }
+        $('.group-members:visible').append(data.calling_group_html);
+        $('.group-members:visible').append('<div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down-group direction-group"><i class="fas fa-angle-double-down"></i></div>')
+        if (pagedata.data('page')=="x"){
+            $(".direction-down-group:visible").remove()
+        }else{
+            $(".group-dir-down:visible").remove()
+            $(".direction-down-group").addClass('group-dir-down')
+        } 
+        scroll_constant = true
+    },
+    error: function(xhr, status, error) {
+    }
+    });
+    
+};
+
+function  scrollToTopFast(element){
+        element.animate({
+            scrollTop: 0}, 0)
+    };
+
+
 })

@@ -60,6 +60,7 @@ def community(request):
         'groups': groups,
         'age_group': age_group,
         'group': group,
+        'has_next': group.has_next(),
         'members': members,
         'male': male,
         'female': female,
@@ -106,18 +107,13 @@ def getGroupSelection(request):
     group_s = GroupSelect.objects.get(user=request.user)
     group_select = group_s.group
     if group_select["custom"] == 'false':
-        print("HERE")
         if group_select["location"] == "group-global":
-            print("GLOBAL")
             select_group_logs = Log.objects.all()
         elif group_select["location"] == "group-country":
-            print("COUNTRY")
             select_group_logs = Log.objects.filter(user__userprofile__country=request.user.userprofile.country)
         else:
-            print("CITY")
             select_group_logs = Log.objects.filter(user__userprofile__town_or_city=request.user.userprofile.town_or_city)
         if group_select["age"] != 'false':
-            print("AGE")
             age = calc_age(request.user.userprofile.birthdate)
             age_bottom = rounddown(age)
             age_top = roundup(age)
@@ -125,7 +121,6 @@ def getGroupSelection(request):
             old_age_date = date.today() - timedelta(days=age_top*365)
             select_group_logs = select_group_logs.filter(user__userprofile__birthdate__gt=old_age_date).filter(user__userprofile__birthdate__lte=young_age_date)
     else:
-        print("CUSTOM")
         custom_group = CustomGroup.objects.get(pk=group_select["custom"])
         user_group = custom_group.group_users.all()
         select_group_logs = Log.objects.filter(user__in=user_group)
@@ -181,7 +176,7 @@ def resetStats(request):
         'female': female,
         'month': month,
         'average_user': average_user,
-        'average-level': average_level
+        'average_level': average_level
         }
     )
     members_html = loader.render_to_string(
@@ -190,9 +185,64 @@ def resetStats(request):
         'group': group,
         }
     )
-    # package output data and return it as a JSON object
     output_data = {
         'stats_html': stats_html,
         'members_html': members_html,
+        'has_next': group.has_next(),
+    }
+    return JsonResponse(output_data)
+
+
+@csrf_exempt
+def lazyLoadGroup(request):
+    selected_group = getGroupSelection(request)
+    no_page = False
+    page = request.POST["page"]
+    selected_group = getGroupSelectionUsers(request)
+    selected_group = selected_group.order_by("-herolevels__general_level")
+    group = Paginator(selected_group, 25)
+    # group = group.page(page)
+    try:
+        group = group.page(page)
+    except PageNotAnInteger:
+        group = group.page(2)
+    except EmptyPage:
+        print("ERROR LAST PAGE")
+        group = group.page(group.num_pages)
+        no_page = True
+    calling_group_html = loader.render_to_string(
+        'community/includes/groupmembersextra.html',
+        {
+        'group': group
+        }
+    )
+    output_data = {
+        'calling_group_html': calling_group_html,
+        'has_next': group.has_next(),
+        "no_page": no_page
+    }
+    return JsonResponse(output_data)
+
+
+@csrf_exempt
+def searchMember(request):
+    selected_group = getGroupSelectionUsers(request)
+    searchtext = request.POST["input"]
+    print(searchtext)
+    search_group = []
+    for user in selected_group:
+        name = user.userprofile.full_name.lower()
+        if searchtext in name:
+            if user.userprofile.full_name == "Ruben de Roos":
+                print("RUBEN DE ROOS")
+            search_group.append(user)
+    calling_group_html = loader.render_to_string(
+        'community/includes/groupmembersearch.html',
+        {
+        'group': search_group
+        }
+        )
+    output_data = {
+        'calling_group_html': calling_group_html,
     }
     return JsonResponse(output_data)

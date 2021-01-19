@@ -3,7 +3,7 @@
     <h4 class="block-title">Explore WODs</h4>
     <div class="row pt-1 justify-content-center">
         <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2 search-wod" type="search" placeholder="Search" aria-label="Search">
+        <input class="form-control search-wod" type="search" placeholder="Search" aria-label="Search">
         </form>
     </div>
 </div>
@@ -16,14 +16,6 @@
                 {% endif %}
             {% endfor %}
         </span></li>
-           <!-- <li id="workout-of-the-day-cat" class="cat">Workout Of the Day</li>
-            <ul class="cat-wods wod-cat-wods">
-                {% for wod in wod_collection %}
-                {% if wod.workout_is_wod == True %}
-                <li><a href="{% url 'workouts' wod.pk %}">{{ wod.workout_name }}</a></li>
-                {% endif %}
-                {% endfor %}
-            </ul> -->
         {% for cat in categories %}
             <li id="{{ cat|space_remove }}" class="cat">{{ cat }}</li>           
             <ul class="cat-wods">
