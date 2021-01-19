@@ -1,26 +1,19 @@
 $(document).ready(function(){
     let group_data = $("#group-select-data").attr('data')
     group_data = group_data.toString()
-    // console.log(group_data)
     group_data = JSON.parse(group_data)
-    console.log(group_data)
-    // console.log(group_data["custom"])
     $(".selected-group").removeClass('selected-group').addClass('disabled-group')
     if (group_data["custom"] != "false"){
-        console.log("here")
         customgroup_id = "#" + group_data["custom"]
         $(customgroup_id).addClass('selected-group')
     } else {
         $(".disabled-group").removeClass("disabled-group")
         if (group_data["age"] != "false"){
-            console.log("age is true")
             $("#group-age").addClass('selected-group')
         }
         if (group_data["location"] == "group-city"){
-            console.log("city is true")
             $("#group-city").addClass('selected-group')
         }else if (group_data["location"] == "group-country"){
-            console.log("country is true")
             $("#group-country").addClass('selected-group')
         }
     }
@@ -49,7 +42,6 @@ $(document).ready(function(){
             $(".disabled-group").removeClass("disabled-group").addClass("selected-group")
         }
         if ($(this).closest(".row-groups").hasClass("custom-groups")){
-            // popGroup()
             $(".row-groups:not(.custom-groups)").find(".selected-group").removeClass("selected-group").addClass("disabled-group")
             $(".selected-group").removeClass("selected-group")
             $(".group-clicked").addClass("selected-group")
@@ -65,29 +57,20 @@ $(document).ready(function(){
         setGroupSelection()
     })
     $(document).on("click", ".fa-check-circle", function(){
-        console.log("SET clicked!")
         $(".row-groups:not(.custom-groups)").find(".selected-group").removeClass("selected-group").addClass("disabled-group")
-        // $(".group-clicked").closest(".row-groups").find(".selected-group").removeClass("selected-group").attr('data-bs-content',"<p class='p-popover'><i class='far fa-check-circle'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>")
         $(".group-clicked").addClass("selected-group")
-        // if ($(".group-clicked").closest(".row-groups").hasClass("age-groups")){
         $(".group-clicked").attr('data-bs-content', "<p class='p-popover'><i class='far fa-window-close'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>")
-        console.log("TEST")
-        // }
     })
     $(document).on("click", ".fa-window-close", function(){
-        console.log("UNSET clicked!")
         $(".disabled-group").removeClass("disabled-group").addClass("selected-group")
         $(".group-clicked").closest(".row-groups").find(".selected-group").removeClass("selected-group")
         $(".group-clicked").attr('data-bs-content', "<p class='p-popover'><i class='far fa-check-circle'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>")
     })
     $(document).on("click", ".fa-edit", function(){
-        console.log("EDIT clicked!")
     })
     $(document).on("click", ".fa-trash-alt", function(){
-        console.log("DELETE clicked!")
     })
     $(document).on("click", ".fa-info-circle", function(){
-        console.log("INFO clicked!")
     })
     
     if ($(".location-groups").find(".selected-group").length == 0 && $(".location-groups").find(".disabled-group").length == 0){
@@ -115,6 +98,21 @@ $(document).ready(function(){
     //         }
     //     })
     // }
+    function resetStats(){
+        $.ajax({
+            type: "POST",
+            url: "resetStats/",
+            dataType: 'json',
+            success: function(data){
+                $(".block-stats").html(data.stats_html)
+                $(".block-members").html(data.members_html)
+                
+            },
+            error: function(){
+                console.log("failed resetStats")
+            }
+        })
+    }
     function setGroupSelection() {
         let age
         let custom
@@ -135,7 +133,7 @@ $(document).ready(function(){
             custom = false
         }
         $.ajax({
-            type:"POST",
+            type: "POST",
             url: "setGroupSelect/",
             data: {
                 age: age,
@@ -145,6 +143,7 @@ $(document).ready(function(){
             dataType: 'json',
             success: function(data){
                 console.log("ajax Succes")
+                resetStats()
             },
             error: function(){
                 console.log("ajax FAIL")          

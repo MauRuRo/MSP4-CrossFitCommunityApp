@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import CustomGroup, GroupSelect
 from profiles.models import UserProfile, User, HeroLevels
 from workouts.models import Workout, Log, MemberComment
+# from workouts.views import getGroupSelection
 from allauth.account.models import EmailAddress
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -42,9 +43,29 @@ def community(request):
     age_bottom = str(rounddown(age))
     age_top = str(roundup(age))
     age_group = age_bottom + "-" + age_top + " years"
+    selected_group = getGroupSelectionUsers(request)
+    selected_group_logs = getGroupSelection(request)
+    selected_group = selected_group.order_by("-herolevels__general_level")
+    group = Paginator(selected_group, 25)
+    group = group.page(1)
+    members = selected_group.count()
+    male = selected_group.filter(userprofile__gender="M").count()
+    female = selected_group.filter(userprofile__gender="F").count()
+    date_month = date.today() - timedelta(days=30)
+    month = selected_group_logs.filter(date__gte=date_month).count()
+    average_user = round(month / members)
+    average_l = selected_group.aggregate(Avg('herolevels__general_level'))
+    average_level = round(average_l['herolevels__general_level__avg'])
     context = {
         'groups': groups,
-        'age_group': age_group
+        'age_group': age_group,
+        'group': group,
+        'members': members,
+        'male': male,
+        'female': female,
+        'month': month,
+        'average_user': average_user,
+        'average_level': average_level
         }
     return render(request, template, context)
 
@@ -79,3 +100,99 @@ def setGroupSelect(request):
 #         user_upload.append(user.username)
 #     data = {"message": user_list, "upload": user_upload, "group": group.name}
 #     return JsonResponse(data)
+
+def getGroupSelection(request):
+     # Determine group selection
+    group_s = GroupSelect.objects.get(user=request.user)
+    group_select = group_s.group
+    if group_select["custom"] == 'false':
+        print("HERE")
+        if group_select["location"] == "group-global":
+            print("GLOBAL")
+            select_group_logs = Log.objects.all()
+        elif group_select["location"] == "group-country":
+            print("COUNTRY")
+            select_group_logs = Log.objects.filter(user__userprofile__country=request.user.userprofile.country)
+        else:
+            print("CITY")
+            select_group_logs = Log.objects.filter(user__userprofile__town_or_city=request.user.userprofile.town_or_city)
+        if group_select["age"] != 'false':
+            print("AGE")
+            age = calc_age(request.user.userprofile.birthdate)
+            age_bottom = rounddown(age)
+            age_top = roundup(age)
+            young_age_date = date.today() - timedelta(days=age_bottom*365)
+            old_age_date = date.today() - timedelta(days=age_top*365)
+            select_group_logs = select_group_logs.filter(user__userprofile__birthdate__gt=old_age_date).filter(user__userprofile__birthdate__lte=young_age_date)
+    else:
+        print("CUSTOM")
+        custom_group = CustomGroup.objects.get(pk=group_select["custom"])
+        user_group = custom_group.group_users.all()
+        select_group_logs = Log.objects.filter(user__in=user_group)
+    return select_group_logs
+
+
+def getGroupSelectionUsers(request):
+     # Determine group selection
+    group_s = GroupSelect.objects.get(user=request.user)
+    group_select = group_s.group
+    if group_select["custom"] == 'false':
+        if group_select["location"] == "group-global":
+            select_group_users = User.objects.all()
+        elif group_select["location"] == "group-country":
+            select_group_users = User.objects.filter(userprofile__country=request.user.userprofile.country)
+        else:
+            select_group_users = User.objects.filter(userprofile__town_or_city=request.user.userprofile.town_or_city)
+        if group_select["age"] != 'false':
+            age = calc_age(request.user.userprofile.birthdate)
+            age_bottom = rounddown(age)
+            age_top = roundup(age)
+            young_age_date = date.today() - timedelta(days=age_bottom*365)
+            old_age_date = date.today() - timedelta(days=age_top*365)
+            select_group_users = select_group_users.filter(userprofile__birthdate__gt=old_age_date).filter(userprofile__birthdate__lte=young_age_date)
+    else:
+        print("CUSTOM")
+        custom_group = CustomGroup.objects.get(pk=group_select["custom"])
+        user_group = custom_group.group_users.all()
+        select_group_users = user_group
+    return select_group_users
+
+
+@csrf_exempt
+def resetStats(request):
+    selected_group = getGroupSelectionUsers(request)
+    selected_group_logs = getGroupSelection(request)
+    selected_group = selected_group.order_by("-herolevels__general_level")
+    group = Paginator(selected_group, 25)
+    group = group.page(1)
+    members = selected_group.count()
+    male = selected_group.filter(userprofile__gender="M").count()
+    female = selected_group.filter(userprofile__gender="F").count()
+    date_month = date.today() - timedelta(days=30)
+    month = selected_group_logs.filter(date__gte=date_month).count()
+    average_user = round(month / members)
+    average_l = selected_group.aggregate(Avg('herolevels__general_level'))
+    average_level = round(average_l['herolevels__general_level__avg'])
+    stats_html = loader.render_to_string(
+        'community/includes/groupstats.html',
+        {
+        'members': members,
+        'male': male,
+        'female': female,
+        'month': month,
+        'average_user': average_user,
+        'average-level': average_level
+        }
+    )
+    members_html = loader.render_to_string(
+        'community/includes/groupmembers.html',
+        {
+        'group': group,
+        }
+    )
+    # package output data and return it as a JSON object
+    output_data = {
+        'stats_html': stats_html,
+        'members_html': members_html,
+    }
+    return JsonResponse(output_data)

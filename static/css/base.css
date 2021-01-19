@@ -513,23 +513,12 @@ label[for='image-clear_id'] {
 }
 
 .rank-card {
-    /* counter-increment: my-awesome-counter; */
     border: 1px solid grey;
     border-radius: 3px;
     padding-left:2px;
     box-shadow: 0px 0px 3px black;
-    /* testing
-    height: 200px; */
+    min-height: 45px;
 }
-
-/* .log-ranking .rank-card:before {
-    content: counter(my-awesome-counter);
-    color: #ffc107;;
-    font-weight: bold;
-    font-size:1.5rem;
-    margin-left:2px;
-    width:25px;
-} */
 
 .no-logs{
     color: #ffc107;;
@@ -624,6 +613,7 @@ label[for='image-clear_id'] {
     top:-15px;
     left:-15px;
 }
+
 .prc-tm{
     margin-top:3px;
     left: 0 !important;
@@ -643,6 +633,9 @@ label[for='image-clear_id'] {
     height:30px !important;
     width:30px !important;
     z-index: 0;
+}
+.group-member-circle{
+    top:-6px;
 }
 .profile-info-list{
     width:100%;
@@ -880,10 +873,6 @@ ol#rank-nav li {
         list-style: none;
         padding:0 10px 0 10px;
     }
-
-    #workout-of-the-day-cat {
-        /* text-shadow: 2px 2px 1px red; */
-    }
     .wod-cat-wods{
         color:blue;
     }
@@ -1003,7 +992,8 @@ ol#rank-nav li {
 
     /* COMMUNITY */
     .bh-community{
-        margin-top:-8px;
+        margin-top:0;
+        margin-bottom:10px;
     }
     .bh-community p{
         margin-bottom:5px;
@@ -1071,6 +1061,47 @@ ol#rank-nav li {
     }
     .edit-group{
         margin-right:8px;
+    }
+    .tail-info{
+        font-size:0.7rem;
+        color:grey;
+    }
+    .block-stats,
+    .block-main,
+    .block-members{
+        padding-top: 0!important;
+        max-height:400px;
+        overflow:scroll;
+    }
+    /* .hl-head{
+        font-family:'Bungee';
+        color: blue;
+        font-size: 1.1rem; 
+    } */
+    .hl-head{
+    font-size: 1.3rem;
+    font-family: 'Bungee';
+    position: absolute;
+    top: -23px;
+    left: 2px;
+    color: rgb(0, 0, 255, 0.8);
+    }
+    .display-level{
+        font-size: 1.5rem;
+        font-family: 'Bungee';
+        letter-spacing: -2px;
+        position: absolute;
+        top: -9px;
+        left: 1px;
+        color: rgba(255, 193, 7,0.8);
+    }
+    .hero-level-group{
+        font-family: 'Bungee';
+        font-size: 1.2rem;
+        color:blue;
+    }
+    .group-level{
+        color:#ffc107;
     }
 
 /* MEDIAQUERIES */

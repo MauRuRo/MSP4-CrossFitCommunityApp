@@ -16,7 +16,7 @@ from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from decimal import Decimal
 from profiles.templatetags.calc_functions import calc_age
-from community.views import roundup, rounddown
+from community.views import roundup, rounddown, getGroupSelection
 # from django.template import Library
 # from django.template.defaultfilters import stringfilter
 import json
@@ -75,35 +75,35 @@ def dateInput(request):
         return JsonResponse({"error": "Date failed"}, status=400)
 
 
-def getGroupSelection(request):
-     # Determine group selection
-    group_s = GroupSelect.objects.get(user=request.user)
-    group_select = group_s.group
-    if group_select["custom"] == 'false':
-        print("HERE")
-        if group_select["location"] == "group-global":
-            print("GLOBAL")
-            select_group_logs = Log.objects.all()
-        elif group_select["location"] == "group-country":
-            print("COUNTRY")
-            select_group_logs = Log.objects.filter(user__userprofile__country=request.user.userprofile.country)
-        else:
-            print("CITY")
-            select_group_logs = Log.objects.filter(user__userprofile__town_or_city=request.user.userprofile.town_or_city)
-        if group_select["age"] != 'false':
-            print("AGE")
-            age = calc_age(request.user.userprofile.birthdate)
-            age_bottom = rounddown(age)
-            age_top = roundup(age)
-            young_age_date = date.today() - timedelta(days=age_bottom*365)
-            old_age_date = date.today() - timedelta(days=age_top*365)
-            select_group_logs = select_group_logs.filter(user__userprofile__birthdate__gt=old_age_date).filter(user__userprofile__birthdate__lte=young_age_date)
-    else:
-        print("CUSTOM")
-        custom_group = CustomGroup.objects.get(pk=group_select["custom"])
-        user_group = custom_group.group_users.all()
-        select_group_logs = Log.objects.filter(user__in=user_group)
-    return select_group_logs
+# def getGroupSelection(request):
+#      # Determine group selection
+#     group_s = GroupSelect.objects.get(user=request.user)
+#     group_select = group_s.group
+#     if group_select["custom"] == 'false':
+#         print("HERE")
+#         if group_select["location"] == "group-global":
+#             print("GLOBAL")
+#             select_group_logs = Log.objects.all()
+#         elif group_select["location"] == "group-country":
+#             print("COUNTRY")
+#             select_group_logs = Log.objects.filter(user__userprofile__country=request.user.userprofile.country)
+#         else:
+#             print("CITY")
+#             select_group_logs = Log.objects.filter(user__userprofile__town_or_city=request.user.userprofile.town_or_city)
+#         if group_select["age"] != 'false':
+#             print("AGE")
+#             age = calc_age(request.user.userprofile.birthdate)
+#             age_bottom = rounddown(age)
+#             age_top = roundup(age)
+#             young_age_date = date.today() - timedelta(days=age_bottom*365)
+#             old_age_date = date.today() - timedelta(days=age_top*365)
+#             select_group_logs = select_group_logs.filter(user__userprofile__birthdate__gt=old_age_date).filter(user__userprofile__birthdate__lte=young_age_date)
+#     else:
+#         print("CUSTOM")
+#         custom_group = CustomGroup.objects.get(pk=group_select["custom"])
+#         user_group = custom_group.group_users.all()
+#         select_group_logs = Log.objects.filter(user__in=user_group)
+#     return select_group_logs
 
 
 def workouts(request, wod_id):
