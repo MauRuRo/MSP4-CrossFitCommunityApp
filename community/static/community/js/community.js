@@ -6,12 +6,12 @@ $(document).ready(function(){
     group_data = group_data.toString()
     group_data = JSON.parse(group_data)
     $(".selected-group").removeClass('selected-group').addClass('disabled-group')
-    if (group_data["custom"] != false){
+    if (group_data["custom"] != "false"){
         customgroup_id = "#" + group_data["custom"]
         $(customgroup_id).addClass('selected-group')
     } else {
         $(".disabled-group").removeClass("disabled-group")
-        if (group_data["age"] != false){
+        if (group_data["age"] != "false"){
             $("#group-age").addClass('selected-group')
         }
         if (group_data["location"] == "group-city"){
