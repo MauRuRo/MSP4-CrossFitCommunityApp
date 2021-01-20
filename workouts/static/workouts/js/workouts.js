@@ -104,7 +104,12 @@ $(document).ready(function() {
                 $('.log-history').hide()
                 $('.log-his-1').show()
             }
-            people = 'everybody'               
+            people = 'everybody'
+            if ($(".log-history").find(".rank-card:visible").length == 0){
+                $(".his-dir-down").hide()
+            }else{
+                $(".his-dir-down").show()
+            }               
         })
         $('#his-me').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -121,6 +126,11 @@ $(document).ready(function() {
                 $('.log-his-3').show()
             }
             people = 'me'
+            if ($(".log-history").find(".rank-card:visible").length == 0){
+                $(".his-dir-down").hide()
+            }else{
+                $(".his-dir-down").show()
+            }  
         })
         $('#his-all-wod').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -137,6 +147,11 @@ $(document).ready(function() {
                 $('.log-his-3').show()
             }
             wodhistory = 'allwods'
+            if ($(".log-history").find(".rank-card:visible").length == 0){
+                $(".his-dir-down").hide()
+            }else{
+                $(".his-dir-down").show()
+            }  
         })
         $('#his-this-wod').click(function(){
             if ($(this).css('text-decoration').split(" ")[0] != 'underline'){
@@ -153,6 +168,11 @@ $(document).ready(function() {
                 $('.log-his-4').show()
             }
             wodhistory = 'thiswod'
+            if ($(".log-history").find(".rank-card:visible").length == 0){
+                $(".his-dir-down").hide()
+            }else{
+                $(".his-dir-down").show()
+            }  
         })
         $("#his-everybody").trigger("click")
         $("#his-this-wod").trigger("click")
@@ -696,11 +716,11 @@ $(document).ready(function() {
             });
                scrollMyRank()
               
-            $(".log-ranking").each(function(){
+            $(".log-ranking, .log-history").each(function(){
                 if ($(this).children(".rank-card").length == 0){
                     $(this).append("<h4 class='no-logs'>NO LOGS AVAILABLE YET.</h4>")
                 }
-            }) 
+            })
             $("#block-1").scroll(function() {
                 if ($("block-1").scrolTop > 4){
                     $("block-header").css("border-bottom", "solid 3px black")
