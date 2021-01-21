@@ -1110,6 +1110,36 @@ ol#rank-nav li {
         font-size: 2rem;
         color:grey;
     }
+    .add-user{
+        position: absolute;
+        left: -33px;
+        top: -8px;
+        color: grey;
+        cursor:pointer;
+    }
+    .fa-user-plus:hover{
+        color:blue;
+    }
+    .fa-user-minus:hover{
+        color: red;
+    }
+    .group-btn{
+        margin: 5px;
+    }
+    #no-members-added{
+        margin:5px;
+        color:grey;
+    }
+    .group-admin-list{
+        margin-bottom: 2px;
+    }
+    .group-admin{
+        /* color:grey; */
+        font-size:0.75rem;
+    }
+    .placeholder-fail::-webkit-input-placeholder {
+    color: red;
+}
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {

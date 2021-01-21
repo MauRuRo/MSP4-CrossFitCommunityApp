@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import CustomGroup, GroupSelect
+from .forms import CustomGroupForm
 from profiles.models import UserProfile, User, HeroLevels
 from workouts.models import Workout, Log, MemberComment
 # from workouts.views import getGroupSelection
@@ -38,7 +39,9 @@ def rounddown(x):
 
 def community(request):
     template = "community/community.html"
-    groups = CustomGroup.objects.filter(group_users=request.user)
+    groups1 = CustomGroup.objects.filter(group_users=request.user).filter(share=True)
+    groups2 = CustomGroup.objects.filter(admin=request.user)
+    groups = groups1.union(groups2)
     age = calc_age(request.user.userprofile.birthdate)
     age_bottom = str(rounddown(age))
     age_top = str(roundup(age))
@@ -53,10 +56,18 @@ def community(request):
     female = selected_group.filter(userprofile__gender="F").count()
     date_month = date.today() - timedelta(days=30)
     month = selected_group_logs.filter(date__gte=date_month).count()
+    admin = False
+    group_s = getGroup(request)
+    if group_s["custom"] != "false":
+        c_group = CustomGroup.objects.get(pk=group_s["custom"])
+        admin = c_group.admin
     average_user = round(month / members)
     average_l = selected_group.aggregate(Avg('herolevels__general_level'))
     average_level = round(average_l['herolevels__general_level__avg'])
+    form = CustomGroupForm()
     context = {
+        'form': form,
+        'admin': admin,
         'groups': groups,
         'age_group': age_group,
         'group': group,
@@ -132,14 +143,25 @@ def getGroupSelection(request):
     return select_group_logs
 
 
-def getGroupSelectionUsers(request):
-    # Determine group selection
+def getGroup(request):
     try:
         group_s = GroupSelect.objects.get(user=request.user)
         group_select = group_s.group
     except GroupSelect.DoesNotExist:
         group_select = {"age": "false", "custom": "false", "location": "group-global"}
         gs_obj = GroupSelect.objects.create(user=request.user, group=group_select)
+    return group_select
+
+
+def getGroupSelectionUsers(request):
+    # Determine group selection
+    group_select = getGroup(request)
+    # try:
+    #     group_s = GroupSelect.objects.get(user=request.user)
+    #     group_select = group_s.group
+    # except GroupSelect.DoesNotExist:
+    #     group_select = {"age": "false", "custom": "false", "location": "group-global"}
+    #     gs_obj = GroupSelect.objects.create(user=request.user, group=group_select)
     if group_select["custom"] == 'false':
         if group_select["location"] == "group-global":
             select_group_users = User.objects.all()
@@ -173,12 +195,18 @@ def resetStats(request):
     female = selected_group.filter(userprofile__gender="F").count()
     date_month = date.today() - timedelta(days=30)
     month = selected_group_logs.filter(date__gte=date_month).count()
+    admin = False
+    group_s = getGroup(request)
+    if group_s["custom"] != "false":
+        c_group = CustomGroup.objects.get(pk=group_s["custom"])
+        admin = c_group.admin
     average_user = round(month / members)
     average_l = selected_group.aggregate(Avg('herolevels__general_level'))
     average_level = round(average_l['herolevels__general_level__avg'])
     stats_html = loader.render_to_string(
         'community/includes/groupstats.html',
         {
+        'admin': admin,
         'members': members,
         'male': male,
         'female': female,
@@ -234,9 +262,13 @@ def lazyLoadGroup(request):
 
 @csrf_exempt
 def searchMember(request):
-    selected_group = getGroupSelectionUsers(request)
+    make = json.loads(request.POST["make"])
+    print(make)
+    if make:
+        selected_group = User.objects.all()
+    else:
+        selected_group = getGroupSelectionUsers(request)
     searchtext = request.POST["input"]
-    print(searchtext)
     search_group = []
     for user in selected_group:
         name = user.userprofile.full_name.lower()
@@ -252,3 +284,45 @@ def searchMember(request):
         'calling_group_html': calling_group_html,
     }
     return JsonResponse(output_data)
+
+
+@csrf_exempt
+def makeGroup(request):
+    if request.is_ajax:
+        admin = request.user
+        groupname = request.POST["groupname"]
+        sharegroup = json.loads(request.POST["sharegroup"])
+        groupmembers = json.loads(request.POST["groupmembers"])
+        members = []
+        for member in groupmembers:
+            user = User.objects.get(pk=member)
+            members.append(user)
+        members.append(request.user)
+        new_group = CustomGroup.objects.create(admin=admin, name=groupname, share=sharegroup)
+        new_group.group_users.set(members)
+        # return redirect(reverse('community'))
+        data={"message":"Success"}
+        return JsonResponse(data)
+
+@csrf_exempt
+def getGroupEditInfo(request):
+    if request.is_ajax:
+        print("IM IN")
+        group_id = request.POST["group_id"]
+        group = CustomGroup.objects.get(pk=group_id)
+        group_name = group.name
+        group_share = group.share
+        group_members = []
+        for member in group.group_users.all():
+            m_name = member.userprofile.full_name
+            m_id = member.pk
+            member = {"name": m_name, "id": m_id}
+            group_members.append(member)
+        group_members=json.dumps(group_members)
+        data = {
+            "group_name": group_name,
+            "group_share": group_share,
+            "group_members": group_members
+        }
+        print(data)
+        return JsonResponse(data)

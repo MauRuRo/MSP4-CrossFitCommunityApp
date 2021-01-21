@@ -279,7 +279,6 @@ $(document).ready(function() {
         $('.extra-log-info').hide()
 
         $(document).on("click", ".card-col", function(){
-            console.log("CLICK")
             if ($(this).parent().hasClass('rank-card') == true){
                 let main_card = "#" + $(this).parent().attr('id')
                 console.log(main_card)
@@ -589,14 +588,11 @@ $(document).ready(function() {
            let clicked_comment = $(this)
            let m_comment_ta = $(this).closest('.col-2').siblings('.card-col').find('textarea:first')
            let m_comment = m_comment_ta.val()
-            //    Check if the form is currently visible/open
-            // if ($(this).closest('.col-2').siblings('.card-col').find('.edit-comment-form').is(':visible')) {         
+            //    Check if the form is currently visible/open        
             if ($(this).attr('id') == 'clicked-edit') {         
                 submitComment(m_comment, m_comment_ta)
                 clicked_comment.removeAttr('id')
             } else if ($(this).attr('id') != 'clicked-edit') {
-                console.log("test")
-                console.log(m_comment)
                 cancelEdit()
                 m_comment_ta.focus()
                 clicked_comment.closest('.col-2').siblings('.card-col').find('.edit-comment-form').removeAttr('hidden').show()
@@ -729,28 +725,7 @@ $(document).ready(function() {
                 }
             });
 
-        // function dateStyling(element){
-        //     $(element).each(function() {
-        //         let date = $(this).text()
-        //         let month = ''
-        //         let day = ''
-        //         try {
-        //             month = date.split(".")[0]
-        //             day = date.split(". ")[1].split(",")[0]
-        //             let year = date.split(", ")[1].slice(-2)
-        //         }catch{
-        //             month = date.split(" ")[0].slice(0, -1)
-        //             if (month == "Apri") {
-        //                 month = month.slice(0, -1)
-        //             }
-        //             day = date.split(" ")[1].split(",")[0]
-        //             let year = date.split(", ")[1].slice(-2)
-        //         }
-        //         $(this).html(`<div class='display-month'>${month}</div><div class='display-day'>${day}</div>`)
-        //     })
-        // }
         dateStyling($(".his-date"))
-            
             
             function sizeLargeNumbers(number) {
                 let no = parseInt(number.text())

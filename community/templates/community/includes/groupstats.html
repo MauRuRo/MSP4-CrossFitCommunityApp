@@ -14,4 +14,9 @@
         <li>This Month: <span class="">{{ month }} <span class="tail-info">WODs</span></span></li>
         <li>Avg: <span class="">{{ average_user }}</span> <span class="tail-info">WODs/memb/month</span></li>
     </ul>
+    {% if admin %}
+    <ul class="list-unstyled profile-info-list group-admin-list">
+        <li class="group-admin">Admin: <a href="#" class="admin-group">{{ admin.userprofile.full_name }}</a></li>
+    </ul>
+    {% endif %}
 </div>

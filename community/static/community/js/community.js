@@ -74,7 +74,68 @@ $(document).ready(function(){
     //     $(".group-clicked").closest(".row-groups").find(".selected-group").removeClass("selected-group")
     //     $(".group-clicked").attr('data-bs-content', "<p class='p-popover'><i class='far fa-check-circle'></i>  <i class='far fa-edit'></i>  <i class='far fa-trash-alt'></i></p>")
     // })
+
+    function getGroupEditInfo(id){
+        let group_id = id
+        let group_members
+        let group_share
+        let group_name
+        $.ajax({
+            type: "POST",
+            url: "getGroupEditInfo/",
+            data: {
+                group_id:group_id
+            },
+            dataType: "json",
+            success: function(data){
+                group_members = data.group_members
+                group_name = data.group_name
+                group_share = data.group_share
+                console.log(group_members)
+                console.log(group_name)
+                console.log(group_share)
+                edit_data = {"members":group_members, "name":group_name, "share":group_share}
+                console.log(edit_data)
+                setEditForm(edit_data, group_id)
+            },
+            error: function(){
+                console.log("ajax failed")
+            }
+        })
+        
+    }
+
+    function setEditForm(data, id){
+        $("#no-members-added").hide()
+        let edit_data = data
+        let group_id = id
+        let name = edit_data["name"]
+        let members = JSON.parse(edit_data["members"])
+        // console.log(members)
+        let share = edit_data["share"]
+        $("#id_name").val(name).attr('data-group-id', group_id)
+        // for (member in members){
+        for (i = 0; i < members.length; i++){
+            member = members[i]
+            console.log(member)
+            let list_html = "<li id='li-" + member["id"] + "' data-id='" + member["id"] + "'>" + member["name"] + "</li>"
+            $("#add-users-form-list").append(list_html)
+        }
+        if (share == true){
+            $("#id_share").prop("checked", true)
+        } else {
+            $("#id_share").prop("checked", false)
+        }
+        $("#group-make-div").removeAttr('hidden').show()
+        $("#group-select-div").hide()
+        $("#make-group-title").hide()
+        $("#edit-group-title").removeAttr("hidden").show()
+        $("#groupform-submit-button").hide()
+        $("#groupform-edit-button").removeAttr("hidden").show()
+    }
     $(document).on("click", ".fa-edit", function(){
+        let group_id = $(this).closest(".row").find(".group-select").attr('id')
+        getGroupEditInfo(group_id)
     })
     $(document).on("click", ".fa-trash-alt", function(){
     })
@@ -88,11 +149,17 @@ $(document).ready(function(){
     function searchMember(input){
         $(".search-member-item").remove()
         scroll_constant = false
+        let make = false
+        // console.log($("#make-group-div").is(":visible"))
+        if ($("#group-make-div").is(":visible") == true){
+            make = true
+        }
         $.ajax({
             type: "POST",
             url: "searchMember/",
             data: {
                 input: input,
+                make: make,
             },
             dataType: 'json',
             success: function(data){
@@ -106,8 +173,19 @@ $(document).ready(function(){
                 }
                 scroll_constant = true
                 if ($(".search-wait:visible").length == 0 && $(".rank-card:visible").length == 0) {
-                    $('.group-members:visible').append("<div class='row justify-content-center no-result-search'>No members found.</div>")
+                    $('.group-members:visible').append("<div class='row justify-content-center no-result-search'>Member not found in group.</div>")
                 }
+                if ($("#group-make-div:visible").length != 0){
+                    $(".search-member-item").find(".fa-user-plus").parent(".add-user").removeAttr("hidden").show()
+                }
+                $(".search-member-item").each(function(){
+                    let user_id = $(this).attr('id')
+                    if ($("#add-users-form-list").find(`[data-id='${user_id}']`).length != 0){
+                        $(this).find(".rank-name").children("strong").css('color', 'blue')
+                        $(this).find(".fa-user-plus").parent(".add-user").hide()
+                        $(this).find(".fa-user-minus").parent(".add-user").removeAttr("hidden").show()
+                    }
+                })
             },
             error: function(){
                 console.log("ajax FAIL")          
@@ -288,6 +366,10 @@ function lazyLoadGroup() {
             $(".group-dir-down:visible").remove()
             $(".direction-down-group").addClass('group-dir-down')
         } 
+        if ($("#group-make-div:visible").length != 0){
+                $(".scroll-load").find(".fa-user-plus").parent(".add-user").removeAttr("hidden").show()
+                $(".scroll-load").removeClass("scroll-load")
+            }
         scroll_constant = true
     },
     error: function(xhr, status, error) {
@@ -301,5 +383,98 @@ function  scrollToTopFast(element){
             scrollTop: 0}, 0)
     };
 
+    $(document).on("click", ".add-group", function(){
+        $("#group-make-div").removeAttr("hidden").show()
+        $("#group-select-div").hide()
+        $(".fa-user-plus").parent(".add-user").removeAttr("hidden").show()
+    })
+    $(document).on("click", ".fa-user-plus", function(){
+        $(this).closest(".circles-and-more").prevAll(".card-col:first").find(".rank-name").children("strong").css('color','blue')
+        $(this).parent(".add-user").siblings(".add-user").removeAttr("hidden").show()
+        $(this).parent(".add-user").hide()
+        let member_id = $(this).closest(".rank-card").attr('id')
+        let member_name = $(this).closest(".circles-and-more").prevAll(".card-col:first").find(".rank-name").children("strong").text()
+        let list_html = "<li id='li-" + member_id + "' data-id='" + member_id + "'>" + member_name + "</li>"
+        $("#add-users-form-list").append(list_html)
+        $("#no-members-added").hide()
+    })
+    $(document).on("click", ".fa-user-minus", function(){
+        $(this).closest(".circles-and-more").prevAll(".card-col:first").find(".rank-name").children("strong").css('color','black')
+        $(this).parent(".add-user").siblings(".add-user").removeAttr("hidden").show()
+        $(this).parent(".add-user").hide()
+        let member_id = $(this).closest(".rank-card").attr('id')
+        $(`#li-${member_id}`).remove()
+        if ($("#add-users-form-list").children("li").length == 0) {
+            $("#no-members-added").show()
+        }
+    })
+    $(document).on("click", "#cancel-group", function(){
+        $("#group-make-div").hide()
+        $("#group-select-div").show()
+        $(".add-user").hide()
+    })
+
+    // MAKE GROUP
+    function makeGroup(){
+        let groupname = $("#id_name").val()
+        let sharegroup = $("#id_share").prop('checked')
+        let groupmembers = []
+        $("#add-users-form-list").children("li").each(function(){
+            groupmembers.push($(this).data('id'))
+        })
+        groupmembers = JSON.stringify(groupmembers)
+        console.log(groupname)
+        console.log(sharegroup)
+        console.log(groupmembers)
+        $.ajax({
+            type: "POST",
+            url: "makeGroup/",
+            data:{
+                groupname: groupname,
+                sharegroup: sharegroup,
+                groupmembers: groupmembers,
+            },
+            dataType: "json",
+            success: function(data){
+                console.log("AJAX MAKE GROUP SUCCESS")
+                location.reload()
+            },
+            error: function(){
+
+            }
+        })
+    }
+    // let pop_const = false
+    function hidePop(){
+        // console.log(pop_const)
+        // if (pop_const){
+            if ($("#pop-incomplete").is(':visible')) {
+                $("#groupform-submit-button").popover('hide')
+            }
+            // pop_const = false
+        }
+    // }
+    $(document).click(function(){
+        hidePop()
+    })
+    $(document).on("click", "#groupform-submit-button", function(e){
+        e.stopPropagation()
+        if ($("#id_name").val().length != 0 && $("#add-users-form-list").find("li").length != 0){
+            makeGroup()
+            return
+        }else if ($("#id_name").val().length == 0 && $("#add-users-form-list").find("li").length == 0){
+            console.log("no both")
+            $("#id_name").addClass("placeholder-fail")
+            $("#no-members-added").css('color','red')
+        }else if ($("#add-users-form-list").find("li").length == 0){
+            console.log("no users")
+            $("#no-members-added").css('color','red')
+        }else{
+            console.log("no name")
+            $("#id_name").addClass("placeholder-fail")
+        }
+        $("#groupform-submit-button").popover('show')
+    })
+    
 
 })

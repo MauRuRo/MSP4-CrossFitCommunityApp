@@ -1,0 +1,24 @@
+{% load calc_functions %}
+<div class="block-header sticky-top row justify-content-center bh-community" id ="make-group-title">
+    <h4 class="block-title">Make A Group</h4><p></i></p>
+</div>
+<div class="block-header sticky-top row justify-content-center bh-community" id="edit-group-title" hidden>
+    <h4 class="block-title">Edit Group</h4><p></i></p>
+</div>
+<div class="row justify-content-center">
+    <div class="col-10">
+        {{ form.name|as_crispy_field }}
+        <div>Add Users from the members module:</div>
+        <div id="no-members-added">No members added yet.</div>
+        <ul id="add-users-form-list"></ul>
+        {{ form.share|as_crispy_field }}
+    </div>      
+</div>
+<div class="row justify-content-center">
+    <div class="col-12 d-flex justify-content-end">
+        <button class="btn rounded-1 btn-black group-btn" id="groupform-submit-button" role="button" tabindex="0" data-bs-toggle="popover" data-bs-trigger="manual" data-bs-placement="top" data-bs-content="<div id='pop-incomplete'>Your form is incomplete.</div>" data-bs-html="true">Make Group</button>
+        <button class="btn rounded-1 btn-black group-btn" id="groupform-edit-button" hidden>Edit Group</button>
+        <button class="btn btn-outline-black rounded-1 group-btn" id="cancel-group">Cancel</button>
+    </div>
+</div>
+        
