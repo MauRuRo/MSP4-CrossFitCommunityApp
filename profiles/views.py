@@ -249,7 +249,9 @@ def getLevels(user, wod):
     user_l = user_list()
     # check which date is exactly a year ago
     lapse_date = date.today() - timedelta(days=365)
+    ft = False
     if wod.workout_type == 'FT':
+        ft = True
         rank_result = 'ft_result'
         rank_result_order = 'ft_result'
     elif wod.workout_type == 'AMRAP':
@@ -264,32 +266,46 @@ def getLevels(user, wod):
     log_id_list = id_list(user_l, all_logs, wod.workout_type)
     # filter out all none max results from query
     all_logs_rank = all_logs.filter(id__in=log_id_list)
-    # all_gender_index_user = 0
-    rank = 0
-    prevresult = [0, 0]
-    # all_gender_index = 1
-    rlistgenderall = []
-    user_rank = 0
-    for log in all_logs_rank:
-        if getattr(log, rank_result) == prevresult[0]:
-            prevresult[1] += 1
-        else:
-            rank = rank + 1 + prevresult[1]
-            prevresult[1] = 0
-        prevresult[0] = getattr(log, rank_result)
-        # prevresult[0] =log.mw_result
-        rlistgenderall.append([log.pk, rank])
-        if log.user == user:
-            # all_gender_index_user = all_gender_index
-            user_rank = rank
-        # else:
-            # all_gender_index += 1
-    if user_rank != 0:
-        last_rank = rlistgenderall[-1][1]
-        percentile = round((1-(user_rank/last_rank)) * 100)
-    else:
+    if all_logs_rank.filter(user=user).count() == 0:
         percentile = None
+    else:
+        total_users = all_logs_rank.all().count()
+        user_log = all_logs_rank.get(user=user)
+        user_result = getattr(user_log, rank_result)
+        if ft:
+            filter_dict = {f'{rank_result}__gte':user_result}
+            greater_users = all_logs_rank.filter(**filter_dict).count()
+            percentile = round(greater_users/total_users*100)
+        else:
+            filter_dict = {f'{rank_result}__lte':user_result}
+            greater_users = all_logs_rank.filter(**filter_dict).count()
+            percentile = round(greater_users/total_users*100)
     return percentile
+    # rank = 0
+    # prevresult = [0, 0]
+    # # all_gender_index = 1
+    # rlistgenderall = []
+    # user_rank = 0
+    # for log in all_logs_rank:
+    #     if getattr(log, rank_result) == prevresult[0]:
+    #         prevresult[1] += 1
+    #     else:
+    #         rank = rank + 1 + prevresult[1]
+    #         prevresult[1] = 0
+    #     prevresult[0] = getattr(log, rank_result)
+    #     # prevresult[0] =log.mw_result
+    #     rlistgenderall.append([log.pk, rank])
+    #     if log.user == user:
+    #         # all_gender_index_user = all_gender_index
+    #         user_rank = rank
+    #     # else:
+    #         # all_gender_index += 1
+    # if user_rank != 0:
+    #     last_rank = rlistgenderall[-1][1]
+    #     percentile = round((1-(user_rank/last_rank)) * 100)
+    # else:
+    #     percentile = None
+    # return percentile
 
 
 @csrf_exempt
