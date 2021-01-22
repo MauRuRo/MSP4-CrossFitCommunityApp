@@ -8,7 +8,7 @@ class CustomGroup(models.Model):
     name = models.CharField(max_length=25, null=False, blank=False, default='')
     group_users = models.ManyToManyField(User, related_name="group_user", blank=False)
     admin = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
-    share = models.BooleanField(default=True)
+    share = models.BooleanField(default=False)
     users_delete = models.ManyToManyField(User, related_name="users_delete", blank=True)
 
     def __str__(self):

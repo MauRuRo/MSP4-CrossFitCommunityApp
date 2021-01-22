@@ -347,17 +347,28 @@ def editGroup(request):
 
 def deleteGroup(request):
     if request.is_ajax:
-        user = request.user
+        r_user = request.user
         group_id = request.POST["group_id"]
         group = CustomGroup.objects.get(pk=group_id)
-        group.users_delete.add(user)
+        group.users_delete.add(r_user)
         users_delete = group.users_delete.all()
         group_users = group.group_users.all()
+        del_admin = False
+        if r_user == group.admin:
+            del_admin = True
+            print("admin")
         delete = True
         for user in group_users:
             if not user in users_delete:
                 delete = False
+                print(user)
+                if del_admin:
+                    print("del_admin set")
+                    group.admin = user
+                    group.save()
                 break
+        if group.share == False:
+            delete = True
         if delete:
             group.delete()        
         data={"message":"Success"}

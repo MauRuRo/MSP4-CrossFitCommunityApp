@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class CustomGroupAdmin(admin.ModelAdmin):
-    fields = ('name', 'group_users', 'admin', 'share')
+    fields = ('name', 'group_users', 'admin', 'share', 'users_delete')
     list_display = (
         'name',
         'admin'
