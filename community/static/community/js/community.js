@@ -472,6 +472,96 @@ function  scrollToTopFast(element){
         }
         $("#groupform-submit-button").popover('show')
     })
+
+    // Emphasize members module for group editing.
+    $(document).on("click", "#goto-members", function(){
+        pagec = $(".page-content").offset().top
+        $("#members-title").animate({fontSize: "2rem"}, 500)
+        $("#members-title").animate({fontSize: "1.5rem"}, 500)
+        $('html, body').animate({
+                    scrollTop: ($(".block-members").offset().top - pagec -70)
+                }, 800)            
+    })
     
+    // EDIT GROUP
+    function editGroup(){
+        let group_id = $("#id_name").data("group-id")
+        let groupname = $("#id_name").val()
+        let sharegroup = $("#id_share").prop('checked')
+        let groupmembers = []
+        $("#add-users-form-list").children("li").each(function(){
+            groupmembers.push($(this).data('id'))
+        })
+        groupmembers = JSON.stringify(groupmembers)
+        $.ajax({
+            type: "POST",
+            url: "editGroup/",
+            data:{
+                group_id: group_id,
+                groupname: groupname,
+                sharegroup: sharegroup,
+                groupmembers: groupmembers,
+            },
+            dataType: "json",
+            success: function(data){
+                console.log("AJAX EDIT GROUP SUCCESS")
+                location.reload()
+            },
+            error: function(){
+
+            }
+        })
+    }
+    $(document).on("click", "#groupform-edit-button", function(){
+        editGroup()
+    })
+    $(document).on("click", ".delete-group", function(){
+        group_id = $(this).closest(".row").find(".group-select").attr('id')
+
+        element = $(this).closest(".col-12")
+        deleteGroup(group_id, element)
+    })
+    function deleteGroup(id, element){
+        let group_id = id
+        resetGroupSelection()
+        $("#group-global").removeClass("disabled-group").addClass("selected-group")
+        $.ajax({
+            type: "POST",
+            url: "deleteGroup/",
+            data:{
+                group_id:group_id
+            },
+            dataType: "json",
+            success: function(data){
+                element.remove()
+            },
+            error: function(){
+                console.log("delete failed ajax")
+            }
+
+        })
+    }
+
+    function resetGroupSelection() {
+        $.ajax({
+            type: "POST",
+            url: "setGroupSelect/",
+            data: {
+                age: false,
+                custom: false,
+                location: "group-global"
+            },
+            dataType: 'json',
+            success: function(data){
+                console.log("ajax Succes")
+                resetStats()
+            },
+            error: function(){
+                console.log("ajax FAIL")          
+            }
+        })
+    }
+
+
 
 })

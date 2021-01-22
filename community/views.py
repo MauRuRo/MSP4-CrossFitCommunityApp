@@ -82,7 +82,7 @@ def community(request):
     return render(request, template, context)
 
 
-@csrf_exempt
+# @csrf_exempt
 def setGroupSelect(request):
     if request.is_ajax:
         age = request.POST["age"]
@@ -183,7 +183,7 @@ def getGroupSelectionUsers(request):
     return select_group_users
 
 
-@csrf_exempt
+# @csrf_exempt
 def resetStats(request):
     selected_group = getGroupSelectionUsers(request)
     selected_group_logs = getGroupSelection(request)
@@ -229,7 +229,7 @@ def resetStats(request):
     return JsonResponse(output_data)
 
 
-@csrf_exempt
+# @csrf_exempt
 def lazyLoadGroup(request):
     selected_group = getGroupSelection(request)
     no_page = False
@@ -260,7 +260,7 @@ def lazyLoadGroup(request):
     return JsonResponse(output_data)
 
 
-@csrf_exempt
+# @csrf_exempt
 def searchMember(request):
     make = json.loads(request.POST["make"])
     print(make)
@@ -286,7 +286,7 @@ def searchMember(request):
     return JsonResponse(output_data)
 
 
-@csrf_exempt
+# @csrf_exempt
 def makeGroup(request):
     if request.is_ajax:
         admin = request.user
@@ -307,7 +307,6 @@ def makeGroup(request):
 @csrf_exempt
 def getGroupEditInfo(request):
     if request.is_ajax:
-        print("IM IN")
         group_id = request.POST["group_id"]
         group = CustomGroup.objects.get(pk=group_id)
         group_name = group.name
@@ -324,5 +323,32 @@ def getGroupEditInfo(request):
             "group_share": group_share,
             "group_members": group_members
         }
-        print(data)
+        return JsonResponse(data)
+
+
+def editGroup(request):
+    if request.is_ajax:
+        group_id = request.POST["group_id"]
+        groupname = request.POST["groupname"]
+        sharegroup = json.loads(request.POST["sharegroup"])
+        groupmembers = json.loads(request.POST["groupmembers"])
+        members = []
+        for member in groupmembers:
+            user = User.objects.get(pk=member)
+            members.append(user)
+        members.append(request.user)
+        edit_group = CustomGroup.objects.get(pk=group_id)
+        edit_group.name = groupname
+        edit_group.share = sharegroup
+        edit_group.group_users.set(members)
+        edit_group.save()
+        data={"message":"Success"}
+        return JsonResponse(data)
+
+
+def deleteGroup(request):
+    if request.is_ajax:
+        group_id = request.POST["group_id"]
+        CustomGroup.objects.filter(pk=group_id).delete()
+        data={"message":"Success"}
         return JsonResponse(data)

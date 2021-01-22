@@ -10,5 +10,7 @@ urlpatterns = [
     path('searchMember/', views.searchMember, name='searchMember'),
     path('makeGroup/', views.makeGroup, name='makeGroup'),
     path('getGroupEditInfo/', views.getGroupEditInfo, name='getGroupEditInfo'),
+    path('editGroup/', views.editGroup, name='editGroup'),
+    path('deleteGroup/', views.deleteGroup, name='deleteGroup'),
     # path('popGroup/', views.popGroup, name='popGroup'),
 ]

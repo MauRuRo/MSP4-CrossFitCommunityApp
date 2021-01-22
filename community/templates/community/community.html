@@ -31,6 +31,7 @@
 {% block postloadjs %}
 {{ block.super }}
 <script type="text/javascript" src="{% static 'community/js/community.js' %}"></script>
+<script type="text/javascript" src="{% static 'community/js/token.js' %}"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
