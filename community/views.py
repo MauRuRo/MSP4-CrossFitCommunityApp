@@ -39,8 +39,8 @@ def rounddown(x):
 
 def community(request):
     template = "community/community.html"
-    groups1 = CustomGroup.objects.filter(group_users=request.user).filter(share=True)
-    groups2 = CustomGroup.objects.filter(admin=request.user)
+    groups1 = CustomGroup.objects.filter(group_users=request.user).filter(share=True).exclude(users_delete=request.user)
+    groups2 = CustomGroup.objects.filter(admin=request.user).exclude(users_delete=request.user)
     groups = groups1.union(groups2)
     age = calc_age(request.user.userprofile.birthdate)
     age_bottom = str(rounddown(age))
@@ -119,7 +119,6 @@ def getGroupSelection(request):
         group_s = GroupSelect.objects.get(user=request.user)
         group_select = group_s.group
     except GroupSelect.DoesNotExist:
-        print("GROUP SELECT DOES NOT EXIST (LOGS)")
         group_select = {"age": "false", "custom": "false", "location": "group-global"}
         gs_obj = GroupSelect.objects.create(user=request.user, group=group_select)
     if group_select["custom"] == 'false':
@@ -348,7 +347,18 @@ def editGroup(request):
 
 def deleteGroup(request):
     if request.is_ajax:
+        user = request.user
         group_id = request.POST["group_id"]
-        CustomGroup.objects.filter(pk=group_id).delete()
+        group = CustomGroup.objects.get(pk=group_id)
+        group.users_delete.add(user)
+        users_delete = group.users_delete.all()
+        group_users = group.group_users.all()
+        delete = True
+        for user in group_users:
+            if not user in users_delete:
+                delete = False
+                break
+        if delete:
+            group.delete()        
         data={"message":"Success"}
         return JsonResponse(data)

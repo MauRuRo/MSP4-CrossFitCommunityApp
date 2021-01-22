@@ -9,6 +9,7 @@ class CustomGroup(models.Model):
     group_users = models.ManyToManyField(User, related_name="group_user", blank=False)
     admin = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
     share = models.BooleanField(default=True)
+    users_delete = models.ManyToManyField(User, related_name="users_delete", blank=True)
 
     def __str__(self):
         return self.name
