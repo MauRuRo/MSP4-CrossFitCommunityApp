@@ -107,19 +107,22 @@ $(document).ready(function(){
 
     function setEditForm(data, id){
         $("#no-members-added").hide()
+        $(".fa-user-plus").parent(".add-user").removeAttr("hidden").show()
         let edit_data = data
         let group_id = id
         let name = edit_data["name"]
         let members = JSON.parse(edit_data["members"])
-        // console.log(members)
         let share = edit_data["share"]
         $("#id_name").val(name).attr('data-group-id', group_id)
-        // for (member in members){
         for (i = 0; i < members.length; i++){
             member = members[i]
-            console.log(member)
+            console.log(member["name"])
+            console.log(member["id"])
             let list_html = "<li id='li-" + member["id"] + "' data-id='" + member["id"] + "'>" + member["name"] + "</li>"
             $("#add-users-form-list").append(list_html)
+            $(`#${member["id"]}.rank-card`).find(".rank-name").children("strong").css('color', 'blue')
+            $(`#${member["id"]}.rank-card`).find(".fa-user-plus").parent(".add-user").hide()
+            $(`#${member["id"]}.rank-card`).find(".fa-user-minus").parent(".add-user").removeAttr('hidden').show()
         }
         if (share == true){
             $("#id_share").prop("checked", true)
@@ -412,6 +415,10 @@ function  scrollToTopFast(element){
         $("#group-make-div").hide()
         $("#group-select-div").show()
         $(".add-user").hide()
+        $("#add-users-form-list").html('')
+        $("#no-members-added").show()
+        $("#id_share").prop("checked", true)
+        $("#id_name").val('')
     })
 
     // MAKE GROUP
@@ -423,9 +430,6 @@ function  scrollToTopFast(element){
             groupmembers.push($(this).data('id'))
         })
         groupmembers = JSON.stringify(groupmembers)
-        console.log(groupname)
-        console.log(sharegroup)
-        console.log(groupmembers)
         $.ajax({
             type: "POST",
             url: "makeGroup/",
@@ -444,16 +448,11 @@ function  scrollToTopFast(element){
             }
         })
     }
-    // let pop_const = false
     function hidePop(){
-        // console.log(pop_const)
-        // if (pop_const){
             if ($("#pop-incomplete").is(':visible')) {
                 $("#groupform-submit-button").popover('hide')
             }
-            // pop_const = false
         }
-    // }
     $(document).click(function(){
         hidePop()
     })
@@ -463,14 +462,12 @@ function  scrollToTopFast(element){
             makeGroup()
             return
         }else if ($("#id_name").val().length == 0 && $("#add-users-form-list").find("li").length == 0){
-            console.log("no both")
             $("#id_name").addClass("placeholder-fail")
             $("#no-members-added").css('color','red')
         }else if ($("#add-users-form-list").find("li").length == 0){
             console.log("no users")
             $("#no-members-added").css('color','red')
         }else{
-            console.log("no name")
             $("#id_name").addClass("placeholder-fail")
         }
         $("#groupform-submit-button").popover('show')

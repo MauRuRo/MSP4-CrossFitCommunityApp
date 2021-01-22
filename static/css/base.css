@@ -716,7 +716,6 @@ ol#rank-nav li {
         color:grey;
         padding:3px 15px;
         text-align:center;
-        margin-top:-10px;
     }
     #level-info-modal{
         color:grey;
@@ -1139,6 +1138,11 @@ ol#rank-nav li {
     }
     .placeholder-fail::-webkit-input-placeholder {
     color: red;
+}
+
+#goto-members:hover{
+    cursor:pointer;
+    color:blue;
 }
 /* MEDIAQUERIES */
 
