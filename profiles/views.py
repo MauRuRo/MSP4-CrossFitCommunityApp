@@ -108,7 +108,11 @@ def calc_level(request):
             wod_level = []
             for wod in workouts:
                 percentile = getLevels(request.user, wod)
+                # data = getLevels(request.user, wod)
+                # percentile = data["percentile"]
+                # wodlog = data["log"]
                 if percentile is not None:
+                    # wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "wodlog": wodlog.pk})
                     wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk})
                     percentiles.append(percentile)
             if len(percentiles) >= 3:
@@ -246,9 +250,11 @@ def edit_profile(request):
 
 
 def getLevels(user, wod):
-    user_l = user_list()
     # check which date is exactly a year ago
     lapse_date = date.today() - timedelta(days=365)
+    if Log.objects.filter(user=user, workout=wod, rx=True, date__gt=lapse_date).count() == 0:
+        percentile = None
+        return percentile
     ft = False
     if wod.workout_type == 'FT':
         ft = True
@@ -263,24 +269,28 @@ def getLevels(user, wod):
     # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
     all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result_order}')
     # create list of log id's max result for this workout for every user
+    user_l = user_list()
     log_id_list = id_list(user_l, all_logs, wod.workout_type)
     # filter out all none max results from query
     all_logs_rank = all_logs.filter(id__in=log_id_list)
-    if all_logs_rank.filter(user=user).count() == 0:
-        percentile = None
+    # if all_logs_rank.filter(user=user).count() == 0:
+    #     percentile = None
+    #     # user_log = None
+    # else:
+    total_users = all_logs_rank.all().count()
+    user_log = all_logs_rank.get(user=user)
+    user_result = getattr(user_log, rank_result)
+    if ft:
+        filter_dict = {f'{rank_result}__gte':user_result}
+        greater_users = all_logs_rank.filter(**filter_dict).count()
+        percentile = round(greater_users/total_users*100)
     else:
-        total_users = all_logs_rank.all().count()
-        user_log = all_logs_rank.get(user=user)
-        user_result = getattr(user_log, rank_result)
-        if ft:
-            filter_dict = {f'{rank_result}__gte':user_result}
-            greater_users = all_logs_rank.filter(**filter_dict).count()
-            percentile = round(greater_users/total_users*100)
-        else:
-            filter_dict = {f'{rank_result}__lte':user_result}
-            greater_users = all_logs_rank.filter(**filter_dict).count()
-            percentile = round(greater_users/total_users*100)
+        filter_dict = {f'{rank_result}__lte':user_result}
+        greater_users = all_logs_rank.filter(**filter_dict).count()
+        percentile = round(greater_users/total_users*100)
+    # data = {"percentile": percentile, "log": user_log}
     return percentile
+    # return data
     # rank = 0
     # prevresult = [0, 0]
     # # all_gender_index = 1

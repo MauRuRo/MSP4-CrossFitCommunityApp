@@ -98,8 +98,7 @@ $(document).ready(function(){
            if ($("#level-info").is(":visible")){
                 $("#level-info").hide()
            }else{
-                $("#level-info").removeAttr('hidden')
-                $("#level-info").show()
+                $("#level-info").removeAttr('hidden').show()
            }
            
        })

@@ -373,3 +373,24 @@ def deleteGroup(request):
             group.delete()        
         data={"message":"Success"}
         return JsonResponse(data)
+
+
+def getMemberInfo(request):
+    if request.is_ajax:
+        member = request.POST["member"]
+        hero_levels = HeroLevels.objects.get(user__pk=member)
+        cat_levels = hero_levels.level_data
+        general_level = hero_levels.general_level
+        categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
+        calling_group_html = loader.render_to_string(
+        '../../profiles/templates/profiles/includes/herolevel.html',
+        {
+            'cat_levels': cat_levels,
+            'general_level': general_level,
+            'categories': categories,
+        }
+        )
+    output_data = {
+        'calling_group_html': calling_group_html,
+    }
+    return JsonResponse(output_data)
