@@ -14,6 +14,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Avg, Max, Min, Sum
 from django.template import loader
 from django.http import Http404, HttpResponse, JsonResponse
+from asgiref.sync import sync_to_async
 import decimal
 import random
 import urllib.request
@@ -24,6 +25,9 @@ from workouts.views import id_list, user_list
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .templatetags.calc_functions import calc_age
+from asgiref.sync import sync_to_async
+import asyncio
+import time
 
 # @require_POST
 # def cache_payment_create_profile(request):
@@ -95,10 +99,33 @@ def profile(request):
         return redirect(reverse('create_profile'))
 
 
+async def calc_level_test(request):
+    # return await asyncio.gather(calc_level_sync(request))
+    bdata = await asyncio.gather(calc_level_sync(request))
+    bdata = bdata[0]
+    print(bdata)
+    general_level = bdata["general_level"]
+    cat_levels = bdata["cat_levels"]
+    new_levels_html = loader.render_to_string(
+    'profiles/includes/herolevel.html',
+    {
+        "general_level": general_level,
+        "cat_levels": cat_levels
+    })
+    data = {
+        'new_levels_html': new_levels_html
+    }
+    # data = json.loads(data)    
+    print("checking data")
+    return JsonResponse(data)
+
+
 @csrf_exempt
-def calc_level(request):
+@sync_to_async
+def calc_level_sync(request):
     if request.is_ajax():
         print("CHECK")
+        start_time = time.time()
         if request.POST["user"] == "request":
             user = request.user
         else:
@@ -114,6 +141,84 @@ def calc_level(request):
             for wod in workouts:
                 # percentile = getLevels(request.user, wod)
                 data = getLevels(user, wod)
+                # data = await asyncio.gather(getLevels(user, wod))
+                percentile = data["percentile"]
+                result = data["result"]
+                if percentile is not None:
+                    wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "result": result})
+                    # wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk})
+                    percentiles.append(percentile)
+            if len(percentiles) >= 3:
+                accuracy = "high"
+            elif len(percentiles) == 2:
+                accuracy = "medium"
+            elif len(percentiles) == 1:
+                accuracy = "low"
+            else:
+                accuracy = "none"
+            if accuracy != "none":
+                avg_percentile = round(statistics.mean(percentiles))
+            else:
+                avg_percentile = "none"
+            cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level": wod_level})
+        print("HALFWAY " + user.username)
+        avg_list = []
+        for item in cat_levels:
+            if item["perc"] != "none":
+                avg_list.append(item["perc"])
+        if len(avg_list) != 0:
+            general_level = round(statistics.mean(avg_list))
+        else:
+            general_level = 0
+        level_data = HeroLevels.objects.filter(user=user)
+        level_data.update(level_data=cat_levels)
+        level_data.update(general_level=general_level)
+        # new_levels_html = loader.render_to_string(
+        # 'profiles/includes/herolevel.html',
+        # {
+        #     "general_level": general_level,
+        #     "cat_levels": cat_levels
+        # })
+        # data = {
+        #     'new_levels_html': new_levels_html
+        # }
+        data = {
+            "general_level": general_level,
+            "cat_levels": cat_levels
+        }
+        print("SUCCESS "  + user.username)
+        total = (time.time() -  start_time)
+        print("total time: ", total)
+        # return JsonResponse(data)
+        # data = str(json.dumps(data))
+        return data
+    else:
+        print("FAILED HERE")
+        data = {"message": "Failed update"}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@csrf_exempt
+def calc_level(request):
+    if request.is_ajax():
+        print("CHECK")
+        start_time = time.time()
+        if request.POST["user"] == "request":
+            user = request.user
+        else:
+            user = User.objects.get(pk=request.POST["user"])
+        users = User.objects.all()
+        categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
+        cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
+        cat_levels = []
+        for cat in categories:
+            workouts = Workout.objects.filter(workout_category=cat_reverse[cat])
+            percentiles = []
+            wod_level = []
+            for wod in workouts:
+                # percentile = getLevels(request.user, wod)
+                data = getLevels(user, wod)
+                # data = await asyncio.gather(getLevels(user, wod))
                 percentile = data["percentile"]
                 result = data["result"]
                 if percentile is not None:
@@ -154,7 +259,13 @@ def calc_level(request):
         data = {
             'new_levels_html': new_levels_html
         }
+        data = {
+            "general_level": general_level,
+            "cat_levels": cat_levels
+        }
         print("SUCCESS "  + user.username)
+        total = (time.time() -  start_time)
+        print("total time: ", total)
         return JsonResponse(data)
     else:
         print("FAILED HERE")
@@ -258,59 +369,57 @@ def getLevels(user, wod):
         "result": user_result
         }
         return data
-    ft = False
-    amrap = False
-    if wod.workout_type == 'FT':
-        ft = True
-        rank_result = 'ft_result'
-        rank_result_order = 'ft_result'
-    elif wod.workout_type == 'AMRAP':
-        amrap = True
-        rank_result = 'amrap_result'
-        rank_result_order = '-amrap_result'
     else:
-        rank_result = 'mw_result'
-        rank_result_order = '-mw_result'
-    # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
-    all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result_order}')
-    # create list of log id's max result for this workout for every user
-    user_l = user_list()
-    log_id_list = id_list(user_l, all_logs, wod.workout_type)
-    # filter out all none max results from query
-    all_logs_rank = all_logs.filter(id__in=log_id_list)
-    # if all_logs_rank.filter(user=user).count() == 0:
-    #     percentile = None
-    #     # user_log = None
-    # else:
-    total_users = all_logs_rank.all().count()
-    user_log = all_logs_rank.get(user=user)
-    user_result = getattr(user_log, rank_result)
-    if ft:
-        filter_dict = {f'{rank_result}__gte':user_result}
-        greater_users = all_logs_rank.filter(**filter_dict).count()
-        percentile = round(greater_users/total_users*100)
-    else:
-        filter_dict = {f'{rank_result}__lte':user_result}
-        greater_users = all_logs_rank.filter(**filter_dict).count()
-        percentile = round(greater_users/total_users*100)
-    user_result = str(user_result)
-    if ft:
-        while user_result[0] == "0" or user_result[0] == ":":
-            user_result = user_result[1:]
-    else:
-        while (user_result[-1] == "0" and "." in user_result) or user_result[-1] == ".":
-            user_result = user_result[0:-1]
-        if amrap:
-            user_result = user_result + " rounds"
+        ft = False
+        amrap = False
+        if wod.workout_type == 'FT':
+            ft = True
+            rank_result = 'ft_result'
+            rank_result_order = 'ft_result'
+        elif wod.workout_type == 'AMRAP':
+            amrap = True
+            rank_result = 'amrap_result'
+            rank_result_order = '-amrap_result'
         else:
-            user_result = user_result + "kg"
-    data = {
-        "percentile": percentile,
-        "result": user_result
-        }
-    print(user)
-    # return percentile
-    return data
+            rank_result = 'mw_result'
+            rank_result_order = '-mw_result'
+        # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+        all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result_order}')
+        # create list of log id's max result for this workout for every user
+        user_l = user_list()
+        log_id_list = id_list(user_l, all_logs, wod.workout_type)
+        # filter out all none max results from query
+        all_logs_rank = all_logs.filter(id__in=log_id_list)
+        total_users = all_logs_rank.all().count()
+        user_log = all_logs_rank.get(user=user)
+        user_result = getattr(user_log, rank_result)
+        if ft:
+            filter_dict = {f'{rank_result}__gte':user_result}
+            greater_users = all_logs_rank.filter(**filter_dict).count()
+            percentile = round(greater_users/total_users*100)
+        else:
+            filter_dict = {f'{rank_result}__lte':user_result}
+            greater_users = all_logs_rank.filter(**filter_dict).count()
+            percentile = round(greater_users/total_users*100)
+        user_result = str(user_result)
+        if ft:
+            while user_result[0] == "0" or user_result[0] == ":":
+                user_result = user_result[1:]
+        else:
+            while (user_result[-1] == "0" and "." in user_result) or user_result[-1] == ".":
+                user_result = user_result[0:-1]
+            if amrap:
+                user_result = user_result + " rounds"
+            else:
+                user_result = user_result + "kg"
+        data = {
+            "percentile": percentile,
+            "result": user_result
+            }
+        print(user)
+        return data
+
+
     # rank = 0
     # prevresult = [0, 0]
     # # all_gender_index = 1
