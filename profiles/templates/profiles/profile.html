@@ -10,7 +10,8 @@
         <div class="row h-100 align-items-center">
             <div class="col-sm-6 col-lg-3 content-block order-2 order-sm-3 align-self-start">
                 <div class="fillblock p-2">
-                    <div class="container" id="user-info-block">
+                    {% include 'profiles/includes/profile_info.html' %}
+                    <!-- <div class="container" id="user-info-block">
                         <div class="row justify-content-center">
                         <h4 class="block-title">{{ profile.full_name }}</h4>
                             <ul class="list-unstyled profile-info-list">
@@ -24,7 +25,7 @@
                         <div class="row justify-content-end">
                              <button class="btn rounded-1 btn-sm btn-black" id="toggle-edit-profile-button"><i class="far fa-edit fa-edit-profile"></i></button>
                         </div>
-                    </div>
+                    </div> -->
                     <div id="edit-form-block" hidden>
                         {% include 'profiles/includes/edit_profile_include.html' %}
                     </div>

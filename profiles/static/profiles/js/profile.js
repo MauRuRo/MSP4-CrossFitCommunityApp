@@ -78,6 +78,10 @@ $(document).ready(function(){
          $.ajax({
                 type:"POST",
                 url: "/profile/calc_level/",
+                data:{
+                    user: "request",
+                },
+                dataType: "json",
                 success: function(data){
                     $("#level-loader").hide()
                     $("#level-block").html(data.new_levels_html)
@@ -94,11 +98,11 @@ $(document).ready(function(){
        };
        updateLevels()
 
-       $(document).on("click", "#level-info-modal", function(){
-           if ($("#level-info").is(":visible")){
-                $("#level-info").hide()
+       $(document).on("click", "#level-info-modal-hl", function(){
+           if ($("#level-info-hl").is(":visible")){
+                $("#level-info-hl").hide()
            }else{
-                $("#level-info").removeAttr('hidden').show()
+                $("#level-info-hl").removeAttr('hidden').show()
            }
            
        })

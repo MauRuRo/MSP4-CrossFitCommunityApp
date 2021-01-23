@@ -37,15 +37,24 @@ def rounddown(x):
     return int(math.floor(x / 10)) * 10
 
 
+def getAgeGroup(request):
+    age = calc_age(request.user.userprofile.birthdate)
+    age_bottom = str(rounddown(age))
+    age_top = str(roundup(age))
+    age_group = age_bottom + "-" + age_top + " years"
+    return age_group
+
+
 def community(request):
     template = "community/community.html"
     groups1 = CustomGroup.objects.filter(group_users=request.user).filter(share=True).exclude(users_delete=request.user)
     groups2 = CustomGroup.objects.filter(admin=request.user).exclude(users_delete=request.user)
     groups = groups1.union(groups2)
-    age = calc_age(request.user.userprofile.birthdate)
-    age_bottom = str(rounddown(age))
-    age_top = str(roundup(age))
-    age_group = age_bottom + "-" + age_top + " years"
+    # age = calc_age(request.user.userprofile.birthdate)
+    # age_bottom = str(rounddown(age))
+    # age_top = str(roundup(age))
+    # age_group = age_bottom + "-" + age_top + " years"
+    age_group = getAgeGroup(request)
     selected_group = getGroupSelectionUsers(request)
     selected_group_logs = getGroupSelection(request)
     selected_group = selected_group.order_by("-herolevels__general_level")
@@ -58,15 +67,27 @@ def community(request):
     month = selected_group_logs.filter(date__gte=date_month).count()
     admin = False
     group_s = getGroup(request)
+    groupname = ''
     if group_s["custom"] != "false":
         c_group = CustomGroup.objects.get(pk=group_s["custom"])
+        groupname = c_group.name
         admin = c_group.admin
+    else:
+        if group_s["location"] == "group-city":
+            groupname = request.user.userprofile.town_or_city
+        elif group_s["location"] == "group-country":
+            groupname = request.user.userprofile.get_country_display()
+        else:
+            groupname = "global"
+        if group_s["age"] == "true":
+            groupname = str(groupname) + ' ' + age_group.split(' ')[0]
     average_user = round(month / members)
     average_l = selected_group.aggregate(Avg('herolevels__general_level'))
     average_level = round(average_l['herolevels__general_level__avg'])
     form = CustomGroupForm()
     context = {
         'form': form,
+        'groupname': groupname,
         'admin': admin,
         'groups': groups,
         'age_group': age_group,
@@ -189,6 +210,7 @@ def resetStats(request):
     selected_group = selected_group.order_by("-herolevels__general_level")
     group = Paginator(selected_group, 25)
     group = group.page(1)
+    age_group = getAgeGroup(request)
     members = selected_group.count()
     male = selected_group.filter(userprofile__gender="M").count()
     female = selected_group.filter(userprofile__gender="F").count()
@@ -196,15 +218,27 @@ def resetStats(request):
     month = selected_group_logs.filter(date__gte=date_month).count()
     admin = False
     group_s = getGroup(request)
+    groupname = ''
     if group_s["custom"] != "false":
         c_group = CustomGroup.objects.get(pk=group_s["custom"])
+        groupname = c_group.name
         admin = c_group.admin
+    else:
+        if group_s["location"] == "group-city":
+            groupname = request.user.userprofile.town_or_city
+        elif group_s["location"] == "group-country":
+            groupname = request.user.userprofile.get_country_display()
+        else:
+            groupname = "global"
+        if group_s["age"] == "true":
+            groupname = str(groupname) + ' ' + age_group.split(' ')[0]
     average_user = round(month / members)
     average_l = selected_group.aggregate(Avg('herolevels__general_level'))
     average_level = round(average_l['herolevels__general_level__avg'])
     stats_html = loader.render_to_string(
         'community/includes/groupstats.html',
         {
+        'groupname': groupname,
         'admin': admin,
         'members': members,
         'male': male,
@@ -377,7 +411,9 @@ def deleteGroup(request):
 
 def getMemberInfo(request):
     if request.is_ajax:
-        member = request.POST["member"]
+        member = request.POST["user_id"]
+        profile_user = User.objects.get(pk=member)
+        profile = profile_user.userprofile
         hero_levels = HeroLevels.objects.get(user__pk=member)
         cat_levels = hero_levels.level_data
         general_level = hero_levels.general_level
@@ -390,7 +426,14 @@ def getMemberInfo(request):
             'categories': categories,
         }
         )
+        calling_group_two = loader.render_to_string(
+        '../../profiles/templates/profiles/includes/profile_info.html',
+        {
+            'profile': profile,
+        }
+        )
     output_data = {
         'calling_group_html': calling_group_html,
+        'calling_group_two': calling_group_two,
     }
     return JsonResponse(output_data)

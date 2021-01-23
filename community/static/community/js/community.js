@@ -22,13 +22,21 @@ $(document).ready(function(){
             $("#group-global").addClass('selected-group')
         }
     }
-    $(document).on("click", "#level-info-modal", function(){
-           if ($("#level-info").is(":visible")){
+    $(document).on("click", "#level-info-modal-gm", function(){
+           if ($("#level-info-gm").is(":visible")){
                 $("#level-info").hide()
            }else{
-                $("#level-info").removeAttr('hidden')
-                $("#level-info").show()
+                $("#level-info-gm").removeAttr('hidden')
+                $("#level-info-gm").show()
            }
+       })
+       $(document).on("click", "#level-info-modal-hl", function(){
+           if ($("#level-info-hl").is(":visible")){
+                $("#level-info-hl").hide()
+           }else{
+                $("#level-info-hl").removeAttr('hidden').show()
+           }
+           
        })
 
     $(".group-options").each(function(){
@@ -562,6 +570,117 @@ function  scrollToTopFast(element){
         })
     }
 
+    $(document).on("click", ".card-col", function(){
+        let memberid = $(this).closest(".rank-card").attr('id')
+        getMemberInfo(memberid)
+    })
 
+    function getMemberInfo(memberid){
+        let user_id = memberid
+        $.ajax({
+            type: "POST",
+            url: "getMemberInfo/",
+            data:{
+                user_id: user_id
+            },
+            dataType: "json",
+            success: function(data){
+                console.log("ajax getMemberInfo Succes")
+                $("#group-select-div, #group-make-div, #group-stats-div").hide()
+                let herolevels = data.calling_group_html
+                let userinfo = data.calling_group_two
+                $(".hl-container:visible, #user-info-block:visible").remove()
+                $(".block-main").append(herolevels)
+                $(".block-stats").append(userinfo)
+                $(".fa-edit-profile").closest(".row").remove()
+                $(".user-info-header").css('margin-top', '8px')
+                updateLevelCSS()
+                $(".hl-container").prepend('<div class="row justify-content-end"><i class="fas fa-times" id="close-hl"></i></div>')
+                $("#close-hl").css('margin-top', '8px').css('margin-bottom', '-18px')
+                var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+                var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl) 
+                    })
+                updateLevels(user_id)
+            },
+            error: function(){
+                console.log("getMemberInfo Ajax failed")
+            }
+        })
+    }
 
+    function updateLevelCSS(){
+        $(".level-bar").each(function(){
+            let height = $(this).next().text() + "px"
+            if (height == "nonepx"){
+                height = '0px'
+            }
+            $(this).css("min-height", height)
+            let name = $(this).parent().next(".level-cat-name")[0]
+            let namewidth = name.offsetWidth
+            let namespan = $(this).parent().next(".level-cat-name").children("span")[0]
+            let namespanwidth = namespan.offsetWidth
+            if (namespanwidth > namewidth){
+                $(this).parent().next(".level-cat-name").css("margin-left", "-100%")
+                $(this).parent().next(".level-cat-name").css("margin-right", "-100%")
+            }
+            if ($(".acc-high").length > 4) {
+                $("#gen-level").css("color", "blue")
+            }else if ($(".acc-low").length > 3) {
+                $("#gen-level").css("color", "red")
+            }else if ($(".acc-none").length > 3){
+                $("#gen-level").css("color", "red")
+            }else{
+                $("#gen-level").css("color", "#ffc107")
+            }
+        })
+    }
+
+    $(document).on("click", "#close-hl, .user-info-header", function(){
+        $(".hl-container:visible, #user-info-block:visible").remove()
+        $("#group-select-div, #group-stats-div").show()
+    })
+
+    let xhr
+    let active = false
+
+    function updateLevels(id){
+        let user_id = id
+        console.log(user_id)
+        $("#level-loader").removeAttr("hidden")
+        $("#level-loader").show()
+        if(active) { 
+            console.log("killing active"); 
+            xhr.abort(); 
+            $("#level-loader").html("<p>Getting most recent statistics...<i class='fas fa-circle-notch fa-spin'></i></p>");
+        }
+        active=true;
+        console.log("going into Ajax") 
+        xhr = $.ajax({
+                type:"POST",
+                url: "/profile/calc_level/",
+                data:{
+                    user: user_id
+                },
+                dataType: "json",
+                success: function(data){
+                    $("#level-loader").hide()
+                    $(".hl-container").remove()
+                    $(".block-main").append(data.new_levels_html)
+                    $(".hl-container").prepend('<div class="row justify-content-end"><i class="fas fa-times" id="close-hl"></i></div>')
+                    $("#close-hl").css('margin-top', '8px').css('margin-bottom', '-18px')
+                    updateLevelCSS()
+                    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+                    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                    return new bootstrap.Popover(popoverTriggerEl)})
+                    active = false
+                },
+                error: function(){
+                    console.log("Failed Updating Levels " + user_id)
+                    $("#level-loader").children("p").html("Failed to get most recent statistics. Please refresh page to try again.")
+                    active = false
+                }
+            })
+       };
+       
 })

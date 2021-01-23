@@ -1,22 +1,25 @@
-<div class="block-header sticky-top justify-content-center bh-community">
-    <h4 class="block-title">Group Stats</h4>
-</div>
-<div class="row">
-    <ul class="list-unstyled profile-info-list">
-        <li class="hero-level-group">HERO LEVEL: <span class="group-level">{{ average_level }}</span></li>
-    </ul>
-    <ul class="list-unstyled profile-info-list">
-        <li>Members: <span class="">{{ members }}</span></li>
-        <li>Male: <span class="">{{ male }}</span></li>
-        <li>Female: <span class="">{{ female }}</span></li>
-    </ul>
-    <ul class="list-unstyled profile-info-list">
-        <li>This Month: <span class="">{{ month }} <span class="tail-info">WODs</span></span></li>
-        <li>Avg: <span class="">{{ average_user }}</span> <span class="tail-info">WODs/memb/month</span></li>
-    </ul>
-    {% if admin %}
-    <ul class="list-unstyled profile-info-list group-admin-list">
-        <li class="group-admin">Admin: <a href="#" class="admin-group">{{ admin.userprofile.full_name }}</a></li>
-    </ul>
-    {% endif %}
+<div id="group-stats-div">
+    <div class="block-header sticky-top justify-content-center bh-community">
+        <h4 class="block-title">Group Stats</h4>
+        <h5 class="stats-name">{{ groupname }}</h5>
+    </div>
+    <div class="row">
+        <ul class="list-unstyled profile-info-list">
+            <li class="hero-level-group">HERO LEVEL: <span class="group-level">{{ average_level }}</span></li>
+        </ul>
+        <ul class="list-unstyled profile-info-list">
+            <li>Members: <span class="">{{ members }}</span></li>
+            <li>Male: <span class="">{{ male }}</span></li>
+            <li>Female: <span class="">{{ female }}</span></li>
+        </ul>
+        <ul class="list-unstyled profile-info-list">
+            <li>This Month: <span class="">{{ month }} <span class="tail-info">WODs</span></span></li>
+            <li>Avg: <span class="">{{ average_user }}</span> <span class="tail-info">WODs/memb/month</span></li>
+        </ul>
+        {% if admin %}
+        <ul class="list-unstyled profile-info-list group-admin-list">
+            <li class="group-admin">Admin: <a href="#" class="admin-group">{{ admin.userprofile.full_name }}</a></li>
+        </ul>
+        {% endif %}
+    </div>
 </div>

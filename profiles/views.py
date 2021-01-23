@@ -98,6 +98,11 @@ def profile(request):
 @csrf_exempt
 def calc_level(request):
     if request.is_ajax():
+        print("CHECK")
+        if request.POST["user"] == "request":
+            user = request.user
+        else:
+            user = User.objects.get(pk=request.POST["user"])
         users = User.objects.all()
         categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
@@ -107,13 +112,13 @@ def calc_level(request):
             percentiles = []
             wod_level = []
             for wod in workouts:
-                percentile = getLevels(request.user, wod)
-                # data = getLevels(request.user, wod)
-                # percentile = data["percentile"]
-                # wodlog = data["log"]
+                # percentile = getLevels(request.user, wod)
+                data = getLevels(user, wod)
+                percentile = data["percentile"]
+                result = data["result"]
                 if percentile is not None:
-                    # wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "wodlog": wodlog.pk})
-                    wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk})
+                    wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "result": result})
+                    # wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk})
                     percentiles.append(percentile)
             if len(percentiles) >= 3:
                 accuracy = "high"
@@ -128,6 +133,7 @@ def calc_level(request):
             else:
                 avg_percentile = "none"
             cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level": wod_level})
+        print("HALFWAY " + user.username)
         avg_list = []
         for item in cat_levels:
             if item["perc"] != "none":
@@ -136,18 +142,9 @@ def calc_level(request):
             general_level = round(statistics.mean(avg_list))
         else:
             general_level = 0
-        level_data = HeroLevels.objects.filter(user=request.user)
-        # if level_data.count() != 0:
+        level_data = HeroLevels.objects.filter(user=user)
         level_data.update(level_data=cat_levels)
         level_data.update(general_level=general_level)
-            
-
-        # else:
-        #     hero_levels = HeroLevels()
-        #     hero_levels.user = user
-        #     hero_levels.data_level = cat_levels
-        #     hero_levels.general_level = general_level
-        #     hero_levels.save()
         new_levels_html = loader.render_to_string(
         'profiles/includes/herolevel.html',
         {
@@ -157,6 +154,7 @@ def calc_level(request):
         data = {
             'new_levels_html': new_levels_html
         }
+        print("SUCCESS "  + user.username)
         return JsonResponse(data)
     else:
         print("FAILED HERE")
@@ -254,13 +252,20 @@ def getLevels(user, wod):
     lapse_date = date.today() - timedelta(days=365)
     if Log.objects.filter(user=user, workout=wod, rx=True, date__gt=lapse_date).count() == 0:
         percentile = None
-        return percentile
+        user_result = None
+        data = {
+        "percentile": percentile,
+        "result": user_result
+        }
+        return data
     ft = False
+    amrap = False
     if wod.workout_type == 'FT':
         ft = True
         rank_result = 'ft_result'
         rank_result_order = 'ft_result'
     elif wod.workout_type == 'AMRAP':
+        amrap = True
         rank_result = 'amrap_result'
         rank_result_order = '-amrap_result'
     else:
@@ -288,9 +293,24 @@ def getLevels(user, wod):
         filter_dict = {f'{rank_result}__lte':user_result}
         greater_users = all_logs_rank.filter(**filter_dict).count()
         percentile = round(greater_users/total_users*100)
-    # data = {"percentile": percentile, "log": user_log}
-    return percentile
-    # return data
+    user_result = str(user_result)
+    if ft:
+        while user_result[0] == "0" or user_result[0] == ":":
+            user_result = user_result[1:]
+    else:
+        while (user_result[-1] == "0" and "." in user_result) or user_result[-1] == ".":
+            user_result = user_result[0:-1]
+        if amrap:
+            user_result = user_result + " rounds"
+        else:
+            user_result = user_result + "kg"
+    data = {
+        "percentile": percentile,
+        "result": user_result
+        }
+    print(user)
+    # return percentile
+    return data
     # rank = 0
     # prevresult = [0, 0]
     # # all_gender_index = 1
@@ -318,43 +338,43 @@ def getLevels(user, wod):
     # return percentile
 
 
-@csrf_exempt
-def getPersonalHistory(request):
-    page = request.POST["page"]
-    # create list of all user id's
-    member_comments = MemberComment.objects.filter(log_id__user=request.user)
-    all_logs = Log.objects.all().order_by('-date')
-    calling_group = all_logs.filter(user=request.user)
-    # user_logs[:25]
-    # check for superuser
-    no_page = False
-    superuser = False
-    if request.user.is_superuser:
-        superuser = True
-    profile = request.user
-    results_per_page = 25
-    paginator_calling_group = Paginator(calling_group, results_per_page)
-    try:
-        calling_group = paginator_calling_group.page(page)
-    except PageNotAnInteger:
-        calling_group = paginator_calling_group.page(2)
-    except EmptyPage:
-        print("ERROR LAST PAGE")
-        calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
-        no_page = True
-    calling_group_html = loader.render_to_string(
-        'profiles/includes/personal_history.html',
-        {
-        'h_group': calling_group,
-        'member_comments':member_comments,
-        'superuser': superuser,
-        "profile": profile,
-        "no_page": no_page
-        }
-    )
-    # package output data and return it as a JSON object
-    output_data = {
-        'calling_group_html': calling_group_html,
-        'has_next': calling_group.has_next()
-    }
-    return JsonResponse(output_data)
+# @csrf_exempt
+# def getPersonalHistory(request):
+#     page = request.POST["page"]
+#     # create list of all user id's
+#     member_comments = MemberComment.objects.filter(log_id__user=request.user)
+#     all_logs = Log.objects.all().order_by('-date')
+#     calling_group = all_logs.filter(user=request.user)
+#     # user_logs[:25]
+#     # check for superuser
+#     no_page = False
+#     superuser = False
+#     if request.user.is_superuser:
+#         superuser = True
+#     profile = request.user
+#     results_per_page = 25
+#     paginator_calling_group = Paginator(calling_group, results_per_page)
+#     try:
+#         calling_group = paginator_calling_group.page(page)
+#     except PageNotAnInteger:
+#         calling_group = paginator_calling_group.page(2)
+#     except EmptyPage:
+#         print("ERROR LAST PAGE")
+#         calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
+#         no_page = True
+#     calling_group_html = loader.render_to_string(
+#         'profiles/includes/personal_history.html',
+#         {
+#         'h_group': calling_group,
+#         'member_comments':member_comments,
+#         'superuser': superuser,
+#         "profile": profile,
+#         "no_page": no_page
+#         }
+#     )
+#     # package output data and return it as a JSON object
+#     output_data = {
+#         'calling_group_html': calling_group_html,
+#         'has_next': calling_group.has_next()
+#     }
+#     return JsonResponse(output_data)

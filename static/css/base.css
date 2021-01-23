@@ -614,6 +614,17 @@ label[for='image-clear_id'] {
     top:-15px;
     left:-15px;
 }
+.pf-circle-container{
+    width:100%;
+}
+.pf-inf-circle {
+    height:120px;
+    width:120px;
+    border-radius:50%;
+    border: 1px solid blue;
+    background-size: cover;
+    margin:10px;
+}
 
 .prc-tm{
     margin-top:3px;
@@ -647,6 +658,9 @@ label[for='image-clear_id'] {
     text-align:center;
     cursor: pointer;
     /* width:100%; */
+}
+.stats-name{
+    text-align:center;
 }
 
 .his-wods,
@@ -717,7 +731,8 @@ ol#rank-nav li {
         padding:3px 15px;
         text-align:center;
     }
-    #level-info-modal{
+    #level-info-modal-gm,
+    #level-info-modal-hl{
         color:grey;
         margin-left:3px;
         cursor: pointer;
@@ -783,7 +798,7 @@ ol#rank-nav li {
         color:red!important;
     }
     .col-levels {
-        margin-top:5px;
+        margin-top:19px;
         margin-bottom:17px;
     }
 
@@ -959,6 +974,7 @@ ol#rank-nav li {
     .popover{
         max-height:200px;
         overflow: scroll;
+        max-width: 300px!important;
     }
     .week-low,
     .month-low {
@@ -1143,6 +1159,10 @@ ol#rank-nav li {
 #goto-members:hover{
     cursor:pointer;
     color:blue;
+}
+#close-hl{
+    color:grey;
+    cursor: pointer;
 }
 /* MEDIAQUERIES */
 
