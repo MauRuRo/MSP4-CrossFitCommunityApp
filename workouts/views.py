@@ -21,6 +21,7 @@ from community.views import roundup, rounddown, getGroupSelection
 # from django.template.defaultfilters import stringfilter
 import json
 import math
+import time
 
 
 def user_list():
@@ -31,27 +32,67 @@ def user_list():
     return user_l
 
 
+# def id_list(userlist, queryset, wodtype):
+#     """Create list of Log id's that are best results for each user"""
+#     listtime = time.time()
+#     log_id_list = []
+#     if wodtype == 'FT':
+#         for log_user in userlist:
+#             max_log_id = None
+#             max_result_q = queryset.filter(user=log_user).order_by('ft_result').first()
+#             if max_result_q:
+#                 max_result_user = max_result_q.ft_result
+#                 max_log_id = max_result_q.id
+#                 log_id_list.append(max_log_id)
+#     elif wodtype == 'AMRAP':
+#         for log_user in userlist:
+#             max_log_id = None
+#             max_result_q = queryset.filter(user=log_user).order_by('-amrap_result').first()
+#             if max_result_q:
+#                 max_result_user = max_result_q.amrap_result
+#                 max_log_id = max_result_q.id
+#                 log_id_list.append(max_log_id)
+#     else:
+#         for log_user in userlist:
+#             max_log_id = None
+#             max_result_q = queryset.filter(user=log_user).order_by('-mw_result').first()
+#             if max_result_q:
+#                 max_result_user = max_result_q.mw_result
+#                 max_log_id = max_result_q.id
+#                 log_id_list.append(max_log_id)
+#     total = (time.time() - listtime)
+#     print("TIME FOR LOG ID LIST: ", total)
+#     return log_id_list
 def id_list(userlist, queryset, wodtype):
     """Create list of Log id's that are best results for each user"""
+    listtime = time.time()
     log_id_list = []
     if wodtype == 'FT':
         for log_user in userlist:
-            max_result_user = queryset.filter(user=log_user).aggregate(Min('ft_result'))['ft_result__min']
-            max_log_id = queryset.filter(user=log_user).filter(ft_result=max_result_user).aggregate(Max('id'))['id__max']
-            if max_log_id != None:
+            max_log_id = None
+            max_result_q = queryset.filter(user=log_user).order_by('ft_result').first()
+            if max_result_q:
+                max_result_user = max_result_q.ft_result
+                max_log_id = max_result_q.id
                 log_id_list.append(max_log_id)
     elif wodtype == 'AMRAP':
         for log_user in userlist:
-            max_result_user = queryset.filter(user=log_user).aggregate(Max('amrap_result'))['amrap_result__max']
-            max_log_id = queryset.filter(user=log_user).filter(amrap_result=max_result_user).aggregate(Max('id'))['id__max']
-            if max_log_id != None:
+            max_log_id = None
+            max_result_q = queryset.filter(user=log_user).order_by('-amrap_result').first()
+            if max_result_q:
+                max_result_user = max_result_q.amrap_result
+                max_log_id = max_result_q.id
                 log_id_list.append(max_log_id)
     else:
         for log_user in userlist:
-            max_result_user = queryset.filter(user=log_user).aggregate(Max('mw_result'))['mw_result__max']
-            max_log_id = queryset.filter(user=log_user).filter(mw_result=max_result_user).aggregate(Max('id'))['id__max']
-            if max_log_id != None:
+            max_log_id = None
+            max_result_q = queryset.filter(user=log_user).order_by('-mw_result').first()
+            if max_result_q:
+                max_result_user = max_result_q.mw_result
+                max_log_id = max_result_q.id
                 log_id_list.append(max_log_id)
+    total = (time.time() - listtime)
+    print("TIME FOR LOG ID LIST: ", total)
     return log_id_list
 
 

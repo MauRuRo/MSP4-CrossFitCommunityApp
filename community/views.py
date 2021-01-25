@@ -296,11 +296,11 @@ def lazyLoadGroup(request):
 # @csrf_exempt
 def searchMember(request):
     make = json.loads(request.POST["make"])
-    print(make)
     if make:
         selected_group = User.objects.all()
     else:
         selected_group = getGroupSelectionUsers(request)
+    # print(selected_group)
     searchtext = request.POST["input"]
     search_group = []
     for user in selected_group:

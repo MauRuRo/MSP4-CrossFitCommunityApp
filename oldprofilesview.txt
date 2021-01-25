@@ -21,7 +21,7 @@ import urllib.request
 import stripe
 import json
 import statistics
-from workouts.views import id_list
+from workouts.views import id_list, user_list
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .templatetags.calc_functions import calc_age
@@ -100,6 +100,159 @@ def profile(request):
     except UserProfile.DoesNotExist:
         return redirect(reverse('create_profile'))
 
+
+# def calc_level(request):
+#     process = Thread(target=calc_level_go, args=(request,))
+#     process.start()
+#     process.join()
+#     print("Thread finished")
+#     data = {"message": "HOORAY"}
+#     return HttpResponse(json.dumps(data), content_type='application/json')
+
+# def calc_level_go(request):
+def calc_level(request):
+    if request.is_ajax():
+    # if True:
+        print("CHECK")
+        start_time = time.time()
+        if request.POST["user"] == "request":
+            user = request.user
+        else:
+            user = User.objects.get(pk=request.POST["user"])
+        users = User.objects.all()
+        categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
+        cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
+        cat_levels = []
+        for cat in categories:
+            workouts = Workout.objects.filter(workout_category=cat_reverse[cat])
+            percentiles = []
+            wod_level = []
+            for wod in workouts:
+                data = getLevels(user,wod)
+                percentile = data["percentile"]
+                result = data["result"]
+                if percentile is not None:
+                    wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "result": result})
+                    percentiles.append(percentile)
+            if len(percentiles) >= 3:
+                accuracy = "high"
+            elif len(percentiles) == 2:
+                accuracy = "medium"
+            elif len(percentiles) == 1:
+                accuracy = "low"
+            else:
+                accuracy = "none"
+            if accuracy != "none":
+                avg_percentile = round(statistics.mean(percentiles))
+            else:
+                avg_percentile = "none"
+            cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level": wod_level})
+        print("HALFWAY " + user.username)
+        avg_list = []
+        for item in cat_levels:
+            if item["perc"] != "none":
+                avg_list.append(item["perc"])
+        if len(avg_list) != 0:
+            general_level = round(statistics.mean(avg_list))
+        else:
+            general_level = 0
+        level_data = HeroLevels.objects.filter(user=user)
+        level_data.update(level_data=cat_levels)
+        level_data.update(general_level=general_level)
+        new_levels_html = loader.render_to_string(
+        'profiles/includes/herolevel.html',
+        {
+            "general_level": general_level,
+            "cat_levels": cat_levels
+        })
+        data = {
+            'new_levels_html': new_levels_html
+        }
+        print("SUCCESS "  + user.username)
+        total = (time.time() - start_time)
+        print("total time: ", total)
+        return JsonResponse(data)
+    else:
+        print("FAILED HERE")
+        data = {"message": "Failed update"}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+# def calc_level(request):
+#     if request.is_ajax():
+#         print("CHECK")
+#         start_time = time.time()
+#         if request.POST["user"] == "request":
+#             user = request.user
+#         else:
+#             user = User.objects.get(pk=request.POST["user"])
+#         users = User.objects.all()
+#         categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
+#         cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
+#         cat_levels = []
+#         for cat in categories:
+#             workouts = Workout.objects.filter(workout_category=cat_reverse[cat])
+#             percentiles = []
+#             wod_level = []
+#             threads = []
+#             results = []
+#             for wod in workouts:
+#                 # data = getLevels(user,wod)
+#                 process = Thread(target=getLevels, args=(user, wod, results))
+#                 threads.append(process)
+#                 process.start()
+#             for process in threads:
+#                 process.join()
+
+#             for data in results:
+#                 print(data)
+#                 percentile = data["percentile"]
+#                 result = data["result"]
+#                 if percentile is not None:
+#                     wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "result": result})
+#                     percentiles.append(percentile)
+#             if len(percentiles) >= 3:
+#                 accuracy = "high"
+#             elif len(percentiles) == 2:
+#                 accuracy = "medium"
+#             elif len(percentiles) == 1:
+#                 accuracy = "low"
+#             else:
+#                 accuracy = "none"
+#             if accuracy != "none":
+#                 avg_percentile = round(statistics.mean(percentiles))
+#             else:
+#                 avg_percentile = "none"
+#             cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level": wod_level})
+#         print("HALFWAY " + user.username)
+#         avg_list = []
+#         for item in cat_levels:
+#             if item["perc"] != "none":
+#                 avg_list.append(item["perc"])
+#         if len(avg_list) != 0:
+#             general_level = round(statistics.mean(avg_list))
+#         else:
+#             general_level = 0
+#         level_data = HeroLevels.objects.filter(user=user)
+#         level_data.update(level_data=cat_levels)
+#         level_data.update(general_level=general_level)
+#         new_levels_html = loader.render_to_string(
+#         'profiles/includes/herolevel.html',
+#         {
+#             "general_level": general_level,
+#             "cat_levels": cat_levels
+#         })
+#         data = {
+#             'new_levels_html': new_levels_html
+#         }
+#         print("SUCCESS "  + user.username)
+#         total = (time.time() - start_time)
+#         print("total time: ", total)
+#         return JsonResponse(data)
+#     else:
+#         print("FAILED HERE")
+#         data = {"message": "Failed update"}
+#         return HttpResponse(json.dumps(data), content_type='application/json')
 
 def create_profile(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
@@ -186,99 +339,9 @@ def edit_profile(request):
         return redirect('edit_profile')
 
 
-def user_list():
-    users = User.objects.all()
-    user_l = []
-    for user in users:
-        user_l.append(user.id)
-    user_data = {"user_l": user_l, "users": users}
-    return user_data
-
-
-def cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat):
-    if len(percentiles) >= 3:
-        accuracy = "high"
-    elif len(percentiles) == 2:
-        accuracy = "medium"
-    elif len(percentiles) == 1:
-        accuracy = "low"
-    else:
-        accuracy = "none"
-    if accuracy != "none":
-        avg_percentile = round(statistics.mean(percentiles))
-    else:
-        avg_percentile = "none"
-    cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level": wod_level})
-    return cat_levels
-    # info = {'cat_levels': cat_levels, 'percentiles': percentiles, 'wod_level': wod_level}
-
-def calc_level(request):
-    start_time = time.time()
-    if request.is_ajax():
-        print("CHECK")
-        #determine for which user the levels need to be calculated
-        if request.POST["user"] == "request":
-            user = request.user
-        else:
-            user = User.objects.get(pk=request.POST["user"])
-        # create catagory list and 'reverse' dictionary for queries an initialize list for category levels
-        categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
-        cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
-        cat_levels = []
-        # loop through categories to calculate level per category
-        workouts = Workout.objects.all().order_by("workout_category")
-        percentiles = []
-        wod_level = []
-        cat = ''
-        last_log = False
-        for wod in workouts:
-            wod_cat = wod.get_workout_category_display()
-            if cat == '':
-                cat = wod_cat
-            elif cat != wod_cat:
-                cat_levels = cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat)
-                percentiles = []
-                wod_level = []
-                cat = wod_cat
-            data = getLevels(user, wod)
-            percentile = data["percentile"]
-            result = data["result"]
-            if percentile is not None:
-                wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "result": result})
-                percentiles.append(percentile)
-        cat_levels = cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat)
-        print("HALFWAY " + user.username)
-        avg_list = []
-        for item in cat_levels:
-            if item["perc"] != "none":
-                avg_list.append(item["perc"])
-        if len(avg_list) != 0:
-            general_level = round(statistics.mean(avg_list))
-        else:
-            general_level = 0
-        level_data = HeroLevels.objects.filter(user=user)
-        level_data.update(level_data=cat_levels)
-        level_data.update(general_level=general_level)
-        new_levels_html = loader.render_to_string(
-        'profiles/includes/herolevel.html',
-        {
-            "general_level": general_level,
-            "cat_levels": cat_levels
-        })
-        data = {
-            'new_levels_html': new_levels_html
-        }
-        print("SUCCESS "  + user.username)
-        total = (time.time() - start_time)
-        print("total time: ", total)
-        return JsonResponse(data)
-    else:
-        print("FAILED HERE")
-        data = {"message": "Failed update"}
-        return HttpResponse(json.dumps(data), content_type='application/json')
-        
-
 def getLevels(user, wod):
+# def getLevels(user, wod, results):
+# def __init__(self, user, wod):
     start_time = time.time()
     # check which date is exactly a year ago
     lapse_date = date.today() - timedelta(days=365)
@@ -304,37 +367,25 @@ def getLevels(user, wod):
         else:
             rank_result = 'mw_result'
             rank_result_order = '-mw_result'
-        all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender, workout=wod, rx=True, date__gt=lapse_date).order_by(f'{rank_result_order}')
-        all_logs_l = list(all_logs.values())
-        log_id_list =[]
-        log_user_id_list = []
-        user_result = ''
-        user_index = False
-        result_index = False
-        for log in all_logs_l:
-            if not log["user_id"] in log_user_id_list:
-                log_user_id_list.append(log["user_id"])
-                log_id_list.append(log)
-                # If the log is for the requested user then get indexes and result
-                if log["user_id"] == user.pk:
-                    user_result = str(log[f'{rank_result}'])
-                    user_index = log_id_list.index(log)
-                # Get the index of the first result that's BETTER than the users result.
-                if ft and user_index and result_index == False:
-                    for log in reversed(log_id_list):
-                        if log["ft_result"] < log_id_list[user_index]["ft_result"]:
-                            result_index = log_id_list.index(log)
-                            break
-                elif user_index and result_index == False:
-                    for log in reversed(log_id_list):
-                        if log[f'{rank_result}'] > log_id_list[user_index][f'{rank_result}']:
-                            result_index = log_id_list.index(log)
-                            break
-        if result_index == False:
-            result_index = 0
-        result_index += 1
-        total_results = len(log_id_list)
-        percentile = round((total_results - result_index)/total_results* 100)
+        # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+        all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result_order}')
+        # create list of log id's max result for this workout for every user
+        user_l = user_list()
+        log_id_list = id_list(user_l, all_logs, wod.workout_type)
+        # filter out all none max results from query
+        all_logs_rank = all_logs.filter(id__in=log_id_list)
+        total_users = all_logs_rank.all().count()
+        user_log = all_logs_rank.get(user=user)
+        user_result = getattr(user_log, rank_result)
+        if ft:
+            filter_dict = {f'{rank_result}__gte':user_result}
+            greater_users = all_logs_rank.filter(**filter_dict).count()
+            percentile = round(greater_users/total_users*100)
+        else:
+            filter_dict = {f'{rank_result}__lte':user_result}
+            greater_users = all_logs_rank.filter(**filter_dict).count()
+            percentile = round(greater_users/total_users*100)
+        user_result = str(user_result)
         if ft:
             while user_result[0] == "0" or user_result[0] == ":":
                 user_result = user_result[1:]
@@ -349,6 +400,8 @@ def getLevels(user, wod):
             "percentile": percentile,
             "result": user_result
             }
+        print(user)
         total = (time.time() -  start_time)
-        print("single loop time: ", total, wod.workout_name)
+        print("single loop time: ", total)
+        # results.append(data)
         return data
