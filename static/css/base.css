@@ -1,6 +1,8 @@
 body {
-    background: url('/media/background.jpg') no-repeat fixed;
+    /* background: url('/media/background.jpg') no-repeat fixed; */
+    background: url('/media/chipboard.png') repeat fixed;
     background-size: cover;
+    background-size: 700px 400px;
     background-position-y: 150px;
     font-family: 'Open Sans', sans-serif;
 }
@@ -444,7 +446,9 @@ label[for='image-clear_id'] {
 
 #block-1,
 #block-3 {
-    overflow: overlay;
+    /* overflow: overlay; */
+    overflow-y: scroll;
+    overflow-x: hidden;
     max-height: none;
     max-height: 400px;
     padding: 0 8px 8px 8px!important;

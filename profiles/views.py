@@ -210,7 +210,7 @@ def cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat):
         avg_percentile = "none"
     cat_levels.append({"cat": cat, "perc": avg_percentile, "acc": accuracy, "wod_level": wod_level})
     return cat_levels
-    # info = {'cat_levels': cat_levels, 'percentiles': percentiles, 'wod_level': wod_level}
+
 
 def calc_level(request):
     start_time = time.time()
@@ -304,8 +304,9 @@ def getLevels(user, wod):
         else:
             rank_result = 'mw_result'
             rank_result_order = '-mw_result'
-        all_logs = Log.objects.all().filter(user__userprofile__gender=user.userprofile.gender, workout=wod, rx=True, date__gt=lapse_date).order_by(f'{rank_result_order}')
+        all_logs = Log.objects.filter(user__userprofile__gender=user.userprofile.gender, workout=wod, rx=True, date__gt=lapse_date).order_by(f'{rank_result_order}')
         all_logs_l = list(all_logs.values())
+        # all_logs_l = all_logs.values_list(flat=True)
         log_id_list =[]
         log_user_id_list = []
         user_result = ''
@@ -352,3 +353,53 @@ def getLevels(user, wod):
         total = (time.time() -  start_time)
         print("single loop time: ", total, wod.workout_name)
         return data
+
+def calc_level_pop(user):
+    start_time = time.time()
+    # create catagory list and 'reverse' dictionary for queries an initialize list for category levels
+    categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
+    cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
+    cat_levels = []
+    # loop through categories to calculate level per category
+    workouts = Workout.objects.all().order_by("workout_category")
+    percentiles = []
+    wod_level = []
+    cat = ''
+    last_log = False
+    for wod in workouts:
+        wod_cat = wod.get_workout_category_display()
+        if cat == '':
+            cat = wod_cat
+        elif cat != wod_cat:
+            cat_levels = cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat)
+            percentiles = []
+            wod_level = []
+            cat = wod_cat
+        data = getLevels(user, wod)
+        percentile = data["percentile"]
+        result = data["result"]
+        if percentile is not None:
+            wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "result": result})
+            percentiles.append(percentile)
+    cat_levels = cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat)
+    print("HALFWAY " + user.username)
+    avg_list = []
+    for item in cat_levels:
+        if item["perc"] != "none":
+            avg_list.append(item["perc"])
+    if len(avg_list) != 0:
+        general_level = round(statistics.mean(avg_list))
+    else:
+        general_level = 0
+    level_data = HeroLevels.objects.filter(user=user)
+    level_data.update(level_data=cat_levels)
+    level_data.update(general_level=general_level)
+
+
+def refreshLevels(request):
+    starttime = time.time()
+    users = User.objects.all()
+    for user in users:
+        calc_level_pop(user)
+    total = time.time() - starttime
+    print("total runtime", total)

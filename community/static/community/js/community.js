@@ -682,5 +682,9 @@ function  scrollToTopFast(element){
                 }
             })
        };
+
+    //    $(document).on("click", ".admin-group", function(){
+          
+    //    })
        
 })

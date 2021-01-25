@@ -7,6 +7,7 @@ urlpatterns = [
     path('create_profile/', views.create_profile, name='create_profile'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
     path('calc_level/', views.calc_level, name='calc_level'),
+    path('refreshLevels/', views.refreshLevels, name='refreshLevels'),
     # path('test/', views.test, name='test'),
     # path('populate/', views.populate, name='populate'),
     # path('logPopulation/', views.logPopulation, name='logPopulation'),
