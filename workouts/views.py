@@ -18,6 +18,7 @@ import math
 
 
 def striphours(duration):
+    """slice of the unnecessary zero's in a time duration string"""
     for x in duration:
         if x == "0" or x == ':':
             no_hours = duration.split(x, 1)[1]
@@ -26,8 +27,10 @@ def striphours(duration):
     return no_hours
 
 
+@require_POST
 def dateInput(request):
-    if request.is_ajax and request.method == "POST":
+    """Reformat the date variable for editing log form"""
+    if request.is_ajax:
         date_input = request.POST["log_date"]
         date_log = datetime.strptime(date_input, "%b. %d, %Y")
         date_log_s = datetime.strftime(date_log, "%d %b %Y")
@@ -38,6 +41,7 @@ def dateInput(request):
 
 
 def workouts(request, wod_id):
+    """A view to render the workouts page on GET and upload a Log object on POST"""
     if not request.user.is_authenticated:
         return render(request, 'home/index.html')
     selected_group = getGroupSelection(request)
@@ -235,6 +239,7 @@ def workouts(request, wod_id):
         }
         template = "workouts/workouts.html"
         return render(request, template, context)
+    # else if request is POST
     else:
         if wod.workout_type == 'FT':
             result = 'ft_result'
@@ -311,6 +316,7 @@ def workouts(request, wod_id):
 
 @require_POST
 def editLog(request):
+    """Function for editing a previously submitted Log object"""
     if request.is_ajax():
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
@@ -381,6 +387,7 @@ def editLog(request):
 
 @require_POST
 def deleteLog(request):
+    """Function for deleting a previously submitted Log"""
     if request.is_ajax():
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
@@ -399,6 +406,7 @@ def deleteLog(request):
 
 @require_POST
 def deleteCommentMember(request):
+    """Function for deleting a comment by user"""
     if request.is_ajax():
         comment_id = request.POST["comment_id"]
         comment_type = request.POST["comment_type"]
@@ -428,6 +436,7 @@ def deleteCommentMember(request):
 
 @require_POST
 def commentMember(request):
+    """Function to post a comment on a log"""
     if request.is_ajax():
         if request.POST["info_crud"] == "comment-upload":
             form_data = {
@@ -481,6 +490,7 @@ def commentMember(request):
 # https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
 @require_POST
 def loopList(request):
+    """Function to get next 'page' of logs for the activity module"""
     if request.is_ajax:
         selected_group = getGroupSelection(request)
         no_page = False
@@ -514,7 +524,6 @@ def loopList(request):
         except PageNotAnInteger:
             calling_group = paginator_calling_group.page(2)
         except EmptyPage:
-            print("ERROR LAST PAGE")
             calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
             no_page = True
         # build a html posts list with the paginated posts
@@ -538,6 +547,7 @@ def loopList(request):
 
 @require_POST
 def loopListRank(request):
+    """Function to get next or previous page for the Rank module."""
     if request.is_ajax:
         selected_group = getGroupSelection(request)
         wod_id = request.POST["wod"]
@@ -589,7 +599,6 @@ def loopListRank(request):
             calling_group = all_logs_rank_today.filter(user__userprofile__gender="M")
         else:
             calling_group = all_logs_rank_today.filter(user__userprofile__gender="F")
-        # use Django's pagination
         # https://docs.djangoproject.com/en/dev/topics/pagination/
         results_per_page = 25
         no_more = False
@@ -622,13 +631,12 @@ def loopListRank(request):
 
 @require_POST
 def createWorkout(request, wod_id):
+    """Function to create a Workout object, only available to superuser"""
     if request.user.is_superuser:
         form = WorkoutForm(request.POST)
         if form.is_valid:
             new = form.save()
-            print(new)
-            new_wod_id = new.pk
-            print(new_wod_id)
+            new_wod_id = new.package
             messages.success(request, "The workout was created successfully.")
             return redirect(reverse('workouts', args=(new_wod_id,)))
         else:
@@ -638,6 +646,7 @@ def createWorkout(request, wod_id):
 
 @require_POST
 def editWorkout(request):
+    """Function to edit Workout object, only available for superuser"""
     if request.is_ajax() and request.user.is_superuser:
         wod = Workout.objects.filter(pk=request.POST["wod_id"])
         wod.update(workout_name=request.POST["workout_name"])
@@ -655,6 +664,7 @@ def editWorkout(request):
 
 @require_POST
 def deleteWorkout(request):
+    """Function to delete Workout object, only available for superuser"""
     if request.is_ajax() and request.user.is_superuser:
         wod = get_object_or_404(Workout, pk=request.POST["wod_id"])
         if wod.workout_is_wod is True:
@@ -672,6 +682,7 @@ def deleteWorkout(request):
 
 @require_POST
 def setWod(request):
+    """Function to set Workout object as WOD (workout of the day), only available for superuser"""
     if request.is_ajax() and request.user.is_superuser:
         wod = Workout.objects.filter(pk=request.POST["wod_id"])
         Workout.objects.all().update(workout_is_wod=False)
@@ -687,6 +698,7 @@ def setWod(request):
 
 @require_POST
 def getSliderLevel(request):
+    """Function to get the Level for a given result on the preview Slider on the workout page"""
     prep_result = request.POST["prep_result"]
     wod = request.POST["wod"]
     if request.is_ajax():

@@ -28,9 +28,8 @@ import statistics
 
 #         return HttpResponse(content=e, status=400)
 
-
 def profile(request):
-    """ a view to render the profile page """
+    """ a view to render the profile page, incl edit profileform"""
     if not request.user.is_authenticated:
         return render(request, 'home/index.html')
     try:
@@ -81,6 +80,7 @@ def profile(request):
 
 
 def create_profile(request):
+    """A view to render the create profile page AND on POST upload a profile object to the database."""
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
     if request.method == "GET":
@@ -130,28 +130,12 @@ def create_profile(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@require_POST
 def edit_profile(request):
-    if request.method == "GET":
-        if request.user.is_authenticated:
-            if not UserProfile.objects.filter(user=request.user).exists():
-                messages.error(request, 'You need to create a profile first!')
-                return redirect(reverse('create_profile'))
-        else:
-            messages.error(request, 'You need to sign in or sign up first!')
-            return redirect(reverse('account_login'))
-
-        profile = UserProfile.objects.get(user=request.user)
-        profile_form = UserProfileForm(instance=profile)
-        template = 'profiles/edit_profile.html'
-        context = {
-            'form': profile_form,
-        }
-        return render(request, template, context)
-
-    else:
+    """A function that edits a UserProfile object."""
+    if request.user.is_authenticated:
         instance = UserProfile.objects.get(user=request.user)
         profile_form = UserProfileForm(request.POST, request.FILES, instance=instance)
-
         if profile_form.is_valid():
             edited_profile = profile_form.save(commit=False)
             edited_profile.email = request.user.email
@@ -162,10 +146,11 @@ def edit_profile(request):
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
-        return redirect('edit_profile')
+        return redirect('profile')
 
 
 def cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat):
+    """A helper function that returns Level information for a category"""
     if len(percentiles) >= 3:
         accuracy = "high"
     elif len(percentiles) == 2:
@@ -184,6 +169,7 @@ def cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat):
 
 @require_POST
 def calc_level(request):
+    """A function that calculates and returns Levels, per WOD, per Category and General, incl. the relevant results and the accuracy of the assesment."""
     if request.is_ajax():
         #determine for which user the levels need to be calculated
         if request.POST["user"] == "request":
@@ -243,6 +229,7 @@ def calc_level(request):
 
 
 def getLevels(user, wod):
+    """A helper function which returns the Level of a user for a particular workout and the relevant result."""
     # check which date is exactly a year ago
     lapse_date = date.today() - timedelta(days=365)
     if Log.objects.filter(user=user, workout=wod, rx=True, date__gt=lapse_date).count() == 0:

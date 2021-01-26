@@ -14,23 +14,8 @@ from profiles.templatetags.calc_functions import calc_age
 import math
 
 
-def roundup(x):
-    return int(math.ceil(x / 10)) * 10
-
-
-def rounddown(x):
-    return int(math.floor(x / 10)) * 10
-
-
-def getAgeGroup(request):
-    age = calc_age(request.user.userprofile.birthdate)
-    age_bottom = str(rounddown(age))
-    age_top = str(roundup(age))
-    age_group = age_bottom + "-" + age_top + " years"
-    return age_group
-
-
 def community(request):
+    """A view to render the community page, including makeGroup form."""
     template = "community/community.html"
     groups1 = CustomGroup.objects.filter(group_users=request.user).filter(share=True).exclude(users_delete=request.user)
     groups2 = CustomGroup.objects.filter(admin=request.user).exclude(users_delete=request.user)
@@ -86,6 +71,7 @@ def community(request):
 
 @require_POST
 def setGroupSelect(request):
+    """A function to update the GroupSelect object for the user to save the filter settings the user has selected."""
     if request.is_ajax:
         age = request.POST["age"]
         custom = request.POST["custom"]
@@ -101,6 +87,7 @@ def setGroupSelect(request):
 
 
 def getGroupSelection(request):
+    """A function to get the filter selection of the user. Returns all workout logs for members of the selected group."""
      # Determine group selection
     try:
         group_s = GroupSelect.objects.get(user=request.user)
@@ -130,6 +117,7 @@ def getGroupSelection(request):
 
 
 def getGroup(request):
+    """Helper function that gets the selected group of the user. If it doesn't exist it will select and create a default selection."""
     try:
         group_s = GroupSelect.objects.get(user=request.user)
         group_select = group_s.group
@@ -140,6 +128,7 @@ def getGroup(request):
 
 
 def getGroupSelectionUsers(request):
+    """Helper function that returns all the users of the selected group."""
     # Determine group selection
     group_select = getGroup(request)
     if group_select["custom"] == 'false':
@@ -164,6 +153,7 @@ def getGroupSelectionUsers(request):
 
 @require_POST
 def resetStats(request):
+    """A function that will return the statistics for the newly selected group."""
     if request.is_ajax:
         selected_group = getGroupSelectionUsers(request)
         selected_group_logs = getGroupSelection(request)
@@ -223,6 +213,7 @@ def resetStats(request):
 
 @require_POST
 def lazyLoadGroup(request):
+    """A function that will return html to append to the userlist from the queryset of the users in the selected group."""
     if request.is_ajax:
         selected_group = getGroupSelection(request)
         no_page = False
@@ -235,7 +226,6 @@ def lazyLoadGroup(request):
         except PageNotAnInteger:
             group = group.page(2)
         except EmptyPage:
-            print("ERROR LAST PAGE")
             group = group.page(group.num_pages)
             no_page = True
         calling_group_html = loader.render_to_string(
@@ -253,6 +243,7 @@ def lazyLoadGroup(request):
 
 @require_POST
 def searchMember(request):
+    """A function that will return members (in the form of html) that have a partial string match for the search input string."""
     if request.is_ajax:
         make = json.loads(request.POST["make"])
         if make:
@@ -279,6 +270,7 @@ def searchMember(request):
 
 @require_POST
 def makeGroup(request):
+    """A function that will create a CustomGroup object."""
     if request.is_ajax:
         admin = request.user
         groupname = request.POST["groupname"]
@@ -296,6 +288,7 @@ def makeGroup(request):
 
 @require_POST
 def getGroupEditInfo(request):
+    """A Function that gets the CustomGroup info and returns it to the Group Edit form."""
     if request.is_ajax:
         group_id = request.POST["group_id"]
         group = CustomGroup.objects.get(pk=group_id)
@@ -318,6 +311,7 @@ def getGroupEditInfo(request):
 
 @require_POST
 def editGroup(request):
+    """A function to update a CustomGroup object."""
     if request.is_ajax:
         group_id = request.POST["group_id"]
         groupname = request.POST["groupname"]
@@ -339,6 +333,7 @@ def editGroup(request):
 
 @require_POST
 def deleteGroup(request):
+    """A function to delete a CustomGroup object."""
     if request.is_ajax:
         r_user = request.user
         group_id = request.POST["group_id"]
@@ -349,14 +344,11 @@ def deleteGroup(request):
         del_admin = False
         if r_user == group.admin:
             del_admin = True
-            print("admin")
         delete = True
         for user in group_users:
             if not user in users_delete:
                 delete = False
-                print(user)
                 if del_admin:
-                    print("del_admin set")
                     group.admin = user
                     group.save()
                 break
@@ -370,6 +362,7 @@ def deleteGroup(request):
 
 @require_POST
 def getMemberInfo(request):
+    """A function to get Level and Profile info for a member. Returns the information as two different html's."""
     if request.is_ajax:
         member = request.POST["user_id"]
         profile_user = User.objects.get(pk=member)
@@ -397,3 +390,22 @@ def getMemberInfo(request):
         'calling_group_two': calling_group_two,
     }
     return JsonResponse(output_data)
+
+
+def roundup(x):
+    """Helper function to roundup a float."""
+    return int(math.ceil(x / 10)) * 10
+
+
+def rounddown(x):
+    """Helper function to rounddown a float."""
+    return int(math.floor(x / 10)) * 10
+
+
+def getAgeGroup(request):
+    """Helper function to get the agegroup for the user."""
+    age = calc_age(request.user.userprofile.birthdate)
+    age_bottom = str(rounddown(age))
+    age_top = str(roundup(age))
+    age_group = age_bottom + "-" + age_top + " years"
+    return age_group
