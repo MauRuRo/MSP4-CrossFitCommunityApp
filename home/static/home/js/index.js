@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    console.log("connected")
+    // reset background for landing page
     $("body").css('background', "url('/media/background.jpg') no-repeat fixed")
     $("body").css('background-size', "cover")
 

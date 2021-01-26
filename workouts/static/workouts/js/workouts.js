@@ -1,5 +1,11 @@
 $(document).ready(function() {
+    // SET VARIABLES
 
+    // DECLARE FUNCTIONS
+
+    // EXECUTE ON DOCUMENT READY
+
+    // EXECUTE FUNCTIONS ON DOCUMENT READY
     let country_select = false
     let country_selected = ""
     let country_count = ""

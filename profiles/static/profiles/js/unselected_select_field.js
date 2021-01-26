@@ -1,3 +1,4 @@
+// Script to set colors for active/inactive selected/unselected choicefields in form.
 let countrySelected = $('#id_country').val();
 if(!countrySelected) {
     $('#id_country').css('color', '#aab7c4');
