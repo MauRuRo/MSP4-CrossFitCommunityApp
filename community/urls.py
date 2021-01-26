@@ -13,5 +13,4 @@ urlpatterns = [
     path('editGroup/', views.editGroup, name='editGroup'),
     path('deleteGroup/', views.deleteGroup, name='deleteGroup'),
     path('getMemberInfo/', views.getMemberInfo, name='getMemberInfo'),
-    # path('popGroup/', views.popGroup, name='popGroup'),
 ]

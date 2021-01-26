@@ -1,99 +1,20 @@
 from django.shortcuts import render, redirect, reverse
-from datetime import date, datetime, timedelta, time
-from community.models import GroupSelect, CustomGroup
-from profiles.models import UserProfile, User
+from datetime import date, datetime, timedelta
 from .models import Workout, MemberComment, Log
 from .forms import LogForm, MemberCommentForm, WorkoutForm
 from django.utils.dateparse import parse_duration
-from django.db.models import Avg, Max, Min, Sum
+from django.db.models import Max, Min
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from django.core import serializers
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from decimal import Decimal
-from profiles.templatetags.calc_functions import calc_age
-from community.views import roundup, rounddown, getGroupSelection
-# from django.template import Library
-# from django.template.defaultfilters import stringfilter
+from community.views import getGroupSelection
 import json
 import math
-import time
-
-
-def user_list():
-    users = User.objects.all()
-    user_l = []
-    for user in users:
-        user_l.append(user.id)
-    return user_l
-
-
-# def id_list(userlist, queryset, wodtype):
-#     """Create list of Log id's that are best results for each user"""
-#     listtime = time.time()
-#     log_id_list = []
-#     if wodtype == 'FT':
-#         for log_user in userlist:
-#             max_log_id = None
-#             max_result_q = queryset.filter(user=log_user).order_by('ft_result').first()
-#             if max_result_q:
-#                 max_result_user = max_result_q.ft_result
-#                 max_log_id = max_result_q.id
-#                 log_id_list.append(max_log_id)
-#     elif wodtype == 'AMRAP':
-#         for log_user in userlist:
-#             max_log_id = None
-#             max_result_q = queryset.filter(user=log_user).order_by('-amrap_result').first()
-#             if max_result_q:
-#                 max_result_user = max_result_q.amrap_result
-#                 max_log_id = max_result_q.id
-#                 log_id_list.append(max_log_id)
-#     else:
-#         for log_user in userlist:
-#             max_log_id = None
-#             max_result_q = queryset.filter(user=log_user).order_by('-mw_result').first()
-#             if max_result_q:
-#                 max_result_user = max_result_q.mw_result
-#                 max_log_id = max_result_q.id
-#                 log_id_list.append(max_log_id)
-#     total = (time.time() - listtime)
-#     print("TIME FOR LOG ID LIST: ", total)
-#     return log_id_list
-def id_list(userlist, queryset, wodtype):
-    """Create list of Log id's that are best results for each user"""
-    listtime = time.time()
-    log_id_list = []
-    if wodtype == 'FT':
-        for log_user in userlist:
-            max_log_id = None
-            max_result_q = queryset.filter(user=log_user).order_by('ft_result').first()
-            if max_result_q:
-                max_result_user = max_result_q.ft_result
-                max_log_id = max_result_q.id
-                log_id_list.append(max_log_id)
-    elif wodtype == 'AMRAP':
-        for log_user in userlist:
-            max_log_id = None
-            max_result_q = queryset.filter(user=log_user).order_by('-amrap_result').first()
-            if max_result_q:
-                max_result_user = max_result_q.amrap_result
-                max_log_id = max_result_q.id
-                log_id_list.append(max_log_id)
-    else:
-        for log_user in userlist:
-            max_log_id = None
-            max_result_q = queryset.filter(user=log_user).order_by('-mw_result').first()
-            if max_result_q:
-                max_result_user = max_result_q.mw_result
-                max_log_id = max_result_q.id
-                log_id_list.append(max_log_id)
-    total = (time.time() - listtime)
-    print("TIME FOR LOG ID LIST: ", total)
-    return log_id_list
 
 
 def striphours(duration):
@@ -116,59 +37,20 @@ def dateInput(request):
         return JsonResponse({"error": "Date failed"}, status=400)
 
 
-# def getGroupSelection(request):
-#      # Determine group selection
-#     group_s = GroupSelect.objects.get(user=request.user)
-#     group_select = group_s.group
-#     if group_select["custom"] == 'false':
-#         print("HERE")
-#         if group_select["location"] == "group-global":
-#             print("GLOBAL")
-#             select_group_logs = Log.objects.all()
-#         elif group_select["location"] == "group-country":
-#             print("COUNTRY")
-#             select_group_logs = Log.objects.filter(user__userprofile__country=request.user.userprofile.country)
-#         else:
-#             print("CITY")
-#             select_group_logs = Log.objects.filter(user__userprofile__town_or_city=request.user.userprofile.town_or_city)
-#         if group_select["age"] != 'false':
-#             print("AGE")
-#             age = calc_age(request.user.userprofile.birthdate)
-#             age_bottom = rounddown(age)
-#             age_top = roundup(age)
-#             young_age_date = date.today() - timedelta(days=age_bottom*365)
-#             old_age_date = date.today() - timedelta(days=age_top*365)
-#             select_group_logs = select_group_logs.filter(user__userprofile__birthdate__gt=old_age_date).filter(user__userprofile__birthdate__lte=young_age_date)
-#     else:
-#         print("CUSTOM")
-#         custom_group = CustomGroup.objects.get(pk=group_select["custom"])
-#         user_group = custom_group.group_users.all()
-#         select_group_logs = Log.objects.filter(user__in=user_group)
-#     return select_group_logs
-
-
 def workouts(request, wod_id):
     if not request.user.is_authenticated:
         return render(request, 'home/index.html')
     selected_group = getGroupSelection(request)
-    # for log in selected_group:
-    #     if log.user != request.user:
-    #         print(log.user)
     # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
         wod = Workout.objects.get(workout_is_wod=True)
     else:
         wod = Workout.objects.get(id=wod_id)
     if request.method == "GET":
-        # create list of all user id's
-        user_l = user_list()
         # check which date is exactly a year ago
         lapse_date = date.today() - timedelta(days=365)
         # get all comments
         member_comments = MemberComment.objects.all()
-        # all_logs = Log.objects.all().order_by('-date')
-        # all_logs_wod = all_logs.filter(workout=wod)
-        # user_logs = all_logs.filter(user=request.user)
         all_logs = selected_group.order_by('-date')
         all_logs_wod = selected_group.filter(workout=wod)
         user_logs = selected_group.filter(user=request.user)
@@ -176,28 +58,29 @@ def workouts(request, wod_id):
         log_groups = [all_logs[:25], all_logs_wod[:25], user_logs[:25], user_logs_wod[:25]]
         # For rank list, find out type of wod, set proper result field and order.
         if wod.workout_type == 'FT':
-            all_logs_rank = selected_group.filter(workout=wod).order_by('ft_result')
+            all_logs_rank = selected_group.filter(workout=wod, rx=True, date__gt=lapse_date).order_by('ft_result')
             rank_result = 'ft_result'
+            rank_result_order = 'ft_result'
         elif wod.workout_type == 'AMRAP':
-            all_logs_rank = selected_group.filter(workout=wod).order_by('-amrap_result')
+            all_logs_rank = selected_group.filter(workout=wod, rx=True, date__gt=lapse_date).order_by('-amrap_result')
             rank_result = 'amrap_result'
+            rank_result_order = '-amrap_result'
         else:
-            all_logs_rank = selected_group.filter(workout=wod).order_by('-mw_result')
+            all_logs_rank = selected_group.filter(workout=wod, rx=True, date__gt=lapse_date).order_by('-mw_result')
             rank_result = 'mw_result'
-        # filter out all logs that are not Rx
-        filter_rx = all_logs_rank.filter(rx=True)
-        # filter out all logs that are more than a year old
-        filter_lapsed = filter_rx.filter(date__gt=lapse_date)
-        # create list of log id's max result for this workout for every user
-        log_id_list = id_list(user_l, filter_lapsed, wod.workout_type)
+            rank_result_order = '-mw_result'
+        all_logs_l = list(all_logs_rank.values())
+        log_max_list =[]
+        log_user_id_list = []
+        for log in all_logs_l:
+            if not log["user_id"] in log_user_id_list:
+                log_user_id_list.append(log["user_id"])
+                log_max_list.append(log["id"])
+                all_logs_l.remove(log)
         # filter out all none max results from query
-        all_logs_rank = filter_lapsed.filter(id__in=log_id_list)
+        all_logs_rank_today = all_logs_rank.filter(date=date.today())
+        all_logs_rank = all_logs_rank.filter(id__in=log_max_list)
         # create query for today's logs, for women, for men, and rank logs for the whole past year.
-        all_logs_rank_today = filter_rx.filter(date=date.today())
-            # all_logs_rank_women = all_logs_rank.filter(user__username__in=all_women)
-            # all_logs_rank_men = all_logs_rank.filter(user__username__in=all_men)
-            # all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
-            # all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
         all_logs_rank_women = all_logs_rank.filter(user__userprofile__gender="F")
         all_logs_rank_men = all_logs_rank.filter(user__userprofile__gender="M")
         all_logs_rank_women_today = all_logs_rank_today.filter(user__userprofile__gender="F")
@@ -272,7 +155,6 @@ def workouts(request, wod_id):
                 all_women_today_index_user = all_women_today_index
             else:
                 all_women_today_index += 1
-
         if request.user.userprofile.gender == "M":
             best = getattr(all_logs_rank_men[0], rank_result)
             worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
@@ -285,7 +167,6 @@ def workouts(request, wod_id):
             best = best.seconds
             worst = worst.seconds
         initial_slider_level = worst + (best-worst)/2
-
         all_women_page = math.ceil(all_women_index_user / 25)
         all_women_today_page = math.ceil(all_women_today_index_user / 25)
         if all_women_page == 0:
@@ -350,7 +231,7 @@ def workouts(request, wod_id):
             "best": best,
             "worst": worst,
             "worst_rank": worst_rank,
-            "initial_slider_level":initial_slider_level
+            "initial_slider_level": initial_slider_level
         }
         template = "workouts/workouts.html"
         return render(request, template, context)
@@ -382,10 +263,8 @@ def workouts(request, wod_id):
             return redirect(reverse('workouts', args=wod_id))
         else:
             log_form = LogForm(form_data)
-            # fresult = request.POST[f"{result}"]
-            if log_form.is_valid():  #  and fresult != '':
+            if log_form.is_valid():
                 new_log = log_form.save(commit=False)
-                # new_log.wod_name = wod.workout_name
                 new_log.workout = wod
                 new_log.user = request.user
                 if wod.workout_type == "FT":
@@ -430,8 +309,9 @@ def workouts(request, wod_id):
                 return redirect(reverse('workouts', args=wod_id))
 
 
+@require_POST
 def editLog(request):
-    if request.is_ajax() and request.POST:
+    if request.is_ajax():
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
         if log.user == request.user or request.user.is_superuser:
@@ -499,8 +379,9 @@ def editLog(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
 
 
+@require_POST
 def deleteLog(request):
-    if request.is_ajax() and request.POST:
+    if request.is_ajax():
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
         if request.user == log.user or request.user.is_superuser:
@@ -516,8 +397,9 @@ def deleteLog(request):
         return JsonResponse({"error": "Delete Failed"}, status=400)
 
 
+@require_POST
 def deleteCommentMember(request):
-    if request.is_ajax() and request.POST:
+    if request.is_ajax():
         comment_id = request.POST["comment_id"]
         comment_type = request.POST["comment_type"]
         if comment_type == 'user-comment':
@@ -544,31 +426,24 @@ def deleteCommentMember(request):
         return JsonResponse({"error": "Delete Failed"}, status=400)
 
 
+@require_POST
 def commentMember(request):
-    # request should be ajax and method should be POST.
-    if request.is_ajax() and request.POST:
+    if request.is_ajax():
         if request.POST["info_crud"] == "comment-upload":
-            # get the form data
             form_data = {
                 "message": request.POST["member_comment"],
                 "member": request.user,
                 "log_id": request.POST["log_id"],
             }
             form = MemberCommentForm(form_data)
-            # save the data and after fetch the object in instance
             if form.is_valid():
                 new_comment = form.save()
-                # serialize in new friend object in json
-                # ser_instance = serializers.serialize('json', [instance, ])
-                # send to client side.
                 new_comment_id = new_comment.pk
                 data = {"message": form_data["message"], "new_comment_id": new_comment_id}
                 return HttpResponse(json.dumps(data), content_type='application/json')
             else:
-                # some form errors occured.
                 return JsonResponse({"error": form.errors}, status=400)
         elif request.POST["info_crud"] == "comment-edit":
-            # get the form data
             comment_id = request.POST["id_comment"]
             if request.POST["main_comment"] == 'true':
                 db_comment = get_object_or_404(Log, pk=comment_id)
@@ -589,13 +464,11 @@ def commentMember(request):
                         "log_id": request.POST["log_id"],
                     }
                     form = MemberCommentForm(form_data, instance=db_comment)
-                    # save the data and after fetch the object in instance
                     if form.is_valid():
                         form.save()
                         data = {"message": form_data['message']}
                         return HttpResponse(json.dumps(data), content_type='application/json')
                     else:
-                        # some form errors occured.
                         return JsonResponse({"error": form.errors}, status=400)
                 else:
                     data = {"message": "You cannot edit another member's post.", "del_false": "False"}
@@ -606,157 +479,150 @@ def commentMember(request):
 
 
 # https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
+@require_POST
 def loopList(request):
-    selected_group = getGroupSelection(request)
-    no_page = False
-    wod_id = request.POST["wod"]
-    wod = int(wod_id)
-    page = request.POST.get('page')
-    # get all comments
-    member_comments = MemberComment.objects.all()
-    # check for superuser
-    superuser = False
-    if request.user.is_superuser:
-        superuser = True
-    # check profile
-    profile = request.user
-    # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
-    called_group = request.POST["call_group"]
-    all_logs = selected_group.order_by('-date')
-    if called_group == "this_everybody":
-        calling_group = all_logs.filter(workout=wod)
-    elif called_group == "all_everybody":
-        calling_group = all_logs
-    elif called_group == "all_me":
-        calling_group = all_logs.filter(user=request.user)
-    else:
-        calling_group = all_logs.filter(user=request.user).filter(workout=wod)
-    # use Django's pagination
-    # https://docs.djangoproject.com/en/dev/topics/pagination/
-    results_per_page = 25
-    paginator_calling_group = Paginator(calling_group, results_per_page)
-    try:
-        calling_group = paginator_calling_group.page(page)
-    except PageNotAnInteger:
-        calling_group = paginator_calling_group.page(2)
-    except EmptyPage:
-        print("ERROR LAST PAGE")
-        calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
-        no_page = True
-    # build a html posts list with the paginated posts
-    calling_group_html = loader.render_to_string(
-        'workouts/includes/historyloop.html',
-        {
-        'h_group': calling_group,
-        'member_comments':member_comments,
-        'superuser': superuser,
-        "profile": profile
+    if request.is_ajax:
+        selected_group = getGroupSelection(request)
+        no_page = False
+        wod_id = request.POST["wod"]
+        wod = int(wod_id)
+        page = request.POST.get('page')
+        # get all comments
+        member_comments = MemberComment.objects.all()
+        # check for superuser
+        superuser = False
+        if request.user.is_superuser:
+            superuser = True
+        # check profile
+        profile = request.user
+        # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+        called_group = request.POST["call_group"]
+        all_logs = selected_group.order_by('-date')
+        if called_group == "this_everybody":
+            calling_group = all_logs.filter(workout=wod)
+        elif called_group == "all_everybody":
+            calling_group = all_logs
+        elif called_group == "all_me":
+            calling_group = all_logs.filter(user=request.user)
+        else:
+            calling_group = all_logs.filter(user=request.user).filter(workout=wod)
+        # use Django's pagination
+        results_per_page = 25
+        paginator_calling_group = Paginator(calling_group, results_per_page)
+        try:
+            calling_group = paginator_calling_group.page(page)
+        except PageNotAnInteger:
+            calling_group = paginator_calling_group.page(2)
+        except EmptyPage:
+            print("ERROR LAST PAGE")
+            calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
+            no_page = True
+        # build a html posts list with the paginated posts
+        calling_group_html = loader.render_to_string(
+            'workouts/includes/historyloop.html',
+            {
+            'h_group': calling_group,
+            'member_comments':member_comments,
+            'superuser': superuser,
+            "profile": profile
+            }
+        )
+        # package output data and return it as a JSON object
+        output_data = {
+            'calling_group_html': calling_group_html,
+            'has_next': calling_group.has_next(),
+            "no_page": no_page
         }
-    )
-    # package output data and return it as a JSON object
-    output_data = {
-        'calling_group_html': calling_group_html,
-        'has_next': calling_group.has_next(),
-        "no_page": no_page
-    }
-    return JsonResponse(output_data)
+        return JsonResponse(output_data)
 
 
+@require_POST
 def loopListRank(request):
-    selected_group = getGroupSelection(request)
-    wod_id = request.POST["wod"]
-    workout = int(wod_id)
-    wod = Workout.objects.get(pk=workout)
-    page = request.POST.get('page')
-    # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
-    called_group = request.POST["call_group"]
-    user_l = user_list()
-    # check which date is exactly a year ago
-    lapse_date = date.today() - timedelta(days=365)
-    # make query of all women and one of all men
-    # all_women_q = UserProfile.objects.filter(gender='F')
-    # all_men_q = UserProfile.objects.filter(gender='M')
-    # get all comments
-    member_comments = MemberComment.objects.all()
-    # check for superuser
-    superuser = False
-    if request.user.is_superuser:
-        superuser = True
-    # check profile
-    profile = request.user
-    # make lists of all women/men
-        # all_women = []
-        # for woman in all_women_q:
-        #     all_women.append(woman.user.username)
-        # all_men = []
-        # for man in all_men_q:
-        #     all_men.append(man.user.username)
-    # For rank list, find out type of wod, set proper result field and order.
-    if wod.workout_type == 'FT':
-        all_logs_rank = selected_group.filter(workout=wod).order_by('ft_result')
-        rank_result = 'ft_result'
-    elif wod.workout_type == 'AMRAP':
-        all_logs_rank = selected_group.filter(workout=wod).order_by('-amrap_result')
-        rank_result = 'amrap_result'
-    else:
-        all_logs_rank = selected_group.filter(workout=wod).order_by('-mw_result')
-        rank_result = 'mw_result'
-    # filter out all logs that are not Rx
-    filter_rx = all_logs_rank.filter(rx=True)
-    # filter out all logs that are more than a year old
-    filter_lapsed = filter_rx.filter(date__gt=lapse_date)
-    # create list of log id's max result for this workout for every user
-    log_id_list = id_list(user_l, filter_lapsed, wod.workout_type)
-    # filter out all none max results from query
-    all_logs_rank = filter_lapsed.filter(id__in=log_id_list)
-    # create query for today's logs, for women, for men, and rank logs for the whole past year.
-    all_logs_rank_today = filter_rx.filter(date=date.today())
-    # all_logs_rank_women = all_logs_rank.filter(user__username__in=all_women)
-    # all_logs_rank_men = all_logs_rank.filter(user__username__in=all_men)
-    # all_logs_rank_women_today = all_logs_rank_today.filter(user__username__in=all_women)
-    # all_logs_rank_men_today = all_logs_rank_today.filter(user__username__in=all_men)
-    if called_group == "men_year":
-        calling_group = all_logs_rank.filter(user__userprofile__gender="M")
-    elif called_group == "women_year":
-        calling_group = all_logs_rank.filter(user__userprofile__gender="F")
-    elif called_group == "men_today":
-        calling_group = all_logs_rank_today.filter(user__userprofile__gender="M")
-    else:
-        calling_group = all_logs_rank_today.filter(user__userprofile__gender="F")
-    # use Django's pagination
-    # https://docs.djangoproject.com/en/dev/topics/pagination/
-    results_per_page = 25
-    no_more = False
-    paginator_calling_group = Paginator(calling_group, results_per_page)
-    try:
-        calling_group = paginator_calling_group.page(page)
-    except PageNotAnInteger:
-        calling_group = paginator_calling_group.page(2)
-    except EmptyPage:
-        no_more = True
-        print("ERROR LAST PAGE")
-        calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
-    # build a html posts list with the paginated posts
-    calling_group_html = loader.render_to_string(
-        'workouts/includes/rankloop.html',
-        {
-        'r_group': calling_group,
-        'rank_result': rank_result,
-        'member_comments':member_comments,
-        'superuser': superuser,
-        "profile": profile
+    if request.is_ajax:
+        selected_group = getGroupSelection(request)
+        wod_id = request.POST["wod"]
+        workout = int(wod_id)
+        wod = Workout.objects.get(pk=workout)
+        page = request.POST.get('page')
+        # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
+        called_group = request.POST["call_group"]
+        # check which date is exactly a year ago
+        lapse_date = date.today() - timedelta(days=365)
+        # get all comments
+        member_comments = MemberComment.objects.all()
+        # check for superuser
+        superuser = False
+        if request.user.is_superuser:
+            superuser = True
+        # check profile
+        profile = request.user
+        # For rank list, find out type of wod, set proper result field and order.
+        if wod.workout_type == 'FT':
+            all_logs_rank = selected_group.filter(workout=wod, rx=True, date__gt=lapse_date).order_by('ft_result')
+            rank_result = 'ft_result'
+            rank_result_order = 'ft_result'
+        elif wod.workout_type == 'AMRAP':
+            all_logs_rank = selected_group.filter(workout=wod, rx=True, date__gt=lapse_date).order_by('-amrap_result')
+            rank_result = 'amrap_result'
+            rank_result_order = '-amrap_result'
+        else:
+            all_logs_rank = selected_group.filter(workout=wod, rx=True, date__gt=lapse_date).order_by('-mw_result')
+            rank_result = 'mw_result'
+            rank_result_order = '-mw_result'
+        all_logs_rank_today = all_logs_rank.filter(date=date.today())
+        all_logs_l = list(all_logs_rank.values())
+        log_max_list =[]
+        log_user_id_list = []
+        for log in all_logs_l:
+            if not log["user_id"] in log_user_id_list:
+                log_user_id_list.append(log["user_id"])
+                log_max_list.append(log["id"])
+                all_logs_l.remove(log)
+        # filter out all none max results from query
+        all_logs_rank = all_logs_rank.filter(id__in=log_max_list)
+        # create query for today's logs, for women, for men, and rank logs for the whole past year.
+        if called_group == "men_year":
+            calling_group = all_logs_rank.filter(user__userprofile__gender="M")
+        elif called_group == "women_year":
+            calling_group = all_logs_rank.filter(user__userprofile__gender="F")
+        elif called_group == "men_today":
+            calling_group = all_logs_rank_today.filter(user__userprofile__gender="M")
+        else:
+            calling_group = all_logs_rank_today.filter(user__userprofile__gender="F")
+        # use Django's pagination
+        # https://docs.djangoproject.com/en/dev/topics/pagination/
+        results_per_page = 25
+        no_more = False
+        paginator_calling_group = Paginator(calling_group, results_per_page)
+        try:
+            calling_group = paginator_calling_group.page(page)
+        except PageNotAnInteger:
+            calling_group = paginator_calling_group.page(2)
+        except EmptyPage:
+            no_more = True
+            calling_group = paginator_calling_group.page(paginator_calling_group.num_pages)
+        # build a html posts list with the paginated posts
+        calling_group_html = loader.render_to_string(
+            'workouts/includes/rankloop.html',
+            {
+            'r_group': calling_group,
+            'rank_result': rank_result,
+            'member_comments':member_comments,
+            'superuser': superuser,
+            "profile": profile
+            }
+        )
+        # package output data and return it as a JSON object
+        output_data = {
+            'calling_group_html': calling_group_html,
+            'has_next': calling_group.has_next()
         }
-    )
-    # package output data and return it as a JSON object
-    output_data = {
-        'calling_group_html': calling_group_html,
-        'has_next': calling_group.has_next()
-    }
-    return JsonResponse(output_data)
+        return JsonResponse(output_data)
 
 
+@require_POST
 def createWorkout(request, wod_id):
-    if request.method == "POST" and request.user.is_superuser:
+    if request.user.is_superuser:
         form = WorkoutForm(request.POST)
         if form.is_valid:
             new = form.save()
@@ -770,8 +636,9 @@ def createWorkout(request, wod_id):
             return redirect(reverse('workouts', args=wod_id))
 
 
+@require_POST
 def editWorkout(request):
-    if request.is_ajax() and request.POST and request.user.is_superuser:
+    if request.is_ajax() and request.user.is_superuser:
         wod = Workout.objects.filter(pk=request.POST["wod_id"])
         wod.update(workout_name=request.POST["workout_name"])
         wod.update(workout_type=request.POST["workout_type"])
@@ -786,8 +653,9 @@ def editWorkout(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
 
 
+@require_POST
 def deleteWorkout(request):
-    if request.is_ajax() and request.POST and request.user.is_superuser:
+    if request.is_ajax() and request.user.is_superuser:
         wod = get_object_or_404(Workout, pk=request.POST["wod_id"])
         if wod.workout_is_wod is True:
             new_wod = Workout.objects.all().first()
@@ -795,17 +663,16 @@ def deleteWorkout(request):
         wod.delete()
         data = {"message": "Succesfull"}
         messages.success(request, "The workout was deleted successfully.")
-        # return redirect(reverse('workouts', args=(0,)))
         return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         data = {"message": "Error"}
         messages.error(request, "Something went wrong. Workout not deleted.")
-        # return redirect(reverse('workouts', args=(request.POST["wod_id"],)))
         return HttpResponse(json.dumps(data), content_type='application/json')
 
 
+@require_POST
 def setWod(request):
-    if request.is_ajax() and request.POST and request.user.is_superuser:
+    if request.is_ajax() and request.user.is_superuser:
         wod = Workout.objects.filter(pk=request.POST["wod_id"])
         Workout.objects.all().update(workout_is_wod=False)
         wod.update(workout_is_wod=True)
@@ -818,12 +685,12 @@ def setWod(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
 
 
+@require_POST
 def getSliderLevel(request):
     prep_result = request.POST["prep_result"]
     wod = request.POST["wod"]
     if request.is_ajax():
         wod = Workout.objects.get(pk=wod)
-        user_l = user_list()
         # check which date is exactly a year ago
         lapse_date = date.today() - timedelta(days=365)
         if wod.workout_type == 'FT':
@@ -838,9 +705,16 @@ def getSliderLevel(request):
         # sort logs by date, filter for current workout, same for logs of user only; then make list of queries
         all_logs = Log.objects.all().filter(user__userprofile__gender=request.user.userprofile.gender).filter(workout=wod).filter(rx=True).filter(date__gt=lapse_date).order_by(f'{rank_result_order}')
         # create list of log id's max result for this workout for every user
-        log_id_list = id_list(user_l, all_logs, wod.workout_type)
+        all_logs_l = list(all_logs.values())
+        log_max_list =[]
+        log_user_id_list = []
+        for log in all_logs_l:
+            if not log["user_id"] in log_user_id_list:
+                log_user_id_list.append(log["user_id"])
+                log_max_list.append(log["id"])
+                all_logs_l.remove(log)
         # filter out all none max results from query
-        all_logs_rank = all_logs.filter(id__in=log_id_list)
+        all_logs_rank = all_logs.filter(id__in=log_max_list)
         rank = 0
         prevresult = [0, 0]
         rlistgenderall = []

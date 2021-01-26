@@ -1,35 +1,17 @@
 from django.shortcuts import render, redirect, reverse
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import UserProfile, User, HeroLevels
-from workouts.models import Workout, Log, MemberComment
-from allauth.account.models import EmailAddress
+from workouts.models import Workout, Log
 from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
-from django.core.files import File
 from django.contrib import messages
 from django.conf import settings
 from datetime import date, datetime, timedelta
-from django.core.exceptions import ValidationError
-from django.db.models import Avg, Max, Min, Sum
 from django.template import loader
-from django.http import Http404, HttpResponse, JsonResponse
-from asgiref.sync import sync_to_async
-import decimal
-import random
-import urllib.request
+from django.http import JsonResponse
 import stripe
 import json
 import statistics
-from workouts.views import id_list
-from django.template import loader
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .templatetags.calc_functions import calc_age
-from asgiref.sync import sync_to_async
-import asyncio
-import time
-from multiprocessing import Process, Manager
-from threading import Thread
 
 # @require_POST
 # def cache_payment_create_profile(request):
@@ -56,12 +38,9 @@ def profile(request):
         template = 'profiles/profile.html'
         profile = UserProfile.objects.get(user=request.user)
         form = UserProfileForm(instance=profile)
-        # cat_levels = calc_level(request.user)
         hero_levels = HeroLevels.objects.get(user=request.user)
-        # print(hero_levels)
         level_data = hero_levels.level_data
         general_level = hero_levels.general_level
-        # print(level_data)
         cat_levels = level_data
         categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         year_date = date.today() - timedelta(days=365)
@@ -91,10 +70,10 @@ def profile(request):
             "month": user_logs_month,
             "week": user_logs_week,
             "perfm": perf_month,
-            "perfw": perf_week     ,
+            "perfw": perf_week,
             "pry": pry,
             "prm": prm,
-            "prw": prw       
+            "prw": prw
         }
         return render(request, template, context)
     except UserProfile.DoesNotExist:
@@ -186,15 +165,6 @@ def edit_profile(request):
         return redirect('edit_profile')
 
 
-def user_list():
-    users = User.objects.all()
-    user_l = []
-    for user in users:
-        user_l.append(user.id)
-    user_data = {"user_l": user_l, "users": users}
-    return user_data
-
-
 def cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat):
     if len(percentiles) >= 3:
         accuracy = "high"
@@ -212,10 +182,9 @@ def cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat):
     return cat_levels
 
 
+@require_POST
 def calc_level(request):
-    start_time = time.time()
     if request.is_ajax():
-        print("CHECK")
         #determine for which user the levels need to be calculated
         if request.POST["user"] == "request":
             user = request.user
@@ -247,7 +216,6 @@ def calc_level(request):
                 wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "result": result})
                 percentiles.append(percentile)
         cat_levels = cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat)
-        print("HALFWAY " + user.username)
         avg_list = []
         for item in cat_levels:
             if item["perc"] != "none":
@@ -268,18 +236,13 @@ def calc_level(request):
         data = {
             'new_levels_html': new_levels_html
         }
-        print("SUCCESS "  + user.username)
-        total = (time.time() - start_time)
-        print("total time: ", total)
         return JsonResponse(data)
     else:
-        print("FAILED HERE")
         data = {"message": "Failed update"}
         return HttpResponse(json.dumps(data), content_type='application/json')
-        
+
 
 def getLevels(user, wod):
-    start_time = time.time()
     # check which date is exactly a year ago
     lapse_date = date.today() - timedelta(days=365)
     if Log.objects.filter(user=user, workout=wod, rx=True, date__gt=lapse_date).count() == 0:
@@ -306,7 +269,6 @@ def getLevels(user, wod):
             rank_result_order = '-mw_result'
         all_logs = Log.objects.filter(user__userprofile__gender=user.userprofile.gender, workout=wod, rx=True, date__gt=lapse_date).order_by(f'{rank_result_order}')
         all_logs_l = list(all_logs.values())
-        # all_logs_l = all_logs.values_list(flat=True)
         log_id_list =[]
         log_user_id_list = []
         user_result = ''
@@ -350,56 +312,4 @@ def getLevels(user, wod):
             "percentile": percentile,
             "result": user_result
             }
-        total = (time.time() -  start_time)
-        print("single loop time: ", total, wod.workout_name)
         return data
-
-def calc_level_pop(user):
-    start_time = time.time()
-    # create catagory list and 'reverse' dictionary for queries an initialize list for category levels
-    categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
-    cat_reverse = {"Power Lifts": "PL", "Olympic Lifts": "OL", "Body Weight": "BW", "Heavy": "HE", "Light": "LI", "Long": "LO", "Speed": "SP", "Endurance": "EN"}
-    cat_levels = []
-    # loop through categories to calculate level per category
-    workouts = Workout.objects.all().order_by("workout_category")
-    percentiles = []
-    wod_level = []
-    cat = ''
-    last_log = False
-    for wod in workouts:
-        wod_cat = wod.get_workout_category_display()
-        if cat == '':
-            cat = wod_cat
-        elif cat != wod_cat:
-            cat_levels = cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat)
-            percentiles = []
-            wod_level = []
-            cat = wod_cat
-        data = getLevels(user, wod)
-        percentile = data["percentile"]
-        result = data["result"]
-        if percentile is not None:
-            wod_level.append({"wod": wod.workout_name, "wodperc": percentile, "wodpk": wod.pk, "result": result})
-            percentiles.append(percentile)
-    cat_levels = cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat)
-    print("HALFWAY " + user.username)
-    avg_list = []
-    for item in cat_levels:
-        if item["perc"] != "none":
-            avg_list.append(item["perc"])
-    if len(avg_list) != 0:
-        general_level = round(statistics.mean(avg_list))
-    else:
-        general_level = 0
-    level_data = HeroLevels.objects.filter(user=user)
-    level_data.update(level_data=cat_levels)
-    level_data.update(general_level=general_level)
-
-
-def refreshLevels(request):
-    starttime = time.time()
-    users = User.objects.all()
-    for user in users:
-        calc_level_pop(user)
-    total = time.time() - starttime
-    print("total runtime", total)
