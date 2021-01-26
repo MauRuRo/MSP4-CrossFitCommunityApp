@@ -78,7 +78,6 @@ $(document).ready(function () {
         $(".search-member-item").remove()
         scroll_constant = false
         let make = false
-        // console.log($("#make-group-div").is(":visible"))
         if ($("#group-make-div").is(":visible") == true) {
             make = true
         }
@@ -209,7 +208,6 @@ $(document).ready(function () {
             },
             dataType: 'json',
             success: function (data) {
-                console.log("ajax Succes")
                 resetStats()
             },
             error: function () {
@@ -299,7 +297,6 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (data) {
-                console.log("AJAX MAKE GROUP SUCCESS")
                 location.reload()
             },
             error: function () {
@@ -335,7 +332,6 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (data) {
-                console.log("AJAX EDIT GROUP SUCCESS")
                 location.reload()
             },
             error: function () {
@@ -378,7 +374,6 @@ $(document).ready(function () {
             },
             dataType: 'json',
             success: function (data) {
-                console.log("ajax Succes")
                 resetStats()
             },
             error: function () {
@@ -398,7 +393,6 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (data) {
-                console.log("ajax getMemberInfo Succes")
                 $("#group-select-div, #group-make-div, #group-stats-div").hide()
                 let herolevels = data.calling_group_html
                 let userinfo = data.calling_group_two
@@ -453,7 +447,6 @@ $(document).ready(function () {
     // Get the latest statistics for level of selected member.
     function updateLevels(id) {
         let user_id = id
-        console.log(user_id)
         $("#level-loader").removeAttr("hidden")
         $("#level-loader").show()
         if (active) {
@@ -657,7 +650,6 @@ $(document).ready(function () {
             $("#id_name").addClass("placeholder-fail")
             $("#no-members-added").css('color', 'red')
         } else if ($("#add-users-form-list").find("li").length == 0) {
-            console.log("no users")
             $("#no-members-added").css('color', 'red')
         } else {
             $("#id_name").addClass("placeholder-fail")
@@ -699,6 +691,7 @@ $(document).ready(function () {
         $("#group-select-div, #group-stats-div").show()
     })
 
-    // EXECUTE FUNCTIONS ON DOCUMENT READY
+    // EXECUTE FUNCTIONS ON DOCUMENT READ
+    // none
 
 })
