@@ -56,6 +56,7 @@ def workouts(request, wod_id):
         lapse_date = date.today() - timedelta(days=365)
         # get all comments
         member_comments = MemberComment.objects.all()
+        # Create log groups for member activity module
         all_logs = selected_group.order_by('-date')
         all_logs_wod = selected_group.filter(workout=wod)
         user_logs = selected_group.filter(user=request.user)
@@ -89,6 +90,7 @@ def workouts(request, wod_id):
                 date__gt=lapse_date
                 ).order_by('-mw_result')
             rank_result = 'mw_result'
+        # Create a list of log id's that are members max result for the past year
         all_logs_l = list(all_logs_rank.values())
         log_max_list = []
         log_user_id_list = []
@@ -97,8 +99,9 @@ def workouts(request, wod_id):
                 log_user_id_list.append(log["user_id"])
                 log_max_list.append(log["id"])
                 all_logs_l.remove(log)
-        # filter out all none max results from query
+        # create a query for logs of current day.
         all_logs_rank_today = all_logs_rank.filter(date=date.today())
+        # filter out all none max results from query
         all_logs_rank = all_logs_rank.filter(id__in=log_max_list)
         # create query for today's logs, for women,\
         # for men, and rank logs for the whole past year.
@@ -114,6 +117,7 @@ def workouts(request, wod_id):
         all_logs_rank_men_today = all_logs_rank_today.filter(
             user__userprofile__gender="M"
         )
+        # Set variables for setting the ranks of the logs
         all_men_index_user = 0
         all_men_today_index_user = 0
         all_women_index_user = 0
@@ -128,6 +132,7 @@ def workouts(request, wod_id):
         rlistmentoday = []
         rlistwomenall = []
         rlistwomentoday = []
+        # Make lists of logs and their corresponding ranks.
         for log in all_logs_rank_men:
             if getattr(log, rank_result) == prevresult[0]:
                 prevresult[1] += 1
@@ -184,6 +189,7 @@ def workouts(request, wod_id):
                 all_women_today_index_user = all_women_today_index
             else:
                 all_women_today_index += 1
+        # Get best and worst results for workout to set initial level slider value.
         if request.user.userprofile.gender == "M":
             best = getattr(all_logs_rank_men[0], rank_result)
             worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
@@ -194,8 +200,9 @@ def workouts(request, wod_id):
             worst_rank = rlistwomenall[-1][1]
         if wod.workout_type == "FT":
             best = best.seconds
-            worst = worst.seconds
+            worst = worst.seconds   
         initial_slider_level = worst + (best-worst)/2
+        # Determine the page on which the user's log is so it will render this page on view load.
         all_women_page = math.ceil(all_women_index_user / 25)
         all_women_today_page = math.ceil(all_women_today_index_user / 25)
         if all_women_page == 0:
@@ -208,6 +215,7 @@ def workouts(request, wod_id):
             all_men_page = 1
         p_my = Paginator(all_logs_rank_men, 25)
         p_all_logs_rank_men = p_my.page(all_men_page)
+        # Set page info to determine from template if page has next or previous.
         if p_all_logs_rank_men.has_next() is False:
             all_men_page = {"down": "x", "up": all_men_page}
         else:
@@ -236,13 +244,14 @@ def workouts(request, wod_id):
                 "down": all_women_today_page,
                 "up": all_women_today_page
                 }
+        # Set groups for loading in the rank module
         rank_groups = [
             p_all_logs_rank_men,
             p_all_logs_rank_women,
             p_all_logs_rank_men_today,
             p_all_logs_rank_women_today
             ]
-        # Get todays date and convert it to string
+        # set further context data and set context.
         date_today = date.today()
         date_initial = date_today.strftime("%d %b %Y")
         form_log = LogForm()
@@ -285,6 +294,8 @@ def workouts(request, wod_id):
         return render(request, template, context)
     # else if request is POST
     else:
+        # Determine workout type and set appropriate values
+        # to get the right data from the request.POST
         if wod.workout_type == 'FT':
             result = 'ft_result'
             non_result_1 = 'amrap_result'
@@ -305,17 +316,20 @@ def workouts(request, wod_id):
             'date': datetime.strptime(request.POST.get('date'), "%d %b %Y"),
             'user_comment': request.POST['user_comment'],
         }
+        # Check if the log is not set in the future
         tday = date.today().strftime("%Y-%m-%d")
         today = datetime.strptime(tday, "%Y-%m-%d")
         if form_data["date"] > today:
             messages.error(request, 'You cannot log for a future date.')
             return redirect(reverse('workouts', args=wod_id))
         else:
+            # Upload new log object.
             log_form = LogForm(form_data)
             if log_form.is_valid():
                 new_log = log_form.save(commit=False)
                 new_log.workout = wod
                 new_log.user = request.user
+                # Determine if log result is personal record.
                 if wod.workout_type == "FT":
                     new_result = new_log.ft_result.seconds
                     max_result = Log.objects.filter(
@@ -381,6 +395,7 @@ def editLog(request):
                 rx_input = False
             else:
                 rx_input = True
+            # Determine if log result is personal record.
             if wod_type == "FT":
                 new_result = parse_duration(request.POST["result"])
                 if new_result is None:
@@ -505,6 +520,8 @@ def deleteCommentMember(request):
     if request.is_ajax():
         comment_id = request.POST["comment_id"]
         comment_type = request.POST["comment_type"]
+        # Determine comment type, because user- vs. member-
+        # comment are saved differently in the Database.
         if comment_type == 'user-comment':
             db_comment = get_object_or_404(Log, pk=comment_id)
             if db_comment.user == request.user or request.user.is_superuser:
@@ -555,9 +572,11 @@ def deleteCommentMember(request):
 
 @require_POST
 def commentMember(request):
-    """Function to post a comment on a log"""
+    """Function to post OR edit a comment on a log"""
     if request.is_ajax():
+        # Determine if the request is to upload or to edit.
         if request.POST["info_crud"] == "comment-upload":
+            # Upload a comment.
             form_data = {
                 "message": request.POST["member_comment"],
                 "member": request.user,
@@ -578,7 +597,10 @@ def commentMember(request):
             else:
                 return JsonResponse({"error": form.errors}, status=400)
         elif request.POST["info_crud"] == "comment-edit":
+            # Edit a comment.
             comment_id = request.POST["id_comment"]
+            # Determine comment type, because user- vs. member-
+            # comment are saved differently in the Database.
             if request.POST["main_comment"] == 'true':
                 db_comment = get_object_or_404(
                     Log,
@@ -645,7 +667,7 @@ def commentMember(request):
             return JsonResponse({"error": "No edit, no upload"}, status=400)
 
 
-# https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
+# Made possible with help from: https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
 @require_POST
 def loopList(request):
     """Function to get next 'page' of logs for the activity module"""
@@ -657,7 +679,7 @@ def loopList(request):
         page = request.POST.get('page')
         # get all comments
         member_comments = MemberComment.objects.all()
-        # check for superuser
+        # check for superuser to determine loading of CRUD options.
         superuser = False
         if request.user.is_superuser:
             superuser = True
@@ -724,7 +746,7 @@ def loopListRank(request):
         lapse_date = date.today() - timedelta(days=365)
         # get all comments
         member_comments = MemberComment.objects.all()
-        # check for superuser
+        # check for superuser to enable CRUD options.
         superuser = False
         if request.user.is_superuser:
             superuser = True
@@ -757,6 +779,8 @@ def loopListRank(request):
         all_logs_l = list(all_logs_rank.values())
         log_max_list = []
         log_user_id_list = []
+        # Make list of log id's that are
+        # max results for each user for the past year.
         for log in all_logs_l:
             if not log["user_id"] in log_user_id_list:
                 log_user_id_list.append(log["user_id"])
@@ -778,7 +802,6 @@ def loopListRank(request):
             calling_group = all_logs_rank_today.filter(
                 user__userprofile__gender="F"
                 )
-        # https://docs.djangoproject.com/en/dev/topics/pagination/
         results_per_page = 25
         paginator_calling_group = Paginator(calling_group, results_per_page)
         try:
@@ -846,6 +869,7 @@ def deleteWorkout(request):
     """Function to delete Workout object, only available for superuser"""
     if request.is_ajax() and request.user.is_superuser:
         wod = get_object_or_404(Workout, pk=request.POST["wod_id"])
+        # Set a new workout of the day if deleted workout was WOD.
         if wod.workout_is_wod is True:
             new_wod = Workout.objects.all().first()
             new_wod.update(workout_is_wod=True)
@@ -917,6 +941,7 @@ def getSliderLevel(request):
         prevresult = [0, 0]
         rlistgenderall = []
         prep_rank = 0
+        # Determine rank for each log.
         for log in all_logs_rank:
             if getattr(log, rank_result) == prevresult[0]:
                 prevresult[1] += 1
