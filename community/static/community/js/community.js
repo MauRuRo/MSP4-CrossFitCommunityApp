@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    // SET VARIABLES
+    // SET VARIABLES AND ADJUST HTML/CSS ON PAGE LOAD
 
     let group_data = $("#group-select-data").attr('data')
     group_data = group_data.toString()
@@ -10,6 +10,9 @@ $(document).ready(function () {
     let scroll_constant = true
     let xhr
     let active = false
+
+
+    $(".selected-group").removeClass('selected-group').addClass('disabled-group')
 
     // DECLARE FUNCTIONS
 
@@ -126,7 +129,6 @@ $(document).ready(function () {
     }
 
     // show selected group
-    $(".selected-group").removeClass('selected-group').addClass('disabled-group')
     if (group_data["custom"] != "false") {
         customgroup_id = "#" + group_data["custom"]
         $(customgroup_id).addClass('selected-group')
