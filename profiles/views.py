@@ -43,16 +43,6 @@ def profile(request):
         level_data = hero_levels.level_data
         general_level = hero_levels.general_level
         cat_levels = level_data
-        categories = [
-            "Power Lifts",
-            "Olympic Lifts",
-            "Body Weight",
-            "Heavy",
-            "Light",
-            "Long",
-            "Speed",
-            "Endurance"
-            ]
         # Calculate user Stats.
         year_date = date.today() - timedelta(days=365)
         month_date = date.today() - timedelta(days=30)
@@ -88,7 +78,6 @@ def profile(request):
             'form': form,
             'cat_levels': cat_levels,
             'general_level': general_level,
-            'categories': categories,
             "year": user_logs_year,
             "month": user_logs_month,
             "week": user_logs_week,

@@ -17,8 +17,13 @@ import math
 def community(request):
     """A view to render the community page, including makeGroup form."""
     template = "community/community.html"
-    groups1 = CustomGroup.objects.filter(group_users=request.user).filter(share=True).exclude(users_delete=request.user)
-    groups2 = CustomGroup.objects.filter(admin=request.user).exclude(users_delete=request.user)
+    # Get groups if user is a member and group is shared or if user is admin.
+    groups1 = CustomGroup.objects.filter(
+        group_users=request.user
+        ).filter(share=True).exclude(users_delete=request.user)
+    groups2 = CustomGroup.objects.filter(
+        admin=request.user
+        ).exclude(users_delete=request.user)
     groups = groups1.union(groups2)
     age_group = getAgeGroup(request)
     selected_group = getGroupSelectionUsers(request)
@@ -26,6 +31,7 @@ def community(request):
     selected_group = selected_group.order_by("-herolevels__general_level")
     group = Paginator(selected_group, 25)
     group = group.page(1)
+    # Get selected group stats
     members = selected_group.count()
     male = selected_group.filter(userprofile__gender="M").count()
     female = selected_group.filter(userprofile__gender="F").count()
@@ -71,7 +77,8 @@ def community(request):
 
 @require_POST
 def setGroupSelect(request):
-    """A function to update the GroupSelect object for the user to save the filter settings the user has selected."""
+    """A function to update the GroupSelect object
+    for the user to save the filter settings the user has selected."""
     if request.is_ajax:
         age = request.POST["age"]
         custom = request.POST["custom"]
@@ -81,34 +88,50 @@ def setGroupSelect(request):
             user_select = GroupSelect.objects.filter(user=request.user)
             user_select.update(group=group_select)
         except GroupSelect.DoesNotExist:
-            user_select = GroupSelect.objects.create(user=request.user, group=group_select)
+            user_select = GroupSelect.objects.create(
+                user=request.user, group=group_select
+                )
         data = {"message": "Success"}
     return JsonResponse(data)
 
 
 def getGroupSelection(request):
-    """A function to get the filter selection of the user. Returns all workout logs for members of the selected group."""
-     # Determine group selection
+    """A function to get the filter selection of the user.
+    Returns all workout logs for members of the selected group."""
+    # Determine group selection
     try:
         group_s = GroupSelect.objects.get(user=request.user)
         group_select = group_s.group
     except GroupSelect.DoesNotExist:
-        group_select = {"age": "false", "custom": "false", "location": "group-global"}
-        gs_obj = GroupSelect.objects.create(user=request.user, group=group_select)
+        group_select = {
+            "age": "false", "custom": "false", "location": "group-global"
+            }
+        GroupSelect.objects.create(
+            user=request.user, group=group_select
+            )
     if group_select["custom"] == 'false':
         if group_select["location"] == "group-global":
             select_group_logs = Log.objects.all()
         elif group_select["location"] == "group-country":
-            select_group_logs = Log.objects.filter(user__userprofile__country=request.user.userprofile.country)
+            select_group_logs = Log.objects.filter(
+                user__userprofile__country=request.user.userprofile.country
+                )
         else:
-            select_group_logs = Log.objects.filter(user__userprofile__town_or_city=request.user.userprofile.town_or_city)
+            user_city = request.user.userprofile.town_or_city
+            select_group_logs = Log.objects.filter(
+                user__userprofile__town_or_city=user_city
+                )
         if group_select["age"] != 'false':
             age = calc_age(request.user.userprofile.birthdate)
             age_bottom = rounddown(age)
             age_top = roundup(age)
             young_age_date = date.today() - timedelta(days=age_bottom*365)
             old_age_date = date.today() - timedelta(days=age_top*365)
-            select_group_logs = select_group_logs.filter(user__userprofile__birthdate__gt=old_age_date).filter(user__userprofile__birthdate__lte=young_age_date)
+            select_group_logs = select_group_logs.filter(
+                user__userprofile__birthdate__gt=old_age_date
+                ).filter(
+                    user__userprofile__birthdate__lte=young_age_date
+                    )
     else:
         custom_group = CustomGroup.objects.get(pk=group_select["custom"])
         user_group = custom_group.group_users.all()
@@ -117,13 +140,18 @@ def getGroupSelection(request):
 
 
 def getGroup(request):
-    """Helper function that gets the selected group of the user. If it doesn't exist it will select and create a default selection."""
+    """Helper function that gets the selected group of the user.
+    If it doesn't exist it will select and create a default selection."""
     try:
         group_s = GroupSelect.objects.get(user=request.user)
         group_select = group_s.group
     except GroupSelect.DoesNotExist:
-        group_select = {"age": "false", "custom": "false", "location": "group-global"}
-        gs_obj = GroupSelect.objects.create(user=request.user, group=group_select)
+        group_select = {
+            "age": "false", "custom": "false", "location": "group-global"
+            }
+        GroupSelect.objects.create(
+            user=request.user, group=group_select
+            )
     return group_select
 
 
@@ -135,25 +163,33 @@ def getGroupSelectionUsers(request):
         if group_select["location"] == "group-global":
             select_group_users = User.objects.all()
         elif group_select["location"] == "group-country":
-            select_group_users = User.objects.filter(userprofile__country=request.user.userprofile.country)
+            select_group_users = User.objects.filter(
+                userprofile__country=request.user.userprofile.country
+                )
         else:
-            select_group_users = User.objects.filter(userprofile__town_or_city=request.user.userprofile.town_or_city)
+            select_group_users = User.objects.filter(
+                userprofile__town_or_city=request.user.userprofile.town_or_city
+                )
         if group_select["age"] != 'false':
             age = calc_age(request.user.userprofile.birthdate)
             age_bottom = rounddown(age)
             age_top = roundup(age)
             young_age_date = date.today() - timedelta(days=age_bottom*365)
             old_age_date = date.today() - timedelta(days=age_top*365)
-            select_group_users = select_group_users.filter(userprofile__birthdate__gt=old_age_date).filter(userprofile__birthdate__lte=young_age_date)
+            select_group_users = select_group_users.filter(
+                userprofile__birthdate__gt=old_age_date
+                ).filter(userprofile__birthdate__lte=young_age_date)
     else:
         custom_group = CustomGroup.objects.get(pk=group_select["custom"])
         user_group = custom_group.group_users.all()
         select_group_users = user_group
     return select_group_users
 
+
 @require_POST
 def resetStats(request):
-    """A function that will return the statistics for the newly selected group."""
+    """A function that will return
+    the statistics for the newly selected group."""
     if request.is_ajax:
         selected_group = getGroupSelectionUsers(request)
         selected_group_logs = getGroupSelection(request)
@@ -188,20 +224,20 @@ def resetStats(request):
         stats_html = loader.render_to_string(
             'community/includes/groupstats.html',
             {
-            'groupname': groupname,
-            'admin': admin,
-            'members': members,
-            'male': male,
-            'female': female,
-            'month': month,
-            'average_user': average_user,
-            'average_level': average_level
+                'groupname': groupname,
+                'admin': admin,
+                'members': members,
+                'male': male,
+                'female': female,
+                'month': month,
+                'average_user': average_user,
+                'average_level': average_level
             }
         )
         members_html = loader.render_to_string(
             'community/includes/groupmembers.html',
             {
-            'group': group,
+                'group': group,
             }
         )
         output_data = {
@@ -211,9 +247,11 @@ def resetStats(request):
         }
         return JsonResponse(output_data)
 
+
 @require_POST
 def lazyLoadGroup(request):
-    """A function that will return html to append to the userlist from the queryset of the users in the selected group."""
+    """A function that will return html to append to the
+    userlist from the queryset of the users in the selected group."""
     if request.is_ajax:
         selected_group = getGroupSelection(request)
         no_page = False
@@ -231,7 +269,7 @@ def lazyLoadGroup(request):
         calling_group_html = loader.render_to_string(
             'community/includes/groupmembersextra.html',
             {
-            'group': group
+                'group': group
             }
         )
         output_data = {
@@ -241,9 +279,11 @@ def lazyLoadGroup(request):
         }
         return JsonResponse(output_data)
 
+
 @require_POST
 def searchMember(request):
-    """A function that will return members (in the form of html) that have a partial string match for the search input string."""
+    """A function that will return members (in the form of html)
+    that have a partial string match for the search input string."""
     if request.is_ajax:
         make = json.loads(request.POST["make"])
         if make:
@@ -259,7 +299,7 @@ def searchMember(request):
         calling_group_html = loader.render_to_string(
             'community/includes/groupmembersearch.html',
             {
-            'group': search_group
+                'group': search_group
             }
             )
         output_data = {
@@ -281,14 +321,18 @@ def makeGroup(request):
             user = User.objects.get(pk=member)
             members.append(user)
         members.append(request.user)
-        new_group = CustomGroup.objects.create(admin=admin, name=groupname, share=sharegroup)
+        new_group = CustomGroup.objects.create(
+            admin=admin, name=groupname, share=sharegroup
+            )
         new_group.group_users.set(members)
-        data={"message":"Success"}
+        data = {"message": "Success"}
         return JsonResponse(data)
+
 
 @require_POST
 def getGroupEditInfo(request):
-    """A Function that gets the CustomGroup info and returns it to the Group Edit form."""
+    """A Function that gets the CustomGroup
+    info and returns it to the Group Edit form."""
     if request.is_ajax:
         group_id = request.POST["group_id"]
         group = CustomGroup.objects.get(pk=group_id)
@@ -300,7 +344,7 @@ def getGroupEditInfo(request):
             m_id = member.pk
             member = {"name": m_name, "id": m_id}
             group_members.append(member)
-        group_members=json.dumps(group_members)
+        group_members = json.dumps(group_members)
         data = {
             "group_name": group_name,
             "group_share": group_share,
@@ -327,7 +371,7 @@ def editGroup(request):
         edit_group.share = sharegroup
         edit_group.group_users.set(members)
         edit_group.save()
-        data={"message":"Success"}
+        data = {"message": "Success"}
         return JsonResponse(data)
 
 
@@ -342,27 +386,32 @@ def deleteGroup(request):
         users_delete = group.users_delete.all()
         group_users = group.group_users.all()
         del_admin = False
+        # if user deleting group is admin,
+        # then asign a new admin for group in active members.
         if r_user == group.admin:
             del_admin = True
         delete = True
         for user in group_users:
-            if not user in users_delete:
+            # if any users left in active users then don't delete group.
+            if not (user in users_delete):
                 delete = False
                 if del_admin:
                     group.admin = user
                     group.save()
                 break
-        if group.share == False:
+        # If it's a non-shared group then delete.
+        if group.share is False:
             delete = True
         if delete:
-            group.delete()        
-        data={"message":"Success"}
+            group.delete()
+        data = {"message": "Success"}
         return JsonResponse(data)
 
 
 @require_POST
 def getMemberInfo(request):
-    """A function to get Level and Profile info for a member. Returns the information as two different html's."""
+    """A function to get Level and Profile info for a member.
+    Returns the information as two different html's."""
     if request.is_ajax:
         member = request.POST["user_id"]
         profile_user = User.objects.get(pk=member)
@@ -370,20 +419,18 @@ def getMemberInfo(request):
         hero_levels = HeroLevels.objects.get(user__pk=member)
         cat_levels = hero_levels.level_data
         general_level = hero_levels.general_level
-        categories = ["Power Lifts", "Olympic Lifts", "Body Weight", "Heavy", "Light", "Long", "Speed", "Endurance"]
         calling_group_html = loader.render_to_string(
-        '../../profiles/templates/profiles/includes/herolevel.html',
-        {
-            'cat_levels': cat_levels,
-            'general_level': general_level,
-            'categories': categories,
-        }
+            '../../profiles/templates/profiles/includes/herolevel.html',
+            {
+                'cat_levels': cat_levels,
+                'general_level': general_level,
+            }
         )
         calling_group_two = loader.render_to_string(
-        '../../profiles/templates/profiles/includes/profile_info.html',
-        {
-            'profile': profile,
-        }
+            '../../profiles/templates/profiles/includes/profile_info.html',
+            {
+                'profile': profile,
+            }
         )
     output_data = {
         'calling_group_html': calling_group_html,

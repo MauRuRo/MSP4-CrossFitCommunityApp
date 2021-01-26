@@ -90,7 +90,7 @@ def workouts(request, wod_id):
                 date__gt=lapse_date
                 ).order_by('-mw_result')
             rank_result = 'mw_result'
-        # Create a list of log id's that are members max result for the past year
+        # Create a list of log id's for max result for the past year
         all_logs_l = list(all_logs_rank.values())
         log_max_list = []
         log_user_id_list = []
@@ -189,7 +189,8 @@ def workouts(request, wod_id):
                 all_women_today_index_user = all_women_today_index
             else:
                 all_women_today_index += 1
-        # Get best and worst results for workout to set initial level slider value.
+        # Get best and worst results for workout
+        # to set initial level slider value.
         if request.user.userprofile.gender == "M":
             best = getattr(all_logs_rank_men[0], rank_result)
             worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
@@ -200,9 +201,10 @@ def workouts(request, wod_id):
             worst_rank = rlistwomenall[-1][1]
         if wod.workout_type == "FT":
             best = best.seconds
-            worst = worst.seconds   
+            worst = worst.seconds
         initial_slider_level = worst + (best-worst)/2
-        # Determine the page on which the user's log is so it will render this page on view load.
+        # Determine the page on which the user's log
+        # is so it will render this page on view load.
         all_women_page = math.ceil(all_women_index_user / 25)
         all_women_today_page = math.ceil(all_women_today_index_user / 25)
         if all_women_page == 0:
@@ -215,7 +217,8 @@ def workouts(request, wod_id):
             all_men_page = 1
         p_my = Paginator(all_logs_rank_men, 25)
         p_all_logs_rank_men = p_my.page(all_men_page)
-        # Set page info to determine from template if page has next or previous.
+        # Set page info to determine from
+        # template if page has next or previous.
         if p_all_logs_rank_men.has_next() is False:
             all_men_page = {"down": "x", "up": all_men_page}
         else:
@@ -667,7 +670,8 @@ def commentMember(request):
             return JsonResponse({"error": "No edit, no upload"}, status=400)
 
 
-# Made possible with help from: https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
+# Made possible with help from:
+# https://alphacoder.xyz/lazy-loading-with-django-and-jquery/
 @require_POST
 def loopList(request):
     """Function to get next 'page' of logs for the activity module"""
