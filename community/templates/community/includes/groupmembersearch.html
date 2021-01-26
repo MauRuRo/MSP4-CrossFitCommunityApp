@@ -1,17 +1,23 @@
-{% for member in group %}           
-        <div class = "row rank-card mx-0 my-1 align-items-center justify-content-between search-member-item" id="{{ member.id }}" data-country="{{ member.userprofile.country.code }}">
-            <div class="col-1"><div class="hl-head">HL</div><div class="display-level">{{ member.herolevels.general_level }}</div></div>
-            <div class="card-col col-8 px-1">
-                <div class="rank-name-spacing">
-                    <p class="rank-name"><strong>{{ member.userprofile.full_name }}</strong></p>
-                </div>
-            </div>
-            <div class="col-2 px-0 align-self-center justify-content-end circles-and-more">
-                <div class="add-user" hidden><i class="fas fa-user-plus"></i></div>
-                <div class="add-user" hidden><i class="fas fa-user-minus"></i></div>
-                <div class="pf-rnk-circle" style="background: url('{{member.userprofile.image.url}}') no-repeat; background-size: cover">
-                </div>
-                <i class="fflag fflag-{{ member.userprofile.country.code }} ff-lg ff-round rank-flag" aria-label="{{ member.userprofile.country.code }}"></i>
-            </div>
+{% for member in group %}
+<div class="row rank-card mx-0 my-1 align-items-center justify-content-between search-member-item" id="{{ member.id }}"
+    data-country="{{ member.userprofile.country.code }}">
+    <div class="col-1">
+        <div class="hl-head">HL</div>
+        <div class="display-level">{{ member.herolevels.general_level }}</div>
+    </div>
+    <div class="card-col col-8 px-1">
+        <div class="rank-name-spacing">
+            <p class="rank-name"><strong>{{ member.userprofile.full_name }}</strong></p>
         </div>
+    </div>
+    <div class="col-2 px-0 align-self-center justify-content-end circles-and-more">
+        <div class="add-user" hidden><i class="fas fa-user-plus"></i></div>
+        <div class="add-user" hidden><i class="fas fa-user-minus"></i></div>
+        <div class="pf-rnk-circle"
+            style="background: url('{{member.userprofile.image.url}}') no-repeat; background-size: cover">
+        </div>
+        <i class="fflag fflag-{{ member.userprofile.country.code }} ff-lg ff-round rank-flag"
+            aria-label="{{ member.userprofile.country.code }}"></i>
+    </div>
+</div>
 {% endfor %}

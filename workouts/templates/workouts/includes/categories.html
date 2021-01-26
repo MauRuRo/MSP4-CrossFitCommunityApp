@@ -3,30 +3,30 @@
     <h4 class="block-title">Explore WODs</h4>
     <div class="row pt-1 justify-content-center">
         <form class="form-inline my-2 my-lg-0">
-        <input class="form-control search-wod" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control search-wod" type="search" placeholder="Search" aria-label="Search">
         </form>
     </div>
 </div>
 <div class="row pt-2 cat-div justify-content-center">
-       <ul>
+    <ul>
         <li id="workout-of-the-day-cat" class="cat">WOD: <span class="wod-cat-wods">
-            {% for wod in wod_collection %}
+                {% for wod in wod_collection %}
                 {% if wod.workout_is_wod == True %}
                 <a href="{% url 'workouts' wod.pk %}">{{ wod.workout_name }}</a>
                 {% endif %}
-            {% endfor %}
-        </span></li>
-        {% for cat in categories %}
-            <li id="{{ cat|space_remove }}" class="cat">{{ cat }}</li>           
-            <ul class="cat-wods">
-                {% for wod in wod_collection %}
-                {% if wod.get_workout_category_display == cat %}
-                <li><a href="{% url 'workouts' wod.pk %}">{{ wod.workout_name }}</a></li>
-                {% endif %}
                 {% endfor %}
-            </ul>
+            </span></li>
+        {% for cat in categories %}
+        <li id="{{ cat|space_remove }}" class="cat">{{ cat }}</li>
+        <ul class="cat-wods">
+            {% for wod in wod_collection %}
+            {% if wod.get_workout_category_display == cat %}
+            <li><a href="{% url 'workouts' wod.pk %}">{{ wod.workout_name }}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
         {% endfor %}
-    </ul> 
+    </ul>
 </div>
 <div class="row pt-2 justify-content-center">
     <ul class="search-cat">

@@ -2,67 +2,43 @@
 {% load static %}
 {% load calc_functions %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'profiles/css/profiles.css' %}">
+<link rel="stylesheet" href="{% static 'profiles/css/profiles.css' %}">
 {% endblock %}
-
 {% block content %}
-    <div class="container-fluid page-content">
-        <div class="row h-100 align-items-center">
-            <div class="col-sm-6 col-lg-3 content-block order-2 order-sm-3 align-self-start">
-                <div class="fillblock p-2">
-                    {% include 'profiles/includes/profile_info.html' %}
-                    <!-- <div class="container" id="user-info-block">
-                        <div class="row justify-content-center">
-                        <h4 class="block-title">{{ profile.full_name }}</h4>
-                            <ul class="list-unstyled profile-info-list">
-                                <li>{% if profile.gender == "M" %}<i class="fas fa-mars"></i>{% else %}<i class="fas fa-venus"></i>{% endif %}</li>
-                                <li>Age: {{ profile.birthdate | calc_age }}</li>
-                                <li>{{ profile.town_or_city }},</li>
-                                <li>{{ profile.get_country_display }}  <i class="fflag fflag-{{ profile.country.code }} ff-lg ff-round" aria-label="{{ profile.country.code }}"></i></li>
-                                <li>{{ profile.weight }}kg</li>
-                            </ul>
-                        </div>
-                        <div class="row justify-content-end">
-                             <button class="btn rounded-1 btn-sm btn-black" id="toggle-edit-profile-button"><i class="far fa-edit fa-edit-profile"></i></button>
-                        </div>
-                    </div> -->
-                    <div id="edit-form-block" hidden>
-                        {% include 'profiles/includes/edit_profile_include.html' %}
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
-                <div class="fillblock p-2" id="level-block">
-                    {% include 'profiles/includes/herolevel.html' %}
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-3 content-block order-3 order-sm-2 order-lg-1 align-self-start">
-                <div class="fillblock p-2">
-                    {% include 'profiles/includes/personal_stats.html' %}
-                    <!-- { include 'profiles/includes/profile_history.html' %} -->
-                    <!-- <a href="{ url 'leveler' %}"><button>leveler</button></a> -->
-                    <!-- <button id="user-populate">get users</button>
-                    <textarea name="" id="printout" cols="30" rows="10"></textarea>
-                    <a href="#"><button>upload</button></a>
-                    <a href="{ url 'logPopulation' %}"><button>logs</button></a>
-                    <a href="{ url 'deleteLogs' %}"><button>Delete Logs</button></a> -->
+<div class="container-fluid page-content">
+    <div class="row h-100 align-items-center">
+        <div class="col-sm-6 col-lg-3 content-block order-2 order-sm-3 align-self-start">
+            <div class="fillblock p-2">
+                {% include 'profiles/includes/profile_info.html' %}
+                <div id="edit-form-block" hidden>
+                    {% include 'profiles/includes/edit_profile_include.html' %}
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
+            <div class="fillblock p-2" id="level-block">
+                {% include 'profiles/includes/herolevel.html' %}
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 content-block order-3 order-sm-2 order-lg-1 align-self-start">
+            <div class="fillblock p-2">
+                {% include 'profiles/includes/personal_stats.html' %}
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}
-
 {% block postloadjs %}
 {{ block.super }}
 <script type="text/javascript" src="{% static 'profiles/js/token.js' %}"></script>
 <script type="text/javascript" src="{% static 'profiles/js/unselected_select_field.js' %}"></script>
 <script type="module" src="{% static 'profiles/js/profile.js' %}"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-  return new bootstrap.Popover(popoverTriggerEl) 
+    $(document).ready(function () {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
     })
-})
 </script>
 {% endblock %}

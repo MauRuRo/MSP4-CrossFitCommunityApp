@@ -1,92 +1,94 @@
 {% extends "base.html" %}
 {% load static %}
 {% load calc_functions %}
-
 {% block content %}
-    <div class="container-fluid page-content">
-        <div class="row h-100 align-items-center">
-            <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
-                <div class="fillblock px-4 py-3 mb-3" id="block-2">
-                    <div class="main-wod-div">
-                        <div class="row justify-content-between">
-                            <div class="col-7 col-md-9 px-0">
-                                <div class="row pl-3">
-                                <h3 class="workout-name">{% if wod.workout_is_wod %}<span>Workout of the Day</span><br>{% endif %}<span id="workout-name">{{ wod.workout_name }}</span></h3>
-                                </div>
-                                <div id="wod-type" hidden>{{ wod.workout_type }}</div>
-                                <div id="wod-cat" hidden>{{ wod.workout_category }}</div>
-                                <div class="row pl-3">
-                                    <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
-                                </div>
+<div class="container-fluid page-content">
+    <div class="row h-100 align-items-center">
+        <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
+            <div class="fillblock px-4 py-3 mb-3" id="block-2">
+                <div class="main-wod-div">
+                    <div class="row justify-content-between">
+                        <div class="col-7 col-md-9 px-0">
+                            <div class="row pl-3">
+                                <h3 class="workout-name">{% if wod.workout_is_wod %}<span>Workout of the
+                                        Day</span><br>{% endif %}<span id="workout-name">{{ wod.workout_name }}</span>
+                                </h3>
                             </div>
-                            <div class="col-3 px-1 justify-content-end">
-                                <div class="row justify-content-end">
-                                    <button class="btn btn-black rounded-1" id="toggle-workouts-button">Workouts</button>
-                                </div>     
-                                <div class="row justify-content-end">
-                                    <button class="btn btn-black rounded-1" id="toggle-log-button">Log</button>
-                                </div>                                                   
-                            </div>      
+                            <div id="wod-type" hidden>{{ wod.workout_type }}</div>
+                            <div id="wod-cat" hidden>{{ wod.workout_category }}</div>
+                            <div class="row pl-3">
+                                <h5 class="category-name">{{ wod.get_workout_category_display }}</h5>
+                            </div>
                         </div>
-                        <div class="row">
-                            <p class="workout-description">{{ wod.description }}</p>
-                        </div>
-                        <div class="row justify-content-center slider-row">
-                            <div id="rangeLevel" data-initial-value="{{ initial_slider_level }}"></div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <span id="rangeLevelCurrentSliderValLabel">Result: <span id="rangeLevelSliderVal"></span>{% if wod.workout_type == "FT" %}{% elif wod.workout_type == "AMRAP" %} rounds{% else %}kg{% endif %}<br>Level: <span id="rangeLevelSliderLevelVal"></span></span>
+                        <div class="col-3 px-1 justify-content-end">
+                            <div class="row justify-content-end">
+                                <button class="btn btn-black rounded-1" id="toggle-workouts-button">Workouts</button>
+                            </div>
+                            <div class="row justify-content-end">
+                                <button class="btn btn-black rounded-1" id="toggle-log-button">Log</button>
+                            </div>
                         </div>
                     </div>
-                    {% if request.user.is_superuser %}
-                    <div class="row justify-content-end superuser-buttons">
-                        <button class="btn rounded-1" id="set-wod-button">Set as WOD</button>                       
-                        <button class="btn rounded-1" id="toggle-create-wod-button">Create</button>
-                        <button class="btn rounded-1" id="toggle-edit-wod-button">Edit</button>
-                        <button class="btn rounded-1" id="toggle-delete-wod-button">Delete</button>
+                    <div class="row">
+                        <p class="workout-description">{{ wod.description }}</p>
                     </div>
-                    <div class="workout-form-div">
-                        <form action="{% url 'createWorkout' wod.id %}" method="POST" id="create-wod-form">
+                    <div class="row justify-content-center slider-row">
+                        <div id="rangeLevel" data-initial-value="{{ initial_slider_level }}"></div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <span id="rangeLevelCurrentSliderValLabel">Result: <span
+                                id="rangeLevelSliderVal"></span>{% if wod.workout_type == "FT" %}{% elif wod.workout_type == "AMRAP" %}
+                            rounds{% else %}kg{% endif %}<br>Level: <span id="rangeLevelSliderLevelVal"></span></span>
+                    </div>
+                </div>
+                {% if request.user.is_superuser %}
+                <div class="row justify-content-end superuser-buttons">
+                    <button class="btn rounded-1" id="set-wod-button">Set as WOD</button>
+                    <button class="btn rounded-1" id="toggle-create-wod-button">Create</button>
+                    <button class="btn rounded-1" id="toggle-edit-wod-button">Edit</button>
+                    <button class="btn rounded-1" id="toggle-delete-wod-button">Delete</button>
+                </div>
+                <div class="workout-form-div">
+                    <form action="{% url 'createWorkout' wod.id %}" method="POST" id="create-wod-form">
                         {% csrf_token %}
                         {{ workout_form|crispy }}
                         <button class="btn btn-black rounded-1" id="create-wod-submit" type="submit">Create</button>
                         <button class="btn btn-black rounded-1" id="edit-wod-submit">Edit</button>
                         <button class="btn btn-outline-black rounded-1" id="cancel-wod-submit">Cancel</button>
-                        </form>
-                    </div>   
-                    {% endif %}
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 content-block align-self-start order-2 order-sm-3">
+            <div class="fillblock mb-3" id="block-1">
+                <div id="log-ranking-div">
+                    {% include 'workouts/includes/log-ranking.html' %}
+                </div>
+                <div id="logform-div">
+                    {% include 'workouts/includes/logform.html' %}
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-3 content-block align-self-start order-2 order-sm-3">
-                <div class="fillblock mb-3" id="block-1">
-                    <div id="log-ranking-div">
-                        {% include 'workouts/includes/log-ranking.html' %} 
-                    </div>
-                    <div id="logform-div">
-                        {% include 'workouts/includes/logform.html' %}
-                    </div>           
+        </div>
+        <div class="col-sm-6 col-lg-3 content-block align-self-start order-3 order-sm-2 order-lg-1">
+            <div class="fillblock mb-3" id="block-3">
+                <div id="log-history-div">
+                    {% include 'workouts/includes/log-history.html' %}
                 </div>
-            </div>           
-            <div class="col-sm-6 col-lg-3 content-block align-self-start order-3 order-sm-2 order-lg-1">
-                <div class="fillblock mb-3" id="block-3">
-                    <div id="log-history-div">
-                        {% include 'workouts/includes/log-history.html' %} 
-                    </div>
-                    <div id="categories-div">
-                        {% include 'workouts/includes/categories.html' %} 
-                    </div>
+                <div id="categories-div">
+                    {% include 'workouts/includes/categories.html' %}
                 </div>
             </div>
         </div>
     </div>
-    <div hidden id="wod-id-no" data="{{ wod.id }}"></div>
-    <div hidden id="rlistmenall" data-list="{{ rlistmenall }}"></div>
-    <div hidden id="rlistmentoday" data-list="{{ rlistmentoday }}"></div>
-    <div hidden id="rlistwomenall" data-list="{{ rlistwomenall }}"></div>
-    <div hidden id="rlistwomentoday" data-list="{{ rlistwomentoday }}"></div>
-    <div hidden id="rangeLevelData" data-best="{{ best }}" data-worst="{{ worst }}" data-worstrank="{{ worst_rank }}"></div>
+</div>
+<div hidden id="wod-id-no" data="{{ wod.id }}"></div>
+<div hidden id="rlistmenall" data-list="{{ rlistmenall }}"></div>
+<div hidden id="rlistmentoday" data-list="{{ rlistmentoday }}"></div>
+<div hidden id="rlistwomenall" data-list="{{ rlistwomenall }}"></div>
+<div hidden id="rlistwomentoday" data-list="{{ rlistwomentoday }}"></div>
+<div hidden id="rangeLevelData" data-best="{{ best }}" data-worst="{{ worst }}" data-worstrank="{{ worst_rank }}"></div>
 {% endblock %}
-
 {% block postloadjs %}
 {{ block.super }}
 <script type="text/javascript" src="{% static 'workouts/js/token.js' %}"></script>

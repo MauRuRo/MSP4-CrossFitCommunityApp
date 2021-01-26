@@ -5,7 +5,6 @@ body {
     background-position-y: 150px;
     font-family: 'Open Sans', sans-serif;
 }
-
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Bungee';
 }
@@ -84,7 +83,7 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: inset 0px 0px 7px #000;
     margin-bottom: 15px;
 }
-/* from Bulma _ from Boutique Ado project */
+/* from Bulma _ from Boutique Ado project CODE INSTITUTE */
 .icon { 
     align-items: center;
     display: inline-flex;

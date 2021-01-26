@@ -1,19 +1,23 @@
 {% load calc_functions %}
 <div class="container" id="user-info-block">
     <div class="row justify-content-center">
-    <h4 class="block-title user-info-header">{{ profile.full_name }}</h4>
-    <div class="pf-circle-container d-flex justify-content-center">
-    <div class="pf-inf-circle" style="background: url('{{ profile.image.url }}') no-repeat; background-size: cover"></div>
-    </div>
-    <ul class="list-unstyled profile-info-list">
-        <li>{% if profile.gender == "M" %}<i class="fas fa-mars"></i>{% else %}<i class="fas fa-venus"></i>{% endif %}</li>
-        <li>Age: {{ profile.birthdate | calc_age }}</li>
-        <li>{{ profile.town_or_city }},</li>
-        <li>{{ profile.get_country_display }}  <i class="fflag fflag-{{ profile.country.code }} ff-lg ff-round" aria-label="{{ profile.country.code }}"></i></li>
-        <li>{{ profile.weight }}kg</li>
-    </ul>
+        <h4 class="block-title user-info-header">{{ profile.full_name }}</h4>
+        <div class="pf-circle-container d-flex justify-content-center">
+            <div class="pf-inf-circle"
+                style="background: url('{{ profile.image.url }}') no-repeat; background-size: cover"></div>
+        </div>
+        <ul class="list-unstyled profile-info-list">
+            <li>{% if profile.gender == "M" %}<i class="fas fa-mars"></i>{% else %}<i
+                    class="fas fa-venus"></i>{% endif %}</li>
+            <li>Age: {{ profile.birthdate | calc_age }}</li>
+            <li>{{ profile.town_or_city }},</li>
+            <li>{{ profile.get_country_display }} <i class="fflag fflag-{{ profile.country.code }} ff-lg ff-round"
+                    aria-label="{{ profile.country.code }}"></i></li>
+            <li>{{ profile.weight }}kg</li>
+        </ul>
     </div>
     <div class="row justify-content-end">
-            <button class="btn rounded-1 btn-sm btn-black" id="toggle-edit-profile-button"><i class="far fa-edit fa-edit-profile"></i></button>
+        <button class="btn rounded-1 btn-sm btn-black" id="toggle-edit-profile-button"><i
+                class="far fa-edit fa-edit-profile"></i></button>
     </div>
 </div>

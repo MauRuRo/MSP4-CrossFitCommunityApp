@@ -1,9 +1,17 @@
 <div class="container hl-container">
     <div class="row justify-content-center" id="level-header">
-        <h3>Hero Level: <span id="gen-level">{{ general_level }}</span></h3><p><i class="fas fa-info-circle" id="level-info-modal-hl"></i></p>
+        <h3>Hero Level: <span id="gen-level">{{ general_level }}</span></h3>
+        <p><i class="fas fa-info-circle" id="level-info-modal-hl"></i></p>
     </div>
     <div class="row justify-content-center block-info-text" id="level-info-hl" hidden>
-        <p>For every workout your best score is translated to which percentile of the community you belong to for that workout. This means: if you have a level of 60, that means that 40 percent of the community has a higher score than you. You percentiles per category are averaged to give you a level score for every category. Your category levels are averaged to give you an overall fitness level. If you have logged only one workout for a category your level has <span class="acc-low"> LOW accuracy </span>. If you've logged two workouts in a category your level has <span class="acc-medium"> MEDIUM accuracy </span>. If you've logged three or more workouts in a category your level has <span class="acc-high"> HIGH accuracy </span>. Logs that are over a year old do not count.
+        <p>For every workout your best score is translated to which percentile of the community you belong to for that
+            workout. This means: if you have a level of 60, that means that 40 percent of the community has a higher
+            score than you. You percentiles per category are averaged to give you a level score for every category. Your
+            category levels are averaged to give you an overall fitness level. If you have logged only one workout for a
+            category your level has <span class="acc-low"> LOW accuracy </span>. If you've logged two workouts in a
+            category your level has <span class="acc-medium"> MEDIUM accuracy </span>. If you've logged three or more
+            workouts in a category your level has <span class="acc-high"> HIGH accuracy </span>. Logs that are over a
+            year old do not count.
         </p>
     </div>
     <div class="row justify-content-center" id="level-loader" hidden>
@@ -12,7 +20,10 @@
     <div class="row row-levels justify-content-center">
         {% for cat in cat_levels %}
         <div class="col-6 col-md-4 col-lg-3 justify-content-center col-levels">
-            <div class="level-bar-box" role="button" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="bottom" title="<span class='ptitle acc-{{ cat.acc }}-p'>{{ cat.cat }}</span>" data-bs-content="{% if cat.wod_level %}{% for wodl in cat.wod_level %}<a href={% url 'workouts' wodl.wodpk %}><span class='pwod'>{{ wodl.wod }}:</span></a> <span class='pperc'>{{ wodl.wodperc }}</span> | {{ wodl.result }}<br>{% endfor %}{%else%}No logs.{% endif %}" data-bs-html="true">
+            <div class="level-bar-box" role="button" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus"
+                data-bs-placement="bottom" title="<span class='ptitle acc-{{ cat.acc }}-p'>{{ cat.cat }}</span>"
+                data-bs-content="{% if cat.wod_level %}{% for wodl in cat.wod_level %}<a href={% url 'workouts' wodl.wodpk %}><span class='pwod'>{{ wodl.wod }}:</span></a> <span class='pperc'>{{ wodl.wodperc }}</span> | {{ wodl.result }}<br>{% endfor %}{%else%}No logs.{% endif %}"
+                data-bs-html="true">
                 <div class="level-bar acc-{{ cat.acc }}"></div>
                 <div class="level-number">{{ cat.perc }}</div>
             </div>
