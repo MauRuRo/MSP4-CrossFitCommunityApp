@@ -119,7 +119,7 @@ def workouts(request, wod_id):
             )
         all_logs_rank_men_today = all_logs_rank_today.filter(
             user__userprofile__gender="M"
-        )
+            )
         # Set variables for setting the ranks of the logs
         all_men_index_user = 0
         all_men_today_index_user = 0

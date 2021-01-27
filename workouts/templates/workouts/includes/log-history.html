@@ -154,8 +154,9 @@
                 <form action="/ajax/post/commentMember" method="POST" class="comment-upload">
                     {% csrf_token %}
                     <textarea name="member_comment" placeholder="Leave a comment" class="member-comment"></textarea>
-                    <button class="btn rounded-0 btn-black comment-btn member-comment-button" type="submit"
-                        hidden>Comment</button>
+                    <div class="member-comment-button-container">
+                    <button class="btn-none comment-btn member-comment-button" type="submit"
+                    ><i class="far fa-share-square"></i></button></div>
                 </form>
             </div>
         </div>

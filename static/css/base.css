@@ -261,6 +261,12 @@ label[for='image-clear_id'] {
 }
 
 /* WOKROUT PAGE */
+.btn-none{
+    background:none!important;
+    border:none!important;
+    font-size: 0.75rem;
+}
+
 #id_user_comment {
     height: 4em;
 }
@@ -513,8 +519,18 @@ ol#rank-nav li {
     margin-bottom:3px;
     padding-right:15px;
 }
+.member-comment-button-container{
+    width:1rem;
+    display:inline!important;
+}
+.member-comment-button{
+    padding: 2px 2px;
+    position: absolute;
+}
 .member-comment {
     margin-top: 3px;
+    width:100%;
+    display:inline-block;
 }
 .fa-trash-alt {
     padding-right:3px!important;

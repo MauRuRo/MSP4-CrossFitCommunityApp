@@ -1045,7 +1045,7 @@ $(document).ready(function() {
     // Click to submit a comment.
     $('.member-comment-button').click(function(e) {
         e.preventDefault()
-        let m_comment_ta =  $(this).siblings('textarea')
+        let m_comment_ta =  $(this).parent().siblings('textarea')
         let m_comment = m_comment_ta.val()
         submitComment(m_comment, m_comment_ta)
     })
