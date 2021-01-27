@@ -189,7 +189,6 @@ select {
 }
 .allauth-form-inner-content input {
     border-color: #000!important;
-    border-radius: 0!important;
 }
 .allauth-form-inner-content label:not([for='id_remember']) {
     display: none;
@@ -216,7 +215,7 @@ label[for='image-clear_id'] {
     padding: .375rem .75rem;
     font-size: 1rem;
     line-height: 1.5;
-    border-radius: 0;
+    border-radius: 5px;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 .allauth-form-inner-content button:hover,
@@ -229,7 +228,7 @@ label[for='image-clear_id'] {
     margin-bottom: 15px;
 }
 .allauth-form-inner-content a {
-    color: #17a2b8; /* text-info */
+    color: blue;
     text-decoration: none;
 }
 .datepicker {
