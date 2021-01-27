@@ -724,6 +724,33 @@ $(document).ready(function() {
         })
     }
 
+    // Function to edit a Log object
+    function submitEditLog(){
+        let result = $(".score-result:visible").val()
+        let rx = $("#id_rx").prop('checked')
+        let date = $("#date").val()
+        let comment = $("#id_user_comment").val()
+        let log_id = $("#log-to-edit-id").text()
+        $.ajax({
+            type:"POST",
+            url: "/workouts/0/editLog/",
+            data: {
+                log_id:log_id,
+                result:result,
+                rx:rx,
+                date:date,
+                comment:comment
+            },
+            dataType: 'json',
+            success: function(data){
+                location.reload()              
+            },
+            error: function(){
+                console.log("Failed Log Edit")
+            }
+        })
+    }
+
     // EVENT HANDLERS
 
     // Click button to show/hide log form.
@@ -752,6 +779,15 @@ $(document).ready(function() {
         $('#id_rx').prop('checked', true)
         $('#id_user_comment').text("")
     });
+
+    // Edit Log on return key (NOT submit new log)
+    $(document).keypress(function(e) {
+        if(e.which === 13 && $("#logform-edit-button").is(":visible") == true){
+            e.preventDefault()
+            $("#logform-edit-button").prop("disabled",true)
+            submitEditLog()             
+        }
+    })
 
     // Click to cancel logging and show ranking module.
     $('#cancel-log').click(function() {
@@ -1035,29 +1071,7 @@ $(document).ready(function() {
     $("#logform-edit-button").click(function(e){
         e.preventDefault()
         $("#logform-edit-button").prop("disabled",true)
-        let result = $(".score-result:visible").val()
-        let rx = $("#id_rx").prop('checked')
-        let date = $("#date").val()
-        let comment = $("#id_user_comment").val()
-        let log_id = $("#log-to-edit-id").text()
-        $.ajax({
-            type:"POST",
-            url: "/workouts/0/editLog/",
-            data: {
-                log_id:log_id,
-                result:result,
-                rx:rx,
-                date:date,
-                comment:comment
-            },
-            dataType: 'json',
-            success: function(data){
-                location.reload()              
-            },
-            error: function(){
-                console.log("Failed Log Edit")
-            }
-        })
+        submitEditLog()
     })
 
     // Click to show edit log form and populate the fields with the relevant data.

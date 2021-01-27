@@ -218,6 +218,7 @@ def cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat):
 
 @require_POST
 def calc_level(request):
+    print("PROFILE CALC")
     """A function that calculates and returns Levels, per WOD,
     per Category and General,
     incl. the relevant results and the accuracy of the assesment."""

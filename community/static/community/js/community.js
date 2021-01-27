@@ -684,6 +684,11 @@ $(document).ready(function () {
         let memberid = $(this).closest(".rank-card").attr('id')
         getMemberInfo(memberid)
     })
+    // Click to get admin info and levels.
+    $(document).on("click", ".admin-group", function () {
+        let memberid = $(this).data('id')
+        getMemberInfo(memberid)
+    })
 
     // Click to close member info and level display and return to group selection.
     $(document).on("click", "#close-hl, .user-info-header", function () {

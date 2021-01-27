@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from datetime import date, datetime, timedelta
 from .models import Workout, MemberComment, Log
+from profiles.models import HeroLevels
 from .forms import LogForm, MemberCommentForm, WorkoutForm
 from django.utils.dateparse import parse_duration
 from django.db.models import Max, Min
@@ -13,8 +14,10 @@ from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from decimal import Decimal
 from community.views import getGroupSelection
+from profiles.views import cat_levels_info, getLevels
 import json
 import math
+import statistics
 
 
 def striphours(duration):
@@ -377,6 +380,7 @@ def workouts(request, wod_id):
                             new_log.personal_record = False
                 new_log.save()
                 messages.success(request, 'Workout logged: Great work!')
+                calc_level(request.user)
                 return redirect(reverse('workouts', args=(wod_id,)))
             else:
                 messages.error(request, 'There was an error with your form. \
@@ -475,6 +479,8 @@ def editLog(request):
                 )
             data = {"message": "Succesfull edit"}
             messages.success(request, "Your log was updated successfully.")
+            user = request.user
+            calc_level(user)
             return HttpResponse(
                 json.dumps(data),
                 content_type='application/json'
@@ -502,6 +508,7 @@ def deleteLog(request):
             log.delete()
             data = {"message": "Your log is deleted."}
             messages.success(request, "Your log is deleted.")
+            calc_level(request.user)
             return HttpResponse(
                 json.dumps(data),
                 content_type='application/json'
@@ -972,3 +979,57 @@ def getSliderLevel(request):
     else:
         data = {"percentile": "Failed to get level."}
         return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def calc_level(user):
+    """A function that calculates and returns Levels, per WOD,
+    per Category and General,
+    incl. the relevant results and the accuracy of the assesment.
+    Instead of callable by AJAX this is just a helper function without a return."""
+    user = user
+    # loop through workouts to calculate level per workout and category.
+    workouts = Workout.objects.all().order_by("workout_category")
+    cat_levels = []
+    percentiles = []
+    wod_level = []
+    cat = ''
+    for wod in workouts:
+        wod_cat = wod.get_workout_category_display()
+        if cat == '':
+            cat = wod_cat
+        elif cat != wod_cat:
+            # If different cat then determine avg level for category
+            # and reset lists for the loop.
+            cat_levels = cat_levels_info(
+                percentiles, cat_levels, cat, wod_level, wod_cat
+                )
+            percentiles = []
+            wod_level = []
+            cat = wod_cat
+        data = getLevels(user, wod)
+        percentile = data["percentile"]
+        result = data["result"]
+        if percentile is not None:
+            wod_level.append({
+                "wod": wod.workout_name,
+                "wodperc": percentile,
+                "wodpk": wod.pk,
+                "result": result
+                })
+            percentiles.append(percentile)
+    cat_levels = cat_levels_info(
+        percentiles, cat_levels, cat, wod_level, wod_cat
+        )
+    # Get category levels to determine general level average.
+    avg_list = []
+    for item in cat_levels:
+        if item["perc"] != "none":
+            avg_list.append(item["perc"])
+    if len(avg_list) != 0:
+        general_level = round(statistics.mean(avg_list))
+    else:
+        general_level = 0
+    # Update HeroLevel Object.
+    level_data = HeroLevels.objects.filter(user=user)
+    level_data.update(level_data=cat_levels)
+    level_data.update(general_level=general_level)
