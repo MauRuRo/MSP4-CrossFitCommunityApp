@@ -98,85 +98,88 @@ def create_profile(request):
     AND on POST upload a profile object to the database."""
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
-    if request.method == "GET":
-        if UserProfile.objects.filter(user=request.user).exists():
-            messages.error(request, 'Your profile is already created.')
-            return redirect(reverse('profile'))
-        else:
-            profile_form = UserProfileForm()
-            # Set price for creating profile.
-            stripe_total = 999
-            stripe.api_key = stripe_secret_key
-            intent = stripe.PaymentIntent.create(
-                amount=stripe_total,
-                currency=settings.STRIPE_CURRENCY,
-            )
-            template = 'profiles/create_profile.html'
-            context = {
-                'form': profile_form,
-                'stripe_public_key': stripe_public_key,
-                'client_secret': intent.client_secret,
-            }
-            if not stripe_public_key:
-                messages.warning(request, 'Stripe public key is missing. \
-                Did you forget to set it in your environment?')
-
-            return render(request, template, context)
-    else:
-        # Get form data and create new UserProfile object.
-        profile_form = UserProfileForm(request.POST, request.FILES)
-        if profile_form.is_valid() and request.POST['date'] != '':
-            pid = request.POST.get('client_secret').split('_secret')[0]
-            new_profile = profile_form.save(commit=False)
-            if not new_profile.image:
-                new_profile.image = 'media/noprofpic.jpg'
-            new_profile.birthdate = datetime.strptime(
-                request.POST.get('date'),
-                "%d %b %Y"
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            if UserProfile.objects.filter(user=request.user).exists():
+                messages.error(request, 'Your profile is already created.')
+                return redirect(reverse('profile'))
+            else:
+                profile_form = UserProfileForm()
+                # Set price for creating profile.
+                stripe_total = 999
+                stripe.api_key = stripe_secret_key
+                intent = stripe.PaymentIntent.create(
+                    amount=stripe_total,
+                    currency=settings.STRIPE_CURRENCY,
                 )
-            new_profile.stripe_pid = pid
-            new_profile.email = request.user.email
-            new_profile.user = request.user
-            new_profile.save()
-            hero_l = HeroLevels()
-            hero_l.user = request.user
-            hero_l.general_level = 0
-            # Set default level data for new Profile.
-            default_wodlevel = [{"wod": "none", "wodperc": "none", "wodpk": 0}]
-            hero_l.level_data = [
-                {"cat": "Power Lifts", "perc": "none", "acc": "none",
-                    "wod_level": default_wodlevel},
-                {"cat": "Olympic Lifts", "perc": "none", "acc": "none",
-                    "wod_level": default_wodlevel},
-                {"cat": "Body Weight", "perc": "none", "acc": "none",
-                    "wod_level": default_wodlevel},
-                {"cat": "Heavy", "perc": "none", "acc": "none",
-                    "wod_level": default_wodlevel},
-                {"cat": "Light", "perc": "none", "acc": "none",
-                    "wod_level": default_wodlevel},
-                {"cat": "Long", "perc": "none", "acc": "none",
-                    "wod_level": default_wodlevel},
-                {"cat": "Speed", "perc": "none", "acc": "none",
-                    "wod_level": default_wodlevel},
-                {"cat": "Endurance", "perc": "none", "acc": "none",
-                    "wod_level": default_wodlevel}
-            ]
-            hero_l.save()
-            messages.success(
-                request,
-                'Profile succesfully created and payment succesfully processed! \
-            Please explore and enjoy our digital hero community!')
-            return redirect(reverse('profile'))
+                template = 'profiles/create_profile.html'
+                context = {
+                    'form': profile_form,
+                    'stripe_public_key': stripe_public_key,
+                    'client_secret': intent.client_secret,
+                }
+                if not stripe_public_key:
+                    messages.warning(request, 'Stripe public key is missing. \
+                    Did you forget to set it in your environment?')
+
+                return render(request, template, context)
         else:
-            messages.error(request, 'There was an error with your form. \
-                Please double check your information.')
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # Get form data and create new UserProfile object.
+            profile_form = UserProfileForm(request.POST, request.FILES)
+            if profile_form.is_valid() and request.POST['date'] != '':
+                pid = request.POST.get('client_secret').split('_secret')[0]
+                new_profile = profile_form.save(commit=False)
+                if not new_profile.image:
+                    new_profile.image = 'media/noprofpic.jpg'
+                new_profile.birthdate = datetime.strptime(
+                    request.POST.get('date'),
+                    "%d %b %Y"
+                    )
+                new_profile.stripe_pid = pid
+                new_profile.email = request.user.email
+                new_profile.user = request.user
+                new_profile.save()
+                hero_l = HeroLevels()
+                hero_l.user = request.user
+                hero_l.general_level = 0
+                # Set default level data for new Profile.
+                default_wodlevel = [{"wod": "none", "wodperc": "none", "wodpk": 0}]
+                hero_l.level_data = [
+                    {"cat": "Power Lifts", "perc": "none", "acc": "none",
+                        "wod_level": default_wodlevel},
+                    {"cat": "Olympic Lifts", "perc": "none", "acc": "none",
+                        "wod_level": default_wodlevel},
+                    {"cat": "Body Weight", "perc": "none", "acc": "none",
+                        "wod_level": default_wodlevel},
+                    {"cat": "Heavy", "perc": "none", "acc": "none",
+                        "wod_level": default_wodlevel},
+                    {"cat": "Light", "perc": "none", "acc": "none",
+                        "wod_level": default_wodlevel},
+                    {"cat": "Long", "perc": "none", "acc": "none",
+                        "wod_level": default_wodlevel},
+                    {"cat": "Speed", "perc": "none", "acc": "none",
+                        "wod_level": default_wodlevel},
+                    {"cat": "Endurance", "perc": "none", "acc": "none",
+                        "wod_level": default_wodlevel}
+                ]
+                hero_l.save()
+                messages.success(
+                    request,
+                    'Profile succesfully created and payment succesfully processed! \
+                Please explore and enjoy our digital hero community!')
+                return redirect(reverse('profile'))
+            else:
+                messages.error(request, 'There was an error with your form. \
+                    Please double check your information.')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return redirect(reverse('index'))
 
 
 @require_POST
 def edit_profile(request):
     """A function that edits a UserProfile object."""
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.userprofile:
         instance = UserProfile.objects.get(user=request.user)
         profile_form = UserProfileForm(
             request.POST, request.FILES,
@@ -226,7 +229,7 @@ def calc_level(request):
     """A function that calculates and returns Levels, per WOD,
     per Category and General,
     incl. the relevant results and the accuracy of the assesment."""
-    if request.is_ajax():
+    if request.is_ajax() and request.user.is_authenticated and request.user.userprofile:
         # Determine for which user the levels need to be calculated
         if request.POST["user"] == "request":
             user = request.user

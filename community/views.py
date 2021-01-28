@@ -16,70 +16,71 @@ import math
 
 def community(request):
     """A view to render the community page, including makeGroup form."""
-    template = "community/community.html"
-    # Get groups if user is a member and group is shared or if user is admin.
-    groups1 = CustomGroup.objects.filter(
-        group_users=request.user
-        ).filter(share=True).exclude(users_delete=request.user)
-    groups2 = CustomGroup.objects.filter(
-        admin=request.user
-        ).exclude(users_delete=request.user)
-    groups = groups1.union(groups2)
-    age_group = getAgeGroup(request)
-    selected_group = getGroupSelectionUsers(request)
-    selected_group_logs = getGroupSelection(request)
-    selected_group = selected_group.order_by("-herolevels__general_level")
-    group = Paginator(selected_group, 25)
-    group = group.page(1)
-    # Get selected group stats
-    members = selected_group.count()
-    male = selected_group.filter(userprofile__gender="M").count()
-    female = selected_group.filter(userprofile__gender="F").count()
-    date_month = date.today() - timedelta(days=30)
-    month = selected_group_logs.filter(date__gte=date_month).count()
-    admin = False
-    group_s = getGroup(request)
-    groupname = ''
-    if group_s["custom"] != "false":
-        c_group = CustomGroup.objects.get(pk=group_s["custom"])
-        groupname = c_group.name
-        admin = c_group.admin
-    else:
-        if group_s["location"] == "group-city":
-            groupname = request.user.userprofile.town_or_city
-        elif group_s["location"] == "group-country":
-            groupname = request.user.userprofile.get_country_display()
+    if request.user.is_authenticated and request.user.userprofile:
+        template = "community/community.html"
+        # Get groups if user is a member and group is shared or if user is admin.
+        groups1 = CustomGroup.objects.filter(
+            group_users=request.user
+            ).filter(share=True).exclude(users_delete=request.user)
+        groups2 = CustomGroup.objects.filter(
+            admin=request.user
+            ).exclude(users_delete=request.user)
+        groups = groups1.union(groups2)
+        age_group = getAgeGroup(request)
+        selected_group = getGroupSelectionUsers(request)
+        selected_group_logs = getGroupSelection(request)
+        selected_group = selected_group.order_by("-herolevels__general_level")
+        group = Paginator(selected_group, 25)
+        group = group.page(1)
+        # Get selected group stats
+        members = selected_group.count()
+        male = selected_group.filter(userprofile__gender="M").count()
+        female = selected_group.filter(userprofile__gender="F").count()
+        date_month = date.today() - timedelta(days=30)
+        month = selected_group_logs.filter(date__gte=date_month).count()
+        admin = False
+        group_s = getGroup(request)
+        groupname = ''
+        if group_s["custom"] != "false":
+            c_group = CustomGroup.objects.get(pk=group_s["custom"])
+            groupname = c_group.name
+            admin = c_group.admin
         else:
-            groupname = "global"
-        if group_s["age"] == "true":
-            groupname = str(groupname) + ' ' + age_group.split(' ')[0]
-    average_user = round(month / members)
-    average_l = selected_group.aggregate(Avg('herolevels__general_level'))
-    average_level = round(average_l['herolevels__general_level__avg'])
-    form = CustomGroupForm()
-    context = {
-        'form': form,
-        'groupname': groupname,
-        'admin': admin,
-        'groups': groups,
-        'age_group': age_group,
-        'group': group,
-        'has_next': group.has_next(),
-        'members': members,
-        'male': male,
-        'female': female,
-        'month': month,
-        'average_user': average_user,
-        'average_level': average_level
-        }
-    return render(request, template, context)
+            if group_s["location"] == "group-city":
+                groupname = request.user.userprofile.town_or_city
+            elif group_s["location"] == "group-country":
+                groupname = request.user.userprofile.get_country_display()
+            else:
+                groupname = "global"
+            if group_s["age"] == "true":
+                groupname = str(groupname) + ' ' + age_group.split(' ')[0]
+        average_user = round(month / members)
+        average_l = selected_group.aggregate(Avg('herolevels__general_level'))
+        average_level = round(average_l['herolevels__general_level__avg'])
+        form = CustomGroupForm()
+        context = {
+            'form': form,
+            'groupname': groupname,
+            'admin': admin,
+            'groups': groups,
+            'age_group': age_group,
+            'group': group,
+            'has_next': group.has_next(),
+            'members': members,
+            'male': male,
+            'female': female,
+            'month': month,
+            'average_user': average_user,
+            'average_level': average_level
+            }
+        return render(request, template, context)
 
 
 @require_POST
 def setGroupSelect(request):
     """A function to update the GroupSelect object
     for the user to save the filter settings the user has selected."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         age = request.POST["age"]
         custom = request.POST["custom"]
         location = request.POST["location"]
@@ -98,99 +99,102 @@ def setGroupSelect(request):
 def getGroupSelection(request):
     """A function to get the filter selection of the user.
     Returns all workout logs for members of the selected group."""
-    # Determine group selection
-    try:
-        group_s = GroupSelect.objects.get(user=request.user)
-        group_select = group_s.group
-    except GroupSelect.DoesNotExist:
-        group_select = {
-            "age": "false", "custom": "false", "location": "group-global"
-            }
-        GroupSelect.objects.create(
-            user=request.user, group=group_select
-            )
-    if group_select["custom"] == 'false':
-        if group_select["location"] == "group-global":
-            select_group_logs = Log.objects.all()
-        elif group_select["location"] == "group-country":
-            select_group_logs = Log.objects.filter(
-                user__userprofile__country=request.user.userprofile.country
+    if request.user.is_authenticated and request.user.userprofile:
+        # Determine group selection
+        try:
+            group_s = GroupSelect.objects.get(user=request.user)
+            group_select = group_s.group
+        except GroupSelect.DoesNotExist:
+            group_select = {
+                "age": "false", "custom": "false", "location": "group-global"
+                }
+            GroupSelect.objects.create(
+                user=request.user, group=group_select
                 )
-        else:
-            user_city = request.user.userprofile.town_or_city
-            select_group_logs = Log.objects.filter(
-                user__userprofile__town_or_city=user_city
-                )
-        if group_select["age"] != 'false':
-            age = calc_age(request.user.userprofile.birthdate)
-            age_bottom = rounddown(age)
-            age_top = roundup(age)
-            young_age_date = date.today() - timedelta(days=age_bottom*365)
-            old_age_date = date.today() - timedelta(days=age_top*365)
-            select_group_logs = select_group_logs.filter(
-                user__userprofile__birthdate__gt=old_age_date
-                ).filter(
-                    user__userprofile__birthdate__lte=young_age_date
+        if group_select["custom"] == 'false':
+            if group_select["location"] == "group-global":
+                select_group_logs = Log.objects.all()
+            elif group_select["location"] == "group-country":
+                select_group_logs = Log.objects.filter(
+                    user__userprofile__country=request.user.userprofile.country
                     )
-    else:
-        custom_group = CustomGroup.objects.get(pk=group_select["custom"])
-        user_group = custom_group.group_users.all()
-        select_group_logs = Log.objects.filter(user__in=user_group)
-    return select_group_logs
+            else:
+                user_city = request.user.userprofile.town_or_city
+                select_group_logs = Log.objects.filter(
+                    user__userprofile__town_or_city=user_city
+                    )
+            if group_select["age"] != 'false':
+                age = calc_age(request.user.userprofile.birthdate)
+                age_bottom = rounddown(age)
+                age_top = roundup(age)
+                young_age_date = date.today() - timedelta(days=age_bottom*365)
+                old_age_date = date.today() - timedelta(days=age_top*365)
+                select_group_logs = select_group_logs.filter(
+                    user__userprofile__birthdate__gt=old_age_date
+                    ).filter(
+                        user__userprofile__birthdate__lte=young_age_date
+                        )
+        else:
+            custom_group = CustomGroup.objects.get(pk=group_select["custom"])
+            user_group = custom_group.group_users.all()
+            select_group_logs = Log.objects.filter(user__in=user_group)
+        return select_group_logs
 
 
 def getGroup(request):
     """Helper function that gets the selected group of the user.
     If it doesn't exist it will select and create a default selection."""
-    try:
-        group_s = GroupSelect.objects.get(user=request.user)
-        group_select = group_s.group
-    except GroupSelect.DoesNotExist:
-        group_select = {
-            "age": "false", "custom": "false", "location": "group-global"
-            }
-        GroupSelect.objects.create(
-            user=request.user, group=group_select
-            )
-    return group_select
+    if request.user.is_authenticated and request.user.userprofile:
+        try:
+            group_s = GroupSelect.objects.get(user=request.user)
+            group_select = group_s.group
+        except GroupSelect.DoesNotExist:
+            group_select = {
+                "age": "false", "custom": "false", "location": "group-global"
+                }
+            GroupSelect.objects.create(
+                user=request.user, group=group_select
+                )
+        return group_select
 
 
 def getGroupSelectionUsers(request):
     """Helper function that returns all the users of the selected group."""
     # Determine group selection
-    group_select = getGroup(request)
-    if group_select["custom"] == 'false':
-        if group_select["location"] == "group-global":
-            select_group_users = User.objects.all()
-        elif group_select["location"] == "group-country":
-            select_group_users = User.objects.filter(
-                userprofile__country=request.user.userprofile.country
-                )
+    if request.user.is_authenticated and request.user.userprofile:
+        group_select = getGroup(request)
+        if group_select["custom"] == 'false':
+            if group_select["location"] == "group-global":
+                select_group_users = User.objects.all()
+            elif group_select["location"] == "group-country":
+                select_group_users = User.objects.filter(
+                    userprofile__country=request.user.userprofile.country
+                    )
+            else:
+                select_group_users = User.objects.filter(
+                    userprofile__town_or_city=request.user.userprofile.town_or_city
+                    )
+            if group_select["age"] != 'false':
+                age = calc_age(request.user.userprofile.birthdate)
+                age_bottom = rounddown(age)
+                age_top = roundup(age)
+                young_age_date = date.today() - timedelta(days=age_bottom*365)
+                old_age_date = date.today() - timedelta(days=age_top*365)
+                select_group_users = select_group_users.filter(
+                    userprofile__birthdate__gt=old_age_date
+                    ).filter(userprofile__birthdate__lte=young_age_date)
         else:
-            select_group_users = User.objects.filter(
-                userprofile__town_or_city=request.user.userprofile.town_or_city
-                )
-        if group_select["age"] != 'false':
-            age = calc_age(request.user.userprofile.birthdate)
-            age_bottom = rounddown(age)
-            age_top = roundup(age)
-            young_age_date = date.today() - timedelta(days=age_bottom*365)
-            old_age_date = date.today() - timedelta(days=age_top*365)
-            select_group_users = select_group_users.filter(
-                userprofile__birthdate__gt=old_age_date
-                ).filter(userprofile__birthdate__lte=young_age_date)
-    else:
-        custom_group = CustomGroup.objects.get(pk=group_select["custom"])
-        user_group = custom_group.group_users.all()
-        select_group_users = user_group
-    return select_group_users
+            custom_group = CustomGroup.objects.get(pk=group_select["custom"])
+            user_group = custom_group.group_users.all()
+            select_group_users = user_group
+        return select_group_users
 
 
 @require_POST
 def resetStats(request):
     """A function that will return
     the statistics for the newly selected group."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         selected_group = getGroupSelectionUsers(request)
         selected_group_logs = getGroupSelection(request)
         selected_group = selected_group.order_by("-herolevels__general_level")
@@ -252,7 +256,7 @@ def resetStats(request):
 def lazyLoadGroup(request):
     """A function that will return html to append to the
     userlist from the queryset of the users in the selected group."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         selected_group = getGroupSelection(request)
         no_page = False
         page = request.POST["page"]
@@ -284,7 +288,7 @@ def lazyLoadGroup(request):
 def searchMember(request):
     """A function that will return members (in the form of html)
     that have a partial string match for the search input string."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         make = json.loads(request.POST["make"])
         if make:
             selected_group = User.objects.all()
@@ -311,7 +315,7 @@ def searchMember(request):
 @require_POST
 def makeGroup(request):
     """A function that will create a CustomGroup object."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         admin = request.user
         groupname = request.POST["groupname"]
         sharegroup = json.loads(request.POST["sharegroup"])
@@ -333,7 +337,7 @@ def makeGroup(request):
 def getGroupEditInfo(request):
     """A Function that gets the CustomGroup
     info and returns it to the Group Edit form."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         group_id = request.POST["group_id"]
         group = CustomGroup.objects.get(pk=group_id)
         group_name = group.name
@@ -356,7 +360,7 @@ def getGroupEditInfo(request):
 @require_POST
 def editGroup(request):
     """A function to update a CustomGroup object."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         group_id = request.POST["group_id"]
         groupname = request.POST["groupname"]
         sharegroup = json.loads(request.POST["sharegroup"])
@@ -378,7 +382,7 @@ def editGroup(request):
 @require_POST
 def deleteGroup(request):
     """A function to delete a CustomGroup object."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         r_user = request.user
         group_id = request.POST["group_id"]
         group = CustomGroup.objects.get(pk=group_id)
@@ -412,7 +416,7 @@ def deleteGroup(request):
 def getMemberInfo(request):
     """A function to get Level and Profile info for a member.
     Returns the information as two different html's."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         member = request.POST["user_id"]
         profile_user = User.objects.get(pk=member)
         profile = profile_user.userprofile

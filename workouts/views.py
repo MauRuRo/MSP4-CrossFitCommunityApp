@@ -48,6 +48,8 @@ def workouts(request, wod_id):
         GET and upload a Log object on POST"""
     if not request.user.is_authenticated:
         return render(request, 'home/index.html')
+    elif not request.user.userprofile:
+        return redirect(reverse('index'))
     selected_group = getGroupSelection(request)
     # Check if specific workout is queried, otherwise go to WOD
     if wod_id == "0":
@@ -391,7 +393,7 @@ def workouts(request, wod_id):
 @require_POST
 def editLog(request):
     """Function for editing a previously submitted Log object"""
-    if request.is_ajax():
+    if request.is_ajax() and request.user.is_authenticated and request.user.userprofile:
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
         if log.user == request.user or request.user.is_superuser:
@@ -501,7 +503,7 @@ def editLog(request):
 @require_POST
 def deleteLog(request):
     """Function for deleting a previously submitted Log"""
-    if request.is_ajax():
+    if request.is_ajax() and request.user.is_authenticated and request.user.userprofile:
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
         if request.user == log.user or request.user.is_superuser:
@@ -527,7 +529,7 @@ def deleteLog(request):
 @require_POST
 def deleteCommentMember(request):
     """Function for deleting a comment by user"""
-    if request.is_ajax():
+    if request.is_ajax() and request.user.is_authenticated and request.user.userprofile:
         comment_id = request.POST["comment_id"]
         comment_type = request.POST["comment_type"]
         # Determine comment type, because user- vs. member-
@@ -583,7 +585,7 @@ def deleteCommentMember(request):
 @require_POST
 def commentMember(request):
     """Function to post OR edit a comment on a log"""
-    if request.is_ajax():
+    if request.is_ajax() and request.user.is_authenticated and request.user.userprofile:
         # Determine if the request is to upload or to edit.
         if request.POST["info_crud"] == "comment-upload":
             # Upload a comment.
@@ -682,7 +684,7 @@ def commentMember(request):
 @require_POST
 def loopList(request):
     """Function to get next 'page' of logs for the activity module"""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         selected_group = getGroupSelection(request)
         no_page = False
         wod_id = request.POST["wod"]
@@ -744,7 +746,7 @@ def loopList(request):
 @require_POST
 def loopListRank(request):
     """Function to get next or previous page for the Rank module."""
-    if request.is_ajax:
+    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
         selected_group = getGroupSelection(request)
         wod_id = request.POST["wod"]
         workout = int(wod_id)
