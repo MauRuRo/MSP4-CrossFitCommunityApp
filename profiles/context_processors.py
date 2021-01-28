@@ -22,11 +22,10 @@ def user_info(request):
                     group_select = {"age": False, "custom": False, "location": "group-city"}
             except ValueError:
                 image = '/media/noprofpic.jpg'
+                # image = {"url": '/media/noprofpic.jpg'}
                 try:
-                    print("made it here")
                     group_s = GroupSelect.objects.get(user=request.user)
                     group_select = group_s.group
-                    # group_select = {"age": False, "custom": False, "location": "group-city"}
                 except GroupSelect.DoesNotExist:
                     group_select = {"age": False, "custom": False, "location": "group-city"}
         except UserProfile.DoesNotExist:

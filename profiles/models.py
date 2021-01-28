@@ -9,14 +9,14 @@ from picklefield.fields import PickledObjectField
 from jsonfield import JSONField
 
 
-def validate_max(value):
-    if value > 500:
-        print("TestValidateModel")
-        raise ValidationError(
-            'This weight is too high.',
-            code='invalid',
-            params={'value': value},
-        )
+# def validate_max(value):
+#     if value > 500:
+#         print("TestValidateModel")
+#         raise ValidationError(
+#             'This weight is too high.',
+#             code='invalid',
+#             params={'value': value},
+#         )
 
 
 class UserProfile(models.Model):
@@ -36,12 +36,11 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=False, blank=False, default='Please select gender... *')
     weight = models.DecimalField(max_digits=4, decimal_places=1, null=False, blank=False)
     birthdate = models.DateField(null=False, blank=False, default="2000-01-01")
-    image = models.ImageField(null=True, blank= True)
+    image = models.ImageField(null=True, blank=True, upload_to='media/')
     stripe_pid = models.CharField(max_length=254, null=False, blank=False, default='')
 
-
     def __str__(self):
-        return self.user.username
+        return self.full_name
 
 
 class HeroLevels(models.Model):
