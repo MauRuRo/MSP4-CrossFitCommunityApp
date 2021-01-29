@@ -372,7 +372,8 @@ def workouts(request, wod_id):
 @require_POST
 def editLog(request):
     """Function for editing a previously submitted Log object"""
-    if request.is_ajax() and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
+    if request.is_ajax() and request.user.is_authenticated \
+            and hasattr(request.user, 'userprofile'):
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
         log_f = Log.objects.filter(pk=log_id)
@@ -427,7 +428,8 @@ def editLog(request):
 @require_POST
 def deleteLog(request):
     """Function for deleting a previously submitted Log"""
-    if request.is_ajax() and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
+    if request.is_ajax() and request.user.is_authenticated \
+            and hasattr(request.user, 'userprofile'):
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
         user_upd = log.user
@@ -461,7 +463,8 @@ def deleteLog(request):
 
 
 def updatePR(user, workout, wod_type, result):
-    """Function to recheck all logs if they were PR or not after log (prev date), edit or delete."""
+    """Function to recheck all logs if they
+    were PR or not after log (prev date), edit or delete."""
     user_wod_logs = Log.objects.filter(
         user=user,
         workout=workout,
@@ -472,7 +475,9 @@ def updatePR(user, workout, wod_type, result):
                 u_log.personal_record = True
             else:
                 curr_date = u_log.date
-                prev_max = user_wod_logs.filter(date__lt=curr_date).aggregate(Min(f'{result}'))[f'{result}__min']
+                prev_max = user_wod_logs.filter(
+                    date__lt=curr_date
+                    ).aggregate(Min(f'{result}'))[f'{result}__min']
                 if getattr(u_log, f'{result}') < prev_max:
                     u_log.personal_record = True
                 else:
@@ -481,11 +486,12 @@ def updatePR(user, workout, wod_type, result):
     else:
         for u_log in user_wod_logs:
             if u_log == user_wod_logs[0]:
-                print(u_log.date)
                 u_log.personal_record = True
             else:
                 curr_date = u_log.date
-                prev_max = user_wod_logs.filter(date__lt=curr_date).aggregate(Max(f'{result}'))[f'{result}__max']
+                prev_max = user_wod_logs.filter(
+                    date__lt=curr_date
+                    ).aggregate(Max(f'{result}'))[f'{result}__max']
                 if getattr(u_log, f'{result}') > prev_max:
                     u_log.personal_record = True
                 else:
@@ -496,7 +502,8 @@ def updatePR(user, workout, wod_type, result):
 @require_POST
 def deleteCommentMember(request):
     """Function for deleting a comment by user"""
-    if request.is_ajax() and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
+    if request.is_ajax() and request.user.is_authenticated \
+            and hasattr(request.user, 'userprofile'):
         comment_id = request.POST["comment_id"]
         comment_type = request.POST["comment_type"]
         # Determine comment type, because user- vs. member-
@@ -551,7 +558,8 @@ def deleteCommentMember(request):
 @require_POST
 def commentMember(request):
     """Function to post OR edit a comment on a log"""
-    if request.is_ajax() and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
+    if request.is_ajax() and request.user.is_authenticated \
+            and hasattr(request.user, 'userprofile'):
         # Determine if the request is to upload or to edit.
         if request.POST["info_crud"] == "comment-upload":
             # Upload a comment.
@@ -650,7 +658,8 @@ def commentMember(request):
 @require_POST
 def loopList(request):
     """Function to get next 'page' of logs for the activity module"""
-    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
+    if request.is_ajax and request.user.is_authenticated \
+            and hasattr(request.user, 'userprofile'):
         selected_group = getGroupSelection(request)
         no_page = False
         wod_id = request.POST["wod"]
@@ -712,7 +721,8 @@ def loopList(request):
 @require_POST
 def loopListRank(request):
     """Function to get next or previous page for the Rank module."""
-    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
+    if request.is_ajax and request.user.is_authenticated \
+            and hasattr(request.user, 'userprofile'):
         selected_group = getGroupSelection(request)
         wod_id = request.POST["wod"]
         workout = int(wod_id)
@@ -951,7 +961,8 @@ def calc_level(user):
     """A function that calculates and returns Levels, per WOD,
     per Category and General,
     incl. the relevant results and the accuracy of the assesment.
-    Instead of callable by AJAX this is just a helper function without a return."""
+    Instead of callable by AJAX this is just a
+    helper function without a return."""
     user = user
     # loop through workouts to calculate level per workout and category.
     workouts = Workout.objects.all().order_by("workout_category")
