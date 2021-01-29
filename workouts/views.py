@@ -57,6 +57,7 @@ def workouts(request, wod_id):
     else:
         wod = Workout.objects.get(id=wod_id)
     if request.method == "GET":
+        ft_seconds = True
         # check which date is exactly a year ago
         lapse_date = date.today() - timedelta(days=365)
         # get all comments
@@ -196,18 +197,32 @@ def workouts(request, wod_id):
         # Get best and worst results for workout
         # to set initial level slider value.
         if request.user.userprofile.gender == "M":
-            best = getattr(all_logs_rank_men[0], rank_result)
-            worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
-            worst_rank = rlistmenall[-1][1]
-            med_count = round(all_logs_rank_men.count() / 2)
-            med = getattr(all_logs_rank_men[med_count], rank_result)
+            if all_logs_rank_men.count() > 0:
+                best = getattr(all_logs_rank_men[0], rank_result)
+                worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
+                worst_rank = rlistmenall[-1][1]
+                med_count = round(all_logs_rank_men.count() / 2)
+                med = getattr(all_logs_rank_men[med_count], rank_result)
+            else:
+                worst_rank = "none"
+                best = 1
+                worst = 1
+                med = 1
+                ft_seconds = False
         else:
-            best = getattr(all_logs_rank_women[0], rank_result)
-            worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
-            worst_rank = rlistwomenall[-1][1]
-            med_count = round(all_logs_rank_women.count() / 2)
-            med = getattr(all_logs_rank_women[med_count], rank_result)
-        if wod.workout_type == "FT":
+            if all_logs_rank_men.count() > 0:
+                best = getattr(all_logs_rank_women[0], rank_result)
+                worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
+                worst_rank = rlistwomenall[-1][1]
+                med_count = round(all_logs_rank_women.count() / 2)
+                med = getattr(all_logs_rank_women[med_count], rank_result)
+            else:
+                worst_rank = "none"
+                best = 1
+                worst = 1
+                med = 1
+                ft_seconds = False
+        if wod.workout_type == "FT" and ft_seconds:
             best = best.seconds
             worst = worst.seconds
             med = med.seconds
@@ -550,7 +565,6 @@ def deleteCommentMember(request):
             else:
                 data = {
                     "message": "You cannot delete another member's post.",
-                    "del_false": "False"
                     }
                 messages.error(
                     request,
@@ -854,7 +868,7 @@ def createWorkout(request, wod_id):
         form = WorkoutForm(request.POST)
         if form.is_valid:
             new = form.save()
-            new_wod_id = new.package()
+            new_wod_id = new.pk
             messages.success(request, "The workout was created successfully.")
             return redirect(reverse('workouts', args=(new_wod_id,)))
         else:

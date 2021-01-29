@@ -246,9 +246,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data){
-                if (data.del_false == "False") {
                     location.reload(true)
-                }
             },
             error: function(){
                 console.log("Failed Delete")
@@ -1067,7 +1065,6 @@ $(document).ready(function() {
     $(document).on("click", ".delete-log", function(){
         let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
         deleteLog(log_id)
-        location.reload(true)
     })
     
     // Click to edit a Log object.
