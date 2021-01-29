@@ -659,6 +659,9 @@ ol#rank-nav li {
     color:black;
     font-weight: bold;
 }
+.tooltip {
+    display:none!important;
+}
 
 /* PROFILE PAGE */
 
@@ -785,6 +788,7 @@ linked to a date input field that is formatted properly. */
     text-align:center;
 }
 .popover{
+    margin-top:0px;
     max-height:200px;
     overflow: scroll;
     max-width: 300px!important;
@@ -986,7 +990,7 @@ color: red;
         height: 120px;
         width: 120px;
     }
-    header-bar {
+    #header-bar {
         height: 90px;
     }
     #first-head-col {

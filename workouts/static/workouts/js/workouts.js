@@ -27,7 +27,6 @@ $(document).ready(function() {
     $(".workout-form-div").hide()
     $('.log-ranking').hide()
     $('#rank-today').css({'font-weight': '700', 'text-decoration': 'underline'})
-    $(".tooltip").attr('hidden', 'hidden')
 
     // Reset classes for different log groups, for later DOM manipulation.
     for( i = 1; i < 5; i++) {
@@ -673,7 +672,6 @@ $(document).ready(function() {
         }
         if (seconds == 0) seconds = '00';
         $('#rangeLevelSliderVal').html(hours + minutes + seconds);
-        $('.tooltip-main').children('tooltip-inner').html(hours + minutes + seconds);
     }
 
     // Get the level for the result that's been slided to.

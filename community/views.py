@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from .models import CustomGroup, GroupSelect
 from .forms import CustomGroupForm
 from profiles.models import User, HeroLevels
@@ -16,7 +16,7 @@ import math
 
 def community(request):
     """A view to render the community page, including makeGroup form."""
-    if request.user.is_authenticated and request.user.userprofile:
+    if request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         template = "community/community.html"
         # Get groups if user is a member and group is shared or if user is admin.
         groups1 = CustomGroup.objects.filter(
@@ -74,13 +74,17 @@ def community(request):
             'average_level': average_level
             }
         return render(request, template, context)
+    elif not request.user.is_authenticated:
+        return render(request, 'home/index.html')
+    else:
+        return redirect(reverse('create_profile'))
 
 
 @require_POST
 def setGroupSelect(request):
     """A function to update the GroupSelect object
     for the user to save the filter settings the user has selected."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         age = request.POST["age"]
         custom = request.POST["custom"]
         location = request.POST["location"]
@@ -99,7 +103,7 @@ def setGroupSelect(request):
 def getGroupSelection(request):
     """A function to get the filter selection of the user.
     Returns all workout logs for members of the selected group."""
-    if request.user.is_authenticated and request.user.userprofile:
+    if request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         # Determine group selection
         try:
             group_s = GroupSelect.objects.get(user=request.user)
@@ -144,7 +148,7 @@ def getGroupSelection(request):
 def getGroup(request):
     """Helper function that gets the selected group of the user.
     If it doesn't exist it will select and create a default selection."""
-    if request.user.is_authenticated and request.user.userprofile:
+    if request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         try:
             group_s = GroupSelect.objects.get(user=request.user)
             group_select = group_s.group
@@ -161,7 +165,7 @@ def getGroup(request):
 def getGroupSelectionUsers(request):
     """Helper function that returns all the users of the selected group."""
     # Determine group selection
-    if request.user.is_authenticated and request.user.userprofile:
+    if request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         group_select = getGroup(request)
         if group_select["custom"] == 'false':
             if group_select["location"] == "group-global":
@@ -194,7 +198,7 @@ def getGroupSelectionUsers(request):
 def resetStats(request):
     """A function that will return
     the statistics for the newly selected group."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         selected_group = getGroupSelectionUsers(request)
         selected_group_logs = getGroupSelection(request)
         selected_group = selected_group.order_by("-herolevels__general_level")
@@ -256,7 +260,7 @@ def resetStats(request):
 def lazyLoadGroup(request):
     """A function that will return html to append to the
     userlist from the queryset of the users in the selected group."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         selected_group = getGroupSelection(request)
         no_page = False
         page = request.POST["page"]
@@ -288,7 +292,7 @@ def lazyLoadGroup(request):
 def searchMember(request):
     """A function that will return members (in the form of html)
     that have a partial string match for the search input string."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         make = json.loads(request.POST["make"])
         if make:
             selected_group = User.objects.all()
@@ -315,7 +319,7 @@ def searchMember(request):
 @require_POST
 def makeGroup(request):
     """A function that will create a CustomGroup object."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         admin = request.user
         groupname = request.POST["groupname"]
         sharegroup = json.loads(request.POST["sharegroup"])
@@ -337,7 +341,7 @@ def makeGroup(request):
 def getGroupEditInfo(request):
     """A Function that gets the CustomGroup
     info and returns it to the Group Edit form."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         group_id = request.POST["group_id"]
         group = CustomGroup.objects.get(pk=group_id)
         group_name = group.name
@@ -360,7 +364,7 @@ def getGroupEditInfo(request):
 @require_POST
 def editGroup(request):
     """A function to update a CustomGroup object."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         group_id = request.POST["group_id"]
         groupname = request.POST["groupname"]
         sharegroup = json.loads(request.POST["sharegroup"])
@@ -382,7 +386,7 @@ def editGroup(request):
 @require_POST
 def deleteGroup(request):
     """A function to delete a CustomGroup object."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         r_user = request.user
         group_id = request.POST["group_id"]
         group = CustomGroup.objects.get(pk=group_id)
@@ -416,7 +420,7 @@ def deleteGroup(request):
 def getMemberInfo(request):
     """A function to get Level and Profile info for a member.
     Returns the information as two different html's."""
-    if request.is_ajax and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         member = request.POST["user_id"]
         profile_user = User.objects.get(pk=member)
         profile = profile_user.userprofile

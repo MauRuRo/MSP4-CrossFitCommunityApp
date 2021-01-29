@@ -11,7 +11,7 @@
                 <div class="allauth-form-inner-content">
                     <h1 class="header-text mb-4">{% trans "Sign Up" %}</h1>
 
-                    <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}<br>After you've verified your account you can login and create a profile!</p>
+                    <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}<br>After you've verified your email address you can login, create a profile and proceed to payment.</p>
 
                     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
                     {% csrf_token %}

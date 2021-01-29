@@ -4,6 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.workouts, {'wod_id': '0'}, name='workouts'),
     path('<wod_id>/', views.workouts, name='workouts'),
     path('0/commentMember/', views.commentMember, name='commentMember'),
     path('0/deleteCommentMember/', views.deleteCommentMember, name='deleteCommentMember'),

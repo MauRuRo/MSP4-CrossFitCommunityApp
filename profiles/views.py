@@ -173,13 +173,13 @@ def create_profile(request):
                     Please double check your information.')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        return redirect(reverse('index'))
+        return render(request, 'home/index.html')
 
 
 @require_POST
 def edit_profile(request):
     """A function that edits a UserProfile object."""
-    if request.user.is_authenticated and request.user.userprofile:
+    if request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         instance = UserProfile.objects.get(user=request.user)
         profile_form = UserProfileForm(
             request.POST, request.FILES,
@@ -229,7 +229,7 @@ def calc_level(request):
     """A function that calculates and returns Levels, per WOD,
     per Category and General,
     incl. the relevant results and the accuracy of the assesment."""
-    if request.is_ajax() and request.user.is_authenticated and request.user.userprofile:
+    if request.is_ajax() and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         # Determine for which user the levels need to be calculated
         if request.POST["user"] == "request":
             user = request.user
