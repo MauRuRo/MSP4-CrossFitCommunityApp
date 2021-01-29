@@ -64,9 +64,9 @@ def workouts(request, wod_id):
         member_comments = MemberComment.objects.all()
         # Create log groups for member activity module
         all_logs = selected_group.order_by('-date')
-        all_logs_wod = selected_group.filter(workout=wod)
-        user_logs = selected_group.filter(user=request.user)
-        user_logs_wod = user_logs.filter(workout=wod)
+        all_logs_wod = selected_group.filter(workout=wod).order_by('-date')
+        user_logs = selected_group.filter(user=request.user).order_by('-date')
+        user_logs_wod = user_logs.filter(workout=wod).order_by('-date')
         log_groups = [
             all_logs[:25],
             all_logs_wod[:25],
