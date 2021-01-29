@@ -125,7 +125,7 @@ $(document).ready(function() {
     function formatResult() {
         $('.r-log, .h-log').each(function(){
         if (!$(this).hasClass('ft-log')) {
-            while ($(this).text().slice(-1) == '0' || $(this).text().slice(-1) == '.') {
+            while (($(this).text().slice(-1) == '0' && $(this).text().includes(".")) || $(this).text().slice(-1) == '.') {
                 if ($(this).text().slice(-1) == '.'){
                     let log_text = $(this).text().slice(0, -1);
                     $(this).text(log_text);

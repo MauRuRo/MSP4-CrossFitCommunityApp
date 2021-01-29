@@ -359,16 +359,21 @@ def workouts(request, wod_id):
                 # Determine if log result is personal record.
                 if wod.workout_type == "FT":
                     new_result = new_log.ft_result.seconds
-                    max_result = Log.objects.filter(
+                    max_result = Log.objects.aggregate(Min('ft_result'))
+                    max_result_obj = Log.objects.filter(
                         user=request.user,
-                        workout=wod
-                        ).aggregate(Min('ft_result'))
+                        workout=wod,
+                        ft_result=max_result['ft_result__min']
+                        )
                     if max_result['ft_result__min'] is None:
                         new_log.personal_record = True
                     else:
                         best_result = max_result['ft_result__min'].seconds
                         if best_result > new_result:
                             new_log.personal_record = True
+                            if max_result_obj.date > new_log.date:
+                                max_result_obj.personal_record = False
+                                max_result_obj.save()
                         else:
                             new_log.personal_record = False
                 else:
@@ -377,12 +382,22 @@ def workouts(request, wod_id):
                         user=request.user,
                         workout=wod
                         ).aggregate(Max(f'{result}'))
+                    sortdict = {
+                        "user": request.user,
+                        "workout": wod,
+                        f'{result}': max_result[f'{result}__max'],
+                        "personal_record": True
+                        }
+                    max_result_obj = Log.objects.filter(**sortdict)
                     if max_result[f'{result}__max'] is None:
                         new_log.personal_record = True
                     else:
                         best_result = max_result[f'{result}__max']
                         if best_result < new_result:
                             new_log.personal_record = True
+                            if max_result_obj.date > new_log.date:
+                                max_result_obj.personal_record = False
+                                max_result_obj.save()
                         else:
                             new_log.personal_record = False
                 new_log.save()
