@@ -44,6 +44,8 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (data) {
+                $('[data-toggle="popover"]').popover("hide")
+                $('[data-toggle="popover"]').addClass('hide-it');
                 $("#level-loader").hide()
                 $("#level-block").html(data.new_levels_html)
                 updateLevelCSS()

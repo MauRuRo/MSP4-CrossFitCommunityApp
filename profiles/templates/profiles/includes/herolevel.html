@@ -20,10 +20,6 @@
     <div class="row row-levels justify-content-center">
         {% for cat in cat_levels %}
         <div class="col-6 col-md-4 col-lg-3 justify-content-center col-levels">
-            <!-- <div class="level-bar-box" role="button" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus"
-                data-bs-placement="bottom" title="<span class='ptitle acc-{{ cat.acc }}-p'>{{ cat.cat }}</span>"
-                data-bs-content="{% if cat.wod_level %}{% for wodl in cat.wod_level %}<a href={% url 'workouts' wodl.wodpk %}><span class='pwod'>{{ wodl.wod }}:</span></a> <span class='pperc'>{{ wodl.wodperc }}</span> | {{ wodl.result }}<br>{% endfor %}{%else%}No logs.{% endif %}"
-                data-bs-html="true"> -->
             <div class="level-bar-box" role="button" tabindex="0" data-toggle="popover" data-trigger="focus"
                 data-placement="bottom" title="<span class='ptitle acc-{{ cat.acc }}-p'>{{ cat.cat }}</span>"
                 data-content="{% if cat.wod_level %}{% for wodl in cat.wod_level %}<a href={% url 'workouts' wodl.wodpk %}><span class='pwod'>{{ wodl.wod }}:</span></a> <span class='pperc'>{{ wodl.wodperc }}</span> | {{ wodl.result }}<br>{% endfor %}{%else%}No logs.{% endif %}"

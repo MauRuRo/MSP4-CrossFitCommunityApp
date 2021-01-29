@@ -83,6 +83,10 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: inset 0px 0px 7px #000;
     margin-bottom: 15px;
 }
+.hide-it{
+    display: none;
+    opacity: 0;
+}
 /* from Bulma _ from Boutique Ado project CODE INSTITUTE */
 .icon { 
     align-items: center;
