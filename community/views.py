@@ -301,9 +301,10 @@ def searchMember(request):
         searchtext = request.POST["input"]
         search_group = []
         for user in selected_group:
-            name = user.userprofile.full_name.lower()
-            if searchtext in name:
-                search_group.append(user)
+            if hasattr(user, "userprofile"):
+                name = user.userprofile.full_name.lower()
+                if searchtext in name:
+                    search_group.append(user)
         calling_group_html = loader.render_to_string(
             'community/includes/groupmembersearch.html',
             {

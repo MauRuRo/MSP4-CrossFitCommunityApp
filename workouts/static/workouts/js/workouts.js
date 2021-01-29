@@ -57,33 +57,6 @@ $(document).ready(function() {
         $('.log-rank-3').show()
     }
 
-    // Format result strings.
-    $('.r-log, .h-log').each(function(){
-        if (!$(this).hasClass('ft-log')) {
-            while ($(this).text().slice(-1) == '0' || $(this).text().slice(-1) == '.') {
-                if ($(this).text().slice(-1) == '.'){
-                    let log_text = $(this).text().slice(0, -1);
-                    $(this).text(log_text);
-                    break
-                }else{
-                    let log_text = $(this).text().slice(0, -1);
-                    $(this).text(log_text);
-                }
-            }
-        } else {
-            while ($(this).text().slice(0,1) == '0' || $(this).text().slice(0,1) == ':'){
-                if ($(this).text().slice(0,1) == ':'){
-                    let log_text = $(this).text().slice(1);
-                    $(this).text(log_text);
-                    break
-                }else{
-                    let log_text = $(this).text().slice(1);
-                    $(this).text(log_text);
-                }
-            }
-        }
-    })
-
     // Set classes for extra info blocks
     $('.extra-log-info').each(function(){
         let group_class_name = $(this).parent().attr('class')
@@ -133,7 +106,8 @@ $(document).ready(function() {
         min_slider = $("#rangeLevelData").data('best')
         max_slider = $("#rangeLevelData").data('worst') 
         step_val = 1 
-        sliderValueTime($("#rangeLevel").data('initial-value'))  
+        // sliderValueTime($("#rangeLevel").data('initial-value'))  
+        sliderValueTime(initial_slider)  
     }    
 
     // Set slider attributes.
@@ -147,6 +121,35 @@ $(document).ready(function() {
 
     // DECLARE FUNCTIONS
 
+    // Format result strings.
+    function formatResult() {
+        $('.r-log, .h-log').each(function(){
+        if (!$(this).hasClass('ft-log')) {
+            while ($(this).text().slice(-1) == '0' || $(this).text().slice(-1) == '.') {
+                if ($(this).text().slice(-1) == '.'){
+                    let log_text = $(this).text().slice(0, -1);
+                    $(this).text(log_text);
+                    break
+                }else{
+                    let log_text = $(this).text().slice(0, -1);
+                    $(this).text(log_text);
+                }
+            }
+        } else {
+            while ($(this).text().slice(0,1) == '0' || $(this).text().slice(0,1) == ':'){
+                if ($(this).text().slice(0,1) == ':'){
+                    let log_text = $(this).text().slice(1);
+                    $(this).text(log_text);
+                    break
+                }else{
+                    let log_text = $(this).text().slice(1);
+                    $(this).text(log_text);
+                }
+            }
+        }
+    })
+    }
+    
     // Submit a comment on a log.
     function submitComment(m_comment, m_comment_ta) {
         let is_main_comment = false
@@ -474,6 +477,7 @@ $(document).ready(function() {
                 }
             } 
             scroll_constant = true
+            formatResult()
         },
         error: function(xhr, status, error) {
             }
@@ -577,6 +581,7 @@ $(document).ready(function() {
             $(".rank-card").not(same_c_logs).hide()
             }
             ranker()
+            formatResult()
             scroll_constant = true
         },
         error: function(xhr, status, error) {
@@ -1455,6 +1460,7 @@ $(document).ready(function() {
     ranker()
     directionArrow()
     getWodLevel()
+    formatResult()
 
 });
 // DOCUMENT END

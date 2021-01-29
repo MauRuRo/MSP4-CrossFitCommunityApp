@@ -103,7 +103,6 @@ def workouts(request, wod_id):
             if not log["user_id"] in log_user_id_list:
                 log_user_id_list.append(log["user_id"])
                 log_max_list.append(log["id"])
-                all_logs_l.remove(log)
         # create a query for logs of current day.
         all_logs_rank_today = all_logs_rank.filter(date=date.today())
         # filter out all none max results from query
@@ -200,14 +199,19 @@ def workouts(request, wod_id):
             best = getattr(all_logs_rank_men[0], rank_result)
             worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
             worst_rank = rlistmenall[-1][1]
+            med_count = round(all_logs_rank_men.count() / 2)
+            med = getattr(all_logs_rank_men[med_count], rank_result)
         else:
             best = getattr(all_logs_rank_women[0], rank_result)
             worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
             worst_rank = rlistwomenall[-1][1]
+            med_count = round(all_logs_rank_women.count() / 2)
+            med = getattr(all_logs_rank_women[med_count], rank_result)
         if wod.workout_type == "FT":
             best = best.seconds
             worst = worst.seconds
-        initial_slider_level = worst + (best-worst)/2
+            med = med.seconds
+        initial_slider_level = med
         # Determine the page on which the user's log
         # is so it will render this page on view load.
         all_women_page = math.ceil(all_women_index_user / 25)
@@ -799,7 +803,6 @@ def loopListRank(request):
             if not log["user_id"] in log_user_id_list:
                 log_user_id_list.append(log["user_id"])
                 log_max_list.append(log["id"])
-                all_logs_l.remove(log)
         # filter out all none max results from query
         all_logs_rank = all_logs_rank.filter(id__in=log_max_list)
         # create query for today's logs,
@@ -948,7 +951,6 @@ def getSliderLevel(request):
             if not log["user_id"] in log_user_id_list:
                 log_user_id_list.append(log["user_id"])
                 log_max_list.append(log["id"])
-                all_logs_l.remove(log)
         # filter out all none max results from query
         all_logs_rank = all_logs.filter(id__in=log_max_list)
         rank = 0
