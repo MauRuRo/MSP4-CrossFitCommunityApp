@@ -371,30 +371,16 @@ def workouts(request, wod_id):
                             new_log.personal_record = True
                         else:
                             new_log.personal_record = False
-                elif wod.workout_type == "AMRAP":
-                    new_result = new_log.amrap_result
-                    max_result = Log.objects.filter(
-                        user=request.user,
-                        workout=wod
-                        ).aggregate(Max('amrap_result'))
-                    if max_result['amrap_result__max'] is None:
-                        new_log.personal_record = True
-                    else:
-                        best_result = max_result['amrap_result__max']
-                        if best_result < new_result:
-                            new_log.personal_record = True
-                        else:
-                            new_log.personal_record = False
                 else:
-                    new_result = new_log.mw_result
+                    new_result = getattr(new_log, f'{result}')
                     max_result = Log.objects.filter(
                         user=request.user,
                         workout=wod
-                        ).aggregate(Max('mw_result'))
-                    if max_result['mw_result__max'] is None:
+                        ).aggregate(Max(f'{result}'))
+                    if max_result[f'{result}__max'] is None:
                         new_log.personal_record = True
                     else:
-                        best_result = max_result['mw_result__max']
+                        best_result = max_result[f'{result}__max']
                         if best_result < new_result:
                             new_log.personal_record = True
                         else:
