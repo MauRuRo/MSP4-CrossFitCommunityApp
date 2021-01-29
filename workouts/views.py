@@ -356,51 +356,10 @@ def workouts(request, wod_id):
                 new_log = log_form.save(commit=False)
                 new_log.workout = wod
                 new_log.user = request.user
-                # Determine if log result is personal record.
-                if wod.workout_type == "FT":
-                    new_result = new_log.ft_result.seconds
-                    max_result = Log.objects.aggregate(Min('ft_result'))
-                    max_result_obj = Log.objects.filter(
-                        user=request.user,
-                        workout=wod,
-                        ft_result=max_result['ft_result__min']
-                        )
-                    if max_result['ft_result__min'] is None:
-                        new_log.personal_record = True
-                    else:
-                        best_result = max_result['ft_result__min'].seconds
-                        if best_result > new_result:
-                            new_log.personal_record = True
-                            if max_result_obj.date > new_log.date:
-                                max_result_obj.personal_record = False
-                                max_result_obj.save()
-                        else:
-                            new_log.personal_record = False
-                else:
-                    new_result = getattr(new_log, f'{result}')
-                    max_result = Log.objects.filter(
-                        user=request.user,
-                        workout=wod
-                        ).aggregate(Max(f'{result}'))
-                    sortdict = {
-                        "user": request.user,
-                        "workout": wod,
-                        f'{result}': max_result[f'{result}__max'],
-                        "personal_record": True
-                        }
-                    max_result_obj = Log.objects.filter(**sortdict)
-                    if max_result[f'{result}__max'] is None:
-                        new_log.personal_record = True
-                    else:
-                        best_result = max_result[f'{result}__max']
-                        if best_result < new_result:
-                            new_log.personal_record = True
-                            if max_result_obj.date > new_log.date:
-                                max_result_obj.personal_record = False
-                                max_result_obj.save()
-                        else:
-                            new_log.personal_record = False
+                new_log.personal_record = True
                 new_log.save()
+                # Determine if log result is personal record
+                updatePR(request.user, wod, wod.workout_type, result)
                 messages.success(request, 'Workout logged: Great work!')
                 calc_level(request.user)
                 return redirect(reverse('workouts', args=(wod_id,)))
@@ -416,6 +375,9 @@ def editLog(request):
     if request.is_ajax() and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
+        log_f = Log.objects.filter(pk=log_id)
+        # pr_was_true = log.personal_record
+        # old_date = log.date
         if log.user == request.user or request.user.is_superuser:
             wod_type = log.workout.workout_type
             rx_input = request.POST["rx"]
@@ -424,81 +386,23 @@ def editLog(request):
                 rx_input = False
             else:
                 rx_input = True
-            # Determine if log result is personal record.
-            if wod_type == "FT":
-                new_result = parse_duration(request.POST["result"])
-                if new_result is None:
-                    data = {"message": "Error"}
-                    messages.error(request, "Your update failed.")
-                    return HttpResponse(
-                        json.dumps(data),
-                        content_type='application/json'
-                        )
-                max_result = Log.objects.filter(
-                    user=request.user,
-                    workout=log.workout
-                    ).exclude(pk=log_id).aggregate(Min('ft_result'))
-                Log.objects.filter(pk=log_id).update(ft_result=new_result)
-                if max_result['ft_result__min'] is None:
-                    Log.objects.filter(pk=log_id).update(personal_record=True)
-                else:
-                    best_result = max_result['ft_result__min'].seconds
-                    new_result_s = new_result.seconds
-                    if best_result > new_result_s:
-                        Log.objects.filter(pk=log_id).update(
-                            personal_record=True
-                            )
-                    else:
-                        Log.objects.filter(pk=log_id).update(
-                            personal_record=False
-                            )
-            elif wod_type == "AMRAP":
-                max_result = Log.objects.filter(
-                    user=request.user,
-                    workout=log.workout
-                    ).exclude(pk=log_id).aggregate(Max('amrap_result'))
-                Log.objects.filter(pk=log_id).update(
-                    amrap_result=request.POST["result"]
-                    )
-                new_result = float(request.POST["result"])
-                if max_result['amrap_result__max'] is None:
-                    Log.objects.filter(pk=log_id).update(personal_record=True)
-                else:
-                    best_result = max_result['amrap_result__max']
-                    if best_result < new_result:
-                        Log.objects.filter(pk=log_id).update(
-                            personal_record=True
-                            )
-                    else:
-                        Log.objects.filter(pk=log_id).update(
-                            personal_record=False
-                            )
-            else:
-                max_result = Log.objects.filter(
-                    user=request.user,
-                    workout=log.workout
-                    ).exclude(pk=log_id).aggregate(Max('mw_result'))
-                Log.objects.filter(pk=log_id).update(
-                    mw_result=request.POST["result"]
-                    )
-                new_result = float(request.POST["result"])
-                if max_result['mw_result__max'] is None:
-                    Log.objects.filter(pk=log_id).update(personal_record=True)
-                else:
-                    best_result = max_result['mw_result__max']
-                    if best_result < new_result:
-                        Log.objects.filter(pk=log_id).update(
-                            personal_record=True
-                            )
-                    else:
-                        Log.objects.filter(pk=log_id).update(
-                            personal_record=False
-                            )
-            Log.objects.filter(pk=log_id).update(rx=rx_input)
-            Log.objects.filter(pk=log_id).update(date=date)
-            Log.objects.filter(pk=log_id).update(
+            log_f.update(rx=rx_input)
+            log_f.update(date=date)
+            log_f.update(
                 user_comment=request.POST["comment"]
                 )
+            new_result = request.POST["result"]
+            if wod_type == "FT":
+                result = 'ft_result'
+                new_result = parse_duration(new_result)
+            elif wod_type == "AMRAP":
+                result = 'amrap_result'
+            else:
+                result = 'mw_result'
+            result_upd = {f'{result}': new_result}
+            log_f.update(**result_upd)
+            # Determine if log result is personal record.
+            updatePR(request.user, log.workout, wod_type, result)
             data = {"message": "Succesfull edit"}
             messages.success(request, "Your log was updated successfully.")
             user = request.user
@@ -526,8 +430,18 @@ def deleteLog(request):
     if request.is_ajax() and request.user.is_authenticated and hasattr(request.user, 'userprofile'):
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
+        user_upd = log.user
+        workout_upd = log.workout
+        wtype_upd = log.workout.workout_type
+        if wtype_upd == "FT":
+            result_upd = 'ft_result'
+        elif wtype_upd == "AMRAP":
+            result_upd = 'amrap_result'
+        else:
+            result_upd = 'mw_result'
         if request.user == log.user or request.user.is_superuser:
             log.delete()
+            updatePR(user_upd, workout_upd, wtype_upd, result_upd)
             data = {"message": "Your log is deleted."}
             messages.success(request, "Your log is deleted.")
             calc_level(request.user)
@@ -544,6 +458,39 @@ def deleteLog(request):
                 )
     else:
         return JsonResponse({"error": "Delete Failed"}, status=400)
+
+
+def updatePR(user, workout, wod_type, result):
+    """Function to recheck all logs if they were PR or not after log (prev date), edit or delete."""
+    user_wod_logs = Log.objects.filter(
+        user=user,
+        workout=workout,
+    ).order_by('date')
+    if wod_type == "FT":
+        for u_log in user_wod_logs:
+            if u_log == user_wod_logs[0]:
+                u_log.personal_record = True
+            else:
+                curr_date = u_log.date
+                prev_max = user_wod_logs.filter(date__lt=curr_date).aggregate(Min(f'{result}'))[f'{result}__min']
+                if getattr(u_log, f'{result}') < prev_max:
+                    u_log.personal_record = True
+                else:
+                    u_log.personal_record = False
+            u_log.save()
+    else:
+        for u_log in user_wod_logs:
+            if u_log == user_wod_logs[0]:
+                print(u_log.date)
+                u_log.personal_record = True
+            else:
+                curr_date = u_log.date
+                prev_max = user_wod_logs.filter(date__lt=curr_date).aggregate(Max(f'{result}'))[f'{result}__max']
+                if getattr(u_log, f'{result}') > prev_max:
+                    u_log.personal_record = True
+                else:
+                    u_log.personal_record = False
+            u_log.save()
 
 
 @require_POST
