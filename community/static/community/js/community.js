@@ -463,6 +463,7 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (data) {
+                $('[data-toggle="popover"]').popover("hide")
                 $("#level-loader").hide()
                 $(".hl-container").remove()
                 $(".block-main").append(data.new_levels_html)
