@@ -512,7 +512,6 @@ def deleteLog(request):
         log = Log.objects.get(pk=log_id)
         if request.user == log.user or request.user.is_superuser:
             log.delete()
-            print("CHECKING")
             data = {"message": "Your log is deleted."}
             messages.success(request, "Your log is deleted.")
             calc_level(request.user)
@@ -855,7 +854,7 @@ def createWorkout(request, wod_id):
         form = WorkoutForm(request.POST)
         if form.is_valid:
             new = form.save()
-            new_wod_id = new.package
+            new_wod_id = new.package()
             messages.success(request, "The workout was created successfully.")
             return redirect(reverse('workouts', args=(new_wod_id,)))
         else:

@@ -68,11 +68,6 @@ ROOT_URLCONF = 'crossfit_community.urls'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
-    # {
-    #     'BACKEND':'django.template.backends.jinja2.Jinja2',
-    #     'DIRS': ['%s/jinjatemplates/'% (PROJECT_DIR),],
-    #     'APP_DIRS': True,
-    #     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
@@ -86,7 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # required by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media', # acces the MEDIA_URL as template-variable in all templates, necessary?
+                'django.template.context_processors.media', # access the MEDIA_URL as template-variable in all templates, necessary?
                 'profiles.context_processors.user_info',  # processor to pass user profile image and possible other user info to all templates
             ],
             'builtins': [

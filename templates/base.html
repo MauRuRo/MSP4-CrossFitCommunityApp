@@ -91,13 +91,13 @@
                     </div>
                 </a>
                 {% if request.user.is_authenticated == False %}
-                <div id="arrow-emblem-home" class="toast"></div>
+                <div id="arrow-emblem-home" class="toast" data-autohide="true" data-delay="3000"></div>
                 {% endif %}
                 {% if request.user.is_authenticated %}
                 <div>
                     <div id="emblem-circle"
                         style="background: url('/media/herocommunitylogo.jpg') no-repeat; background-size: cover">
-                        <div id="arrow-emblem" class="toast"></div>
+                        <div id="arrow-emblem" class="toast" data-autohide="true" data-delay="3000"></div>
                     </div>
                 </div>
                 {% endif %}

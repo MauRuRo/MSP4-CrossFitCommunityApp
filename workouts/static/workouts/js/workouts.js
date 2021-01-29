@@ -227,7 +227,7 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(data){
                 if (data.del_false == "False") {
-                    location.reload()
+                    location.reload(true)
                 }
             },
             error: function(){
@@ -247,7 +247,7 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(data){
                 if (data.del_false == "False") {
-                    location.reload()
+                    location.reload(true)
                 }
             },
             error: function(){
@@ -746,7 +746,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data){
-                location.reload()              
+                location.reload(true)              
             },
             error: function(){
                 console.log("Failed Log Edit")
@@ -1067,7 +1067,7 @@ $(document).ready(function() {
     $(document).on("click", ".delete-log", function(){
         let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
         deleteLog(log_id)
-        location.reload()
+        location.reload(true)
     })
     
     // Click to edit a Log object.
@@ -1332,7 +1332,8 @@ $(document).ready(function() {
     })
 
     // Click to hide form for creating/editing workout (only available for super user)
-    $("#cancel-wod-submit").click(function(){
+    $("#cancel-wod-submit").click(function(e){
+        e.preventDefault()
         $(".main-wod-div").show()
         $(".superuser-buttons").show()
         $(".workout-form-div").hide()
@@ -1359,7 +1360,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data){
-                location.reload()              
+                location.reload(true)              
             },
             error: function(){
                 console.log("Failed Log Edit")
@@ -1399,7 +1400,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data){
-                location.reload()              
+                location.reload(true)              
             },
             error: function(){
                 console.log("Failed Wodset")

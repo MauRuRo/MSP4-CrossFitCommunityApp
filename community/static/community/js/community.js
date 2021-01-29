@@ -297,7 +297,7 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (data) {
-                location.reload()
+                location.reload(true)
             },
             error: function () {
             }
@@ -332,7 +332,7 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (data) {
-                location.reload()
+                location.reload(true)
             },
             error: function () {
 
