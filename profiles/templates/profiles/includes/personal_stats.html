@@ -8,9 +8,14 @@
         </ul>
     </div>
     <div class="row row-stats justify-content-center">
+        {% if year == 0  %}
+            <img src="/media/letsgo.gif" alt="Let's Go!" id="letsgo">
+            <div class="col-12 d-flex justify-content-center">
+            <h5>LET'S GO!</h5>
+        </div>
+        {% else %}
         {% if perfw == "high" and perfm == "high" %}
         <img src="/media/greatjob.gif" alt="Great Job!" id="greatjob">
-        <!-- <img src="/media/greatjob.gif" alt="Great Job!" id="greatjob"> -->
         <div class="col-12 d-flex justify-content-center">
             <h5>You're doing great!</h5>
         </div>
@@ -24,6 +29,7 @@
         <div class="col-12 d-flex justify-content-center">
             <h5>Get back on that horse!</h5>
         </div>
+        {% endif %}
         {% endif %}
     </div>
 </div>

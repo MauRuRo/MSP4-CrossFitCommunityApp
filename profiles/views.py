@@ -79,11 +79,11 @@ def profile(request):
         prw = Log.objects.filter(user=request.user).filter(
             date__gt=week_date
             ).filter(personal_record=True).count()
-        if (user_logs_year/12) > user_logs_month:
+        if (user_logs_year/12) > user_logs_month or user_logs_month == 0:
             perf_month = "low"
         else:
             perf_month = "high"
-        if (user_logs_year/52) > user_logs_week:
+        if (user_logs_year/52) > user_logs_week or user_logs_week == 0:
             perf_week = "low"
         else:
             perf_week = "high"

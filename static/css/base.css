@@ -827,16 +827,9 @@ linked to a date input field that is formatted properly. */
     text-align:center;
     margin-top: 10px;
 }
-#greatjob{
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-}
-#coach{
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-}
+#letsgo,
+#greatjob,
+#coach,
 #drill-seargent{
     object-fit: contain;
     width: 100%;
