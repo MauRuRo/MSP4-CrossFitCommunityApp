@@ -13,20 +13,34 @@ import stripe
 import json
 import statistics
 
-# @require_POST
-# def cache_payment_create_profile(request):
-#     try:
-#         pid = request.POST.get('client_secret').split('_secret')[0]
-#         stripe.api_key = settings.STRIPE_SECRET_KEY
-#         stripe.PaymentIntent.modify(pid, metadata={
-#             'username': request.user,
-#         })
-#         return HttpResponse(status=200)
-#     except Exception as e:
-#         messages.error(request, 'Sorry, your payment cannot be \
-#             processed right now. Please try again later.')
 
-#         return HttpResponse(content=e, status=400)
+@require_POST
+def cache_payment_create_profile(request):
+    print("I AM ABOUT TO CACHE NOW")
+    try:
+        print("I AM IN THE CACHE NOW!!!")
+        pid = request.POST.get('client_secret').split('_secret')[0]
+        print("pid:", pid)
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        print("seckey:", stripe.api_key)
+        print("MADE IT JUST BEFORE PAYMENT INTENT")
+        stripe.PaymentIntent.modify(pid, metadata={
+            'user': request.user.pk,
+            'email': request.user.email,
+            'full_name': request.POST["full_name"],
+            'town_or_city': request.POST["town_or_city"],
+            'country': request.POST["country"],
+            'gender': request.POST["gender"],
+            'weight': request.POST["weight"],
+            'birthdate': request.POST["birthdate"]
+        })
+        return HttpResponse(status=200)
+    except Exception as e:
+        print("FAILED THE CACHE")
+        messages.error(request, 'Sorry, your payment cannot be \
+            processed right now. Please try again later.')
+
+        return HttpResponse(content=e, status=400)
 
 
 def profile(request):
@@ -96,6 +110,7 @@ def profile(request):
 def create_profile(request):
     """A view to render the create profile page
     AND on POST upload a profile object to the database."""
+    print("IN THE CREATE PROFILE VIEW")
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
     if request.user.is_authenticated:
@@ -139,34 +154,12 @@ def create_profile(request):
                 new_profile.email = request.user.email
                 new_profile.user = request.user
                 new_profile.save()
-                hero_l = HeroLevels()
-                hero_l.user = request.user
-                hero_l.general_level = 0
-                # Set default level data for new Profile.
-                default_wodlevel = [{"wod": "none", "wodperc": "none", "wodpk": 0}]
-                hero_l.level_data = [
-                    {"cat": "Power Lifts", "perc": "none", "acc": "none",
-                        "wod_level": default_wodlevel},
-                    {"cat": "Olympic Lifts", "perc": "none", "acc": "none",
-                        "wod_level": default_wodlevel},
-                    {"cat": "Body Weight", "perc": "none", "acc": "none",
-                        "wod_level": default_wodlevel},
-                    {"cat": "Heavy", "perc": "none", "acc": "none",
-                        "wod_level": default_wodlevel},
-                    {"cat": "Light", "perc": "none", "acc": "none",
-                        "wod_level": default_wodlevel},
-                    {"cat": "Long", "perc": "none", "acc": "none",
-                        "wod_level": default_wodlevel},
-                    {"cat": "Speed", "perc": "none", "acc": "none",
-                        "wod_level": default_wodlevel},
-                    {"cat": "Endurance", "perc": "none", "acc": "none",
-                        "wod_level": default_wodlevel}
-                ]
-                hero_l.save()
+                createDefaultHeroLevels(request.user)
                 messages.success(
                     request,
                     'Profile succesfully created and payment succesfully processed! \
                 Please explore and enjoy our digital hero community!')
+                print("OUT OF THE CREATE PROFILE VIEW")
                 return redirect(reverse('profile'))
             else:
                 messages.error(request, 'There was an error with your form. \
@@ -174,6 +167,36 @@ def create_profile(request):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         return render(request, 'home/index.html')
+
+
+def createDefaultHeroLevels(user):
+    """A function to create the default levels for a new user."""
+    hero_l = HeroLevels()
+    hero_l.user = user
+    hero_l.general_level = 0
+    # Set default level data for new Profile.
+    default_wodlevel = [{
+        "wod": "none", "wodperc": "none", "wodpk": 0
+        }]
+    hero_l.level_data = [
+        {"cat": "Power Lifts", "perc": "none", "acc": "none",
+            "wod_level": default_wodlevel},
+        {"cat": "Olympic Lifts", "perc": "none", "acc": "none",
+            "wod_level": default_wodlevel},
+        {"cat": "Body Weight", "perc": "none", "acc": "none",
+            "wod_level": default_wodlevel},
+        {"cat": "Heavy", "perc": "none", "acc": "none",
+            "wod_level": default_wodlevel},
+        {"cat": "Light", "perc": "none", "acc": "none",
+            "wod_level": default_wodlevel},
+        {"cat": "Long", "perc": "none", "acc": "none",
+            "wod_level": default_wodlevel},
+        {"cat": "Speed", "perc": "none", "acc": "none",
+            "wod_level": default_wodlevel},
+        {"cat": "Endurance", "perc": "none", "acc": "none",
+            "wod_level": default_wodlevel}
+    ]
+    hero_l.save()
 
 
 @require_POST

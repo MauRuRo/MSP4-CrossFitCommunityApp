@@ -130,7 +130,7 @@
     {% block content %}
     {% endblock %}
 
-    <div hidden id="user-id-no" data="{{ profile.user.pk }}"></div>
+    <div hidden id="user-id-no" data="{{ active_user.pk }}"></div>
     <div hidden id="group-select-data" data="{{ group_select }}"></div>
 
     {% block postloadjs %}

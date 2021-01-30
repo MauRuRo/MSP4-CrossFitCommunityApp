@@ -67,8 +67,9 @@ $(document).ready(function () {
     // Set text for newly selected image
     $('#new-image').change(function () {
         var file = $('#new-image')[0].files[0];
-        $('#filename').text(`Image will be set to: ${file.name}`);
+        $('#filename').text(`${file.name}`);
     });
+
 
     // Click to show profile edit form.
     $("#toggle-edit-profile-button").click(function () {

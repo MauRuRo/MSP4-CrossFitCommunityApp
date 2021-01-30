@@ -9,16 +9,6 @@ from picklefield.fields import PickledObjectField
 from jsonfield import JSONField
 
 
-# def validate_max(value):
-#     if value > 500:
-#         print("TestValidateModel")
-#         raise ValidationError(
-#             'This weight is too high.',
-#             code='invalid',
-#             params={'value': value},
-#         )
-
-
 class UserProfile(models.Model):
     """
     A user profile

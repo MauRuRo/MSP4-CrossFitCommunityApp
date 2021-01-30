@@ -49,5 +49,6 @@ def user_info(request):
     return {
         'image': image,
         'profile': profile,
-        'group_select': group_select
+        'group_select': group_select,
+        'active_user': request.user
         }
