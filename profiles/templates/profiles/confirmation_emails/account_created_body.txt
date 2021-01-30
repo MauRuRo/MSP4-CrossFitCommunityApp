@@ -1,0 +1,10 @@
+Hello {{ profile.full_name }}
+
+This is a confirmation of payment and the creation of your user profile in the Hero Community.
+WELCOME! Please explore our sites an functionalities and KEEP MOVING!
+
+HOORAH!
+
+Greetz, 
+
+The Hero Community

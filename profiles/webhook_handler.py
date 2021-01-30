@@ -16,21 +16,21 @@ class StripeWH_Handler:
     def __init__(self, request):
         self.request = request
 
-    # def _send_confirmation_email(self, order):
-    #     """ Send th user confirmation email"""
-    #     cust_email = order.email
-    #     subject = render_to_string(
-    #         'checkout/confirmation_emails/confirmation_email_subject.txt',
-    #         {'order': order})
-    #     body = render_to_string(
-    #         'checkout/confirmation_emails/confirmation_email_body.txt',
-    #         {'order': order, 'contact_email': settings.DEFAULT_FROM_EMAIL})
-    #     send_mail(
-    #         subject,
-    #         body,
-    #         settings.DEFAULT_FROM_EMAIL,
-    #         [cust_email]
-    #     )
+    def _send_confirmation_email(self, new_profile):
+        """ Send th user confirmation email"""
+        cust_email = new_profile.email
+        subject = render_to_string(
+            'profiles/confirmation_emails/account_created_subject.txt',
+            {'profile': new_profile})
+        body = render_to_string(
+            'profiles/confirmation_emails/account_created_body.txt',
+            {'profile': new_profile, 'contact_email': settings.DEFAULT_FROM_EMAIL})
+        send_mail(
+            subject,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            [cust_email]
+        )
 
 
     def handle_event(self, event):
@@ -72,7 +72,7 @@ class StripeWH_Handler:
                 attempt += 1
                 time.sleep(1)
         if profile_exists:
-            # self._send_confirmation_email(order)
+            self._send_confirmation_email(new_profile)
             return HttpResponse(
                     content=f'Webhook received: {event["type"]} | Success: Verified profile already in database',
                     status=200)
@@ -98,7 +98,7 @@ class StripeWH_Handler:
                 return HttpResponse(
                     content=f'Webhook received: {event["type"]} | ERROR: {e}',
                     status=500)
-        # self._send_confirmation_email(order)
+        self._send_confirmation_email(new_profile)
         print("WEBHOOK PAYMENT SUCCEEDED")
         return HttpResponse(
             content=f'Webhook received: {event["type"]} |  SUCCESS: created profile in webhook',
