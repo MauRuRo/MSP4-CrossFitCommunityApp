@@ -40,9 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # copied from allauth documentation:
     'django.contrib.sites',
+    'django_extensions',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
     'home',
     'profiles',
     'workouts',
@@ -99,6 +102,37 @@ AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+# For loggin in via facebook.
+# https://jinkwon711.medium.com/django-allauth-facebook-login-b536444cbc6b
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+     {'METHOD': 'oauth2',
+      'SCOPE': ['email', ],
+      'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+      'FIELDS': [
+          'id',
+          'email',
+          'name',
+          'first_name',
+          'last_name',
+          'verified',
+          'locale',
+          'timezone',
+          'link',
+          'gender',
+          'updated_time'],
+      'EXCHANGE_TOKEN': True,
+      'LOCALE_FUNC': lambda request: 'kr_KR',
+      'VERIFIED_EMAIL': False,
+      'VERSION': 'v3.2'
+      }, 'google': {
+            'SCOPE': ['email'],
+            'AUTH_PARAMS': {'access_type': 'online'}
+            }
+     }
+
+LOGIN_REDIRECT_URL = '/'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
@@ -162,12 +196,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# https://pypi.org/project/django-tempus-dominus/
-TEMPUS_DOMINUS_LOCALIZE = True
-
-TEMPUS_DOMINUS_INCLUDE_ASSETS = True
-
-# DATE_INPUT_FORMATS = ('%d-%b-%Y', '%Y-%b-%d')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -186,6 +214,10 @@ STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 if 'DEVELOPMENT' in os.environ:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'herocommunity@example.com'
+
+    SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SOCIAL_AUTH_FACEBOOK_KEY')
+    SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET')
+
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_USE_TLS = True
@@ -195,6 +227,10 @@ else:
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASS')
     EMAIL_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 
+    SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SOCIAL_AUTH_FACEBOOK_KEY')
+    SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET')
+
+# Cronjob to update statistics for inactive users. Unable to test in Gitpod environment.
 CRONJOBS = [
-    ('30 23 * * *', 'home.cron.cron_check_levels')
+    ('30 1 * * *', 'home.cron.cron_check_levels')
 ]
