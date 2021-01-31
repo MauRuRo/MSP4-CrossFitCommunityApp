@@ -16,14 +16,11 @@ import statistics
 
 @require_POST
 def cache_payment_create_profile(request):
-    print("I AM ABOUT TO CACHE NOW")
     try:
-        print("I AM IN THE CACHE NOW!!!")
         pid = request.POST.get('client_secret').split('_secret')[0]
         print("pid:", pid)
         stripe.api_key = settings.STRIPE_SECRET_KEY
         print("seckey:", stripe.api_key)
-        print("MADE IT JUST BEFORE PAYMENT INTENT")
         stripe.PaymentIntent.modify(pid, metadata={
             'user': request.user.pk,
             'email': request.user.email,
@@ -110,7 +107,6 @@ def profile(request):
 def create_profile(request):
     """A view to render the create profile page
     AND on POST upload a profile object to the database."""
-    print("IN THE CREATE PROFILE VIEW")
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
     if request.user.is_authenticated:
@@ -159,7 +155,6 @@ def create_profile(request):
                     request,
                     'Profile succesfully created and payment succesfully processed! \
                 Please explore and enjoy our digital hero community!')
-                print("OUT OF THE CREATE PROFILE VIEW")
                 return redirect(reverse('profile'))
             else:
                 messages.error(request, 'There was an error with your form. \
