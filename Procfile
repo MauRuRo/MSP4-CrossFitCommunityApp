@@ -1,1 +1,1 @@
-web: gunicorn crossfit_community.asgi:application
+web: gunicorn crossfit_community.wsgi:application

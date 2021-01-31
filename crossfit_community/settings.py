@@ -45,8 +45,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.facebook',
-    # 'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
     'home',
     'profiles',
     'workouts',
@@ -106,32 +106,32 @@ AUTHENTICATION_BACKENDS = [
 
 # For loggin in via facebook.
 # https://jinkwon711.medium.com/django-allauth-facebook-login-b536444cbc6b
-# SOCIALACCOUNT_PROVIDERS = \
-#     {'facebook':
-#      {'METHOD': 'oauth2',
-#       'SCOPE': ['email', ],
-#       'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-#       'FIELDS': [
-#           'id',
-#           'email',
-#           'name',
-#           'first_name',
-#           'last_name',
-#           'verified',
-#           'locale',
-#           'timezone',
-#           'link',
-#           'gender',
-#           'updated_time'],
-#       'EXCHANGE_TOKEN': True,
-#       'LOCALE_FUNC': lambda request: 'kr_KR',
-#       'VERIFIED_EMAIL': False,
-#       'VERSION': 'v3.2'
-#       }, 'google': {
-#             'SCOPE': ['email'],
-#             'AUTH_PARAMS': {'access_type': 'online'}
-#             }
-#      }
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+     {'METHOD': 'oauth2',
+      'SCOPE': ['email', ],
+      'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+      'FIELDS': [
+          'id',
+          'email',
+          'name',
+          'first_name',
+          'last_name',
+          'verified',
+          'locale',
+          'timezone',
+          'link',
+          'gender',
+          'updated_time'],
+      'EXCHANGE_TOKEN': True,
+      'LOCALE_FUNC': lambda request: 'kr_KR',
+      'VERIFIED_EMAIL': False,
+      'VERSION': 'v3.2'
+      }, 'google': {
+            'SCOPE': ['email'],
+            'AUTH_PARAMS': {'access_type': 'online'}
+            }
+     }
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
@@ -155,7 +155,6 @@ ASGI_APPLICATION = 'crossfit_community.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 if 'DATABASE_URL' in os.environ:
-    print("IM IN HERE")
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
