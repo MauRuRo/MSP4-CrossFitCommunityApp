@@ -33,6 +33,10 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 1.5rem;
     margin-top:85px;
 }
+.logopic{
+    background: url('/media/herocommunitylogo.jpg') no-repeat;
+    background-size: cover;
+}
 #profile-circle {
     margin-top:25px;
     height:200px;

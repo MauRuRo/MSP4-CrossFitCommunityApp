@@ -86,8 +86,8 @@
             </div>
             <div class="col-6 col-lg-3 d-flex justify-content-center" id="profile-circle-container">
                 <a href="{% url 'home' %}">
-                    <div id="profile-circle"
-                        style="background: url({% if request.user.is_authenticated %}{{ image }}{% else %}'/media/herocommunitylogo.jpg'{% endif %}) no-repeat; background-size: cover">
+                    <div id="profile-circle" class="{% if request.user.is_authenticated == False %}logopic{% endif %}"
+                        style="{% if request.user.is_authenticated %}background: url({{ image }}) no-repeat; background-size: cover{% endif %}">
                     </div>
                 </a>
                 {% if request.user.is_authenticated == False %}
@@ -95,8 +95,7 @@
                 {% endif %}
                 {% if request.user.is_authenticated %}
                 <div>
-                    <div id="emblem-circle"
-                        style="background: url('/media/herocommunitylogo.jpg') no-repeat; background-size: cover">
+                    <div id="emblem-circle" class="logopic">
                         <div id="arrow-emblem" class="toast" data-autohide="true" data-delay="3000"></div>
                     </div>
                 </div>
