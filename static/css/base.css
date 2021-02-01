@@ -562,7 +562,7 @@ label[for='image-clear_id'] {
     border-radius:50%;
     border: 1px solid grey;
     background-size: cover;
-    z-index: 998;
+    z-index: 997;
     position:absolute;
     top:-15px;
     left:-15px;
@@ -1096,11 +1096,6 @@ color: red;
         height: 120px!important;
         width: 120px!important;
     }
-    /* #emblem-circle:hover {
-    margin-left: -120px;
-    height: 120px;
-    width: 120px;
-    } */
     #hero-co-info {
     top: 90px;
     }
