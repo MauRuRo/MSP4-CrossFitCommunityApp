@@ -169,7 +169,9 @@ def getGroupSelectionUsers(request):
         group_select = getGroup(request)
         if group_select["custom"] == 'false':
             if group_select["location"] == "group-global":
-                select_group_users = User.objects.all()
+                select_group_users = User.objects.filter(
+                    userprofile__isnull=False
+                    )
             elif group_select["location"] == "group-country":
                 select_group_users = User.objects.filter(
                     userprofile__country=request.user.userprofile.country

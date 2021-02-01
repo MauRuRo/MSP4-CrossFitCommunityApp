@@ -13,7 +13,7 @@ def user_info(request):
             profile = UserProfile.objects.get(user=request.user)
             try:
                 if not profile.image:
-                    profile.image = f'{settings.MEDIA_URL}noprofpic.jpg'
+                    profile.image = '/media/noprofpic.jpg'
                     profile.save()
                 if isinstance(profile.image, str):
                     image = profile.image
