@@ -149,8 +149,8 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/profile/'
 
 
-# WSGI_APPLICATION = 'crossfit_community.wsgi.application'
-ASGI_APPLICATION = 'crossfit_community.asgi.application'
+WSGI_APPLICATION = 'crossfit_community.wsgi.application'
+# ASGI_APPLICATION = 'crossfit_community.asgi.application'
 
 
 # Database
