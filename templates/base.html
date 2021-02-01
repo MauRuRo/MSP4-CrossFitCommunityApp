@@ -133,7 +133,8 @@
 
     {% block postloadjs %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
-    <script type="text/javascript">
+    <script src="/static/js/base.js"></script>
+    <!-- <script type="text/javascript">
         $(document).ready(function () {
             var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="popover"]'))
             var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
@@ -163,7 +164,7 @@
                 }
             });
         });
-    </script>
+    </script> -->
     {% endblock %}
 
 </body>
