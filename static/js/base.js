@@ -27,22 +27,43 @@
         }
     });
     let mouseleave_cons = true
+    let touchdevice = false
+    let tapped = true
     $("#emblem-circle, .logopic").on("mouseenter", function(){
-        $("#hero-co-info").fadeIn(500)
+        if (touchdevice == false){
+            $("#emblem-circle").addClass("emblem-circle-hover")
+            $("#hero-co-info").fadeIn(500)
+            }
     })
     $("#emblem-circle, .logopic").on("mouseleave", function(){
-        if (mouseleave_cons == true){
+        if (mouseleave_cons == true && touchdevice == false){
+            $("#emblem-circle").removeClass("emblem-circle-hover")
             $("#hero-co-info").hide()
         }
     })
     $("#emblem-circle, .logopic").on("click", function(){
-        if (mouseleave_cons == false){
-            mouseleave_cons = true
-            $("hero-co-info").hide()
-            $("#emblem-circle").removeClass("emblem-circle-hover")
+        if (touchdevice == false){
+            if (mouseleave_cons == false){
+                mouseleave_cons = true
+                $("hero-co-info").hide()
+                $("#emblem-circle").removeClass("emblem-circle-hover")
 
+            }else{
+                mouseleave_cons = false
+                $("#hero-co-info").fadeIn(500)
+                $("#emblem-circle").addClass("emblem-circle-hover")
+            }
+        }
+    })
+    $("#emblem-circle, .logopic").on("touchstart", function(e){
+        e.preventDefault()
+        touchdevice = true
+        if (tapped == false){
+            tapped = true
+            $("#hero-co-info").hide()
+            $("#emblem-circle").removeClass("emblem-circle-hover")
         }else{
-            mouseleave_cons = false
+            tapped = false
             $("#hero-co-info").fadeIn(500)
             $("#emblem-circle").addClass("emblem-circle-hover")
         }
