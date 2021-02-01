@@ -129,6 +129,12 @@ ul.socialaccount_providers {
     width: 200px;
     transition: width .5s, height .5s, top .5s, margin-left .5s, margin-top .5s;
 }
+#hero-co-info {
+    background-color:black;
+    color: white;
+    height: 200px;
+    width: 400px;
+}
 .content-block {
     margin-top: 15px;
 }
