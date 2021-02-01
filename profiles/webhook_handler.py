@@ -89,7 +89,7 @@ class StripeWH_Handler:
                     user=user,
                     stripe_pid=pid
                 )
-                new_profile.image = 'media/noprofpic.jpg'
+                new_profile.image = f'{settings.MEDIA_URL}/noprofpic.jpg'
                 new_profile.save()
                 createDefaultHeroLevels(user)
             except Exception as e:
