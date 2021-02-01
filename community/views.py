@@ -125,6 +125,7 @@ def getGroupSelection(request):
             else:
                 user_city = request.user.userprofile.town_or_city
                 select_group_logs = Log.objects.filter(
+                    user__userprofile__country=request.user.userprofile.country,
                     user__userprofile__town_or_city=user_city
                     )
             if group_select["age"] != 'false':
@@ -178,6 +179,7 @@ def getGroupSelectionUsers(request):
                     )
             else:
                 select_group_users = User.objects.filter(
+                    userprofile__country=request.user.userprofile.country,
                     userprofile__town_or_city=request.user.userprofile.town_or_city
                     )
             if group_select["age"] != 'false':

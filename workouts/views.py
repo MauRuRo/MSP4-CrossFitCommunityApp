@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from decimal import Decimal
-from community.views import getGroupSelection
+from community.views import getGroupSelection, getGroup
 from profiles.views import cat_levels_info, getLevels
 import json
 import math
@@ -196,37 +196,44 @@ def workouts(request, wod_id):
                 all_women_today_index += 1
         # Get best and worst results for workout
         # to set initial level slider value.
-        if request.user.userprofile.gender == "M":
-            if all_logs_rank_men.count() > 0:
-                best = getattr(all_logs_rank_men[0], rank_result)
-                worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
-                worst_rank = rlistmenall[-1][1]
-                med_count = round(all_logs_rank_men.count() / 2)
-                med = getattr(all_logs_rank_men[med_count], rank_result)
-            else:
-                worst_rank = "none"
-                best = 1
-                worst = 1
-                med = 1
-                ft_seconds = False
-        else:
-            if all_logs_rank_men.count() > 0:
-                best = getattr(all_logs_rank_women[0], rank_result)
-                worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
-                worst_rank = rlistwomenall[-1][1]
-                med_count = round(all_logs_rank_women.count() / 2)
-                med = getattr(all_logs_rank_women[med_count], rank_result)
-            else:
-                worst_rank = "none"
-                best = 1
-                worst = 1
-                med = 1
-                ft_seconds = False
-        if wod.workout_type == "FT" and ft_seconds:
-            best = best.seconds
-            worst = worst.seconds
-            med = med.seconds
-        initial_slider_level = med
+        data = setInitialSliderLevel(request, wod, lapse_date, rank_result, all_logs_rank_men, all_logs_rank_women)
+        initial_slider_level = data["init"]
+        best = data["best"]
+        worst = data["worst"]
+
+        # if request.user.userprofile.gender == "M":
+        #     if all_logs_rank_men.count() > 0:
+        #         best = getattr(all_logs_rank_men[0], rank_result)
+        #         worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
+        #         worst_rank = rlistmenall[-1][1]
+        #         med_count = round(all_logs_rank_men.count() / 2)
+        #         med = getattr(all_logs_rank_men[med_count], rank_result)
+        #     else:
+        #         worst_rank = "none"
+        #         best = 1
+        #         worst = 1
+        #         med = 1
+        #         ft_seconds = False
+        # else:
+        #     if all_logs_rank_women.count() > 0:
+        #         best = getattr(all_logs_rank_women[0], rank_result)
+        #         worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
+        #         worst_rank = rlistwomenall[-1][1]
+        #         med_count = round(all_logs_rank_women.count() / 2)
+        #         med = getattr(all_logs_rank_women[med_count], rank_result)
+        #     else:
+        #         worst_rank = "none"
+        #         best = 1
+        #         worst = 1
+        #         med = 1
+        #         ft_seconds = False
+        # if wod.workout_type == "FT" and ft_seconds:
+        #     best = best.seconds
+        #     worst = worst.seconds
+        #     med = med.seconds
+        # initial_slider_level = med
+
+
         # Determine the page on which the user's log
         # is so it will render this page on view load.
         all_women_page = math.ceil(all_women_index_user / 25)
@@ -314,7 +321,6 @@ def workouts(request, wod_id):
             "workout_form": workout_form,
             "best": best,
             "worst": worst,
-            "worst_rank": worst_rank,
             "initial_slider_level": initial_slider_level
         }
         template = "workouts/workouts.html"
@@ -1010,3 +1016,92 @@ def calc_level(user):
     level_data = HeroLevels.objects.filter(user=user)
     level_data.update(level_data=cat_levels)
     level_data.update(general_level=general_level)
+
+
+def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women_logs):
+    """Determine the result needed for a level of around 50 (median result)"""
+    ft_seconds = True
+    group_s = getGroup(request)
+    if group_s["custom"] == "true" or group_s["age"] == "true" or group_s["location"] != "group-global":
+        print("SELECTED GROUP")
+        selected_group = Log.objects.all()
+        if wod.workout_type == 'FT':
+            all_logs_rank = selected_group.filter(
+                workout=wod,
+                rx=True,
+                date__gt=lapse_date
+                ).order_by('ft_result')
+            rank_result = 'ft_result'
+        elif wod.workout_type == 'AMRAP':
+            all_logs_rank = selected_group.filter(
+                workout=wod,
+                rx=True,
+                date__gt=lapse_date
+                ).order_by('-amrap_result')
+            rank_result = 'amrap_result'
+        else:
+            all_logs_rank = selected_group.filter(
+                workout=wod,
+                rx=True,
+                date__gt=lapse_date
+                ).order_by('-mw_result')
+            rank_result = 'mw_result'
+        # Create a list of log id's for max result for the past year
+        all_logs_l = list(all_logs_rank.values())
+        log_max_list = []
+        log_user_id_list = []
+        for log in all_logs_l:
+            if not log["user_id"] in log_user_id_list:
+                log_user_id_list.append(log["user_id"])
+                log_max_list.append(log["id"])
+        # filter out all none max results from query
+        all_logs_rank = all_logs_rank.filter(id__in=log_max_list)
+        # create query of logs, for women,\
+        # for men, and rank logs for the whole past year.
+        all_logs_rank_women = all_logs_rank.filter(
+            user__userprofile__gender="F"
+            )
+        all_logs_rank_men = all_logs_rank.filter(
+            user__userprofile__gender="M"
+            )
+    else:
+        print("GLOBAL SELECTED")
+        all_logs_rank_men = men_logs
+        all_logs_rank_women = women_logs
+    if request.user.userprofile.gender == "M":
+        if all_logs_rank_men.count() > 0:
+            best = getattr(all_logs_rank_men[0], rank_result)
+            worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
+            # worst_rank = rlistmenall[-1][1]
+            med_count = round(all_logs_rank_men.count() / 2)
+            med = getattr(all_logs_rank_men[med_count], rank_result)
+        else:
+            # worst_rank = "none"
+            best = 1
+            worst = 1
+            med = 1
+            ft_seconds = False
+    else:
+        if all_logs_rank_women.count() > 0:
+            best = getattr(all_logs_rank_women[0], rank_result)
+            worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
+            # worst_rank = rlistwomenall[-1][1]
+            med_count = round(all_logs_rank_women.count() / 2)
+            med = getattr(all_logs_rank_women[med_count], rank_result)
+        else:
+            # worst_rank = "none"
+            best = 1
+            worst = 1
+            med = 1
+            ft_seconds = False
+    if wod.workout_type == "FT" and ft_seconds:
+        best = best.seconds
+        worst = worst.seconds
+        med = med.seconds
+    initial_slider_level = med
+    data = {
+        'init': initial_slider_level,
+        'best': best,
+        'worst': worst
+        }
+    return data
