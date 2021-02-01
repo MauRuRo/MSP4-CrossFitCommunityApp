@@ -139,7 +139,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 SITE_ID = 1
 
 
-    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -212,6 +212,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 if "USE_AWS" in os.environ:
+    # No cache control required because files change all the time.
     # Bucket config:
     AWS_STORAGE_BUCKET_NAME = "hero-community"
     AWS_S3_REGION_NAME = 'eu-west-2'
