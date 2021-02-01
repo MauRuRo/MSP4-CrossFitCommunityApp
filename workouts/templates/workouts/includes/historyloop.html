@@ -26,8 +26,7 @@
         <i class="fflag fflag-{{ member_h_log.user.userprofile.country.code }} ff-lg ff-round rank-flag"
             aria-label="{{ member_h_log.user.userprofile.country.code }}"></i>
         {% if member_h_log.personal_record %}
-        <div class="pr-logo-circle"
-            style="background: url('/media/herocommunitylogo-PR-lean.jpg') no-repeat; background-size: cover"></div>
+        <div class="pr-logo-circle pr-pic"></div>
         {% endif %}
         {% if member_h_log.user == profile or superuser %}
         <div class="crud-icons-log">

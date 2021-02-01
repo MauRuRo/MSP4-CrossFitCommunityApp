@@ -287,6 +287,10 @@ label[for='image-clear_id'] {
 }
 
 /* WOKROUT PAGE */
+.pr-pic{
+    background: url('/media/herocommunitylogo-PR-lean.jpg') no-repeat;
+    background-size: cover;
+}
 .btn-none{
     background:none!important;
     border:none!important;
