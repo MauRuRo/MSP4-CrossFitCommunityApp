@@ -141,7 +141,7 @@ def create_profile(request):
                 pid = request.POST.get('client_secret').split('_secret')[0]
                 new_profile = profile_form.save(commit=False)
                 if not new_profile.image:
-                    new_profile.image = f'{settings.MEDIA_URL}noprofpic.jpg'
+                    new_profile.image = 'media/noprofpic.jpg'
                 new_profile.birthdate = datetime.strptime(
                     request.POST.get('date'),
                     "%d %b %Y"
@@ -206,7 +206,7 @@ def edit_profile(request):
         if profile_form.is_valid():
             edited_profile = profile_form.save(commit=False)
             if not edited_profile.image:
-                edited_profile.image = f'{settings.MEDIA_URL}noprofpic.jpg'
+                edited_profile.image = 'media/noprofpic.jpg'
             edited_profile.email = request.user.email
             edited_profile.user = request.user
             edited_profile.save()
