@@ -47,7 +47,6 @@ class StripeWH_Handler:
         """
         intent = event.data.object
         pid = intent.id
-        print("THIS IS THE METADATA: ", intent.metadata)
         userprofile = intent.metadata
         birthdate = datetime.strptime(userprofile.birthdate, "%d %b %Y")
         birthdate = datetime.strftime(birthdate, "%Y-%m-%d")
@@ -56,6 +55,7 @@ class StripeWH_Handler:
         attempt = 1
         while attempt <= 5:
             try:
+                print("TRY IT A COUPLE")
                 new_profile = UserProfile.objects.get(
                     full_name__iexact=userprofile.full_name,
                     town_or_city__iexact=userprofile.town_or_city,
@@ -72,11 +72,14 @@ class StripeWH_Handler:
                 attempt += 1
                 time.sleep(1)
         if profile_exists:
+            print("PROFILE FOUND: SENDING CONF MAIL")
             self._send_confirmation_email(new_profile)
             return HttpResponse(
-                    content=f'Webhook received: {event["type"]} | Success: Verified profile already in database',
+                    content=f'Webhook received: {event["type"]} | \
+                        Success: Verified profile already in database',
                     status=200)
         else:
+            print("PROFILE NOT FOUND, CREATING PROFILE")
             new_profile = None
             try:
                 new_profile = UserProfile.objects.create(
@@ -89,10 +92,12 @@ class StripeWH_Handler:
                     user=user,
                     stripe_pid=pid
                 )
+                print("MADE IT UNTIL HERE")
                 new_profile.image = 'media/noprofpic.jpg'
                 new_profile.save()
                 createDefaultHeroLevels(user)
             except Exception as e:
+                print("THERE WAS AN ERROR, NO PROFILE CREATED")
                 if new_profile:
                     new_profile.delete()
                 return HttpResponse(
@@ -101,7 +106,8 @@ class StripeWH_Handler:
         self._send_confirmation_email(new_profile)
         print("WEBHOOK PAYMENT SUCCEEDED")
         return HttpResponse(
-            content=f'Webhook received: {event["type"]} |  SUCCESS: created profile in webhook',
+            content=f'Webhook received: {event["type"]} | \
+                SUCCESS: created profile in webhook',
             status=200)
 
     def handle_payment_intent_payment_failed(self, event):
