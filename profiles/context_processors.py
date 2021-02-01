@@ -13,7 +13,7 @@ def user_info(request):
             profile = UserProfile.objects.get(user=request.user)
             try:
                 if not profile.image:
-                    profile.image = f'{settings.MEDIA_URL}/noprofpic.jpg'
+                    profile.image = f'{settings.MEDIA_URL}noprofpic.jpg'
                     profile.save()
                 if isinstance(profile.image, str):
                     image = profile.image
@@ -29,7 +29,7 @@ def user_info(request):
                         "location": "group-city"
                         }
             except ValueError:
-                image = f'{settings.MEDIA_URL}/noprofpic.jpg'
+                image = f'{settings.MEDIA_URL}noprofpic.jpg'
                 try:
                     group_s = GroupSelect.objects.get(user=request.user)
                     group_select = group_s.group
@@ -40,7 +40,7 @@ def user_info(request):
                         "location": "group-city"
                         }
         except UserProfile.DoesNotExist:
-            image = f'{settings.MEDIA_URL}/noprofpic.jpg'
+            image = f'{settings.MEDIA_URL}noprofpic.jpg'
             profile = None
     else:
         image = ''
