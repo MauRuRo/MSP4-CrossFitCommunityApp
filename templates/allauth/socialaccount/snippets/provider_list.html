@@ -14,9 +14,9 @@
 {% endfor %}
 {% endif %}
 <li>
-    <div class="social-button">
+    <div class="social-button social-{{provider.id}}">
     <img src="{{MEDIA_URL}}{{provider.name.lower}}.png" alt="{{provider.name}}" class="social-icon"> 
-    <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+    <a title="{{provider.name}}" class="socialaccount_provider social-link-{{provider.id}}" 
      href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
      </div>
 </li>

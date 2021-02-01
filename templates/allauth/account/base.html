@@ -12,3 +12,20 @@
         </div>
     </div>
 {% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+<script type="text/javascript">
+// Code to make sure the whole button div is clickable and not just the anchor.
+    $(document).ready(function(){
+        $(document).on("click", ".social-facebook", function(){
+            window.location.href=$(this).find("a").attr('href');
+            console.log("clicked facebook")
+        })
+        $(document).on("click", ".social-google", function(){
+            window.location.href=$(this).find("a").attr('href');
+            console.log("clicked google")
+        })
+    })
+</script>
+{% endblock %}
