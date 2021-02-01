@@ -75,7 +75,7 @@ var url = '/profile/cache_payment_create_profile/';
             $('#submit-button').attr('disabled', false);
         } else {
             if (result.paymentIntent.status === 'succeeded') {
-                form.submit();
+                // form.submit();
             }
     }
   });
@@ -84,42 +84,3 @@ var url = '/profile/cache_payment_create_profile/';
     location.reload();
 })
 });
-
-
-// userprofile:{
-//                 "user": $("#user-id-no").data(),
-//                 "full_name": $("#id_full_name").val(),
-//                 "town_or_city": $("#id_town_or_city").val(),
-//                 "country": $("#id_country").val(),
-//                 "gender": $("#id_gender").val(),
-//                 "weight": $("#id_weight").val(),
-//                 "birthdate": $("#date").val(),
-//                 "image_name": file
-
-// //   $('#create-profile-form').fadeToggle(100);
-// //   $('#loading-overlay').fadeToggle(100);
-//     stripe.confirmCardPayment(clientSecret, {
-//         payment_method: {
-//             card: card,
-//             billing_details: {
-//                 name: $("#id_full_name").val()
-//                     },
-//             }
-//         }
-//     }).then(function(result) {
-//         if (result.error) {
-//             var errorDiv = document.getElementById('card-errors');
-//             var html = `
-//                 <span class="icon" role="alert">
-//                 <i class="fas fa-times"></i>
-//                 </span>
-//                 <span>${result.error.message}</span>`;
-//             $(errorDiv).html(html);
-//             card.update({ 'disabled': false});
-//             $('#submit-button').attr('disabled', false);
-//         } else {
-//             if (result.paymentIntent.status === 'succeeded') {
-//                 form.submit();
-//             }
-//         }
-//     });

@@ -32,7 +32,6 @@ class StripeWH_Handler:
             [cust_email]
         )
 
-
     def handle_event(self, event):
         """
         Handle a generic/unknown/unexpected webhook event
@@ -45,6 +44,7 @@ class StripeWH_Handler:
         """
         Handle the payment_intent.succeeded webhook from Stripe
         """
+        print("GOING IN TO THE SUCCESS HANDLER")
         intent = event.data.object
         pid = intent.id
         userprofile = intent.metadata
