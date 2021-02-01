@@ -137,7 +137,7 @@ AUTHENTICATION_BACKENDS = [
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-SITE_ID = 1
+SITE_ID = 4
 
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -151,12 +151,9 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 5px;
     background-color: rgba(0,0,0,0)!important;
 }
-/* .input-group{
-    border-radius:5px;
-}
 .rounded-1-imp{
     border-radius: 5px!important;
-} */
+}
 .btn-file input[type="file"] {
     position: absolute;
     top: 0;
