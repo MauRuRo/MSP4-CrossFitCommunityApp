@@ -47,6 +47,8 @@ form.addEventListener('submit', function(e) {
     e.preventDefault();
     card.update({'disabled': true});
     $('#submit-button').attr('disabled', true);
+    $('#loading-overlay').fadeToggle(100);
+    $('#loading-overlay').css("display", "block");
 
   var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
   var postData = {
@@ -73,9 +75,11 @@ var url = '/profile/cache_payment_create_profile/';
             $(errorDiv).html(html);
             card.update({'disabled': false});
             $('#submit-button').attr('disabled', false);
+            $('#loading-overlay').fadeToggle(100);
+            $('#loading-overlay').css("display", "block");
         } else {
             if (result.paymentIntent.status === 'succeeded') {
-                // form.submit();
+                form.submit();
             }
     }
   });

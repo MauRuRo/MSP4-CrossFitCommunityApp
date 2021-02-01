@@ -44,7 +44,6 @@ class StripeWH_Handler:
         """
         Handle the payment_intent.succeeded webhook from Stripe
         """
-        print("GOING IN TO THE SUCCESS HANDLER")
         intent = event.data.object
         pid = intent.id
         userprofile = intent.metadata
@@ -55,7 +54,6 @@ class StripeWH_Handler:
         attempt = 1
         while attempt <= 5:
             try:
-                print("TRY IT A COUPLE")
                 new_profile = UserProfile.objects.get(
                     full_name__iexact=userprofile.full_name,
                     town_or_city__iexact=userprofile.town_or_city,
@@ -72,14 +70,12 @@ class StripeWH_Handler:
                 attempt += 1
                 time.sleep(1)
         if profile_exists:
-            print("PROFILE FOUND: SENDING CONF MAIL")
             self._send_confirmation_email(new_profile)
             return HttpResponse(
                     content=f'Webhook received: {event["type"]} | \
                         Success: Verified profile already in database',
                     status=200)
         else:
-            print("PROFILE NOT FOUND, CREATING PROFILE")
             new_profile = None
             try:
                 new_profile = UserProfile.objects.create(
@@ -92,12 +88,10 @@ class StripeWH_Handler:
                     user=user,
                     stripe_pid=pid
                 )
-                print("MADE IT UNTIL HERE")
                 new_profile.image = 'media/noprofpic.jpg'
                 new_profile.save()
                 createDefaultHeroLevels(user)
             except Exception as e:
-                print("THERE WAS AN ERROR, NO PROFILE CREATED")
                 if new_profile:
                     new_profile.delete()
                 return HttpResponse(
