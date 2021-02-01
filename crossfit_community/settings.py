@@ -128,10 +128,11 @@ SOCIALACCOUNT_PROVIDERS = \
       'LOCALE_FUNC': lambda request: 'kr_KR',
       'VERIFIED_EMAIL': False,
       'VERSION': 'v3.2'
-      }, 'google': {
-            'SCOPE': ['email'],
-            'AUTH_PARAMS': {'access_type': 'online'}
-            }
+      },
+    #   'google': {
+    #         'SCOPE': ['email'],
+    #         'AUTH_PARAMS': {'access_type': 'online'}
+    #         }
      }
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
