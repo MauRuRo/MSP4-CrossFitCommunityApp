@@ -1023,7 +1023,6 @@ def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women
     ft_seconds = True
     group_s = getGroup(request)
     if group_s["custom"] == "true" or group_s["age"] == "true" or group_s["location"] != "group-global":
-        print("SELECTED GROUP")
         selected_group = Log.objects.all()
         if wod.workout_type == 'FT':
             all_logs_rank = selected_group.filter(
@@ -1065,7 +1064,6 @@ def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women
             user__userprofile__gender="M"
             )
     else:
-        print("GLOBAL SELECTED")
         all_logs_rank_men = men_logs
         all_logs_rank_women = women_logs
     if request.user.userprofile.gender == "M":
