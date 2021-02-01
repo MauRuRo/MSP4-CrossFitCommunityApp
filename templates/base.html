@@ -85,7 +85,7 @@
                 </nav>
             </div>
             <div class="col-6 col-lg-3 d-flex justify-content-center" id="profile-circle-container">
-                <a href="{% url 'home' %}">
+                <a href="{% if request.user.is_authenticated %}{% url 'profile' %}{% else %}#{% endif %}">
                     <div id="profile-circle" {% if request.user.is_authenticated == False %} class="logopic" {% else %} style="background: url({{ image }}) no-repeat; background-size: cover" {% endif %}>
                     </div>
                 </a>
@@ -96,10 +96,6 @@
                 <div>
                     <div id="emblem-circle" class="logopic">
                         <div id="arrow-emblem" class="toast" data-autohide="true" data-delay="3000"></div>
-                    </div>
-                    <div id="hero-co-info">
-                        <p>This is a block with a lot of information that will appear upon hover over the logo emblem. It will tell about the origins of the site and its creator.
-                        </p>
                     </div>
                 </div>
                 {% endif %}
@@ -131,7 +127,16 @@
 
     {% block content %}
     {% endblock %}
-
+    <div id="hero-co-info">
+        <div class="container">
+            <div class="row justify-content-center row-site-info">
+                <div class="col-10">
+                    <p>This is a block with a lot of information that will appear upon hover over the logo emblem. It will tell about the origins of the site and its creator.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div hidden id="user-id-no" data="{{ active_user.pk }}"></div>
     <div hidden id="group-select-data" data="{{ group_select }}"></div>
 

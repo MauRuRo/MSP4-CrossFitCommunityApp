@@ -26,4 +26,25 @@
             $(this).addClass("active");
         }
     });
+    let mouseleave_cons = true
+    $("#emblem-circle, .logopic").on("mouseenter", function(){
+        $("#hero-co-info").fadeIn(500)
+    })
+    $("#emblem-circle, .logopic").on("mouseleave", function(){
+        if (mouseleave_cons == true){
+            $("#hero-co-info").hide()
+        }
+    })
+    $("#emblem-circle, .logopic").on("click", function(){
+        if (mouseleave_cons == false){
+            mouseleave_cons = true
+            $("hero-co-info").hide()
+            $("#emblem-circle").removeClass("emblem-circle-hover")
+
+        }else{
+            mouseleave_cons = false
+            $("#hero-co-info").fadeIn(500)
+            $("#emblem-circle").addClass("emblem-circle-hover")
+        }
+    })
 });
