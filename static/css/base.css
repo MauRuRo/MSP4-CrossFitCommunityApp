@@ -121,6 +121,16 @@ ul.socialaccount_providers {
     background-size: cover;
     z-index: 999;
 }
+#emblem-circle:hover {
+    margin-top:25px;
+    height:200px;
+    width:200px;
+    min-width: 120px;
+    border-radius:50%;
+    border: 3px solid black;
+    background-size: cover;
+    z-index: 999;
+}
 .content-block {
     margin-top: 15px;
 }
