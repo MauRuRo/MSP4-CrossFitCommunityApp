@@ -122,14 +122,12 @@ ul.socialaccount_providers {
     z-index: 999;
 }
 #emblem-circle:hover {
-    margin-top:25px;
-    height:200px;
-    width:200px;
-    min-width: 120px;
-    border-radius:50%;
-    border: 3px solid black;
-    background-size: cover;
-    z-index: 999;
+    top: 25px;
+    margin-left: -200px;
+    margin-top: 0;
+    height: 200px;
+    width: 200px;
+    transition: width .5s, height .5s, top .5s, margin-left .5s, margin-top .5s;
 }
 .content-block {
     margin-top: 15px;
@@ -1101,6 +1099,11 @@ color: red;
         margin-left:-23px;
         height:40px;
         width:40px;
+    }
+    #emblem-circle:hover{
+        margin-left: -120px;
+        height: 120px;
+        width: 120px;
     }
     .page-content{
         margin-top:90px;

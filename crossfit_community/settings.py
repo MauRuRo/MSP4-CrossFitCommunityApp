@@ -86,7 +86,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # required by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',  # access the MEDIA_URL as template-variable in all templates, necessary?
+                'django.template.context_processors.media',  # access the MEDIA_URL as template-variable
+                'django.core.context_processors.static'. # access the STATIC_URL as template-variable
                 'profiles.context_processors.user_info',  # processor to pass user profile image and possible other user info to all templates
             ],
             'builtins': [
