@@ -1,4 +1,7 @@
 /* GENERAL */
+/* html {
+    background-color: black;
+} */
 body {
     background: url('/media/chipboard.png') repeat fixed;
     background-size: 700px 400px;
@@ -175,7 +178,7 @@ ul.socialaccount_providers {
     border: 6px ridge lightgrey;
     border-radius: 5px;
     background-color: white;
-    box-shadow: inset 0px 0px 7px #000;
+    /* box-shadow: inset 0px 0px 7px #000; */
     margin-bottom: 15px;
 }
 .hide-it{
@@ -446,7 +449,7 @@ label[for='image-clear_id'] {
     z-index:998!important;
     width: calc(100% + 16px);
     margin-left: -8px;
-    box-shadow: inset 6px 6px 7px -6px #000, inset -4px 5px 7px -4px #000;
+    /* box-shadow: inset 6px 6px 7px -6px #000, inset -4px 5px 7px -4px #000; */
 }
 .group-members,
 .log-history,
@@ -1024,6 +1027,17 @@ linked to a date input field that is formatted properly. */
 .block-levels{
     max-height:none!important;
     overflow:none!important;
+}
+.shadow-div{
+    box-shadow: inset 0px 0px 7px #000;
+    position:absolute;
+    height:calc(100% - 27px);
+    width:calc(100% - 42px);
+    top:6px;
+    left:0;
+    pointer-events: none;
+    margin-left:21px;
+    z-index: 999;
 }
 .hl-head{
     font-size: 1.3rem;

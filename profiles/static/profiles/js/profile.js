@@ -49,6 +49,7 @@ $(document).ready(function () {
                 $('[data-toggle="popover"]').addClass('hide-it');
                 $("#level-loader").hide()
                 $("#level-block").html(data.new_levels_html)
+                $("#level-block").prepend("<div class='shadow-div'></div>")
                 updateLevelCSS()
                 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="popover"]'))
                 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
