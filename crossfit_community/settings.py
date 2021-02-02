@@ -255,5 +255,5 @@ else:
 
 # Cronjob to update statistics for inactive users. Unable to test in Gitpod environment.
 CRONJOBS = [
-    ('22 * * * *', 'home.cron.cron_check_levels')
+    ('27 * * * *', 'home.cron.cron_check_levels')
 ]
