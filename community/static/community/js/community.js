@@ -405,8 +405,9 @@ $(document).ready(function () {
                 $(".fa-edit-profile").closest(".row").remove()
                 $(".user-info-header").css('margin-top', '8px')
                 updateLevelCSS()
-                $(".hl-container").prepend('<div class="row justify-content-end"><i class="fas fa-times" id="close-hl"></i></div>')
-                $("#close-hl").css('margin-top', '8px').css('margin-bottom', '-18px')
+                $("#close-hl").show()
+                // $(".hl-container").prepend('<div class="row justify-content-end"><i class="fas fa-times" id="close-hl"></i></div>')
+                // $("#close-hl").css('margin-top', '8px').css('margin-bottom', '-18px')
                 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="popover"]'))
                 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
                     return new bootstrap.Popover(popoverTriggerEl)
@@ -471,8 +472,9 @@ $(document).ready(function () {
                 $("#level-loader").hide()
                 $(".hl-container").remove()
                 $(".block-main").append(data.new_levels_html)
-                $(".hl-container").prepend('<div class="row justify-content-end"><i class="fas fa-times" id="close-hl"></i></div>')
-                $("#close-hl").css('margin-top', '8px').css('margin-bottom', '-18px')
+                $("#close-hl").show()
+                // $(".hl-container").prepend('<div class="row justify-content-end"><i class="fas fa-times" id="close-hl"></i></div>')
+                // $("#close-hl").css('margin-top', '8px').css('margin-bottom', '-18px')
                 updateLevelCSS()
                 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="popover"]'))
                 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
@@ -541,7 +543,8 @@ $(document).ready(function () {
         setGroupSelection()
         pagec = $(".page-content").offset().top
         $('html, body').animate({
-            scrollTop: ($(".block-stats").offset().top - pagec - 70)
+            // scrollTop: ($(".block-stats").offset().top - pagec - 70)
+            scrollTop: 0
         }, 500)
     })
 
@@ -676,7 +679,8 @@ $(document).ready(function () {
         $("#members-title").animate({ fontSize: "2rem" }, 500)
         $("#members-title").animate({ fontSize: "1.5rem" }, 500)
         $('html, body').animate({
-            scrollTop: ($(".block-members").offset().top - pagec - 70)
+            // scrollTop: ($(".block-members").offset().top - pagec - 70)
+            scrollTop: 0
         }, 800)
     })
 
@@ -698,7 +702,8 @@ $(document).ready(function () {
         getMemberInfo(memberid)
         pagec = $(".page-content").offset().top
         $('html, body').animate({
-            scrollTop: ($(".block-stats").offset().top - pagec - 70)
+            // scrollTop: ($(".block-stats").offset().top - pagec - 70)
+            scrollTop: 0
         }, 500)
     })
     // Click to get admin info and levels.
