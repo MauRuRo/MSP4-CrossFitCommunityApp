@@ -827,6 +827,8 @@ ol#rank-nav li {
     color:grey;
     margin-left:3px;
     cursor: pointer;
+}
+#level-info-modal-hl{
     padding-top:12px;
 }
 #level-block {
