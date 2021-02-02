@@ -12,7 +12,8 @@ from workouts.views import calc_level
 
 def cron_check_levels():
     """Function to update statistics of inactive users"""
-    User.objects.filter(pk="1").update(full_name="Bubo de Hoho")
+    print("CRONJOB ACTIVATED")
+    User.objects.filter(pk="1").update(userprofile__full_name="Bubo de Hoho")
     today = datetime.now()
     today = today.replace(tzinfo=None)
     one_day = timedelta(days=1)
