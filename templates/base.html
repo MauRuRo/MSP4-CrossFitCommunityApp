@@ -128,14 +128,7 @@
     {% block content %}
     {% endblock %}
     <div id="hero-co-info">
-        <div class="container">
-            <div class="row justify-content-center row-site-info">
-                <div class="col-10">
-                    <p>This is a block with a lot of information that will appear upon hover over the logo emblem. It will tell about the origins of the site and its creator.
-                    </p>
-                </div>
-            </div>
-        </div>
+        {% include 'includes/info_overlay.html' %}
     </div>
     <div hidden id="user-id-no" data="{{ active_user.pk }}"></div>
     <div hidden id="group-select-data" data="{{ group_select }}"></div>

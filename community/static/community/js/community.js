@@ -477,6 +477,9 @@ $(document).ready(function () {
                     return new bootstrap.Popover(popoverTriggerEl)
                 })
                 active = false
+                if ($(".block-main").hasClass("block-levels") == false){
+                $(".block-main").addClass("block-levels")
+                }
             },
             error: function () {
                 console.log("Failed Updating Levels " + user_id)
@@ -534,6 +537,10 @@ $(document).ready(function () {
             $(this).addClass("selected-group")
         }
         setGroupSelection()
+        pagec = $(".page-content").offset().top
+        $('html, body').animate({
+            scrollTop: ($(".block-stats").offset().top - pagec - 70)
+        }, 500)
     })
 
     // Edit Group
@@ -687,6 +694,10 @@ $(document).ready(function () {
     $(document).on("click", ".card-col", function () {
         let memberid = $(this).closest(".rank-card").attr('id')
         getMemberInfo(memberid)
+        pagec = $(".page-content").offset().top
+        $('html, body').animate({
+            scrollTop: ($(".block-stats").offset().top - pagec - 70)
+        }, 500)
     })
     // Click to get admin info and levels.
     $(document).on("click", ".admin-group", function () {
@@ -698,6 +709,7 @@ $(document).ready(function () {
     $(document).on("click", "#close-hl, .user-info-header", function () {
         $(".hl-container:visible, #user-info-block:visible").remove()
         $("#group-select-div, #group-stats-div").show()
+        $(".block-main").removeClass("block-levels")
     })
 
     // EXECUTE FUNCTIONS ON DOCUMENT READ

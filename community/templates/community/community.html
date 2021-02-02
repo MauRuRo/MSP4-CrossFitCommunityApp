@@ -7,12 +7,12 @@
 {% block content %}
 <div class="container-fluid page-content">
     <div class="row h-100 align-items-center">
-        <div class="col-sm-6 col-lg-3 content-block order-2 order-sm-3 align-self-start">
+        <div class="col-sm-6 col-lg-3 content-block order-1 order-sm-3 align-self-start">
             <div class="fillblock p-2 block-stats">
                 {% include 'community/includes/groupstats.html' %}
             </div>
         </div>
-        <div class="col-lg-6 content-block align-self-start order-1 order-lg-2">
+        <div class="col-lg-6 content-block align-self-start order-2 order-lg-2">
             <div class="fillblock p-2 block-main">
                 <div id="group-select-div">{% include 'community/includes/groupmain.html' %}</div>
                 <div id="group-make-div" hidden>{% include 'community/includes/makegroup.html' %}</div>
@@ -20,7 +20,9 @@
         </div>
         <div class="col-sm-6 col-lg-3 content-block order-3 order-sm-2 order-lg-1 align-self-start">
             <div class="fillblock p-2 block-members">
-                {% include 'community/includes/groupmembers.html' %}
+                <div class="comm-members-div">
+                    {% include 'community/includes/groupmembers.html' %}
+                </div>
             </div>
         </div>
     </div>

@@ -32,7 +32,19 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(23, 162, 184, .85);
     z-index: 9999;
 }
-
+.t-center{
+    text-align:center;
+}
+#info-overlay-h{
+    position:absolute;
+    right:0;
+}
+#info-overlay-text{
+    text-align: justify;
+}
+#close-info-overlay{
+    cursor: pointer;
+}
 .loading-spinner {
     display: flex;
     align-items: center;
@@ -425,7 +437,6 @@ label[for='image-clear_id'] {
 #block-3 {
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height: none;
     max-height: 400px;
     padding: 0 8px 8px 8px!important;
 }
@@ -1007,8 +1018,12 @@ linked to a date input field that is formatted properly. */
 .block-members{
     padding-top: 0!important;
     max-height:400px;
-    overflow:scroll;
+    overflow-y:scroll;
     overflow-x:hidden;
+}
+.block-levels{
+    max-height:none!important;
+    overflow:none!important;
 }
 .hl-head{
     font-size: 1.3rem;

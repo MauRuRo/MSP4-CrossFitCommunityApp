@@ -41,11 +41,11 @@
             $("#hero-co-info").hide()
         }
     })
-    $("#emblem-circle, .logopic").on("click", function(){
+    $("#emblem-circle, .logopic, #close-info-overlay").on("click", function(){
         if (touchdevice == false){
             if (mouseleave_cons == false){
                 mouseleave_cons = true
-                $("hero-co-info").hide()
+                $("#hero-co-info").hide()
                 $("#emblem-circle").removeClass("emblem-circle-hover")
 
             }else{
@@ -55,7 +55,7 @@
             }
         }
     })
-    $("#emblem-circle, .logopic").on("touchstart", function(e){
+    $("#emblem-circle, .logopic, #close-info-overlay").on("touchstart", function(e){
         e.preventDefault()
         touchdevice = true
         if (tapped == false){
