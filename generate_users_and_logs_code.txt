@@ -170,3 +170,20 @@ def leveler(request):
     #     hero_l.save()
     print("DONE")
     return HttpResponse()
+
+
+def removeOldLogs():
+    logs = Log.objects.all().order_by("-date")
+    workouts = Workout.objects.all()
+    users = User.objects.all()[200:520]
+    numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    for user in users:
+        if user.username[-1] in numbers:
+            print(user)
+            user.delete()
+        # for workout in workouts:
+        #     userlogs = logs.filter(user=user, workout=workout)
+        #     for ulog in userlogs:
+        #         if ulog != userlogs[0]:
+        #             ulog.delete()
+    print("DONE")

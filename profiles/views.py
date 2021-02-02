@@ -407,3 +407,5 @@ def getLevels(user, wod):
             "result": user_result
             }
         return data
+
+
