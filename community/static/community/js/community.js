@@ -167,8 +167,8 @@ $(document).ready(function () {
             success: function (data) {
                 $(".block-stats").html(data.stats_html)
                 $(".block-stats").prepend("<div class='shadow-div'></div>")
-                $(".block-members").html(data.members_html)
-                $(".block-members").prepend("<div class='shadow-div'></div>")
+                $(".comm-members-div").html(data.members_html)
+                // $(".block-members").prepend("<div class='shadow-div'></div>")
                 if (data.has_next == false) {
                     $("#members-title").data('page', 'x')
                     $(".group-dir-down").remove()
