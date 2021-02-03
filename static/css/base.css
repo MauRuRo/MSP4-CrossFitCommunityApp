@@ -1,7 +1,5 @@
 /* GENERAL */
-/* html {
-    background-color: black;
-} */
+
 body {
     background: url('/media/chipboard.png') repeat fixed;
     background-size: 700px 400px;
@@ -47,6 +45,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 #close-info-overlay{
     cursor: pointer;
+}
+.creator-credits{
+    text-decoration: none;
+    color:grey;
+    cursor:pointer;
+}
+.creator-credits:hover{
+    text-decoration:none;
+    color: white;
+}
+.cc-div{
+    text-align: center;
+    margin-bottom:30px;
 }
 .loading-spinner {
     display: flex;
@@ -1178,6 +1189,9 @@ color: red;
     }
     .page-content{
         margin-top:90px;
+    }
+    #info-overlay-h{
+    top:-40px;
     }
 }
 
