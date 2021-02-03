@@ -57,8 +57,11 @@ h1, h2, h3, h4, h5, h6 {
     text-shadow:1px 1px 1px black;
 }
 .cc-div{
+    /* position:sticky;
+    bottom:0;
+    width:100%; */
     text-align: center;
-    margin-bottom:30px;
+    margin-bottom:15px;
 }
 .loading-spinner {
     display: flex;
@@ -95,9 +98,9 @@ ul.socialaccount_providers {
 }
 .page-content{
     margin-top:150px;
-    /* height: calc(100vh - 150px); */
+    min-height: calc(100vh - 150px - 42px);
     padding-top: 75px;
-    padding-bottom: 25px;
+    padding-bottom: 15px;
 }
 .navbar {
     text-transform: uppercase;
@@ -1165,6 +1168,7 @@ color: red;
     .page-content {
     padding-top: 50px;
     margin-top:90px;
+    min-height: calc(100vh - 90px - 42px);
     }
     .navbar {
         margin-top:25px;
