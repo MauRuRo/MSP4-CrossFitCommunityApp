@@ -54,6 +54,7 @@ h1, h2, h3, h4, h5, h6 {
 .creator-credits:hover{
     text-decoration:none;
     color: white;
+    text-shadow:1px 1px 1px black;
 }
 .cc-div{
     text-align: center;
@@ -94,9 +95,9 @@ ul.socialaccount_providers {
 }
 .page-content{
     margin-top:150px;
-    height: calc(100vh - 150px);
+    /* height: calc(100vh - 150px); */
     padding-top: 75px;
-    padding-bottom: 75px;
+    padding-bottom: 25px;
 }
 .navbar {
     text-transform: uppercase;
@@ -1163,6 +1164,7 @@ color: red;
     }
     .page-content {
     padding-top: 50px;
+    margin-top:90px;
     }
     .navbar {
         margin-top:25px;
@@ -1186,9 +1188,6 @@ color: red;
         margin-left:-23px;
         height:40px;
         width:40px;
-    }
-    .page-content{
-        margin-top:90px;
     }
     #info-overlay-h{
     top:-40px;
