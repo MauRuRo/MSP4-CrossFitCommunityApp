@@ -50,6 +50,7 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: none;
     color:grey;
     cursor:pointer;
+    padding: 0 10px;
 }
 .creator-credits:hover{
     text-decoration:none;
@@ -57,11 +58,11 @@ h1, h2, h3, h4, h5, h6 {
     text-shadow:1px 1px 1px black;
 }
 .cc-div{
-    /* position:sticky;
-    bottom:0;
-    width:100%; */
     text-align: center;
     margin-bottom:15px;
+}
+.breakline{
+    display:inline-block;
 }
 .loading-spinner {
     display: flex;
@@ -160,14 +161,6 @@ ul.socialaccount_providers {
     width: 200px!important;
     transition: width .5s, height .5s, top .5s, margin-left .5s, margin-top .5s;
 }
-/* #emblem-circle:hover {
-    top: 25px;
-    margin-left: -200px;
-    margin-top: 0;
-    height: 200px;
-    width: 200px;
-    transition: width .5s, height .5s, top .5s, margin-left .5s, margin-top .5s;
-} */
 #hero-co-info {
     display: none;
     position: fixed;
