@@ -450,6 +450,9 @@ label[for='image-clear_id'] {
 #logform-div {
     display:none;
 }
+#logform-wod-type {
+    color:grey;
+}
 #block-1,
 #block-3 {
     overflow-y: scroll;
@@ -471,6 +474,10 @@ label[for='image-clear_id'] {
     padding-left:0px;
     font-size:0.75rem;
     list-style: none;
+}
+#ranking-wod-name-title{
+        margin: -10px 0 2px 0;
+        color:grey;
 }
 .rank-name-spacing a {
     text-decoration: none;

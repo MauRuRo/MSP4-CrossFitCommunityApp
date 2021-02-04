@@ -121,6 +121,32 @@ $(document).ready(function() {
 
     // DECLARE FUNCTIONS
 
+    // Set logform for workout type.
+    function setLogFormType(wodtype, wodname) {
+        if (wodtype == "default") {
+            wodtype = $("#wod-id-no").data("type")
+        }
+        if (wodname == "default") {
+            wodname = $("#wod-id-no").data("name")
+        }
+        if (wodtype == "FT" || wodtype == "ft-log" ){
+            $("#logform-wod-type").text("For Time Result:")
+            $("#id_ft_result").show()
+            $("#id_amrap_result").hide()
+            $("#id_mw_result").hide()
+        }else if (wodtype == "AMRAP" || wodtype == "amrap-log") {
+            $("#logform-wod-type").text("AMRAP Result:")
+            $("#id_ft_result").hide()
+            $("#id_amrap_result").show()
+            $("#id_mw_result").hide()
+        }else{
+            $("#logform-wod-type").text("Max Weight Result:")
+            $("#id_ft_result").hide()
+            $("#id_amrap_result").show()
+            $("#id_mw_result").hide()
+        }
+        $("#logform-wod-title").text(wodname)
+    }
     // Format result strings.
     function formatResult() {
         $('.r-log, .h-log').each(function(){
@@ -775,6 +801,7 @@ $(document).ready(function() {
         $('#id_ft_result').val("")
         $('#id_amrap_result').val("")
         $('#id_mw_result').val("")
+        setLogFormType("default", "default")
         initial_date = $('#date').attr('data-initial')
         $("#date").val(initial_date)
         $('#id_rx').prop('checked', true)
@@ -1079,6 +1106,12 @@ $(document).ready(function() {
         let log_id = $(this).closest('.rank-card').prev('.m-log-id').attr('data')
         $("#log-to-edit-id").html(log_id)
         let info = $(this).closest('.rank-card').children('.card-col')
+        let wodname
+        if  ($(this).closest("ol").hasClass("log-history") == true){
+            wodname = info.find(".his-wod-name:first").children("strong").text()
+        } else{
+            wodname = "default"
+        }
         let result = info.find('.r-log:first, .h-log:first')
         let result_type = result.attr('class').split(" ")[0]
         let result_log= result.text()
@@ -1102,6 +1135,7 @@ $(document).ready(function() {
         $("#logform-edit-button").show().removeAttr('hidden')
         $('#logform-div').toggle()
         $('#log-ranking-div').toggle()
+        setLogFormType(result_type, wodname)
     })
 
     // Click to cancel logging and show ranking module.

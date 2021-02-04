@@ -196,44 +196,17 @@ def workouts(request, wod_id):
                 all_women_today_index += 1
         # Get best and worst results for workout
         # to set initial level slider value.
-        data = setInitialSliderLevel(request, wod, lapse_date, rank_result, all_logs_rank_men, all_logs_rank_women)
+        data = setInitialSliderLevel(
+            request,
+            wod,
+            lapse_date,
+            rank_result,
+            all_logs_rank_men,
+            all_logs_rank_women
+            )
         initial_slider_level = data["init"]
         best = data["best"]
         worst = data["worst"]
-
-        # if request.user.userprofile.gender == "M":
-        #     if all_logs_rank_men.count() > 0:
-        #         best = getattr(all_logs_rank_men[0], rank_result)
-        #         worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
-        #         worst_rank = rlistmenall[-1][1]
-        #         med_count = round(all_logs_rank_men.count() / 2)
-        #         med = getattr(all_logs_rank_men[med_count], rank_result)
-        #     else:
-        #         worst_rank = "none"
-        #         best = 1
-        #         worst = 1
-        #         med = 1
-        #         ft_seconds = False
-        # else:
-        #     if all_logs_rank_women.count() > 0:
-        #         best = getattr(all_logs_rank_women[0], rank_result)
-        #         worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
-        #         worst_rank = rlistwomenall[-1][1]
-        #         med_count = round(all_logs_rank_women.count() / 2)
-        #         med = getattr(all_logs_rank_women[med_count], rank_result)
-        #     else:
-        #         worst_rank = "none"
-        #         best = 1
-        #         worst = 1
-        #         med = 1
-        #         ft_seconds = False
-        # if wod.workout_type == "FT" and ft_seconds:
-        #     best = best.seconds
-        #     worst = worst.seconds
-        #     med = med.seconds
-        # initial_slider_level = med
-
-
         # Determine the page on which the user's log
         # is so it will render this page on view load.
         all_women_page = math.ceil(all_women_index_user / 25)

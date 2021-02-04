@@ -1,5 +1,6 @@
 <div class="block-header justify-content-center">
-    <h4 class="block-title">
+    <h4 class="block-title" id="logform-wod-title">{{ wod.workout_name }}</h4>
+    <h6 class="block-title" id="logform-wod-type">
         {% if wod.workout_type == 'FT' %}
         For Time Result:
         {% elif wod.workout_type == 'AMRAP' %}
@@ -7,18 +8,21 @@
         {% else %}
         Max Weight Result:
         {% endif %}
-    </h4>
+    </h6>
 </div>
 <form id="log-workout-form" method="post" action="{% url 'workouts' wod.id %}">
     {% csrf_token %}
     <div class="logfield" id="log-block">
-        {% if wod.workout_type == 'FT' %}
+        {{ form_log.ft_result|as_crispy_field }}
+        {{ form_log.amrap_result|as_crispy_field }}
+        {{ form_log.mw_result|as_crispy_field }}
+        <!-- {% if wod.workout_type == 'FT' %}
         {{ form_log.ft_result|as_crispy_field }}
         {% elif wod.workout_type == 'AMRAP' %}
         {{ form_log.amrap_result|as_crispy_field }}
         {% else %}
         {{ form_log.mw_result|as_crispy_field }}
-        {% endif %}
+        {% endif %} -->
     </div>
     <div class="logfield">
         <input type="hidden" name="{{ form_log.rx.name }}" value="False" />

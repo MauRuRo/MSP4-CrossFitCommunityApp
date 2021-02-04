@@ -543,7 +543,6 @@ $(document).ready(function () {
         setGroupSelection()
         pagec = $(".page-content").offset().top
         $('html, body').animate({
-            // scrollTop: ($(".block-stats").offset().top - pagec - 70)
             scrollTop: 0
         }, 500)
     })

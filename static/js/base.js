@@ -26,6 +26,7 @@
             $(this).addClass("active");
         }
     });
+    // Code for hover and click effect for emblem info layover: also for touch devices.
     let mouseleave_cons = true
     let touchdevice = false
     let tapped = true
@@ -68,14 +69,4 @@
             $("#emblem-circle").addClass("emblem-circle-hover")
         }
     })
-
-    // let height = $(window).height()
-    // console.log(height)
-    // let credits_os = $("#cc-div-base").offset().top
-    // console.log(credits_os)
-    // let h_diff = height - credits_os - 42
-    // console.log(h_diff)
-    // set_diff = h_diff.toString() + "px"
-    // console.log(set_diff)
-    // $("#cc-div-base").css('margin-top', set_diff)
 });
