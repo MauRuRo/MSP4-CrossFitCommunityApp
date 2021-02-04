@@ -1,0 +1,9 @@
+Hey {{ log_name }}!
+
+{{ comment_name }} just commented on your {{ wod_name }} performance on {{ wod_date }}!
+
+{{ comment_name }}: "{{ message }}"
+
+LET'S GO!
+
+Your Hero Community

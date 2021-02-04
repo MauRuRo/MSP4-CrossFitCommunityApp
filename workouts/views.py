@@ -15,6 +15,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from decimal import Decimal
 from community.views import getGroupSelection, getGroup
 from profiles.views import cat_levels_info, getLevels
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
 import json
 import math
 import statistics
@@ -555,6 +558,11 @@ def commentMember(request):
                     "message": form_data["message"],
                     "new_comment_id": new_comment_id
                     }
+                send_comment_notification(
+                    request.user,
+                    request.POST["log_id"],
+                    request.POST["member_comment"]
+                    )
                 return HttpResponse(
                     json.dumps(data),
                     content_type='application/json'
@@ -1076,3 +1084,32 @@ def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women
         'worst': worst
         }
     return data
+
+
+def send_comment_notification(user, logid, message):
+    """ Send th user comment notification email"""
+    comment_name = user.userprofile.full_name
+    log_user = Log.objects.get(id=logid).user
+    if log_user == user:
+        return
+    log_name = log_user.userprofile.full_name
+    wod_name = Log.objects.get(id=logid).workout.workout_name
+    wod_date = Log.objects.get(id=logid).date
+    email = log_user.email
+    subject = "Somebody commented on your performance!"
+    body = render_to_string(
+        'workouts/messages/comment_notification.txt',
+        {
+            'log_name': log_name,
+            'comment_name': comment_name,
+            'message': message,
+            'wod_name': wod_name,
+            'wod_date': wod_date
+        }
+        )
+    send_mail(
+        subject,
+        body,
+        settings.DEFAULT_FROM_EMAIL,
+        [email]
+    )

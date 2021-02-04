@@ -27,7 +27,7 @@
         <i class="fa fa-calendar-o">
         </i>
        </div>
-            <input class="form-control" id="date" name="date" data-initial="{{ date_initial }}" value="{{ date_initial }}" type="text"/ required>
+            <input class="form-control" id="date" name="date" data-initial="{{ date_initial }}" value="{{ date_initial }}" type="text"/ autocomplete="off" required>
       </div>
      </div>
 </div>
@@ -46,9 +46,9 @@
         var date_input=$('input[name="date"]'); //our date input has the name "date"
         var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
         date_input.datepicker({
-            // format: 'dd/mm/yyyy',
             format: 'dd M yyyy',
-            container: container,
+            // container: container,
+            container: $(".bootstrap-iso").find(".input-group"),
             todayHighlight: false,
             autoclose: true,
             maxDate: new Date(),
@@ -58,41 +58,40 @@
             $('#date').datepicker('setDate', new Date(2000, 0, 1));
             $('#date').datepicker('update');
             $('#date').val('');
-            $('#date').datepicker( "option", "maxDate", '0' )
-        }
-        // Validate date input
-        $("#date").change(function(){
-            let tdate = new Date()
-            let tday = tdate.getDate()
-            let tmonth= tdate.getMonth()+1
-            let tyear = tdate.getFullYear()
-            let idate = $("#date").val()
-            let iday = idate.split(" ")[0]
-            let imonth = idate.split(" ")[1]
-            let iyear = idate.split(" ")[2]
-            let s_month = {Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12}
-            imonth = s_month[imonth]
-            if (iday[0] == "0"){
-                iday = iday.slice(1)
-            }
-            iday = parseInt(iday)
-            imonth = parseInt(imonth)
-            iyear = parseInt(iyear)
-            tday = parseInt(tday)
-            tmonth = parseInt(tmonth)
-            tyear = parseInt(tyear)
-            if (iyear > tyear){
-                setPlaceDate("y")
-            } else if ( iyear == tyear && imonth > tmonth){
-                setPlaceDate("y")
-            } else if (iyear == iyear && imonth == imonth && iday > tday){
-                setPlaceDate("y")
-            }
-            if (iyear < 1920) {
-                setPlaceDate("o")
-            }
-        })     
         
+            // Validate date input
+            $("#date").change(function(){
+                let tdate = new Date()
+                let tday = tdate.getDate()
+                let tmonth= tdate.getMonth()+1
+                let tyear = tdate.getFullYear()
+                let idate = $("#date").val()
+                let iday = idate.split(" ")[0]
+                let imonth = idate.split(" ")[1]
+                let iyear = idate.split(" ")[2]
+                let s_month = {Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12}
+                imonth = s_month[imonth]
+                if (iday[0] == "0"){
+                    iday = iday.slice(1)
+                }
+                iday = parseInt(iday)
+                imonth = parseInt(imonth)
+                iyear = parseInt(iyear)
+                tday = parseInt(tday)
+                tmonth = parseInt(tmonth)
+                tyear = parseInt(tyear)
+                if (iyear > tyear){
+                    setPlaceDate("y")
+                } else if ( iyear == tyear && imonth > tmonth){
+                    setPlaceDate("y")
+                } else if (iyear == tyear && imonth == tmonth && iday > tday){
+                    setPlaceDate("y")
+                }
+                if (iyear < 1920) {
+                    setPlaceDate("o")
+                }
+            })     
+        }
         // Set placeholder text invalid.
         function setPlaceDate(i){
             $("#date").val('')
@@ -101,7 +100,9 @@
             }else{
                 $("#date").attr('placeholder', 'Set date of birth within the past 100 years.*')
             }
-            
+            $('#date').datepicker('setDate', new Date(2000, 0, 1));
+            $('#date').datepicker('update');
+            $('#date').val('');
         }
     })
 </script>
