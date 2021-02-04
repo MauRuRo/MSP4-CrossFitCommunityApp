@@ -1,0 +1,8 @@
+Hey {{ member }}!
+
+{{ admin }} just added you to a new group named "{{ groupname }}"!
+Welcome to your new community! Go to the community page to check out your new buddies!
+
+LET'S GO!
+
+Your Hero Commnity

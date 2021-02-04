@@ -8,9 +8,12 @@ from datetime import date, timedelta
 from django.db.models import Avg
 from django.template import loader
 from django.http import JsonResponse
-import json
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from profiles.templatetags.calc_functions import calc_age
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+import json
 import math
 
 
@@ -339,6 +342,8 @@ def makeGroup(request):
             )
         new_group.group_users.set(members)
         data = {"message": "Success"}
+        if sharegroup is True:
+            send_group_notification(groupname, members, admin)
         return JsonResponse(data)
 
 
@@ -380,11 +385,22 @@ def editGroup(request):
             members.append(user)
         members.append(request.user)
         edit_group = CustomGroup.objects.get(pk=group_id)
+        old_share = edit_group.share
+        admin = edit_group.admin
+        old_members = edit_group.group_users.all()
+        new_members = []
+        for member in members:
+            if not (member in old_members):
+                new_members.append(member)
         edit_group.name = groupname
         edit_group.share = sharegroup
         edit_group.group_users.set(members)
         edit_group.save()
         data = {"message": "Success"}
+        if old_share is False and sharegroup is True:
+            send_group_notification(groupname, members, admin)
+        elif sharegroup is True:
+            send_group_notification(groupname, new_members, admin)
         return JsonResponse(data)
 
 
@@ -469,3 +485,25 @@ def getAgeGroup(request):
     age_top = str(roundup(age))
     age_group = age_bottom + "-" + age_top + " years"
     return age_group
+
+
+def send_group_notification(groupname, members, admin):
+    """ Send user group notification email"""
+    for member in members:
+        if member != admin:
+            email = member.email
+            subject = "Somebody added you to a group!"
+            body = render_to_string(
+                'community/messages/group_notification.txt',
+                {
+                    'admin': admin.userprofile.full_name,
+                    'groupname': groupname,
+                    'member': member.userprofile.full_name,
+                }
+                )
+            send_mail(
+                subject,
+                body,
+                settings.DEFAULT_FROM_EMAIL,
+                [email]
+            )
