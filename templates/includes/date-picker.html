@@ -49,11 +49,59 @@
             // format: 'dd/mm/yyyy',
             format: 'dd M yyyy',
             container: container,
-            todayHighlight: true,
+            todayHighlight: false,
             autoclose: true,
+            maxDate: new Date(),
         })
         if ("/" + window.location.pathname.split("/")[1] + "/" == "/profile/"){
             $('#date').attr('placeholder', 'Select your date of birth *')
+            $('#date').datepicker('setDate', new Date(2000, 0, 1));
+            $('#date').datepicker('update');
+            $('#date').val('');
+            $('#date').datepicker( "option", "maxDate", '0' )
+        }
+        // Validate date input
+        $("#date").change(function(){
+            let tdate = new Date()
+            let tday = tdate.getDate()
+            let tmonth= tdate.getMonth()+1
+            let tyear = tdate.getFullYear()
+            let idate = $("#date").val()
+            let iday = idate.split(" ")[0]
+            let imonth = idate.split(" ")[1]
+            let iyear = idate.split(" ")[2]
+            let s_month = {Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12}
+            imonth = s_month[imonth]
+            if (iday[0] == "0"){
+                iday = iday.slice(1)
+            }
+            iday = parseInt(iday)
+            imonth = parseInt(imonth)
+            iyear = parseInt(iyear)
+            tday = parseInt(tday)
+            tmonth = parseInt(tmonth)
+            tyear = parseInt(tyear)
+            if (iyear > tyear){
+                setPlaceDate("y")
+            } else if ( iyear == tyear && imonth > tmonth){
+                setPlaceDate("y")
+            } else if (iyear == iyear && imonth == imonth && iday > tday){
+                setPlaceDate("y")
+            }
+            if (iyear < 1920) {
+                setPlaceDate("o")
+            }
+        })     
+        
+        // Set placeholder text invalid.
+        function setPlaceDate(i){
+            $("#date").val('')
+            if (i == "y"){
+                $("#date").attr('placeholder', 'Set date of birth PRIOR to current date.*')
+            }else{
+                $("#date").attr('placeholder', 'Set date of birth within the past 100 years.*')
+            }
+            
         }
     })
 </script>
