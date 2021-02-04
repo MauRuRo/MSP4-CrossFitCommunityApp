@@ -64,6 +64,9 @@ h1, h2, h3, h4, h5, h6 {
 .breakline{
     display:inline-block;
 }
+#anchor-promo{
+    text-decoration:none;
+}
 .loading-spinner {
     display: flex;
     align-items: center;
@@ -318,8 +321,11 @@ select {
 .allauth-form-inner-content input {
     border-color: #000!important;
 }
-.allauth-form-inner-content label:not([for='id_remember']) {
-    display: none;
+.verified{
+    color:blue;
+}
+.primary{
+    color:red;
 }
 label[for='image-clear_id'] {
     display: inline-block !important;
@@ -808,6 +814,9 @@ ol#rank-nav li {
 
 /* PROFILE PAGE */
 
+.account-link{
+    margin: 5px 0px;
+}
 .profile-info-list{
     width:100%;
     text-align: center
