@@ -251,6 +251,7 @@ else:
 SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET')
 
+CRONTAB_EXECUTABLE = '/workspace/MSP4-CrossFitCommunityApp/crontab'
 # Cronjob to update statistics for inactive users. Unable to test in Gitpod environment.
 CRONJOBS = [
     ('27 * * * *', 'home.cron.cron_check_levels')

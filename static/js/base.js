@@ -69,4 +69,11 @@
             $("#emblem-circle").addClass("emblem-circle-hover")
         }
     })
+    // collapse navbar on click anywhere else
+    $(document).on("click", "body:not(#navbarNavDropdown)", function(){
+        $("#navbarNavDropdown").collapse('hide')
+    })
+    $(document).on("touchstart", "body:not(#navbarNavDropdown)", function(){
+        $("#navbarNavDropdown").collapse('hide')
+    })
 });
