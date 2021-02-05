@@ -13,7 +13,7 @@ from django.core.management.base import BaseCommand
 class Command(BaseCommand):
     help = 'Makes sure all members level statistics are up to date.'
 
-    def handle(self):
+    def handle(self, *args, **options):
         """Function to update statistics of inactive users"""
         User.objects.filter(pk="1").update(
             userprofile__full_name="Bubo de Hoho"
