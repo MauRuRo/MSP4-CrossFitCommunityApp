@@ -931,8 +931,10 @@ def getSliderLevel(request):
                     if prep_rank == 0:
                         prep_rank = rank
         if prep_rank != 0:
-            last_rank = rlistgenderall[-1][1]
-            percentile = round((1-(prep_rank/last_rank)) * 100)
+            # last_rank = rlistgenderall[-1][1]
+            last_rank = len(rlistgenderall)
+            prep_rank = prep_rank - 1
+            percentile = round((((last_rank - prep_rank)/last_rank)) * 100)
         else:
             percentile = 0
         data = {"percentile": percentile}

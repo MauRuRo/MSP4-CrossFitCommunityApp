@@ -386,7 +386,7 @@ def getLevels(user, wod):
                             break
         if result_index is False:
             result_index = 0
-        result_index += 1
+        # result_index += 1
         total_results = len(log_id_list)
         percentile = round(
             (total_results - result_index) / total_results * 100

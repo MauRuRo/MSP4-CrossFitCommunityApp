@@ -21,17 +21,3 @@ def space_remove(value):
         new_string = new_string + i
     new_string = new_string.lower()
     return new_string
-
-# class DurationInput(TextInput):
-
-#     def calc_duration(self, value):
-#         duration = parse_duration(value)
-
-#         seconds = duration.seconds
-
-#         minutes = seconds // 60
-#         seconds = seconds % 60
-
-#         minutes = minutes % 60
-
-#         return '{:02d}:{:02d}'.format(minutes, seconds)
