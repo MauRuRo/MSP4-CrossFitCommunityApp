@@ -6,6 +6,7 @@ This cronjob will be commented out in settings.py as the app is just a developin
 deployed on a host with a limited number of free requests."""
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
+from profiles.models import UserProfile
 # from workouts.views import calc_level
 from django.core.management.base import BaseCommand
 
@@ -15,8 +16,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Function to update statistics of inactive users"""
-        User.objects.filter(pk="1").update(
-            userprofile__full_name="Bubo de Hoho"
+        maururo = User.objects.get(pk="1")
+        UserProfile.objects.filter(user=maururo).update(
+            full_name="Bubo de Hoho"
             )
         # today = datetime.now()
         # today = today.replace(tzinfo=None)
