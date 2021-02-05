@@ -251,7 +251,8 @@ else:
 SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET')
 
-# Cronjob to update statistics for inactive users. Unable to test in Gitpod environment.
-CRONJOBS = [
-    ('27 * * * *', 'home.cron.cron_check_levels')
-]
+# CRONTAB_EXECUTABLE = "/etc/cron.d"
+# # Cronjob to update statistics for inactive users. Unable to test in Gitpod environment.
+# CRONJOBS = [
+#     ('27 * * * *', 'home.cron.cron_check_levels')
+# ]

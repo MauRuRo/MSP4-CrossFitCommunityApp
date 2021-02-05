@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- This entire source code is copied from: https://html-online.com/articles/smart-404-error-page-redirect/ -->
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting</title>
+  </head>
+  <body onload="redirect()">
+	<h1 style="text-align: center; padding-top: 50px; display: block;">Redirecting...</h1>
+	<script>
+	  function redirect() {
+		setTimeout(function(){ 
+                window.location.replace("/");
+                console.log("You've been redirected because of a 404 error.")
+			}
+			, 100);	
+		}
+	</script>
+  </body>
+</html>
