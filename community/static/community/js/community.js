@@ -10,6 +10,7 @@ $(document).ready(function () {
     let scroll_constant = true
     let xhr
     let active = false
+    let makinggroup = false
 
 
     $(".selected-group").removeClass('selected-group').addClass('disabled-group')
@@ -173,6 +174,7 @@ $(document).ready(function () {
                     $("#members-title").data('page', 'x')
                     $(".group-dir-down").remove()
                 }
+                setAddUserIcons()
             },
             error: function () {
                 console.log("failed resetStats")
@@ -261,8 +263,9 @@ $(document).ready(function () {
                     $(".group-dir-down:visible").remove()
                     $(".direction-down-group").addClass('group-dir-down')
                 }
-                if ($("#group-make-div:visible").length != 0) {
-                    $(".scroll-load").find(".fa-user-plus").parent(".add-user").removeAttr("hidden").show()
+                if ($("#group-make-div:visible").length != 0 || $(".add-user:visible").length != 0) {
+                    // $(".scroll-load").find(".fa-user-plus").parent(".add-user").removeAttr("hidden").show()
+                    setAddUserIcons()
                     $(".scroll-load").removeClass("scroll-load")
                 }
                 scroll_constant = true
@@ -306,6 +309,29 @@ $(document).ready(function () {
         })
     }
 
+    // Keep showing add-user icons while navigating through page if making group is true.
+    function setAddUserIcons(){
+        if (makinggroup == true){
+                let grouparr = []
+                $("#add-users-form-list").children().each(function(){
+                    grouparr.push($(this).data('id').toString())
+                })
+                console.log(grouparr)
+                $(".rank-card").each(function(){
+                    memberid = $(this).attr('id').toString()
+                    console.log(memberid)
+                    if ( grouparr.includes(memberid) ){
+                        console.log("IN THIS ONE")
+                        $(this).find(".fa-user-minus").parent(".add-user").removeAttr('hidden').show()
+                        $(this).find(".rank-name").children("strong").css('color', 'blue')
+                    } else {
+                        console.log("IN HERE")
+                        $(this).find(".fa-user-plus").parent(".add-user").removeAttr('hidden').show()
+                    }
+                })
+            }
+    }
+
     // Hide popover for incomplete form (validation).
     function hidePop() {
         if ($("#pop-incomplete").is(':visible')) {
@@ -346,7 +372,7 @@ $(document).ready(function () {
     function deleteGroup(id, element) {
         let group_id = id
         resetGroupSelection()
-        $("#group-global").removeClass("disabled-group").addClass("selected-group")
+        $(".disabled-group").removeClass("disabled-group").addClass("selected-group")
         $.ajax({
             type: "POST",
             url: "deleteGroup/",
@@ -468,7 +494,7 @@ $(document).ready(function () {
             success: function (data) {
                 $('[data-toggle="popover"]').popover("hide")
                 // Add this line to fix safari iOS bug.
-                $('[data-toggle="popover"]').addClass('hide-it');
+                $('[data-toggle="popover"]:not(#groupform-submit-button)').addClass('hide-it');
                 $("#level-loader").hide()
                 $(".hl-container").remove()
                 $(".block-main").append(data.new_levels_html)
@@ -516,6 +542,10 @@ $(document).ready(function () {
 
     // Select a group.
     $(document).on("click", ".group-select:not(.add-group)", function () {
+        if ($(".add-user:visible").length > 0){
+            makinggroup = true
+        }
+        console.log(makinggroup)
         element = $(".block-members:first")
         scrollToTopFast(element)
         scroll_level = 1
@@ -612,7 +642,9 @@ $(document).ready(function () {
     $(document).on("click", ".add-group", function () {
         $("#group-make-div").removeAttr("hidden").show()
         $("#group-select-div").hide()
-        $(".fa-user-plus").parent(".add-user").removeAttr("hidden").show()
+        if ($(".add-user:visible").length == 0 ){
+            $(".fa-user-plus").parent(".add-user").removeAttr("hidden").show()
+        }
     })
 
     // Click to add user to group.
@@ -648,6 +680,7 @@ $(document).ready(function () {
         $("#no-members-added").show()
         $("#id_share").prop("checked", true)
         $("#id_name").val('')
+        $(".rank-name").children("strong").css('color', 'black')
     })
 
     // Click anywhere to hide validation popover.
@@ -716,6 +749,12 @@ $(document).ready(function () {
         $(".hl-container:visible, #user-info-block:visible").remove()
         $("#group-select-div, #group-stats-div").show()
         $(".block-main").removeClass("block-levels")
+    })
+    // Click to close group make/edit tab and show group 
+    // selection in order to change selection to choose members from.
+    $(document).on("click", "#close-mg, #close-eg", function () {
+        $("#group-make-div").hide()
+        $("#group-select-div, #group-stats-div").show()
     })
 
     // EXECUTE FUNCTIONS ON DOCUMENT READ

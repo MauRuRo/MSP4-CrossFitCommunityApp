@@ -5,6 +5,7 @@ body {
     background-size: 700px 400px;
     background-position-y: 150px;
     font-family: 'Open Sans', sans-serif;
+    overflow-x:hidden;
 }
 .indexbody{
     background: url('/media/background.jpg') no-repeat fixed;
@@ -36,6 +37,7 @@ h1, h2, h3, h4, h5, h6 {
 .t-center{
     text-align:center;
 }
+
 #info-overlay-h{
     position:absolute;
     right:0;
@@ -127,9 +129,12 @@ ul.socialaccount_providers {
 }
 .toast {
     box-shadow: 5px 5px 15px #000;
+    border:none;
 }
 .toast-body {
     font-family: 'Open Sans', sans-serif;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 #arrow-emblem {
     top:56px;
@@ -269,7 +274,9 @@ input[name='q']::placeholder {
     overflow: visible;
 }
 .toast-capper {
-    height: 2px;
+    height: 5px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 /* from CSS-tricks.com: https://css-tricks.com/snippets/css/css-triangle/ */
 .arrow-up {
@@ -277,7 +284,7 @@ input[name='q']::placeholder {
     height: 0; 
     border-left: 4px solid transparent;
     border-right: 4px solid transparent; 
-    border-bottom: 10px solid black;
+    border-bottom: 12px solid black;
     position: absolute;
     top: -10px;
     right: 34px;
@@ -827,6 +834,7 @@ ol#rank-nav li {
 }
 .stats-name{
     text-align:center;
+    color:grey;
 }
 .profile-info-list li .fa-mars {
     font-size:1.6rem;
@@ -1070,6 +1078,7 @@ linked to a date input field that is formatted properly. */
     position:absolute;
     height:calc(100% - 27px);
     width:calc(100% - 42px);
+    min-width: 218px;
     top:6px;
     left:0;
     pointer-events: none;
@@ -1139,14 +1148,18 @@ color: red;
     cursor:pointer;
     color:blue;
 }
+#close-mg,
+#close-eg,
 #close-hl{
-    display:none;
     color:grey;
     cursor: pointer;
     position: absolute;
+    right:13px;
+}
+#close-hl{
+    display:none;
     right:30px;
 }
-
 /* MEDIAQUERIES */
 
 @media (max-width: 576px) {
@@ -1188,6 +1201,7 @@ color: red;
     .message-container {
         top:115px;
         min-width: 245px!important;
+        /* border-radius: 5px!important; */
     }
     #arrow-emblem {
         top:35px;

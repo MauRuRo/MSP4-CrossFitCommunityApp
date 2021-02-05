@@ -359,8 +359,6 @@ def editLog(request):
         log_id = request.POST["log_id"]
         log = Log.objects.get(pk=log_id)
         log_f = Log.objects.filter(pk=log_id)
-        # pr_was_true = log.personal_record
-        # old_date = log.date
         if log.user == request.user or request.user.is_superuser:
             wod_type = log.workout.workout_type
             rx_input = request.POST["rx"]
@@ -1003,7 +1001,7 @@ def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women
     """Determine the result needed for a level of around 50 (median result)"""
     ft_seconds = True
     group_s = getGroup(request)
-    if group_s["custom"] == "true" or group_s["age"] == "true" or group_s["location"] != "group-global":
+    if group_s["custom"] != "false" or group_s["age"] == "true" or group_s["location"] != "group-global":
         selected_group = Log.objects.all()
         if wod.workout_type == 'FT':
             all_logs_rank = selected_group.filter(
@@ -1051,11 +1049,9 @@ def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women
         if all_logs_rank_men.count() > 0:
             best = getattr(all_logs_rank_men[0], rank_result)
             worst = getattr(all_logs_rank_men.reverse()[0], rank_result)
-            # worst_rank = rlistmenall[-1][1]
             med_count = round(all_logs_rank_men.count() / 2)
             med = getattr(all_logs_rank_men[med_count], rank_result)
         else:
-            # worst_rank = "none"
             best = 1
             worst = 1
             med = 1
@@ -1064,11 +1060,9 @@ def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women
         if all_logs_rank_women.count() > 0:
             best = getattr(all_logs_rank_women[0], rank_result)
             worst = getattr(all_logs_rank_women.reverse()[0], rank_result)
-            # worst_rank = rlistwomenall[-1][1]
             med_count = round(all_logs_rank_women.count() / 2)
             med = getattr(all_logs_rank_women[med_count], rank_result)
         else:
-            # worst_rank = "none"
             best = 1
             worst = 1
             med = 1
