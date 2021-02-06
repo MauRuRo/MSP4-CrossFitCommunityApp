@@ -196,11 +196,10 @@ ul.socialaccount_providers {
     min-height: 200px;
     min-width: 230px;
     width: 100%;
-    /* border: 2px solid black; */
     border: 6px ridge lightgrey;
     border-radius: 5px;
     background-color: white;
-    /* box-shadow: inset 0px 0px 7px #000; */
+    box-shadow: 3px 3px 8px;
     margin-bottom: 15px;
 }
 .hide-it{
@@ -266,9 +265,23 @@ input[name='q']::placeholder {
     /* right:15px; */
     z-index: 9999;
     min-width: 245px;
+    max-height: calc(100vh - 200px);
+    overflow: scroll;
 }
 .message-container-home {
     top: 231px !important;
+}
+.close-notification {
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    float: right;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
 }
 .custom-toast {
     overflow: visible;

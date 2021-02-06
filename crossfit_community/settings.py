@@ -55,7 +55,10 @@ INSTALLED_APPS = [
     # Other
     'crispy_forms',
     'storages',
-    'django_crontab'
+    'django_crontab',
+    # 'notify',
+    'notifications'
+
 ]
 
 MIDDLEWARE = [

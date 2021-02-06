@@ -49,6 +49,7 @@
 </head>
 
 <body>
+    {% load notifications_tags %}
     <header class="container-fluid" id="header-bar">
         <div class="row align-items-start">
             <div class="col-3 col-lg-9 d-flex" id="first-head-col">
@@ -122,6 +123,13 @@
                     {% endfor %}
                 </div>
                 {% endif %}
+                {% if notes %}
+                <div class="message-container">
+                    {% for note in notes %}
+                    {% include 'includes/toasts/toast_notification.html' %}
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
             <div class="col-3 d-lg-none d-flex justify-content-center">
             </div>
@@ -138,6 +146,13 @@
             <div class="cc-div">
                 <h6><a href="https://github.com/MauRuRo" target="_blank" class="creator-credits"><span class="breakline">Designed and created by</span> <span class="breakline"><i
                         class="fab fa-github"></i> Ruben de Roos</a></span></h6>
+                        <!-- {% notifications_unread as unread_count %}
+                        {% if unread_count %}
+                            You have <strong>{{ unread_count }}</strong> unread notifications.
+                        {% endif %}
+                        {% for note in notes %}
+                        {{ note.verb }}
+                        {% endfor %} -->
             </div>
         </div>
     </div>

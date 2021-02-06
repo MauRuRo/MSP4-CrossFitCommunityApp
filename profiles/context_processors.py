@@ -47,9 +47,11 @@ def user_info(request):
         profile = None
         group_select = {"age": True, "custom": False, "location": "global"}
     group_select = json.dumps(group_select)
+    notes = request.user.notifications.unread()
     return {
         'image': image,
         'profile': profile,
         'group_select': group_select,
-        'active_user': request.user
+        'active_user': request.user,
+        'notes': notes
         }

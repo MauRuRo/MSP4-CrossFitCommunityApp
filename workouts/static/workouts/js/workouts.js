@@ -131,19 +131,19 @@ $(document).ready(function() {
         }
         if (wodtype == "FT" || wodtype == "ft-log" ){
             $("#logform-wod-type").text("For Time Result:")
-            $("#id_ft_result").show()
-            $("#id_amrap_result").hide()
-            $("#id_mw_result").hide()
+            $("#id_ft_result").show().prop('required', true)
+            $("#id_amrap_result").hide().prop('required', false)
+            $("#id_mw_result").hide().prop('required', false)
         }else if (wodtype == "AMRAP" || wodtype == "amrap-log") {
             $("#logform-wod-type").text("AMRAP Result:")
-            $("#id_ft_result").hide()
-            $("#id_amrap_result").show()
-            $("#id_mw_result").hide()
+            $("#id_ft_result").hide().prop('required', false)
+            $("#id_amrap_result").show().prop('required', true)
+            $("#id_mw_result").hide().prop('required', false)
         }else{
             $("#logform-wod-type").text("Max Weight Result:")
-            $("#id_ft_result").hide()
-            $("#id_amrap_result").show()
-            $("#id_mw_result").hide()
+            $("#id_ft_result").hide().prop('required', false)
+            $("#id_amrap_result").show().prop('required', true)
+            $("#id_mw_result").hide().prop('required', false)
         }
         $("#logform-wod-title").text(wodname)
     }

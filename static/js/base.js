@@ -76,4 +76,38 @@
     $(document).on("touchstart", "body:not(#navbarNavDropdown)", function(){
         $("#navbarNavDropdown").collapse('hide')
     })
+
+    // Close single notification toast.
+    $(document).on("click", ".close-notification", function(){
+        let note_id = $(this).closest(".toast").find(".note-col:first").attr('id')
+        $(this).closest(".toast").remove()
+        markAsRead(note_id)
+    })
+
+    // Format notification toast.
+    $(".note-col").each(function(){
+        let text = $(this).text()
+        let note = text.split("$%$%")[0]
+        let message = text.split("$%$%")[1]
+        let toasthtml = `<p>${note}<hr><em>${message}</em></p>`
+        $(this).html(toasthtml)
+    })
+    // Mark notification as read to stop it from reappearing.
+    function markAsRead(note_id){
+        $.ajax({
+            type: "POST",
+            url: "/profile/markAsRead/",
+            data: {
+                note_id: note_id,
+            },
+            dataType: "json",
+            success: function () {
+                console.log("marked as read")
+            },
+            error: function() {
+                console.log("failed ajax mark as read")
+            }
+        })
+    }
+
 });
