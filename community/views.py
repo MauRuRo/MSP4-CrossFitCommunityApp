@@ -110,7 +110,7 @@ def getGroupSelection(request):
         # Determine group selection
         try:
             group_s = GroupSelect.objects.get(user=request.user)
-            group_select = group_s.group
+            group_select = json.loads(group_s.group)
         except GroupSelect.DoesNotExist:
             group_select = {
                 "age": "false", "custom": "false", "location": "group-global"
