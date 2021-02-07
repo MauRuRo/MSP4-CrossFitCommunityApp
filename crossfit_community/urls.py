@@ -28,5 +28,4 @@ urlpatterns = [
     path('workouts/', include('workouts.urls')),
     path('community/', include('community.urls')),
     url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
-    # url(r'^notifications/', include('notify.urls', 'notifications')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
