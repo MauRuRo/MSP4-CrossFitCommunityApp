@@ -52,8 +52,8 @@ INSTALLED_APPS = [
     'profiles',
     'workouts',
     'community',
-    'notifications',
     # Other
+    'notifications',
     'crispy_forms',
     'storages'
 ]
