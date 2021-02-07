@@ -15,5 +15,5 @@ def notify_comment(sender, instance, created, **kwargs):
     wod_date = wod_date.strftime("%d %b %Y")
     comment = instance.message
     message = f'{user_name} commented on your {workout} result of {wod_date}$%$%{comment}'
-    notify.send(user, recipient=receiver, verb=message)
-    print(message)
+    notify.send(user, recipient=receiver, verb=message, description="comment")
+

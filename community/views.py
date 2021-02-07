@@ -13,6 +13,7 @@ from profiles.templatetags.calc_functions import calc_age
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
+from notifications.signals import notify
 import json
 import math
 
@@ -42,7 +43,8 @@ def community(request):
         date_month = date.today() - timedelta(days=30)
         month = selected_group_logs.filter(date__gte=date_month).count()
         admin = False
-        group_s = json.loads(getGroup(request))
+        # group_s = json.loads(getGroup(request))
+        group_s = getGroup(request)
         groupname = ''
         if group_s["custom"] != "false":
             c_group = CustomGroup.objects.get(pk=group_s["custom"])
@@ -110,7 +112,8 @@ def getGroupSelection(request):
         # Determine group selection
         try:
             group_s = GroupSelect.objects.get(user=request.user)
-            group_select = json.loads(group_s.group)
+            # group_select = json.loads(group_s.group)
+            group_select = group_s.group
         except GroupSelect.DoesNotExist:
             group_select = {
                 "age": "false", "custom": "false", "location": "group-global"
@@ -170,7 +173,8 @@ def getGroupSelectionUsers(request):
     """Helper function that returns all the users of the selected group."""
     # Determine group selection
     if request.user.is_authenticated and hasattr(request.user, 'userprofile'):
-        group_select = json.loads(getGroup(request))
+        # group_select = json.loads(getGroup(request))
+        group_select = getGroup(request)
         if group_select["custom"] == 'false':
             if group_select["location"] == "group-global":
                 select_group_users = User.objects.filter(
@@ -218,7 +222,8 @@ def resetStats(request):
         date_month = date.today() - timedelta(days=30)
         month = selected_group_logs.filter(date__gte=date_month).count()
         admin = False
-        group_s = json.loads(getGroup(request))
+        # group_s = json.loads(getGroup(request))
+        group_s = getGroup(request)
         groupname = ''
         if group_s["custom"] != "false":
             c_group = CustomGroup.objects.get(pk=group_s["custom"])
@@ -343,6 +348,7 @@ def makeGroup(request):
         new_group.group_users.set(members)
         data = {"message": "Success"}
         if sharegroup is True:
+            note_group_notification(groupname, members, admin)
             send_group_notification(groupname, members, admin)
         return JsonResponse(data)
 
@@ -398,8 +404,10 @@ def editGroup(request):
         edit_group.save()
         data = {"message": "Success"}
         if old_share is False and sharegroup is True:
+            note_group_notification(groupname, members, admin)
             send_group_notification(groupname, members, admin)
         elif sharegroup is True:
+            note_group_notification(groupname, new_members, admin)
             send_group_notification(groupname, new_members, admin)
         return JsonResponse(data)
 
@@ -507,3 +515,14 @@ def send_group_notification(groupname, members, admin):
                 settings.DEFAULT_FROM_EMAIL,
                 [email]
             )
+
+
+def note_group_notification(groupname, members, admin):
+    """Send an in-app notification about the group for the members"""
+    message = f'{admin} added you to the group "{groupname}".'
+    member_list = []
+    for member in members:
+        if member != admin:
+            member_list.append(member)
+    members = member_list
+    notify.send(admin, recipient=members, verb=message, description="group")

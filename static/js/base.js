@@ -86,11 +86,13 @@
 
     // Format notification toast.
     $(".note-col").each(function(){
+        if ($(this).data('note-type') == "comment"){
         let text = $(this).text()
         let note = text.split("$%$%")[0]
         let message = text.split("$%$%")[1]
         let toasthtml = `<p>${note}<hr><em>${message}</em></p>`
         $(this).html(toasthtml)
+        }
     })
     // Mark notification as read to stop it from reappearing.
     function markAsRead(note_id){

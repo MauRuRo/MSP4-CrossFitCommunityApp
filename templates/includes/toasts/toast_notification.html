@@ -2,14 +2,14 @@
     <div class="arrow-up arrow-success" hidden></div>
     <div class="w-100 toast-capper bg-success"></div>
     <div class="toast-header bg-white text-dark">
-        <strong class="mr-auto">Comment!</strong>
+        <strong class="mr-auto">{{ note.description }}</strong>
         <button type="button" class="ml-2 mb-1 text-dark close-notification">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="toast-body bg-white">
         <div class="row">
-            <div class="col note-col" id="{{ note.pk }}">
+            <div class="col note-col" id="{{ note.pk }}" data-note-type="{{ note.description }}">
                 {{ note.verb }}   
             </div>
         </div>
