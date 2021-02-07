@@ -1002,7 +1002,7 @@ def calc_level(user):
 def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women_logs):
     """Determine the result needed for a level of around 50 (median result)"""
     ft_seconds = True
-    group_s = getGroup(request)
+    group_s = json.loads(getGroup(request))
     if group_s["custom"] != "false" or group_s["age"] == "true" or group_s["location"] != "group-global":
         selected_group = Log.objects.all()
         if wod.workout_type == 'FT':
