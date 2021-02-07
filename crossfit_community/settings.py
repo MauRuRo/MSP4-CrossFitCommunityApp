@@ -52,13 +52,11 @@ INSTALLED_APPS = [
     'profiles',
     'workouts',
     'community',
+    'notifications',
     # Other
     'crispy_forms',
     'storages',
-    'django_crontab',
-    # 'notify',
-    'notifications'
-
+    'django_crontab'
 ]
 
 MIDDLEWARE = [

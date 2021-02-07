@@ -16,6 +16,7 @@ django-notifications-hq==1.6.0
 django-notify-x==0.1.9
 django-picklefield==3.0.1
 django-storages==1.11
+django-tempus-dominus==5.1.2.13
 executing==0.5.4
 get-variable-name==0.0.2
 gunicorn==20.0.4
