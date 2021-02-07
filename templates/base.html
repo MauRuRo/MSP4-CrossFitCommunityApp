@@ -49,7 +49,7 @@
 </head>
 
 <body>
-    <!-- { load notifications_tags %} -->
+    {% load notifications_tags %}
     <header class="container-fluid" id="header-bar">
         <div class="row align-items-start">
             <div class="col-3 col-lg-9 d-flex" id="first-head-col">
@@ -123,13 +123,13 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                <!-- { if notes %}
+                {% if notes %}
                 <div class="message-container">
-                    { for note in notes %}
-                    { include 'includes/toasts/toast_notification.html' %}
-                    { endfor %}
+                    {% for note in notes %}
+                    {% include 'includes/toasts/toast_notification.html' %}
+                    {% endfor %}
                 </div>
-                { endif %} -->
+                {% endif %}
             </div>
             <div class="col-3 d-lg-none d-flex justify-content-center">
             </div>

@@ -9,7 +9,7 @@ from django.conf import settings
 from datetime import date, datetime, timedelta
 from django.template import loader
 from django.http import JsonResponse
-# from notifications.models import Notification
+from notifications.models import Notification
 import stripe
 import json
 import statistics
@@ -410,11 +410,11 @@ def getLevels(user, wod):
         return data
 
 
-# @require_POST
-# def markAsRead(request):
-#     if request.user.is_authenticated and request.is_ajax:
-#         note_id = request.POST["note_id"]
-#         note = Notification.objects.filter(pk=note_id)
-#         note.mark_all_as_read()
-#         data = {"message": "Success"}
-#         return JsonResponse(data)
+@require_POST
+def markAsRead(request):
+    if request.user.is_authenticated and request.is_ajax:
+        note_id = request.POST["note_id"]
+        note = Notification.objects.filter(pk=note_id)
+        note.mark_all_as_read()
+        data = {"message": "Success"}
+        return JsonResponse(data)
