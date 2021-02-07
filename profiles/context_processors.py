@@ -21,7 +21,7 @@ def user_info(request):
                     image = profile.image.url
                 try:
                     group_s = GroupSelect.objects.get(user=request.user)
-                    group_select = group_s.group
+                    group_select = json.loads(group_s.group)
                 except GroupSelect.DoesNotExist:
                     group_select = {
                         "age": False,
