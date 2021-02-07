@@ -5,7 +5,7 @@ import json
 
 
 def user_info(request):
-    """ processor to pass user profile image 
+    """ processor to pass user profile image
     and possible other user info to all templates """
     if request.user.is_authenticated:
         group_select = {"age": False, "custom": False, "location": "global"}
@@ -47,7 +47,10 @@ def user_info(request):
         profile = None
         group_select = {"age": True, "custom": False, "location": "global"}
     group_select = json.dumps(group_select)
-    notes = request.user.notifications.unread()
+    if request.user.is_authenticated:
+        notes = request.user.notifications.unread()
+    else:
+        notes = None
     return {
         'image': image,
         'profile': profile,
