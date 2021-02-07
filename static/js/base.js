@@ -70,12 +70,14 @@
         }
     })
     // collapse navbar on click anywhere else
-    $(document).on("click", "body:not(#navbarNavDropdown)", function(){
+    $(":not(#navbarNavDropdown)").click(function(){
+        console.log("TEST1")
         $("#navbarNavDropdown").collapse('hide')
     })
-    $(document).on("touchstart", "body:not(#navbarNavDropdown)", function(){
-        $("#navbarNavDropdown").collapse('hide')
-    })
+    // $(document).on("touchstart", ":not(#navbarNavDropdown)", function(){
+    //     console.log("TEST2")
+    //     $("#navbarNavDropdown").collapse('hide')
+    // })
 
     // Close single notification toast.
     $(document).on("click", ".close-notification", function(){
@@ -113,7 +115,6 @@
     }
     // Set on/off mail notification.
     $(document).on("click", ".set-mail-not", function(){
-        console.log("ACTIVE")
         let on_off = $(this).data("onoff")
         $.ajax({
             type: "POST",
@@ -124,12 +125,10 @@
             dataType: "json",
             success: function (data) {
                 if (on_off == "on"){
-                    console.log("turnon")
                     $("#turn-on-mail").html('Turn Notifications Off')
                     $("#turn-on-mail").data('onoff','off')
                     $("#turn-on-mail").attr('id', 'turn-off-mail')
                 } else {
-                    console.log("turnoff")
                     $("#turn-off-mail").html('Turn Notifications On')
                     $("#turn-off-mail").data('onoff','on')
                     $("#turn-off-mail").attr('id', 'turn-on-mail')
