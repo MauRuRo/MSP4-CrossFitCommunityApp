@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls import url
-from django.conf.urls.static import static
+# from django.conf.urls.static import static
 import notifications.urls
 
 urlpatterns = [
@@ -27,5 +27,5 @@ urlpatterns = [
     path('profile/', include('profiles.urls')),
     path('workouts/', include('workouts.urls')),
     path('community/', include('community.urls')),
-    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
