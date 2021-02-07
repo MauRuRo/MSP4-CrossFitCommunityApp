@@ -46,6 +46,14 @@
 
                     </fieldset>
                 </form>
+                <div class="buttonHolder">
+                    <div>{{ notify }}</div>
+                    {% if notify == True %}
+                    <button id="turn-off-mail" class="set-mail-not" data-onoff="off">Turn Notifications Off</button>
+                    {% else %}
+                    <button id="turn-on-mail" class="set-mail-not" data-onoff="on">Turn Notifications On</button>
+                    {% endif %}
+                </div>
 
                 {% else %}
                 <p><strong>{% trans 'Warning:'%}</strong>

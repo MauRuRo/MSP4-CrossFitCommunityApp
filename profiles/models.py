@@ -41,3 +41,12 @@ class HeroLevels(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class MailNotificationSettings(models.Model):
+    """Settings for mail notifications for individual users"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    notify = models.BooleanField(blank=True, default=True)
+
+    def __str__(self):
+        return self.user.username

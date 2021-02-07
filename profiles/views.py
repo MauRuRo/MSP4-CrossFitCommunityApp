@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import UserProfile, User, HeroLevels
+from .models import UserProfile, User, HeroLevels, MailNotificationSettings
 from workouts.models import Workout, Log
 from .forms import UserProfileForm
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.conf import settings
 from datetime import date, datetime, timedelta
@@ -412,9 +413,31 @@ def getLevels(user, wod):
 
 @require_POST
 def markAsRead(request):
+    """Mark notifications as read as to not render them anymore"""
     if request.user.is_authenticated and request.is_ajax:
         note_id = request.POST["note_id"]
         note = Notification.objects.filter(pk=note_id)
         note.mark_all_as_read()
+        data = {"message": "Success"}
+        return JsonResponse(data)
+
+
+@require_POST
+@csrf_exempt
+def SetMailNot(request):
+    """Turn on or off mail notifications for user"""
+    if request.user.is_authenticated and request.is_ajax:
+        print("INHERE")
+        if MailNotificationSettings.objects.filter(user=request.user).count() == 0:
+            MailNotificationSettings.objects.create(user=request.user, notify=False)
+            print("INHEREtwo")
+        else:
+            print("INHEREthree")
+            on_off = request.POST["on_off"]
+            if on_off == "on":
+                print("INHEREON")
+                MailNotificationSettings.objects.filter(user=request.user).update(notify=True)
+            else:
+                MailNotificationSettings.objects.filter(user=request.user).update(notify=False)
         data = {"message": "Success"}
         return JsonResponse(data)

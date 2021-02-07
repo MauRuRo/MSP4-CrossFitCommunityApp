@@ -1,4 +1,4 @@
-from .models import UserProfile
+from .models import UserProfile, MailNotificationSettings
 from community.models import GroupSelect
 from django.conf import settings
 import json
@@ -50,12 +50,19 @@ def user_info(request):
     group_select = json.dumps(group_select)
     if request.user.is_authenticated:
         notes = request.user.notifications.unread()
+        notify = MailNotificationSettings.objects.filter(user=request.user)
+        if notify.count() == 1:
+            notify = notify[0].notify
+        else:
+            notify = True
     else:
         notes = None
+        notify = True
     return {
         'image': image,
         'profile': profile,
         'group_select': group_select,
         'active_user': request.user,
-        'notes': notes
+        'notes': notes,
+        'notify': notify
         }

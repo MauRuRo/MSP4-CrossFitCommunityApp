@@ -9,6 +9,7 @@ urlpatterns = [
     path('edit_profile/', views.edit_profile, name='edit_profile'),
     path('calc_level/', views.calc_level, name='calc_level'),
     path('markAsRead/', views.markAsRead, name='markAsRead'),
+    path('SetMailNot/', views.SetMailNot, name='SetMailNot'),
     path('wh/', webhook, name="webhook"),
     path('cache_payment_create_profile/', views.cache_payment_create_profile, name="cache_payment_create_profile"),
 ]

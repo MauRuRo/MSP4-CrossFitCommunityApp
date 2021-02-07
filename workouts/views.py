@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from datetime import date, datetime, timedelta
 from .models import Workout, MemberComment, Log
-from profiles.models import HeroLevels
+from profiles.models import HeroLevels, MailNotificationSettings
 from .forms import LogForm, MemberCommentForm, WorkoutForm
 from django.utils.dateparse import parse_duration
 from django.db.models import Max, Min
@@ -1087,6 +1087,10 @@ def send_comment_notification(user, logid, message):
     """ Send th user comment notification email"""
     comment_name = user.userprofile.full_name
     log_user = Log.objects.get(id=logid).user
+    n_setting = MailNotificationSettings.objects.filter(user=log_user)
+    if n_setting.count() == 1:
+        if n_setting[0].notify is False:
+            return
     if log_user == user:
         return
     log_name = log_user.userprofile.full_name

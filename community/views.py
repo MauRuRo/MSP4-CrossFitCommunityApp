@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from .models import CustomGroup, GroupSelect
 from .forms import CustomGroupForm
-from profiles.models import User, HeroLevels
+from profiles.models import User, HeroLevels, MailNotificationSettings
 from workouts.models import Log
 from django.views.decorators.http import require_POST
 from datetime import date, timedelta
@@ -499,6 +499,10 @@ def send_group_notification(groupname, members, admin):
     """ Send user group notification email"""
     for member in members:
         if member != admin:
+            n_setting = MailNotificationSettings.objects.filter(user=member)
+            if n_setting.count == 1:
+                if n_setting[0].notify == False:
+                    continue
             email = member.email
             subject = "Somebody added you to a group!"
             body = render_to_string(

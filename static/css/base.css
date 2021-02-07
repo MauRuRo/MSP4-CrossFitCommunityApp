@@ -76,6 +76,22 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
     height: 100%;
 }
+.buttonHolder button {
+    margin-top:5px;
+}
+.email_list{
+    margin-bottom: 15px;
+}
+#turn-off-mail{
+    background-color:red;
+    border: none;
+    margin-bottom: 8px;
+}
+#turn-on-mail{
+    background-color:green;
+    border: none;
+    margin-bottom: 8px;
+}
 ul.socialaccount_providers {
     list-style: none;
     padding-left: 0px;
@@ -690,6 +706,7 @@ ol#rank-nav li {
 .member-comment-button-container{
     width:1rem;
     display:inline!important;
+    position:relative;
 }
 .member-comment-button{
     padding: 2px 2px;
