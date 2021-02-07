@@ -50,8 +50,8 @@ INSTALLED_APPS = [
     # site apps
     'home',
     'profiles',
-    'community',
     'workouts',
+    'community',
     # Other
     'notifications',
     'crispy_forms',
