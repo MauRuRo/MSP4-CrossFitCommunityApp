@@ -107,8 +107,8 @@
                     </div>
                 </div>
                 {% endif %}
-                {% if messages %}
-                <div class="message-container m-messages">
+                <!-- { if messages %} -->
+                <div class="message-container">
                     {% for message in messages %}
                     {% with message.level as level %}
                     {% if level == 40 %}
@@ -122,12 +122,15 @@
                     {% endif %}
                     {% endwith %}
                     {% endfor %}
+                    <div class="n-messages">
+                        {% include 'includes/toasts/toast_notification.html' %}
+                    </div>
                 </div>
-                {% endif %}
-
+                <!-- { endif %} -->
+<!-- 
                 <div class="message-container n-messages">
-                    {% include 'includes/toasts/toast_notification.html' %}
-                </div>
+                    { include 'includes/toasts/toast_notification.html' %}
+                </div> -->
 
                 <ul class="live_notify_list" hidden></ul>
             </div>

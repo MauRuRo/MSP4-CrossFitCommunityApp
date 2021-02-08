@@ -71,13 +71,8 @@
     })
     // collapse navbar on click anywhere else
     $(":not(#navbarNavDropdown)").click(function(){
-        console.log("TEST1")
         $("#navbarNavDropdown").collapse('hide')
     })
-    // $(document).on("touchstart", ":not(#navbarNavDropdown)", function(){
-    //     console.log("TEST2")
-    //     $("#navbarNavDropdown").collapse('hide')
-    // })
 
     // Close single notification toast.
     $(document).on("click", ".close-notification", function(){

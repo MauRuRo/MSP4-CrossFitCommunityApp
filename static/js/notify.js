@@ -23,7 +23,6 @@ function fill_notification_list(data) {
     var menus = document.getElementsByClassName(notify_menu_class);
     if (menus) {
         var messages = data.unread_list.map(function (item) {
-            console.log(messages)
             var message = "";
             // if(typeof item.actor !== 'undefined'){
             //     message = item.actor;
