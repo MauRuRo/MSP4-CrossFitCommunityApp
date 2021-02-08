@@ -427,17 +427,31 @@ def markAsRead(request):
 def SetMailNot(request):
     """Turn on or off mail notifications for user"""
     if request.user.is_authenticated and request.is_ajax:
-        print("INHERE")
         if MailNotificationSettings.objects.filter(user=request.user).count() == 0:
             MailNotificationSettings.objects.create(user=request.user, notify=False)
-            print("INHEREtwo")
         else:
-            print("INHEREthree")
             on_off = request.POST["on_off"]
             if on_off == "on":
-                print("INHEREON")
                 MailNotificationSettings.objects.filter(user=request.user).update(notify=True)
             else:
                 MailNotificationSettings.objects.filter(user=request.user).update(notify=False)
         data = {"message": "Success"}
         return JsonResponse(data)
+
+
+@require_POST
+@csrf_exempt
+def resetNotes(request):
+    """Turn on or off mail notifications for user"""
+    if request.user.is_authenticated and request.is_ajax:
+        notes = request.user.notifications.unread()
+         # build html template
+        calling_group_html = loader.render_to_string(
+            'templates/includes/toasts/toast_notification.html',
+            {'notes': notes}
+            )
+        # package output data and return it as a JSON object
+        output_data = {
+            'calling_group_html': calling_group_html,
+        }
+        return JsonResponse(output_data)

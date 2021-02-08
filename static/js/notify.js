@@ -1,3 +1,5 @@
+// This is coded copied from the notifications app, adjusted to replace it's functioning.
+
 var notify_badge_class;
 var notify_menu_class;
 var notify_api_url;
@@ -38,10 +40,10 @@ function fill_notification_list(data) {
             // }
             return `<li data-noteid=${item.slug}>` + message + '</li>';
         }).join('')
-
         for (var i = 0; i < menus.length; i++){
             menus[i].innerHTML = messages;
         }
+        resetNotes()
     }
 }
 
@@ -81,3 +83,29 @@ function fetch_api_data() {
 }
 
 setTimeout(fetch_api_data, 1000);
+
+function resetNotes(){
+    $.ajax({
+        type: "POST",
+        url: "/profile/resetNotes/",
+        success: function(data){
+            $(".n-messages").html(data.calling_group_html)
+            formatToast()
+        },
+        error: function(){
+            console.log("ajax resetNOTES failed")
+        }
+    })
+}
+// Format notification toast.
+function formatToast(){
+    $(".note-col").each(function(){
+        if ($(this).data('note-type') == "comment"){
+        let text = $(this).text()
+        let note = text.split("$%$%")[0]
+        let message = text.split("$%$%")[1]
+        let toasthtml = `<p>${note}<hr><em>${message}</em></p>`
+        $(this).html(toasthtml)
+        }
+    })
+}
