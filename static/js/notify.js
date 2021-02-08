@@ -108,4 +108,5 @@ function formatToast(){
         $(this).html(toasthtml)
         }
     })
+    $(".n-messages").children(".toast").addClass("show")
 }
