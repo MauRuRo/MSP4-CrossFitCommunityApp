@@ -98,13 +98,13 @@ $(document).ready(function() {
 
     // Determine slider attributes based on best/worst results and workout type.
     if (parseFloat($("#rangeLevelData").data('worst')) < parseFloat($("#rangeLevelData").data('best'))){
-        min_slider = parseFloat($("#rangeLevelData").data('worst'))
+        min_slider = Math.round((parseFloat($("#rangeLevelData").data('worst')) - (1/10))*100)/100
         max_slider = parseFloat($("#rangeLevelData").data('best'))
         step_val = 0.1
         $('#rangeLevelSliderVal').html(initial_slider)
     }else{
         min_slider = $("#rangeLevelData").data('best')
-        max_slider = $("#rangeLevelData").data('worst') 
+        max_slider = $("#rangeLevelData").data('worst') + 1
         step_val = 1 
         // sliderValueTime($("#rangeLevel").data('initial-value'))  
         sliderValueTime(initial_slider)  

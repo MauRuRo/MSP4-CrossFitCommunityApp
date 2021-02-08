@@ -12,14 +12,14 @@ body {
     background-size: cover;
 }
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
 }
 #header-bar {
     height: 150px;
     border-bottom: 3px solid black;
     background: url('/media/blackmat.jpg') repeat fixed;
     background-size: 300px 300px;
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     position: fixed;
     top: 0;
     z-index: 9997;
@@ -142,10 +142,6 @@ ul.socialaccount_providers {
     border: 3px solid black;
     background-size: cover;
     z-index: 9998;
-}
-.toast {
-    /* box-shadow: 5px 5px 15px #000; */
-    /* border:none; */
 }
 .toast-body {
     font-family: 'Open Sans', sans-serif;
@@ -543,7 +539,7 @@ label[for='image-clear_id'] {
 }
 .display-month{
     font-size: 1.0rem;
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     letter-spacing: -2px;
     position: absolute;
     top: -19px;
@@ -552,7 +548,7 @@ label[for='image-clear_id'] {
 }
 .display-day{
     font-size: 1.5rem;
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     letter-spacing: -2px;
     position: absolute;
     top: -9px;
@@ -576,7 +572,7 @@ label[for='image-clear_id'] {
 .rank-counter {
     color: #ffc107;;
     font-size:1.5rem;
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
 }
 .rank-counter span {
     position: absolute;
@@ -695,7 +691,7 @@ ol#rank-nav li {
     margin-top:4px;
 }
 .his-wod-name{
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     display:inline-block;
 }
 .x-info {
@@ -782,7 +778,7 @@ ol#rank-nav li {
     color:blue;
 }
 .cat{
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     color:#ffc107;
     cursor:pointer;
     font-size:1.3rem;
@@ -800,7 +796,7 @@ ol#rank-nav li {
     color:grey;
     font-size:0.9rem;
     cursor:pointer;
-    font-family:'Bungee';
+    font-family:'Bungee', cursive;
 }
 .cat-wods li a{
     color:blue!important;
@@ -918,7 +914,7 @@ ol#rank-nav li {
     background-color:white;
 }
 .level-cat-name{
-    font-family:'Bungee';
+    font-family:'Bungee', cursive;
     color:#ffc107;
     text-align:center;
 }
@@ -1034,7 +1030,7 @@ linked to a date input field that is formatted properly. */
     box-shadow:5px 5px 5px grey;
 }
 .group-select{
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     width: 100%;
     height: 100%;
     color:white;
@@ -1117,7 +1113,7 @@ linked to a date input field that is formatted properly. */
 }
 .hl-head{
     font-size: 1.3rem;
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     position: absolute;
     top: -23px;
     left: 2px;
@@ -1125,7 +1121,7 @@ linked to a date input field that is formatted properly. */
 }
 .display-level{
     font-size: 1.5rem;
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     letter-spacing: -2px;
     position: absolute;
     top: -9px;
@@ -1133,7 +1129,7 @@ linked to a date input field that is formatted properly. */
     color: rgba(255, 193, 7,0.8);
 }
 .hero-level-group{
-    font-family: 'Bungee';
+    font-family: 'Bungee', cursive;
     font-size: 1.2rem;
     color:blue;
 }
