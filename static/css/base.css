@@ -144,8 +144,8 @@ ul.socialaccount_providers {
     z-index: 9998;
 }
 .toast {
-    box-shadow: 5px 5px 15px #000;
-    border:none;
+    /* box-shadow: 5px 5px 15px #000; */
+    /* border:none; */
 }
 .toast-body {
     font-family: 'Open Sans', sans-serif;
