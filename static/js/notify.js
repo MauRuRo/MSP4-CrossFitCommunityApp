@@ -21,6 +21,7 @@ function fill_notification_list(data) {
     var menus = document.getElementsByClassName(notify_menu_class);
     if (menus) {
         var messages = data.unread_list.map(function (item) {
+            console.log(messages)
             var message = "";
             // if(typeof item.actor !== 'undefined'){
             //     message = item.actor;
@@ -35,7 +36,7 @@ function fill_notification_list(data) {
             // if(typeof item.timestamp !== 'undefined'){
             //     message = message + " " + item.timestamp;
             // }
-            return `<li data-noteid=${item.pk}>` + message + '</li>';
+            return `<li data-noteid=${item.slug}>` + message + '</li>';
         }).join('')
 
         for (var i = 0; i < menus.length; i++){
