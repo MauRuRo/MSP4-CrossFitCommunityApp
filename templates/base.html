@@ -40,7 +40,6 @@
     <script src="https://kit.fontawesome.com/9facdf36e4.js" crossorigin="anonymous"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
-    {% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
     {% endblock %}
 
     {% block extra_js %}
@@ -51,6 +50,7 @@
 
 <body>
     {% load notifications_tags %}
+    {% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
     <header class="container-fluid" id="header-bar">
         <div class="row align-items-start">
             <div class="col-3 col-lg-9 d-flex" id="first-head-col">
