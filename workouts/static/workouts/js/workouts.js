@@ -179,10 +179,12 @@ $(document).ready(function() {
     // Submit a comment on a log.
     function submitComment(m_comment, m_comment_ta) {
         let is_main_comment = false
-        if (m_comment_ta.parent('form').parent('.edit-comment-form').attr('name') == 'edit-comment-form-user'){
+        console.log("INHERE")
+        if (m_comment_ta.closest('form').parent('.edit-comment-form').attr('name') == 'edit-comment-form-user'){
             is_main_comment = true
         }
-        let crud_info = m_comment_ta.parent('form').attr('class')
+        // let crud_info = m_comment_ta.parent('form').attr('class')
+        let crud_info = m_comment_ta.closest('form').attr('class')
         let comment_id = ''
         if (crud_info != "comment-upload") {
             comment_id = m_comment_ta.prev('.comment-id').text()
@@ -200,16 +202,17 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data){
+                console.log("MADEHERE")
                 if (crud_info == 'comment-upload'){
                     $('#comment-id').text(data.new_comment_id)
                     $('#comment-id').attr("data-comment-id", data.new_comment_id)
                     let template = $('#hidden-row-template').html()
-                    let log_card_name = m_comment_ta.closest(".row").prevAll(".rank-card:first").attr('name')
+                    let log_card_name = m_comment_ta.closest(".extra-log-info").prevAll(".rank-card:first").attr('name')
                     let last_rows = $(`.add-border-last[data-logid=${log_card_name}]`).find("textarea")
-                    last_rows.closest(".row").before(template)
-                    let newrow = last_rows.closest('.row').prev(".row")
+                    last_rows.closest(".extra-log-info").before(template)
+                    let newrow = last_rows.closest('.extra-log-info').prev(".row")
                     newrow.hide()
-                    let newrow_curr = m_comment_ta.closest('.row').prev(".row")
+                    let newrow_curr = m_comment_ta.closest('.extra-log-info').prev(".row")
                     newrow_curr.show()
                     newrow.find('.new-comment:first').text('"' + data.message + '"')
                     newrow.find("textarea").text(data.message)
@@ -1072,8 +1075,11 @@ $(document).ready(function() {
 
     // Click to submit a comment.
     $('.member-comment-button').click(function(e) {
+        console.log("click commenter")
         e.preventDefault()
-        let m_comment_ta =  $(this).parent().siblings('textarea')
+        // let m_comment_ta =  $(this).parent().siblings('textarea')
+        let m_comment_ta =  $(this).closest("form").find('textarea:first')
+        console.log(m_comment_ta)
         let m_comment = m_comment_ta.val()
         submitComment(m_comment, m_comment_ta)
     })

@@ -154,13 +154,18 @@
         <div class="col-1"></div>
         <div class="card-col col-8 px-1">
             <hr>
-            <div class="x-info">
+            <div class="x-info container">
                 <form action="/ajax/post/commentMember" method="POST" class="comment-upload">
                     {% csrf_token %}
-                    <textarea name="member_comment" placeholder="Leave a comment" class="member-comment"></textarea>
-                    <div class="member-comment-button-container">
-                    <button class="btn-none comment-btn member-comment-button" type="submit"
-                    ><i class="far fa-share-square"></i></button></div>
+                    <div class="row">
+                        <div class="col-11 p-0">
+                            <textarea name="member_comment" placeholder="Leave a comment" class="member-comment"></textarea>
+                        </div>
+                        <div class="col-1 p-0">
+                            <button class="btn-none comment-btn member-comment-button" type="submit">
+                            <i class="far fa-share-square"></i></button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

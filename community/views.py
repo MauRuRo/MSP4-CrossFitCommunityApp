@@ -523,7 +523,7 @@ def send_group_notification(groupname, members, admin):
 
 def note_group_notification(groupname, members, admin):
     """Send an in-app notification about the group for the members"""
-    message = f'{admin} added you to the group "{groupname}".'
+    message = f'{admin.userprofile.full_name} added you to the group "{groupname}".'
     member_list = []
     for member in members:
         if member != admin:
