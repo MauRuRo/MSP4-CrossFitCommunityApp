@@ -447,7 +447,7 @@ def resetNotes(request):
         notes = request.user.notifications.unread()
          # build html template
         calling_group_html = loader.render_to_string(
-            'templates/includes/toasts/toast_notification.html',
+            '../../templates/includes/toasts/toast_notification.html',
             {'notes': notes}
             )
         # package output data and return it as a JSON object
