@@ -6,7 +6,6 @@
     {% block meta %}
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <meta charset="utf-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     {% endblock %}
 
@@ -40,6 +39,8 @@
         crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/9facdf36e4.js" crossorigin="anonymous"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+    {% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
     {% endblock %}
 
     {% block extra_js %}
@@ -130,6 +131,7 @@
                     {% endfor %}
                 </div>
                 {% endif %}
+                <ul class="live_notify_list" hidden></ul>
             </div>
             <div class="col-3 d-lg-none d-flex justify-content-center">
             </div>

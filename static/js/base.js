@@ -139,4 +139,7 @@
         })
     })
 
+    // remove allauth labels for password change form.
+    $(".password_change").find("label").remove()
+
 });
