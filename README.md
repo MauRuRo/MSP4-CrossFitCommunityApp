@@ -58,7 +58,7 @@ My goal was to make a web application similar to the existing website [BeyondThe
 
 The basic idea is to create an online platform where a commnity of users can log their workout results and compare to each other and see what level they are at as a function of the total community results. BeyondTheWhiteboard has a lot of feautures on their application, each of which was worth exploring, but due to the limited amount of time available to me I limited the scope of the site functionality to logging, ranking, comparing, commenting and grouping.
 
-Users can make use of the websites functionality for a one time payment of €9,99. I might also have opted for a subscription payment of say €0,99 per month.
+Users can make use of the website's functionality for a one time payment of €9,99. I might also have opted for a subscription payment of say €0,99 per month.
 
 ### User Stories
 
@@ -199,19 +199,49 @@ It displays a enticing text encouring the user buy an account and it displays a 
 
     </details>
 
-- **User Hero Levels**
+- **Hero Levels**
   This module displays the user's levels. It annotates a general fitness level ("Hero Level"). It also gives average levels per workout category (of which there are eight). And if a use clicks on the category level bar it can also see the workouts and their corresponding results and levels that build toward the average level in a popover. From that popover users can also navigate to each specific workout on the workout page listed there. The module also conains an information icon which toggles an div with information about that module.
+  <details>
+  <summary>Hero Levels</summary>
+
+  <p align="center">
+  <img src="media/screenshots/herolevels.png">
+  </p>
+
+</details>
 
 - **Profile Information**
   This module displays the user's profile information. It also contains a edit button which swithces the module to an edit module for said profile information.
+  <details>
+  <summary>Profile Info</summary>
+
+  <p align="center">
+  <img src="media/screenshots/profileinfo.png">
+  </p>
+
+</details>
 
 ## **WOD's Page**
+  <details>
+  <summary>WOD's Page</summary>
+
+  <p align="center">
+  <img src="media/screenshots/wodspage.png">
+  </p>
+
+</details>
 
 - ***Log Cards***
   This page makes use of "Log cards" in two of it's modules. These are collapsed information holders with only basic information on top (date, workout, result, profile name). It also shows wheter a result is a PR for the user and it shows the user profile picture and their country flag (which can be clicked to filter by country, though full country filtering functionallity works better when selecting the country group on the community page). If the user clicks the center div on the card it expands to reveal some extra information, including comments made by members and a little div with a form with textarea where the user can make their own comment. When applicapble (if current user is creator of the object), crud icons appear next to the comment or log information to enable the user to edit/delete.
 
 - **Activity**
   This module shows the logging activity by members (filtered by the group selected in the community module) ordered by date (latest on top). The user can show recent acivity for all members of the group or just themselves. The user can also choose to see acitvity for only the selected workout or for all workouts. The module is a scrolling list. The list consists of 'log cards' (see above). On page load, it loads max 25 cards per category. If the user scrolls down, halfway through the div site makes a call to the database to load the next 25 cards, and so on. If the website is too slow or the user is to fast, there is also a button on the bottom of the list to click to load more cards.
+  <details>
+  <summary>Activity</summary>
+  <p align="center">
+  <img src="media/screenshots/activity.png">
+  </p>
+  </details>
 
 - **Workout of the Day**
   This module displays the workout of the day, as selected by the site administrator. It contains information about the workout (title, category, description) and also a "story" about the 'hero' (deceased service man/woman) after whom the workout is named. The content for these workout descriptions and information was taken from [BeyondTheWhiteboard](https://beyondthewhiteboard.com/). Furthermore the module also contains a slider, which the user can use to determine the result needed for certain level. 
@@ -219,357 +249,98 @@ It displays a enticing text encouring the user buy an account and it displays a 
   The module also includes two buttons (top-right): "Log" (which toggles the Log module in place of the Ranking module) and "Workouts" (which toggles the Workout module in place of the Activity module)
 
   For the superuser the module also contains CRUD buttons for workouts.
+  <details>
+  <summary>Workout of the Day</summary>
+  <p align="center">
+  <img src="media/screenshots/workoutoftheday.png">
+  </p>
+  </details>
 
 - **Ranking**
   This module shows the ranked resuls of members (filtered by the group selected in the community module). It is not a simple ordered and numbered list: equal results have equal rank numbers, and the next rank after a sequance of equal results skips a number equal to the amount of equal results. E.g( 1, 2, 3, 3, 5, 5, 7, 8, 9). The user can show ranked logs for men or women and can also show the ranking for just the current day or the entire past year. The module is a scrolling list. The list consists of 'log cards' (see above). On page load, it loads max 25 cards per category. If the user scrolls down, halfway through the div site makes a call to the database to load the next 25 cards, and so on. If the website is too slow or the user is to fast, there is also a button on the bottom of the list to click to load more cards. On page load the module automatically scrolls to the result of the user (and loads the 'page' of 25 logs on which the user's result is on). If their are ranks higher than those loaded on the page a button will appear on top of the list to load the higher ranking results.
+  <details>
+  <summary>Ranking</summary>
+  <p align="center">
+  <img src="media/screenshots/ranking.png">
+  </p>
+  </details>
 
 - **Workouts**
   This module contains a list of workouts per category and a search bar to look for a specific workout. It also indicates which workout is selected as workout of the day. All workouts listed are links to the page for that workout.
+  <details>
+  <summary>Workouts</summary>
+  <p align="center">
+  <img src="media/screenshots/workouts.png">
+  </p>
+  </details>
 
 - **Log**
   This module shows the log submit or log edit form. Depending on the workout type, the field for "For time", "AMRAP" or "Max Weight" result is shown. 
+  <details>
+  <summary>Log</summary>
+  <p align="center">
+  <img src="media/screenshots/log.png">
+  </p>
+  </details>
 
 ## **Community Page**
+  <details>
+  <summary>Community Page</summary>
+  <p align="center">
+  <img src="media/screenshots/community.png">
+  </p>
+  </details>
 
 - **Groups**
   This module shows you the groups that are available to you by default (global, country, city, age) and the (shared) custom groups that you are a member of. You can also create your own group in this module: When clicking "Make Group" button, the module will switch to the create group form letting you enter a group name and select members from the member module. When clicking on custom groups CRUD icons will apear letting you delete and/or edit the group (depending if you are the admin of the group).
+  <details>
+  <summary>Groups</summary>
+  <p align="center">
+  <img src="media/screenshots/groups.png">
+  </p>
+  </details>
 
 - **Members**
   This module shows members of the group you have selected in the group module. It loads max 25 member cards and loads the next page of 25 when you scroll down or click the load button (as a backup). It also features search bar which allows you to search within the group for a specific member. If you are creating a group add/delete icons will appear next to the member's name. When you click on a members name the members level and profile information will be shown in the other modules.
+  <details>
+  <summary>Members</summary>
+  <p align="center">
+  <img src="media/screenshots/members.png">
+  </p>
+  </details>
 
 - **Group Stats**
-This module shows the statistics of the group that's selected: average level, member count, men/women, average activity level and the admin name.
+  This module shows the statistics of the group that's selected: average level, member count, men/women, average activity level and the admin name.
+  <details>
+  <summary>Group Stats</summary>
+  <p align="center">
+  <img src="media/screenshots/groupstats.png">
+  </p>
+  </details>
 
 - **Hero Levels**
-This module shows the hero levels for the selected user and is similar in every way to the module on the profile page.
+  This module shows the hero levels for the selected user and is similar in every way to the module on the profile page.
 
 - **Profile Info**
 This module shows the profile information of the selected user, similar to how it is shown on the profile page, but without the CRUD options. 
 
+## **Login/ Signup/ Logout/ Create Profile Page**
 
-The Cart is where you see a list of all the products that you have added.
-Center block design. The top horizontal half is a list of all the products and information:
+- These pages are pretty straight forward and based on the allauth standard templates (with the exception of the create profile page).
 
-- Image on the left
-- Name
-- Prince
-- Quantity and quantity adjuster - Here you see the quantity of a product, if you want to adjust, or remove the product.
-
-The Order Summary is below the products list and hold all the financial details of the order:
-
-- Cart Total
-- Discounts - (if applicable)
-- Subtotal
-- Delivery charge
-- Tax amount - (Note is is added into the total amount)
-- Grand Total
-- Keep shopping button - will take you back to the shop.
-- Checkout button - will take to the check out.
-
-<details>
-<summary>Shopping Cart Wireframes(Click for image)</summary>
-
-<p align="center">
-<img src="media/wireframes/Cart.png">
-</p>
-
-</details>
-
-#### Checkout
-
-Full page layout with the user order form to complete:
-
-- Contact details and delivery address.
-- Save information to profile button that if pressed the information will be autofilled in next time they use the store.
-- Adjust cart button - If you need to adjust the cart.
-- Complete Order - Sends the card informtion to [Stripe](https://stripe.com/)
+- **Stripe Payments** On the Create Profile page is where the user makes their one time payment using [Stripe](https://stripe.com/).
 
 > #### Stripe Development Card
 >
-> A [Stripe](https://stripe.com/) payment system is inplace and >takes all major cards.
+> A [Stripe](https://stripe.com/) payment system is inplace and takes all major cards.
 > The numbers below are used to test the Stripe Payment software.
 >
 > - Card number - 4242 4242 4242 4242
 > - CVC - Any 3 digit number.
 > - Expire date - Any date in the future
 
-<details>
-<summary>Checkout Page Wireframes (Click for image)</summary>
 
-<p align="center">
 
-![Checkout](media/wireframes/Checkout_D_M.png)
-
-</p>
-</details>
-
-#### Checkout Success
-
-Two center blocks one on the left and right both hold all your order details.
-Breadcrumbs in the top left will take you to your dashboard.
-
-Left block contains:
-
-- Order Details
-- Stripe Receipt - Clicking the receipt will sent to a new page with you Stripe receipt
-
-Right Block contains
-
-- Contact Details
-- Shipping information
-
-<details>
-<summary>Checkout Success Wireframes(Click for image)</summary>
-
-<p align="center">
-
-![Checkout Success](media/wireframes/Checkoutsuccess_D_M.png)
-
-</p>
-</details>
-
----
-
-<div align="right">
-
-[Back to Top :arrow_up:](#table-of-contents)
-
-</div>
-
-## **Blog**
-
-The blog post is the main source of communication in Focus, it is how all the user connect with each other, by writing blogs about how they are getting on, there experienceses and succesess they have had. Products or workouts they have used from the Focus Shop or Membership Programs. A special Category call 'Members' is for members to support each other,and get support from our Focus Fitness Trainers.
-Featured Blogs are chosen by our Trainers and is generally written by Pro trainers or athletes.
-
-The Blog Page is broken down into separate parts
-
-- **Featured Blogs**
-  Is the first thing you see. And uses a carcel to scrole through.
-
-- **Category selection**
-  A green and grey Category selection box is on the right-hand side.
-  Here you will find all the available categories, and some information on each.
-  Each category is colour coded.
-
-  - **Members**
-    This is for our users to connect with each other, write blogs about how they are enjoying one of our Focus Products or how a Membership program is working for them. If they have a question or comments on how to do anything they will be answered by our Focus Trainers in this category. By leaving comments on their blog post.
-
-  - **Covid-19**
-    In this category, we will talk about everything COVID and gym-related, its managing training in lockdowns and gym hygiene.
-
-  - **Dieting**
-    All blog post that are diet-related, tips tricks and pitfalls
-
-  - **Endurance**
-    All blogs that focus on the endurance training side of thing, Running, Cycling, Swimming
-
-  - **Strength Training**
-    All blogs that have to do with resistance training, bodybuilding, exercise techniques, tips, tricks and pitfalls
-  - **Recovery**
-    All blogs to do with the recovery side of the gym. Sleep, post-gym products, tips, tricks and pitfalls.
-
-- **Blogs**
-  This is where all the other blogs live.
-  All blog borders are colour coded as per there category, to make it easer to see what category a blog is at a glance.
-  They are ordered, newest to oldest.
-
-- **Members Blogs**
-  Underneath the Category selection box, is the Members blogs, a list of all the user member’s blogs show here.
-
-<details>
-<summary>Blog List Wireframes (Click for image)</summary>
-
-<p align="center">
-
-![Blog](media/wireframes/blog_list_D_mo.png)
-
-</p>
-
-</details>
-
-#### Blog Categories Page
-
-Once the category selection has been made, they will be redirected to this page.
-All the blog post in that category will be displayed.
-Only logged in users may see the Members posts
-
-<details>
-<summary>Blog Categories Wireframes (Click for image)</summary>
-
-<p align="center">
-
-![blog_cat](media/wireframes/blog_cat.png)
-
-</p>
-</details>
-
-#### **Blog Detail Page**
-
-Once the user has selected the blog post they would like to read, They are redirected to this page.
-The blog post with the only element on this page.
-Witch in include:
-
-- Blogs Title
-- Blog author
-- Blog Content
-- The amount of views, likes, and comments the post have
-- When the blog was created.
-
-Once the user has finished reading the post there is a section where a user may ‘like’ or leave a comment.
-Note only logged in user may use this feature.
-
-<details>
-<summary>Blog Detais Wireframes (Click for image)</summary>
-
-<p align="center">
-
-![detail_blog](media/wireframes/detail_blog.png)
-
-</p>
-
-</details>
-
-#### **Create and Edit Blog Page**
-
-The create and edit blogs views share the same page: blog_form.html
-This page is a form that has all the needed fields to fill out when creating or editing a blog.
-The difference is when your creating a post the form is blank with ‘placeholders’ to guide you.
-When your editing a post, all the fields are prefilled with the data needed to edit.
-The information icon in the top right, has informatin about how to write a blog post.
-
-<details>
-<summary>Blog Create/Edit Wireframes (Click for image)</summary>
-
-<p align="center">
-
-![blog_forms](media/wireframes/blog_forms.png)
-
-</p>
-</details>
-
-#### Blog Author Page
-
-By Clicking on the authors name in the details blog page, you will be redirected to this page.
-Here you will be able to see all the blogs that this user has written.
-Each title is a link to the blog and you can see the amount of likes, comments, and thumps up each post has.
-
-<details>
-<summary>Blog Create/Edit Wireframes (Click for image)</summary>
-
-<p align="center">
-
-![Blog_author](media/wireframes/Blog_author.png)
-
-</p>
-
-</details>
-
-#### **Memberships**
-
-Are an important part of how Focus Fitness works. There are 2 types of memberships
-_Free_ and _Professional_.
-
-- **Free** memberships are given to anyone who joins Focus by logging in. When you log in you profile is made and _free_ status is given.
-- **Professional** membership is a monthly subscription.
-  To become a _Professional_ member, Click the ‘Select' button on the card and you will be redirected to the members-payment page.
-  This page is a simple center block design with the memberships details and monthly billing amount.
-  Below is the Stripe Payment Field.
-  To Cancel a Subscription, it can be done viva the Dashboard in the subscription tab.
-
-#### **Programs**
-
-Only Subscribed users may use this app.
-The Programs page is where the user can find the programs they have subscribed to.
-The page is center based with horizontal cards stacked on top of each other.
-They consist of the different categories.
-
-- Endurance Training
-- Static Stretching
-- Strength training
-- Dieting
-
-More can be added in the administration section.
-
-#### Programs Details
-
-The page is a center block design and is divided in half.
-On the Left hand side is the description of the category the member has chosen.
-On the right hand side is the list of workouts within that Program.
-The workouts are all video based and can be added or ordered in any way the trainer wishes to show them.
-
-<details>
-<summary>Programs WireFrame(Click for image)</summary>
-
-<p align="center">
-
-![Programs](media/wireframes/Programs.png)
-
-</p>
-</details>
-
-#### **Workouts**
-
-Once the workout is selected, you will be redirected to the workout.
-Its a center-block design which displays the title and the context of the work out.
-Below this is a video, which will fit the size of the user's display.
-
-<details>
-<summary>Workouts WireFrame(Click for image)</summary>
-
-<p align="center">
-
-![workdouts](media/wireframes/workdouts.png)
-
-</p>
-</details>
-
-#### **Dashboard**
-
-The Dashboard is where the login in user can access all their personal information.
-It is divided into 3 parts.
-
-- _Profile Admin_
-- _My Blogs_
-- _Orders History_
-
-<details>
-<summary>Dashboard Wireframes (Click for image)</summary>
-
-<p align="center">
-
-![dashBoard](media/wireframes/dashBoard.png)
-
-</p>
-
-</details>
-
-#### **About**
-
-The About page has a centre block format with a heading and information about Focus Fitness.
-
-<details>
-<summary>About Page Wireframes (Click for image)</summary>
-
-<p align="center">
-
-![About](media/wireframes/About.png)
-
-</p>
-</details>
-
-#### **Contact Us**
-
-The Contact us page is where you can contact us viva email.
-
-<details>
-<summary>Contact Us Wireframes (Click for image)</summary>
-
-<p align="center">
-
-![Contact](media/wireframes/Contact.png)
-
-</p>
-</details>
 
 #### **Data Base**
 
@@ -596,13 +367,26 @@ For this Project we used [SQLite](https://www.sqlite.org/index.html) in developm
 
 ## Surface
 
+The design of the site is based on elements found in your average CrossFit box: black gym mats (in the header), chipboard for the background (my box has chipboard walls) and whiteboards to hold the modules (this is also a wink to the inspiration of this website: BeyondTheWhiteboard).
+
+#### Images
+
+The site uses few images for it's design. See the list here:
+- [Landing Page background](https://www.facebook.com/Egypt.crossfitters/photos/a.134487927312457/134487907312459)
+- [Default profile image](https://boundingintocomics.com/wp-content/uploads/2017/10/Mystery-Hero.png)
+- [Black mat for header background](https://www.australianbarbellco.com/FRIBK_dash_FLAT/Black-rubber-gym-floor-tiles.-Square-edge-flat-tile./pd.php)
+
+For the logo I adapted an [existing image](https://www.vectorstock.com/royalty-free-vector/kettlebell-and-dumbbell-with-baner-logo-vector-4156230), and I further adapted it to create the PR emblem.
+
+All artifically generated users have profile pictures that were provided by the [generator API](https://randomuser.me/). Some users where manually made during testing and their profile pictures are mostly personal pictures.
+
 #### Fonts
 
-- [Montserrat](https://fonts.google.com/specimen/Montserrat?query=montserrat) - Primary Font
-- [Audiowide](https://fonts.google.com/specimen/Audiowide) - Secondary Font
+- [Open sans](https://fonts.google.com/specimen/Open+Sans?query=open+sans&preview.text_type=custom) - Primary Font
+- [Bungee](https://fonts.google.com/specimen/Bungee?query=bungee&preview.text_type=custom) - Secondary Font
 
-The primary font [Montserrat]("https://fonts.google.com/specimen/Montserrat") is used for the body of all pages. I chose it because of its readability and accessibility. It complements the secondary font.
-The Secondary is [Audiowide](https://fonts.google.com/specimen/Audiowide") is used in the logo and transposes well to the Heading and buttons, the technology styled typeface gives it a young and edgie feel, yet cleanly readable.
+The primary font [Open sans](https://fonts.google.com/specimen/Open+Sans?query=open+sans&preview.text_type=custom) is used for all paragraph texts and longer texts on the site. It's readable and was recommended as a suplimentary font to Bungee by Googe fonts.
+The Secondary font [Bungee](https://fonts.google.com/specimen/Bungee?query=bungee&preview.text_type=custom) is used for headings and short descriptors of main items. It's bulky and strong which emphasizes the CrossFit mentality, but it's not overly flaunty in it's design, still giving the text a clean impression.
 
 #### Colour Scheme
 
@@ -613,14 +397,7 @@ The Secondary is [Audiowide](https://fonts.google.com/specimen/Audiowide") is us
 - ![#e5ce21](https://placehold.it/15/e5ce21/000000?text=+) `rgb(229, 206, 33)` - Supplementary colour 3
 - ![#0275d8](https://placehold.it/15/0275d8/000000?text=+) `rgb(91, 192, 222)` - Supplementary colour 4
 
-The colour scheme is all about contrast, there are a lot a dark background with white text and bold bright colours used sparingly throughout the site.
-The Supplementary colours ![#1bd87d](https://placehold.it/15/1bd87d/000000?text=+) ![#e7313f](https://placehold.it/15/e7313f/000000?text=+) ![#e5ce21](https://placehold.it/15/e5ce21/000000?text=+) ![#0275d8](https://placehold.it/15/0275d8/000000?text=+) follow the Olympic weightlifting colours standard. The colours are bold and work with the theme.
-
-#### Images
-
-Images are used extensively. The images chosen are all gym and fitness related. They are used as a background in most of the site. Original pictures were darkened to fit with the theme of the project.
-All images were found on [Unsplash](https://unsplash.com/) and have a CC licence.
-A list of all the photographers can be found [here](#media)
+The colors are mostly primary colors that reminisce of whiteboard markers. I tried to limit the amount of colors to keep the site clean.
 
 <div align="right">
 
