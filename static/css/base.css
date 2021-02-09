@@ -1,11 +1,14 @@
 /* GENERAL */
 
+html {
+    overflow-x: hidden!important;
+}
 body {
     background: url('/media/chipboard.png') repeat fixed;
     background-size: 700px 400px;
     background-position-y: 150px;
     font-family: 'Open Sans', sans-serif;
-    overflow-x:hidden;
+    overflow-x: hidden!important;
 }
 .indexbody{
     background: url('/media/background.jpg') no-repeat fixed;
