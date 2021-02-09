@@ -125,7 +125,7 @@ The basic structure of the web page is
 - _Body_ - Main page elements
 -_Footer_ - Credits link.
 
-The Landing Page, Sign-up Page and Login Page are publically accesible. After a user has signed up and logged in the user is redirected to the create profile page (logout is still accesible). After the user has created a profile (and completed payment),all pages of the site are accessible: Profile page, WOD's page, Community page.
+The Landing Page, Sign-up Page and Login Page are publically accesible. After a user has signed up and logged in the user is redirected to the create profile page (logout is still accesible). After the user has created a profile (and completed payment),all pages of the site are accessible: Profile page, WOD's page, Community page. These last pages are all structured to contain three "modules".
 
 I had a very basic idea for the website structure before I started writing the code, which I sketched out in some very simple [wireframes](https://github.com/MauRuRo/MSP4-CrossFitCommunityApp/tree/master/documentation) at the start of the process.
 
@@ -162,74 +162,48 @@ The footer stays at the bottom of each page. It contains only a credits link for
 
 </div>
 
-### **Home Page**
+## **Home Page**
 
 The home page or Index page is the landing page for users who do not have, or are not yet signed in to an account.
 It displays a enticing text encouring the user buy an account and it displays a caroussel with some images and text which demonstrate the website's capabilities.
 
-<div align="right">
-
-[Back to Top :arrow_up:](#table-of-contents)
-
-</div>
-
----
 
 ## **Profile Page**
 
-- **Layout**
-  _The shop heading is top center_. -To let the user know where they are.
+- **User Workout Stats**
+  This module contains the workout stats for the user; describing the amount of workouts in the past year, the past month and the past week. If the amount of workouts per week or per month is less then the weekly/monthly average (based on the passed year) the text changes from blue to red. Depending on the users "progress" a different motivational gif and accompanying text will be shown.
 
-- **Product Filtering area**
-  The category selectors are coloured in the supplementary colour to distinguish them apart at a glance.
-  On the right hand side there is some breadcrumbs, this is another way to get back to the default ordering, and shows you how many products there are in total, or in each search.
+- **User Hero Levels**
+  This module displays the user's levels. It annotates a general fitness level ("Hero Level"). It also gives average levels per workout category (of which there are eight). And if a use clicks on the category level bar it can also see the workouts and their corresponding results and levels that build toward the average level in a popover. From that popover users can also navigate to each specific workout on the workout page listed there. The module also conains an information icon which toggles an div with information about that module.
 
-- **Product cards**
-  The products are displayed on cards, are positioned side by side in rows.
-  - Picture - is at the top.
-  - Name of the product.
-  - Price of the product is displayed in bold numbers.
-  - Category and stars ratings - The product is rated by the users and the average of all the ratings is displayed here, total out of 5.
+- **Profile Information**
+  This module displays the user's profile information. It also contains a edit button which swithces the module to an edit module for said profile information.
 
-<details>
-<summary>Focus Shop Wireframes (Click for image)</summary>
+## **WOD's Page**
 
-<p align="center">
+- ***Log Cards***
+  This page makes use of "Log cards" in two of it's modules. These are collapsed information holders with only basic information on top (date, workout, result, profile name). It also shows wheter a result is a PR for the user and it shows the user profile picture and their country flag (which can be clicked to filter by country, though full country filtering functionallity works better when selecting the country group on the community page). If the user clicks the center div on the card it expands to reveal some extra information, including comments made by members and a little div with a form with textarea where the user can make their own comment. When applicapble (if current user is creator of the object), crud icons appear next to the comment or log information to enable the user to edit/delete.
 
-![Focus Shop](media/wireframes/focus_shop.png)
+- **Activity**
+  This module shows the logging activity by members (filtered by the group selected in the community module) ordered by date (latest on top). The user can show recent acivity for all members of the group or just themselves. The user can also choose to see acitvity for only the selected workout or for all workouts. The module is a scrolling list. The list consists of 'log cards' (see above). On page load, it loads max 25 cards per category. If the user scrolls down, halfway through the div site makes a call to the database to load the next 25 cards, and so on. If the website is too slow or the user is to fast, there is also a button on the bottom of the list to click to load more cards.
 
-</p>
-</details>
+- **Workout of the Day**
+  This module displays the workout of the day, as selected by the site administrator. It contains information about the workout (title, category, description) and also a "story" about the 'hero' (deceased service man/woman) after whom the workout is named. The content for these workout descriptions and information was taken from [BeyondTheWhiteboard](https://beyondthewhiteboard.com/). Furthermore the module also contains a slider, which the user can use to determine the result needed for certain level. 
 
-#### Product Details
+  The module also includes two buttons (top-right): "Log" (which toggles the Log module in place of the Ranking module) and "Workouts" (which toggles the Workout module in place of the Activity module)
 
-The Details page is a center block design, with breadcrumbs navigation in the top left.
-The center is divided in half, the left hand side has picture of the product, and on the right is the information:
+  For the superuser the module also contains CRUD buttons for workouts.
 
-- Name of the product
-- Category and Rating
-- Price
-- Size selector, (if applicable)
-- Quantity selector
-- Add to Cart button.
-- Product Overview -
-  This is where there are more details about the product.
-  Under that there is the reviews section
-  The product's overall rating is displayed here.
-  This is where you write your review.
-  Below is a list of all the reviews and individual ratings the users gave the product.
+- **Ranking**
+  This module shows the ranked resuls of members (filtered by the group selected in the community module). It is not a simple ordered and numbered list: equal results have equal rank numbers, and the next rank after a sequance of equal results skips a number equal to the amount of equal results. E.g( 1, 2, 3, 3, 5, 5, 7, 8, 9). The user can show ranked logs for men or women and can also show the ranking for just the current day or the entire past year. The module is a scrolling list. The list consists of 'log cards' (see above). On page load, it loads max 25 cards per category. If the user scrolls down, halfway through the div site makes a call to the database to load the next 25 cards, and so on. If the website is too slow or the user is to fast, there is also a button on the bottom of the list to click to load more cards. On page load the module automatically scrolls to the result of the user (and loads the 'page' of 25 logs on which the user's result is on). If their are ranks higher than those loaded on the page a button will appear on top of the list to load the higher ranking results.
 
-<details>
-<summary>Product Details WireFrames (Click for image)</summary>
+- **Workouts**
+  This module contains a list of workouts per category and a search bar to look for a specific workout. It also indicates which workout is selected as workout of the day. All workouts listed are links to the page for that workout.
 
-<p align="center">
+- **Log**
+  This module shows the log submit or log edit form. Depending on the workout type, the field for "For time", "AMRAP" or "Max Weight" result is shown. 
 
-![Product Details](media/wireframes/detailed_view_D_M.png)
-
-</p>
-</details>
-
-#### Shopping Cart
+## **Community Page**
 
 The Cart is where you see a list of all the products that you have added.
 Center block design. The top horizontal half is a list of all the products and information:
