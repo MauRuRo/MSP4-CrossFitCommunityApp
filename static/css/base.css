@@ -214,7 +214,7 @@ ul.socialaccount_providers {
     border: 6px ridge lightgrey;
     border-radius: 5px;
     background-color: white;
-    box-shadow: 3px 3px 8px;
+    box-shadow: 1px 1px 3px;
     margin-bottom: 15px;
 }
 .hide-it{
@@ -277,11 +277,11 @@ input[name='q']::placeholder {
 .message-container {
     position: absolute;
     top:187px;
-    /* right:15px; */
     z-index: 9999;
     min-width: 245px;
     max-height: calc(100vh - 200px);
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 .message-container-home {
     top: 231px !important;
@@ -422,6 +422,25 @@ label[for='image-clear_id'] {
 .carousel-caption p {
     background-color: black;
     font-size:1.3rem;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-image: none;
+}
+
+.carousel-control-next-icon:after
+{
+  content: '>';
+  font-family: 'Bungee', cursive;
+  font-size: 2.5rem;
+  color: grey;
+}
+
+.carousel-control-prev-icon:after {
+  content: '<';
+  font-family: 'Bungee', cursive;
+  font-size: 2.5rem;
+  color: grey;
 }
 .example-slide {
     margin-top: 50px;
@@ -1230,7 +1249,6 @@ color: red;
     .message-container {
         top:115px;
         min-width: 245px!important;
-        /* border-radius: 5px!important; */
     }
     #arrow-emblem {
         top:35px;
