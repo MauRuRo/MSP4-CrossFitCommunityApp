@@ -124,7 +124,7 @@ The basic structure of the web page is
 
 - _Navigation_ - Top level
 - _Body_ - Main page elements
--_Footer_ - Credits link.
+- _Footer_ - Credits link.
 
 The Landing Page, Sign-up Page and Login Page are publically accesible. After a user has signed up and logged in the user is redirected to the create profile page (logout is still accesible). After the user has created a profile (and completed payment),all pages of the site are accessible: Profile page, WOD's page, Community page. These last pages are all structured to contain three "modules".
 
@@ -147,7 +147,7 @@ All of [Allauth](https://django-allauth.readthedocs.io/en/latest/) HTML pages ha
 
 #### Navbar
 
-The navbar is fixed to top of each page. For smaller width screens the navbar will collapse to a bootstrap collapsed navber (taking the form of a hamburger button). The navbar only has four items: Profile, WOD's, Community and Log Out (or incase you are not logged in it's: Home, Log In, Sign Up). There are no sub lists in the nav items. To create optimal UX all site functionality can be easily and intuitively accessed through just these four pages.
+The navbar is fixed to top of each page. For smaller width screens the navbar will collapse to a bootstrap collapsed navbar (taking the form of a hamburger button). The navbar only has four items: Profile, WOD's, Community and Log Out (or in case you are not logged in it's: Home, Login, Sign Up). There are no sub lists in the nav items. To create optimal UX all site functionality can be easily and intuitively accessed through just these four pages.
 
 The navbar also includes the user profile image and the site emblem when logged in, or just the website emblem when logged out. When clicking on or hovering over the website emblem a information layover will appear with general information aobut the website.
 
@@ -165,14 +165,39 @@ The footer stays at the bottom of each page. It contains only a credits link for
 
 ## **Home Page**
 
+- **Landing page**
 The home page or Index page is the landing page for users who do not have, or are not yet signed in to an account.
 It displays a enticing text encouring the user buy an account and it displays a caroussel with some images and text which demonstrate the website's capabilities.
 
+<details>
+<summary>Landing Page</summary>
+
+<p align="center">
+<img src="media/screenshots/landingpage.png">
+</p>
+
+</details>
 
 ## **Profile Page**
+<details>
+<summary>Profile Page</summary>
+
+<p align="center">
+<img src="media/screenshots/profilepage.png">
+</p>
+
+</details>
 
 - **User Workout Stats**
   This module contains the workout stats for the user; describing the amount of workouts in the past year, the past month and the past week. If the amount of workouts per week or per month is less then the weekly/monthly average (based on the passed year) the text changes from blue to red. Depending on the users "progress" a different motivational gif and accompanying text will be shown.
+  <details>
+    <summary>Workout Stats</summary>
+
+    <p align="center">
+    <img src="media/screenshots/workoutstats.png">
+    </p>
+
+    </details>
 
 - **User Hero Levels**
   This module displays the user's levels. It annotates a general fitness level ("Hero Level"). It also gives average levels per workout category (of which there are eight). And if a use clicks on the category level bar it can also see the workouts and their corresponding results and levels that build toward the average level in a popover. From that popover users can also navigate to each specific workout on the workout page listed there. The module also conains an information icon which toggles an div with information about that module.
@@ -205,6 +230,22 @@ It displays a enticing text encouring the user buy an account and it displays a 
   This module shows the log submit or log edit form. Depending on the workout type, the field for "For time", "AMRAP" or "Max Weight" result is shown. 
 
 ## **Community Page**
+
+- **Groups**
+  This module shows you the groups that are available to you by default (global, country, city, age) and the (shared) custom groups that you are a member of. You can also create your own group in this module: When clicking "Make Group" button, the module will switch to the create group form letting you enter a group name and select members from the member module. When clicking on custom groups CRUD icons will apear letting you delete and/or edit the group (depending if you are the admin of the group).
+
+- **Members**
+  This module shows members of the group you have selected in the group module. It loads max 25 member cards and loads the next page of 25 when you scroll down or click the load button (as a backup). It also features search bar which allows you to search within the group for a specific member. If you are creating a group add/delete icons will appear next to the member's name. When you click on a members name the members level and profile information will be shown in the other modules.
+
+- **Group Stats**
+This module shows the statistics of the group that's selected: average level, member count, men/women, average activity level and the admin name.
+
+- **Hero Levels**
+This module shows the hero levels for the selected user and is similar in every way to the module on the profile page.
+
+- **Profile Info**
+This module shows the profile information of the selected user, similar to how it is shown on the profile page, but without the CRUD options. 
+
 
 The Cart is where you see a list of all the products that you have added.
 Center block design. The top horizontal half is a list of all the products and information:
