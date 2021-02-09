@@ -135,6 +135,6 @@
     })
 
     // remove allauth labels from allauth forms.
-    $(".password_change, .signup, .login, .password_reset").find("label:not(.form-check-label)").remove()
+    $(".password_change, .signup, .login, .password_reset, .add_email").find("label:not(.form-check-label)").remove()
 
 });
