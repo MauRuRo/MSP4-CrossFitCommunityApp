@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from datetime import date, datetime, timedelta
 from .models import Workout, MemberComment, Log
 from profiles.models import HeroLevels, MailNotificationSettings
+from django.contrib.auth.models import User
 from .forms import LogForm, MemberCommentForm, WorkoutForm
 from django.utils.dateparse import parse_duration
 from django.db.models import Max, Min
