@@ -246,9 +246,14 @@ else:
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASS')
     # DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
     DEFAULT_FROM_EMAIL = 'herocommunity@example.com'
+    # SECURITY SETTINGS MAKING SURE ALL VISITORS ARE REDIRECTED TO SECURE HTTPS
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET')
+
 
 # CRONTAB_EXECUTABLE = "/etc/cron.d"
 # # Cronjob to update statistics for inactive users. Unable to test in Gitpod environment.

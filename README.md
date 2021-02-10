@@ -78,6 +78,8 @@ Users can make use of the website's functionality for a one time payment of €9
 - As a user, I want to be able to keep a custom created group private.
 - As a user, I want to be able to switch between which group I select.
 - As a user, I want to be able to comment on workout results.
+- As a user, I want to be notified about comments on my logs.
+- As a user, I want to be notified if I've een added to a group.
 - As a user, I want to be able to determine which result I need to reach a certain level.
 - As a user, I want to be able to create an account and profile.
 - As a user, I want to be able to signup/login using a social account.
@@ -149,7 +151,7 @@ All of [Allauth](https://django-allauth.readthedocs.io/en/latest/) HTML pages ha
 
 The navbar is fixed to top of each page. For smaller width screens the navbar will collapse to a bootstrap collapsed navbar (taking the form of a hamburger button). The navbar only has four items: Profile, WOD's, Community and Log Out (or in case you are not logged in it's: Home, Login, Sign Up). There are no sub lists in the nav items. To create optimal UX all site functionality can be easily and intuitively accessed through just these four pages.
 
-The navbar also includes the user profile image and the site emblem when logged in, or just the website emblem when logged out. When clicking on or hovering over the website emblem a information layover will appear with general information aobut the website.
+The header bar that contains the navbar also includes the user profile image and the site emblem when logged in, or just the website emblem when logged out. When clicking on or hovering over the website emblem a information layover will appear with general information aobut the website.
 
 ##### The Footer
 
@@ -232,7 +234,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
 </details>
 
 - ***Log Cards***
-  This page makes use of "Log cards" in two of it's modules. These are collapsed information holders with only basic information on top (date, workout, result, profile name). It also shows wheter a result is a PR for the user and it shows the user profile picture and their country flag (which can be clicked to filter by country, though full country filtering functionallity works better when selecting the country group on the community page). If the user clicks the center div on the card it expands to reveal some extra information, including comments made by members and a little div with a form with textarea where the user can make their own comment. When applicapble (if current user is creator of the object), crud icons appear next to the comment or log information to enable the user to edit/delete.
+  This page makes use of "Log cards" in two of it's modules. These are collapsed information holders with only basic information on top (date, workout, result, profile name). It also shows whether a result is a PR for the user and it shows the user profile picture and their country flag (which can be clicked to filter by country, though full country filtering functionallity works better when selecting the country group on the community page). If the user clicks the center div on the card it expands to reveal some extra information, including comments made by members and a little div with a form with textarea where the user can make their own comment. When applicapble (if current user is creator of the object), crud icons appear next to the comment or log information to enable the user to edit/delete.
 
 - **Activity**
   This module shows the logging activity by members (filtered by the group selected in the community module) ordered by date (latest on top). The user can show recent acivity for all members of the group or just themselves. The user can also choose to see acitvity for only the selected workout or for all workouts. The module is a scrolling list. The list consists of 'log cards' (see above). On page load, it loads max 25 cards per category. If the user scrolls down, halfway through the div site makes a call to the database to load the next 25 cards, and so on. If the website is too slow or the user is to fast, there is also a button on the bottom of the list to click to load more cards.
