@@ -345,14 +345,14 @@ This module shows the profile information of the selected user, similar to how i
 #### **Data Base**
 
 For this Project we used [SQLite](https://www.sqlite.org/index.html) in development because it is integrated as default in [Django](https://www.djangoproject.com/). and [Heroku Postgres](https://www.heroku.com/postgres) in production
-[AWS S3](https://aws.amazon.com/s3/) buckets are used to hold all the Static Files.
+[AWS S3](https://aws.amazon.com/s3/) buckets are used to hold all the Static Files. Below you can click to view the ERD schema (generated using [DBeaver](https://dbeaver.io/)).
 
 <details>
-<summary>Focus Fitness Schema (Click for image)</summary>
+<summary>Hero Community ERD Schema</summary>
 
 <p align="center">
 
-![Focus schema](media/wireframes/focus_schema.png)
+![Hero Community Schema](media/screenshots/HC_ERD_schema.png)
 
 </p>
 </details>
@@ -390,12 +390,12 @@ The Secondary font [Bungee](https://fonts.google.com/specimen/Bungee?query=bunge
 
 #### Colour Scheme
 
-- ![#f7f7f7](https://placehold.it/15/f7f7f7/000000?text=+) `rgb(247, 247, 247)` - Primary-(Headings and text)
-- ![#000000cc](https://placehold.it/15/000000cc/000000?text=+) `rbg(0, 0, 0, 0.8)` - Secondary (Header, Footer Backgrounds)
-- ![#1bd87d](https://placehold.it/15/1bd87d/000000?text=+) `rgb(27, 216, 125)` - Supplementary colour 1
-- ![#e7313f](https://placehold.it/15/e7313f/000000?text=+) `rgb(231, 49, 63)` - Supplementary colour 2
-- ![#e5ce21](https://placehold.it/15/e5ce21/000000?text=+) `rgb(229, 206, 33)` - Supplementary colour 3
-- ![#0275d8](https://placehold.it/15/0275d8/000000?text=+) `rgb(91, 192, 222)` - Supplementary colour 4
+- ![#fff](https://placehold.it/15/ffffff/000000?text=+) `rgb(255, 255, 255)`
+- ![#000](https://placehold.it/15/000000/000000?text=+) `rbg(0, 0, 0)`
+- ![#808080](https://placehold.it/15/808080/000000?text=+) `rgb(128, 128, 128)`
+- ![#0000ff](https://placehold.it/15/0000ff/000000?text=+) `rgb(0, 0, 255)`
+- ![#ff0000](https://placehold.it/15/ff0000/000000?text=+) `rgb(255, 0, 0)`
+- ![#ffc107](https://placehold.it/15/ffc107/000000?text=+) `rgb(255, 193, 7)` 
 
 The colors are mostly primary colors that reminisce of whiteboard markers. I tried to limit the amount of colors to keep the site clean.
 

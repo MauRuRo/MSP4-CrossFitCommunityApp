@@ -1083,7 +1083,7 @@ linked to a date input field that is formatted properly. */
     cursor: pointer;
 }
 .p-popover i:not(.fa-trash-alt):hover{
-    color:blue;
+    color:#0000ff;
 }
 .selected-group{
     background-color:blue;
@@ -1095,7 +1095,7 @@ linked to a date input field that is formatted properly. */
 .group-options{
     width: 54px;
     margin-left: calc(100% - 60px);
-    background-color:grey;
+    background-color:#808080;
     color:white;
     border-bottom-left-radius:5px;
     border-bottom-right-radius: 5px;
@@ -1156,7 +1156,7 @@ linked to a date input field that is formatted properly. */
     color:blue;
 }
 .group-level{
-    color:#ffc107;
+    color:rgb(255, 193, 7);
 }
 .search-wait{
     font-size: 2rem;
@@ -1173,7 +1173,7 @@ linked to a date input field that is formatted properly. */
     color:blue;
 }
 .fa-user-minus:hover{
-    color: red;
+    color: #ff0000;
 }
 .group-btn{
     margin: 5px;
