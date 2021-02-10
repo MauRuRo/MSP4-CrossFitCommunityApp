@@ -7,6 +7,26 @@ body {
     background: url('/media/chipboard.png') repeat fixed;
     background-size: 700px 400px;
     background-position-y: 150px;
+
+    /* background: url('/media/background.jpg') no-repeat fixed;
+    background-size: cover; */
+
+    /* background-color: #ffeaa7;
+    background-image: linear-gradient(315deg, #ffeaa7 0%, #000000 74%); */
+/* 
+    background-color: #eb4511;
+    background-image: linear-gradient(315deg, #eb4511 0%, #b02e0c 74%); */
+
+
+    /* background-color: #3f0d12;
+    background-image: linear-gradient(315deg, #3f0d12 0%, #a71d31 74%); */
+
+    /* background-color: #a55c1b;
+    background-image: linear-gradient(315deg, #a55c1b 0%, #000000 74%); */
+
+    /* background-color: #a40606;
+    background-image: linear-gradient(315deg, #a40606 0%, #d98324 74%); */
+
     font-family: 'Open Sans', sans-serif;
     overflow-x: hidden!important;
 }

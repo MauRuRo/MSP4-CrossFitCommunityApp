@@ -1139,8 +1139,8 @@ $(document).ready(function() {
         $('#id_user_comment').text(comment_log)
         $("#logform-submit-button").hide()
         $("#logform-edit-button").show().removeAttr('hidden')
-        $('#logform-div').toggle()
-        $('#log-ranking-div').toggle()
+        $('#logform-div').show()
+        $('#log-ranking-div').hide()
         setLogFormType(result_type, wodname)
     })
 

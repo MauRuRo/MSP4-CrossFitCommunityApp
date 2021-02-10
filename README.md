@@ -373,10 +373,11 @@ The design of the site is based on elements found in your average CrossFit box: 
 
 #### Images
 
-The site uses few images for it's design. See the list here:
+The site uses few images for it's design.
 - [Landing Page background](https://www.facebook.com/Egypt.crossfitters/photos/a.134487927312457/134487907312459)
 - [Default profile image](https://boundingintocomics.com/wp-content/uploads/2017/10/Mystery-Hero.png)
 - [Black mat for header background](https://www.australianbarbellco.com/FRIBK_dash_FLAT/Black-rubber-gym-floor-tiles.-Square-edge-flat-tile./pd.php)
+- [Chipboard main background](https://nl.123rf.com/photo_19478178_pressed-chipboard-background-wood-texture.html)
 
 For the logo I adapted an [existing image](https://www.vectorstock.com/royalty-free-vector/kettlebell-and-dumbbell-with-baner-logo-vector-4156230), and I further adapted it to create the PR emblem.
 
@@ -426,13 +427,11 @@ The colors are mostly primary colors that reminisce of whiteboard markers. I tri
 #### Third-Party Tools
 
 - [GitHub](https://github.com/) ~ Distributed version control and source code management (SCM) functionality of Git, plus its own features.
-- [Travis](https://travis-ci.org/) ~ Travis CI is a hosted continuous integration service used to build and test software projects hosted at GitHub and Bitbucket.********
 - [Font Awesome](https://fontawesome.com/) ~ Font Awesome icons
 - [Git](https://git-scm.com/) ~ Distributed version control system
-- [Codacy](https://app.codacy.com/) ~ Automated Code Review *****
+
 - [W3 Validator](https://validator.w3.org/nu/) ~ The HTML Validation Service.
 - [W3C CSS Validation](https://jigsaw.w3.org/css-validator/) ~ A CSS validator checks your Cascading Style Sheets to make sure that they comply with the CSS standards set by the W3 Consortium.
-- [TinyPNG](https://tinypng.com/) ~ A smart lossy compression technique to reduce the file size of your PNG files.******
 - [Google Fonts](https://fonts.google.com/) ~ A library free licensed font families, an interactive web directory for browsing the library.
 
 <div align="right">
