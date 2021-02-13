@@ -1,7 +1,6 @@
-# WORK IN PROGRESS
 # Hero Community
 
-## <i> Full Stack Frameworks With Django - Code institute </i>
+## <i> Full Stack Frameworks With Django - Code Institute </i>
 
 ---
 
@@ -24,31 +23,23 @@
 ## Table of Contents
 
 > 1.  [**UX**](#ux)
+>     - [**User Stories**](#user-stories)
 > 2.  [**Scope**](#scope)
-> 3.  [**Structure and Wireframe Mockups**](#structure)
+> 3.  [**Structure and Features**](#structure)
 >     - [**Navigation**](#navigation)
->     - [**Focus Shop**](#focus-shop)
->     - [**Blog**](#blog)
->     - [**Memberships**](#Membership)
->     - [**Workouts**](#workouts)
->     - [**Dashboard**](#dashboard)
 >     - [**Home Page**](#home-page)
->     - [**About Page**](#about-page)
->     - [**Contact Page**](#contact-page)
->     - [**Programs**](#programs)
-> 4.  [**Surface**](#surface)
+>     - [**Profile Page**](#profile-page)
+>     - [**WOD's Page**](#wod's-page)
+>     - [**Community Page**](#community-page)
+>     - [**Login-Signup-Logout-Create Profile Page**](#login-signup-logout-create-profile-page)
+>     - [**Further Features**](#further-features)
+>     - [**Possible Future Features**](#possible-future-features)
+>     - [**Database**](#database)
+> 4.  [**Design**](#design)
 > 5.  [**Technologies**](#technologies)
-> 6.  [**Features**](#features)
->     - [**Home Page Features**](#home-page-features)
->     - [**Blog Features**](#blog-features)
->     - [**Focus Shop Features**](#focus-shop-features)
->     - [**Memberships Features**](#memberships-features)
->     - [**Programs Features**](#programs-features)
->     - [**Workouts Features**](#workouts-features)
->     - [**Dashboard Features**](#dashboard-features)
-> 7.  [**Testing**](#testing)
-> 8.  [**Deployment**](#deployment)
-> 9.  [**Credits & Acknowledgements**](#credits)
+> 6.  [**Testing**](#testing)
+> 7.  [**Deployment**](#deployment)
+> 8.  [**Credits & Acknowledgements**](#credits)
 
 ---
 
@@ -64,32 +55,235 @@ Users can make use of the website's functionality for a one time payment of €9
 
 #### User
 
-- As a user, I want to be able to get instructions for a workout.
-- As a user, I want to be able to log my results for a workout.
-- As a user, I want to be able to review my previous results.
-- As a user, I want to be able to edit my results.
-- As a user, I want to be able to view the results of others.
-- As a user, I want to be able to see what rank I have.
-- As a user, I want to be able to see what rank others have.
-- As a user, I want to be able to see what level I have.
-- As a user, I want to be able to see what level other users have.
-- As a user, I want to be able to review results of other users.
-- As a user, I want to be able to create, edit, delete groups of fellow users to which I wish to compare my results.
-- As a user, I want to be able to keep a custom created group private.
-- As a user, I want to be able to switch between which group I select.
-- As a user, I want to be able to comment on workout results.
-- As a user, I want to be notified about comments on my logs.
-- As a user, I want to be notified if I've een added to a group.
-- As a user, I want to be able to determine which result I need to reach a certain level.
-- As a user, I want to be able to create an account and profile.
-- As a user, I want to be able to signup/login using a social account.
-- As a user, I want to be able to edit my profile information.
+<details>
+<summary>As a user, I want to be able to get instructions for a workout.</summary>
+
+    - Navigate to the WOD's page.
+    - Main module shows workout instructions OR
+    - Click the "Workouts" button.
+    - Select a workout from the "workouts" module.
+    - Page reloads: instructions are in main module.
+</details>
+<details>
+<summary>As a user, I want to be able to log my results for a workout.</summary>
+
+    - Navigate to the WOD's page (optionally select specific workout).
+    - Click on "Log" button in main module.
+    - Fill out the log form that appears in the Log module.
+    - Click "Log" button in the log module.
+</details>
+<details>
+<summary>As a user, I want to be able to review my previous results.</summary>
+
+    - Navigate to the WOD's page (optionally select specific workout).
+    - Click the "Me" option in the Activity module.
+    - Choose either "All Wod's" or "This Wod" in the Activity module.
+    - Your results filtered as requested by you are visible in the module ordered by date (most recent on top).
+    - To load more results simply scroll down.
+</details>
+<details>
+<summary>As a user, I want to be able to edit my results.</summary>
+
+    - Navigate to the WOD's page (optionally select specific workout).
+    - Find the log you want to edit either in the Activity module or in the Ranking module.
+    - Next to your name in the log card there is an edit icon. Click the edit icon.
+    - The Edit form appears in the Log module. Edit the log information.
+    - Click the "Edit" button on the bottom of the form.
+</details>
+<details>
+<summary>As a user, I want to be able to view the results of others.</summary>
+
+    - Navigate to the WOD's page (optionally select specific workout).
+    - Click the "Everybody" option in the Activity module.
+    - Choose either "All Wod's" or "This Wod" in the Activity module.
+    - The results filtered as requested by you are visible in the module ordered by date (most recent on top). NOTE: only results of members that are part of your currently selected group in the Community page are shown (default is global, cq: all site users.)
+    - To load more results simply scroll down.
+    - Other users logs are also visible in the Ranking module.
+</details>
+<details>
+<summary>As a user, I want to be able to see what rank I have.</summary>
+
+    - Navigate to the WOD's page (optionally select specific workout).
+    - Choose either "Today" or "Year" in the Ranking module.
+    - The module automatically loads the "page" with your result on it (if Rx) and srolls to your position.
+    - Your rank is displayed in the left parst of the log card.
+</details>
+<details>
+<summary>As a user, I want to be able to see what rank others have.</summary>
+
+    - Navigate to the WOD's page (optionally select specific workout).
+    - Choose either "Today" or "Year" in the Ranking module.
+    - The module automatically loads the "page" with your result on it (if Rx) and srolls to your position.
+    - All logs listed their by the members of the currently selected group have the rank listed on the left side of the card.
+    -To load more logs simply scroll down or press the button at the top of the list to load higher ranks.
+</details>
+<details>
+<summary>As a user, I want to be able to see what level I have.</summary>
+
+    - Navigate to the Profile page.
+    - Your levels are displayed in the main module.
+    - Click on a level bar to see detailed information about the workout logs contibuting to that level and the level of that individual performance.
+</details>
+<details>
+<summary>As a user, I want to be able to see what level other users have.</summary>
+
+    - Navigate to the Community page.
+    - Find the user you want to inspect in the Members module.
+    - You can search for a specific member using the search field.
+    - You can scroll through the list.
+    - You can change the list by selecting a different group.
+    - Click on the name of the member you wish to inspect.
+    - The members level information appears in the main module.
+    - Click on a level bar to see detailed information about the workout logs contibuting to that level and the level of that individual performance.
+    - The General level of each user is displayed in the information card in the Members module on the left side.
+</details>
+<details>
+<summary>As a user, I want to be able to create, edit, delete groups of fellow users to which I wish to compare my results.</summary>
+
+    - Navigate to the Community page.
+    CREATE
+    - Click the "make group" button in the main module. The Group form appears.
+    - Enter a name in the group name field.
+    - Add users from the members module using the "add user" icons that have appeared in each member card on opening the form.
+    - You can close the module an navigate to a different group to get a different list of members to add from.
+    - You can search for members using the search field to add them.
+    - You can come back to your group form by clicking again on the make group button.
+    - You can substract members from the group by looking them up in the members module and clicking the remove user icon which has appeared.
+    - Click the submit button to create the group.
+    EDIT
+    - You can only edit groups that you are the admin of.
+    - Click on the group button. An edit icon will appear underneath the button.
+    - Click the edit icon.
+    - Follow the same steps as above to adjust the group.
+    - Click the Edit button to update the group.
+    DELETE 
+    - Click the (custom) group you want to delete.
+    - A delete icon will appear beneath the button.
+    - Click the delete icon.
+    - The group will now dissappear from your group lists. However, if it is shared, the group will remain active for the other members (a new admin is assigned if were the admin).
+</details>
+<details>
+<summary>As a user, I want to be able to keep a custom created group private.</summary>
+
+    - Navigate to the Community Page.
+    - Follow the steps to create or edit a group.
+    - In the form, uncheck the "Share" checkbox on the form to keep the group private.
+    - The other members of the group will not see this group in thier group lists.
+</details>
+<details>
+<summary>As a user, I want to be able to switch between which group I select.</summary>
+
+    - Navigate to the Community page.
+    - In the main module, click on the group that you wish to select.
+    - The group button will turn blue, indicating it is selected.
+</details>
+<details>
+<summary>As a user, I want to be able to comment on workout results.</summary>
+
+    - Navigate to the WOD's page.
+    - Find the member log you want to comment on, either in the Activity module or in the Ranking module.
+    - Click on the center of the log card. This expands the card.
+    - At the bottom of the card is a textarea.
+    - Fill in the textarea and press return or click on the comment button to submit the comment.
+    - Holding shift while pressing return will allow you to insert new lines in your comment.
+</details>
+<details>
+<summary>As a user, I want to be notified about comments on my logs.</summary>
+
+    - When a member comments on one of your logs a notification message will appear withing 10 seconds of the fact if you are currently on the website.
+    - If you are not on the site when the member comments, the notification will be renedered the next time you login on the site.
+    - The notification mentions the commenting members name, the workout log they commented on and it's date. This allows you to look up the comment by navigating manually to it, using the information provided. (Room for improvement on this feature by enabling automatic navigation)
+    - You also receive an email about the notification. (This feature can be switched off by the user.)
+</details>
+<details>
+<summary>As a user, I want to be notified if I've een added to a group.</summary>
+
+    - When a member adds you to a group a notification message will appear withing 10 seconds of the fact if you are currently on the website.
+    - If you are not on the site when the member comments, the notification will be renedered the next time you login on the site.
+    - The notification mentions the creating members name and the group name.
+    - You also receive an email about the notification. (This feature can be switched off by the user.)
+</details>
+<details>
+<summary>As a user, I want to be able to determine which result I need to reach a certain level.</summary>
+
+    - Navigate to the WOD's page.
+    - Optionally find and select the workout that you're interested in.
+    - In the main module you'll find a slider at the bottom of the module.
+    - The slider allows you to slide along different results. When the slider is released the corresponding level is calculated and shown beneath the slider.
+</details>
+<details>
+<summary>As a user, I want to be able to create an account and profile.</summary>
+
+    - Navigate to the sign up page.
+    - Fill out the sign up and submit the form.
+    - Validate your email address using the email you received after the form submission.
+    - Navigate to the login page.
+    - Login to your account.
+    - The create profile page is loaded.
+    - Fill out the form and enter your payment infromation.
+    - Submit the form. 
+</details>
+<details>
+<summary>As a user, I want to be able to create an account and profile.</summary>
+
+    - Navigate to the sign up page.
+    - Click on the button corresponding with the social site you wish to use.
+    - Follow the steps indicated by the site. 
+</details>
+<details>
+<summary>As a user, I want to be able to edit my profile information.</summary>
+
+    - Navigate to the Profile page.
+    - Click on the edit button at the bottom of the profile information module. The edit form appears.
+    - Edit the information.
+    - Click the Edit button. 
+</details>
 
 #### Admin
 
-- As administrator, I expect to be able to add, edit, delete workouts on the website.
-- As administrator, I expect to be able to add, edit, delete logs on the website.
-- As administrator, I expect to be able to add, edit, delete comments on the website.
+<details>
+<summary>As administrator, I expect to be able to add, edit, delete workouts on the website.</summary>
+
+    - Navigate to the WOD's page.
+    ADD
+    - Click the Create button.
+    - Fill out the form that appears.
+    - Click the Create button.
+    EDIT 
+    - Find and select the workout you want to edit.
+    - Click the edit button in the main module.
+    - Edit the information on the form that appears.
+    - Click the edit button.
+    DELETE 
+    - Find and select the workout you want to delete.
+    - Click the delete button in the main module.
+</details>
+<details>
+<summary>As administrator, I expect to be able to edit, delete logs on the website.</summary>
+
+    - Navigate to the WOD's page.
+    EDIT 
+    - Find the log that you want to edit.
+    - Click on the edit icon in the log.
+    - Edit the information on the form.
+    - Click the edit button.
+    DELETE 
+    - Find the log that you want tot delete.
+    - Click the delete icon in the log.
+</details>
+<details>
+<summary>As administrator, I expect to be able to edit, delete comments on the website.</summary>
+
+    - Navigate to the WOD's page.
+    EDIT 
+    - Find the log comment that you want to edit.
+    - Click on the edit icon next to the comment.
+    - Edit the comment.
+    - Click the edit button.
+    DELETE 
+    - Find the log comment that you want tot delete.
+    - Click the delete icon next to the comment.
+</details>
 
 ---
 
@@ -121,6 +315,7 @@ Users can make use of the website's functionality for a one time payment of €9
 </div>
 
 ## Structure and Feautures
+### General
 
 The basic structure of the web page is
 
@@ -145,15 +340,13 @@ All of [Allauth](https://django-allauth.readthedocs.io/en/latest/) HTML pages ha
 
 
 
-### **Navigation**
-
-#### Navbar
+#### **Navigation**
 
 The navbar is fixed to top of each page. For smaller width screens the navbar will collapse to a bootstrap collapsed navbar (taking the form of a hamburger button). The navbar only has four items: Profile, WOD's, Community and Log Out (or in case you are not logged in it's: Home, Login, Sign Up). There are no sub lists in the nav items. To create optimal UX all site functionality can be easily and intuitively accessed through just these four pages.
 
 The header bar that contains the navbar also includes the user profile image and the site emblem when logged in, or just the website emblem when logged out. When clicking on or hovering over the website emblem a information layover will appear with general information aobut the website.
 
-##### The Footer
+#### The Footer
 
 The footer stays at the bottom of each page. It contains only a credits link for the website creator (me). As this is just a learning excercise and not a real world application; If this website ever commercially deploys the footer can be used to also contain some legalize links, and other miscalaneous details (contact details, social links).
 
@@ -165,7 +358,7 @@ The footer stays at the bottom of each page. It contains only a credits link for
 
 </div>
 
-## **Home Page**
+### **Home Page**
 
 - **Landing page**
 The home page or Index page is the landing page for users who do not have, or are not yet signed in to an account.
@@ -180,7 +373,15 @@ It displays a enticing text encouring the user buy an account and it displays a 
 
 </details>
 
-## **Profile Page**
+---
+
+<div align="right">
+
+[Back to Top :arrow_up:](#table-of-contents)
+
+</div>
+
+### **Profile Page**
 <details>
 <summary>Profile Page</summary>
 
@@ -223,7 +424,15 @@ It displays a enticing text encouring the user buy an account and it displays a 
 
 </details>
 
-## **WOD's Page**
+---
+
+<div align="right">
+
+[Back to Top :arrow_up:](#table-of-contents)
+
+</div>
+
+### **WOD's Page**
   <details>
   <summary>WOD's Page</summary>
 
@@ -285,7 +494,15 @@ It displays a enticing text encouring the user buy an account and it displays a 
   </p>
   </details>
 
-## **Community Page**
+---
+
+<div align="right">
+
+[Back to Top :arrow_up:](#table-of-contents)
+
+</div>
+
+### **Community Page**
   <details>
   <summary>Community Page</summary>
   <p align="center">
@@ -326,7 +543,15 @@ It displays a enticing text encouring the user buy an account and it displays a 
 - **Profile Info**
 This module shows the profile information of the selected user, similar to how it is shown on the profile page, but without the CRUD options. 
 
-## **Login/ Signup/ Logout/ Create Profile Page**
+---
+
+<div align="right">
+
+[Back to Top :arrow_up:](#table-of-contents)
+
+</div>
+
+### **Login-Signup-Logout-Create Profile Page**
 
 - These pages are pretty straight forward and based on the allauth standard templates (with the exception of the create profile page).
 
@@ -341,10 +566,25 @@ This module shows the profile information of the selected user, similar to how i
 > - CVC - Any 3 digit number.
 > - Expire date - Any date in the future
 
+---
+
+<div align="right">
+
+[Back to Top :arrow_up:](#table-of-contents)
+
+</div>
 
 ### **Further Features**
 - **Notifications**
 A general feature that's not part of a specific page is the notification feature. When a member comments on another members workout log, the owner of the log get's a notification message on their browser in real time (without having to reload the page). They also receive an email of the notification. The user can opt to turn off the email notifications by changing email settings (form the profile page). The notification feautre also applies to a user adding anther member to a group (of which that member will then receive a notification, if the group is shared).
+
+---
+
+<div align="right">
+
+[Back to Top :arrow_up:](#table-of-contents)
+
+</div>
 
 ### **Possible Future Features**
 - A graph that tracks a users level progress history.
@@ -352,7 +592,15 @@ A general feature that's not part of a specific page is the notification feature
 - Challenges and other group features to engage the user more and have them be more active and healthy.
 - For further inspiration for future features look to [BeyondTheWhiteboard](https://beyondthewhiteboard.com/).
 
-#### **Data Base**
+---
+
+<div align="right">
+
+[Back to Top :arrow_up:](#table-of-contents)
+
+</div>
+
+### **Database**
 
 For this Project we used [SQLite](https://www.sqlite.org/index.html) in development because it is integrated as default in [Django](https://www.djangoproject.com/). and [Heroku Postgres](https://www.heroku.com/postgres) in production
 [AWS S3](https://aws.amazon.com/s3/) buckets are used to hold all the Static Files. Below you can click to view the ERD schema (generated using [DBeaver](https://dbeaver.io/)).
@@ -375,7 +623,7 @@ For this Project we used [SQLite](https://www.sqlite.org/index.html) in developm
 
 </div>
 
-## Surface
+## Design
 
 The design of the site is based on elements found in your average CrossFit box: black gym mats (in the header), chipboard for the background (my box has chipboard walls) and whiteboards to hold the modules (this is also a wink to the inspiration of this website: BeyondTheWhiteboard).
 
@@ -452,7 +700,27 @@ The colors are mostly primary colors that reminisce of whiteboard markers. I tri
 
 ## Testing
 
-Testing, Bugs and Validation information and be found at [Testing.md](https://github.com/Clinton-Davis/focus_fitness/blob/master/testing.md)
+During the development of the project the code was consistently tested at every incremental addaptation manually; testing for expected behavior with valid and invalid input, tested accross different browsers (Chrome, Safari, FireFox) and on mobile devices (Safari iOS).
+
+Responsiveness was also tested throughout the development process manually.
+
+All forms were thorougly manually tested, testing invalid inputs on each field. 
+
+After deployment the website was beta-tested by a group of friends, which resulted in some significant addaptations, namely the addition security settings in the settings.py file (line 249), to ensure that the website is always run securely from https, as it turned out this did not happen automatically and for one of the testers resulted in the javascript not loading. Also an issue with a overfow-x not being defined resulted in a mysterious floating scrollbar on an invisible div; this was also resolved thanks to the beta testing.
+
+Besides manual testing all the HTML files and the CSS file have been rested using W3 validator.
+
+There were no major issues: the validator could not handle the django and jinja syntax though.
+
+One noteworthy issue that did turn up was that div elements were nested inside an ol element (in the activity and ranking module ). Apparently this is not correct html, however since it does not present any functionality issues and translating to correct html would be a lot of work I decided to leave it as is.
+
+For the testing of the user stories I refer you to [User Stories](#user-stories). (Click to expand each stories instructions.)
+
+ <div align="right">
+
+[Back to Top :arrow_up:](#table-of-contents)
+
+</div>
 
 ---
 
@@ -483,12 +751,12 @@ Once you have [Git](https://git-scm.com/) and [Pip](https://pip.pypa.io/en/stabl
 3. Clone the repository from github.
 
    ```bash
-   $ git clone https://github.com/Clinton-Davis/focus_fitness.git
+   $ git clone https://github.com/MauRuRo/MSP4-CrossFitCommunityApp.git
    ```
 
-4. Change into focus_fitness directory.
+4. Change into MSP4-CrossFitCommunityApp directory.
 
-   `$ cd focus_fitness`
+   `$ cd MSP4-CrossFitCommunityApp`
 
 5. Install [virtualenv](https://pypi.org/project/virtualenv/)
 
@@ -508,7 +776,7 @@ Once you have [Git](https://git-scm.com/) and [Pip](https://pip.pypa.io/en/stabl
    $ source env/Scripts/activate
    ```
 
-8. In focus folder make a `.env` file and add the variables below.
+8. In focus folder make an `.env` file and add the variables below.
 
    > There is a handy .templates.env file with all the variables.
 
@@ -517,11 +785,10 @@ Once you have [Git](https://git-scm.com/) and [Pip](https://pip.pypa.io/en/stabl
    | SECRET_KEY          | < Your Values > |
    | EMAIL_HOST_PASS     | < Your Values > |
    | EMAIL_HOST_USER     | < Your Values > |
-   | NOTIFY_EMAIL        | < Your Values > |
-   | DEFAULT_FROM_EMAIL  | < Your Values > |
+   | DEVELOPMENT         |      True       |
    | STRIPE_PUBLIC_KEY   | < Your Values > |
    | STRIPE_SECRET_KEY   | < Your Values > |
-   | STRIPE_SECSTRIPE_WH | < Your Values > |
+   | STRIPE_WH_SECRET    | < Your Values > |
 
 9. Install all the requirements needed to run the project.
 
@@ -529,47 +796,25 @@ Once you have [Git](https://git-scm.com/) and [Pip](https://pip.pypa.io/en/stabl
    $ pip install -r requirements.txt
    ```
 
-10. Open up blog.forms and comment out lines 8 and 9
-
-    ```python
-    # for item in choices:
-    #     choices_list.append(item)
-    ```
-
-11. Then migrate
+10. Then migrate
 
     ```bash
     $ python manage.py migrate
     ```
 
-12. Once the migrations are complete, uncomment blog.forms
-
-    ```python
-    for item in choices:
-        choices_list.append(item)
-    ```
-
-13. Before creating a superuser you'll need to load the required fixtures.
-
-    > The reason for this is that a signal is used to assign a membership to a user when they are created, If there is no memberships it can't assign anything and causes an error.
-
-    ```bash
-    $ python manage.py loaddata fixtures/required.json
-    ```
-
-14. Create superuser.
+11. Create superuser.
 
     ```bash
     $ python manage.py createsuperuser
     ```
 
-15. To populate the shop with products, load products data.
+12. To populate the database with fictional users and logs:
 
     ```bash
-    $ python manage.py loaddata products.json
+    $ python manage.py loaddata db.json
     ```
 
-16. If you want to use the allauth social accounts, and have you [Facebook](https://developers.facebook.com/products/facebook-login/) secrets setup. add them to the `.env` file.
+13. If you want to use the allauth social accounts, and have you [Facebook](https://developers.facebook.com/products/facebook-login/) secrets setup. add them to the `.env` file.
     | Key | Value |
     |----------|:-------------:|
     | SOCIAL_AUTH_FACEBOOK_KEY | < Your Values >|
@@ -577,7 +822,7 @@ Once you have [Git](https://git-scm.com/) and [Pip](https://pip.pypa.io/en/stabl
 
     If you are not using the social accounts, comment out lines 60/61 in settings.py (INSTALLED_APPS) socialaccounts.
 
-17. Run project with
+14. Run project with
 
     ```bash
     $ python manage.py runserver
@@ -588,6 +833,8 @@ Once you have [Git](https://git-scm.com/) and [Pip](https://pip.pypa.io/en/stabl
 [Back to Top :arrow_up:](#table-of-contents)
 
 </div>
+
+---
 
 ### Heroku Deployment
 
@@ -602,14 +849,14 @@ If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/
 5.  Create a corresponding app name that we use to deploy our application. The apps **name** must be **unique.**.
 6.  Pick a server location that is closest to you.
 7.  Once the app is created click on the resources button and choose the Heroku Postgres to attach a postgres database to your project.
-8.  To be able to run on Heroku A few more libraries are needed.
+8.  To be able to run on Heroku A few more libraries are needed. Though they should be installed already since they are in the requirements.txt.
     [Guniorn](https://gunicorn.org/) a (WSGI HTTP Server), [dj-databas-url](https://pypi.org/project/dj-database-url/) to connect with PostgreSQL and [Psycopg](https://www.psycopg.org/)(PostgreSQL adapter)
 
         ```bash
         $ pip install Gunicorn, dj-database, Psycopg
         ```
 
-9.  To migrate to the postgres db. First `import dj-databas-url` at the top of the setting.py.
+9.  To migrate to the postgres db. First `import dj-databas-url` at the top of the setting.py. This is already done.
 10. Then comment out the default database configuration and add:
 
     ```python
@@ -649,7 +896,7 @@ If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/
     | USE_AWS               |      True       |
 
     > You will get in them when you setup your [AWS bucket](https://aws.amazon.com/s3/).
-    > If you are wanting to use the [allauth](https://django-allauth.readthedocs.io/en/latest/) social accounts, uncomment out lines 60-61 from settings.py (INSTALLED_APPS socialaccounts) and add your [Facebook](https://developers.facebook.com/products/facebook-login/) secrets into the 'Config Vars'. [Googel](https://developers.google.com/identity/sign-in/web/sign-in) setup here.
+    > If you want to use the [allauth](https://django-allauth.readthedocs.io/en/latest/) social accounts, add your [Facebook](https://developers.facebook.com/products/facebook-login/) secrets into the 'Config Vars'. [Googel](https://developers.google.com/identity/sign-in/web/sign-in) setup here.
 
     | Key                         |      Value      |
     | --------------------------- | :-------------: |
@@ -660,13 +907,13 @@ If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/
     Login to Heroku using the Terminal
 
         ```bash
-        $ heroku login
+        $ heroku login -i
         ```
 
 15. Create a `Procfile` This file tells heroku how to run the project
 
     ```bash
-    $ web: gunicorn focus_fitness.wsgi:application
+    $ web: gunicorn crossfit_community.wsgi:application
     ```
 
 16. Freeze your requirements
@@ -684,7 +931,7 @@ If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/
 18. Commit changes to Github
 
     ```bash
-    $ commit -m "You message"
+    $ commit -m "Your message"
     ```
 
 19. Now that heroku is ready to go, Inside the Django setting.py you will need to set up the AWS configs so the static files have a place to go.
@@ -712,7 +959,7 @@ If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/
         >Specifies the hosts that focus can run on
 
         ```python
-            ALLOWED_HOSTS = ['127.0.0.1', 'focus-fitness.herokuapp.com']
+            ALLOWED_HOSTS = ['hero-community.herokuapp.com', 'localhost',]
          ```
 
 20. You are ready to push to Heroku
@@ -735,54 +982,18 @@ If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/
 
 ### Code
 
-- The project’s code was developed by following the [Code Institute](https://codeinstitute.net/) and [Just Django](https://justdjango.com/) video lessons and based on the understanding of the course material, The code has been customized and enhanced to fit with the purpose of the project. In some places the logic is used and in others the code. Some comments with credits have been added where needed.
-- YouTubers Matt from [Just Django](https://justdjango.com/) and John from [Codemy.com](https://codemy.com/) have been extremely helpful in finding additional information during the building of this project.
-- The [Django Documentation](https://docs.djangoproject.com/en/3.1/) and [Stack Overflow](https://stackoverflow.com/) have been referred to constantly and super helpful in deciphering the different django debugging error codes.
-- The Ripple Effect on the buttons click is thanks to Leonardo Monteiro Fernandes ~ [Ripple Effect](https://medium.com/@leonardo.monteiro.fernandes/css-techniques-for-material-ripple-effect-3f0ece3062a0)
-- [CSS-Tricks](https://css-tricks.com/snippets/css/media-queries-for-standard-devices/) for iphone and ipad media queries.
+- The project’s code was developed by following the [Code Institute](https://codeinstitute.net/) video lessons and based on the understanding of the course material, and the course "Boutique Ado" Django app example. The code has been customized and enhanced to fit with the purpose of the project.
+- The [Django Documentation](https://docs.djangoproject.com/en/3.1/) and [Stack Overflow](https://stackoverflow.com/) have been referred to regularly.
+- Over the course of the development of this project I purused all over the world wide web to inform myself, learn and find solutions. One site in particular gave me a solution for how I wanted to load my data to the page (which I discoverd I could not do in one go since it was too much data): https://alphacoder.xyz/lazy-loading-with-django-and-jquery/.
 
-#### Content and Media
 
-**Content**
-The Supplements section of the shop is all obtained from [Bodybuilding.com](bodybuilding.com)
-Blogs are taken from [BodyBuilding.com](bodybuilding.com) and [puregym.com](https://www.puregym.com) with credits to:
+#### Content
 
-- Basic setup for README.md file - [Clint-Davis](https://github.com/Clinton-Davis/focus_fitness)
-- Cardio for Gym Bros: 5 Conditioning Finishers for Lifters - [Thomas King](https://www.bodybuilding.com/author/jon-erik-kawamoto-cscs-cep)
-- The surprising way exercise helps your heart -[ Hobart Swan](https://www.bodybuilding.com/author/hobart-swan)
-- How To Avoid Rebound Weight Gain - [ATP Science](https://www.bodybuilding.com/author/contributing-writer)
-- 8 Ways To Maximize Your Post-Workout Recovery- [Shannon Clark](https://www.bodybuilding.com/author/shannon-clark)
-- The Importance Of Sleep - [David Robson](https://www.bodybuilding.com/author/david-robson)
-- 4 Reasons You're Not Adding Muscle - [Dan North](https://www.bodybuilding.com/author/dan-north)
-- The Real Fitness Lessons Of Lockdown - [Lee Boyce](https://www.bodybuilding.com/author/lee-boyce)
-- Upper Body Dumbbell Workout - [@kaypuregym](https://www.instagram.com/kaypuregym/) and [@bethtruemanfit](https://www.instagram.com/bethtruemanfit/)
-- How To Clean Cardio Machines - [puregym.com](https://www.puregym.com).
-- 5 Functional Exercises To Master - [PAUL JOSEPH](https://www.puregym.com/personal-trainer/paul-joseph/)
-- How To Support Your Immune System - [PureGym](https://www.puregym.com/blog/how-to-support-your-immune-system/)
-- Going Plant-Based? Read This First - [puregym.com](https://www.puregym.com)
-- The Program's content is taken from [wikipedia](https://www.wikipedia.org/)
 
-**Video Media**
-The workout videos were taken from [YouTube](https://www.youtube.com/) with credits to:
-Home Workout to IMPROVE STAMINA - [LEANSQUAD](https://www.youtube.com/channel/UCI_VPUgIs60oLH162pVhpOQ)
-Stretch | Five-Minute Full Body Stretch - [Bowflex](https://global.bowflex.com/)
-3 Perfect Stretches to Start Your Day! - [Calisthenicmovement](https://www.youtube.com/channel/UCZIIRX8rkNjVpP-oLMHpeDw)
-Increase Your Mobility & Flexibility- [Calisthenicmovement](https://www.youtube.com/channel/UCZIIRX8rkNjVpP-oLMHpeDw)
-10 Min Sweat Workout - [Pamela Reif](https://www.youtube.com/channel/UChVRfsT_ASBZk10o0An7Ucg)
-How To Start Eating Healthy (LIFE CHANGING) - [CHRIS HERIA](https://www.youtube.com/channel/UCaBqRxHEMomgFU-AkSfodCw)
-5 Best Shoulder Exercises - [CHRIS HERIA](https://www.youtube.com/channel/UCaBqRxHEMomgFU-AkSfodCw)
-Effective Complete arm workout [CHRIS HERIA](https://www.youtube.com/channel/UCaBqRxHEMomgFU-AkSfodCw)
-Lose Belly Fat Effortlessly -[ Gravity Transformation - Fat Loss Experts](https://www.youtube.com/channel/UC0CRYvGlWGlsGxBNgvkUbAg)
-Intermittent Fasting Top 5 Mistakes - [Thomas DeLauer](https://www.youtube.com/channel/UC70SrI3VkT1MXALRtf0pcHg)
-What Happens Inside When You Burn Fat -[ Gravity Transformation - Fat Loss Experts](https://www.youtube.com/channel/UC0CRYvGlWGlsGxBNgvkUbAg)
-Basics of Resistance Training Principle - [ Gravity Transformation - Fat Loss Experts](https://www.youtube.com/channel/UC0CRYvGlWGlsGxBNgvkUbAg)
-Pictures
-The images used for this website are from [Unsplash](https://unsplash.com/) and hold a CC license
-Photo by [Javier Santos Guzmán](https://unsplash.com/@buildingjavier?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/).
-Photos by [Evan Wise](https://unsplash.com/@evanthewise?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/)
-Photos by [Damir Spanic](https://unsplash.com/@spanic?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/)
-Photo by [Sven Mieke](https://unsplash.com/@sxoxm?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/)
-Icons by [Icons8](https://icons8.com/)
+For the content of the workout information I have taken text from [BeyondTheWhiteboard](https://beyondthewhiteboard.com/). For the images I refer you to the [Design](#design) segment.
+All other textual data was fabricated by myself.
+
+This README file has been structured (and is in parts copied from (where similar information applied)) based on the extremely thorough README file of my fellow CI student [Clint Davis's  project: Focus Fitness](https://github.com/Clinton-Davis/focus_fitness/blob/master/README.md).
 
 ###### <i>Disclaimer: This project was created for educational use only as part of the Code Institute Full Stack Software Development Course for Milestone 4 Django!</i>
 
