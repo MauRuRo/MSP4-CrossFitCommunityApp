@@ -9,27 +9,23 @@
     </div>
     <div class="row row-stats justify-content-center">
         {% if year == 0  %}
-            <!-- <img src="{ url '/media/letsgo.gif' %}" alt="Let's Go!" id="letsgo"> -->
             <img src="{{MEDIA_URL}}letsgo.gif" alt="Let's Go!" id="letsgo"> 
             <div class="col-12 d-flex justify-content-center">
             <h5>LET'S GO!</h5>
         </div>
         {% else %}
         {% if perfw == "high" and perfm == "high" %}
-        <!-- <img src="{ url '/media/greatjob.gif' %}" alt="Great Job!" id="greatjob"> -->
-        <img src="{{MEDIA_URL}}greatjob.gif" alt="Let's Go!" id="letsgo"> 
+        <img src="{{MEDIA_URL}}greatjob.gif" alt="Great Job!" id="greatjob"> 
         <div class="col-12 d-flex justify-content-center">
             <h5>You're doing great!</h5>
         </div>
         {% elif perfw == "low" and perfm == "high" or perfw == "high" and perfm == "low" %}
-        <!-- <img src="{ url '/media/coach.gif' %}" alt="coach" id="coach"> -->
-        <img src="{{MEDIA_URL}}coach.gif" alt="Let's Go!" id="letsgo"> 
+        <img src="{{MEDIA_URL}}coach.gif" alt="GO!" id="coach"> 
         <div class="col-12 d-flex justify-content-center">
             <h5>Keep it up!</h5>
         </div>
         {% else %}
-        <!-- <img src="{ url '/media/drillseargant.gif' %}" alt="drill-seargent" id="drill-seargent"> -->
-        <img src="{{MEDIA_URL}}drillseargant.gif" alt="Let's Go!" id="letsgo"> 
+        <img src="{{MEDIA_URL}}drillseargant.gif" alt="Get back on that horse!" id="drillseargant"> 
         <div class="col-12 d-flex justify-content-center">
             <h5>Get back on that horse!</h5>
         </div>
