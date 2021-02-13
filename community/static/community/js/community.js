@@ -432,8 +432,6 @@ $(document).ready(function () {
                 $(".user-info-header").css('margin-top', '8px')
                 updateLevelCSS()
                 $("#close-hl").show()
-                // $(".hl-container").prepend('<div class="row justify-content-end"><i class="fas fa-times" id="close-hl"></i></div>')
-                // $("#close-hl").css('margin-top', '8px').css('margin-bottom', '-18px')
                 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="popover"]'))
                 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
                     return new bootstrap.Popover(popoverTriggerEl)
@@ -499,8 +497,6 @@ $(document).ready(function () {
                 $(".hl-container").remove()
                 $(".block-main").append(data.new_levels_html)
                 $("#close-hl").show()
-                // $(".hl-container").prepend('<div class="row justify-content-end"><i class="fas fa-times" id="close-hl"></i></div>')
-                // $("#close-hl").css('margin-top', '8px').css('margin-bottom', '-18px')
                 updateLevelCSS()
                 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="popover"]'))
                 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {

@@ -120,7 +120,7 @@ Users can make use of the website's functionality for a one time payment of €9
 
 </div>
 
-## Structure
+## Structure and Feautures
 
 The basic structure of the web page is
 
@@ -213,7 +213,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
 </details>
 
 - **Profile Information**
-  This module displays the user's profile information. It also contains a edit button which swithces the module to an edit module for said profile information.
+  This module displays the user's profile information. It also contains an edit button which switches the module to an edit module for said profile information.
   <details>
   <summary>Profile Info</summary>
 
@@ -342,7 +342,15 @@ This module shows the profile information of the selected user, similar to how i
 > - Expire date - Any date in the future
 
 
+### **Further Features**
+- **Notifications**
+A general feature that's not part of a specific page is the notification feature. When a member comments on another members workout log, the owner of the log get's a notification message on their browser in real time (without having to reload the page). They also receive an email of the notification. The user can opt to turn off the email notifications by changing email settings (form the profile page). The notification feautre also applies to a user adding anther member to a group (of which that member will then receive a notification, if the group is shared).
 
+### **Possible Future Features**
+- A graph that tracks a users level progress history.
+- A module that let's the user track their BMI over time.
+- Challenges and other group features to engage the user more and have them be more active and healthy.
+- For further inspiration for future features look to [BeyondTheWhiteboard](https://beyondthewhiteboard.com/).
 
 #### **Data Base**
 
@@ -435,264 +443,6 @@ The colors are mostly primary colors that reminisce of whiteboard markers. I tri
 - [Google Fonts](https://fonts.google.com/) ~ A library free licensed font families, an interactive web directory for browsing the library.
 
 <div align="right">
-
-[Back to Top :arrow_up:](#table-of-contents)
-
-</div>
-
----
-
-## Features
-
-### Existing Features
-
-#### Top Navbar
-
-- Changes Dymamicaly
-  This changes depending on the membership status of the user.
-  If the user is not logged in it shows the basic menu with 'Sign up/Login' and shopping cart
-  ![admin_no_user](media/wireframes/admin_no_user.png)
-
-- Username and Admin Login
-  When the use is logged in the top right is now the users 'Username' and a user icon.
-  If the user is a ‘Staff’ member a link to the admin ear is shown.
-  The basic menu extends to include Programs and dashboard and logout tabs.
-  ![admin_nav](media/wireframes/admin_nav.png)
-
-#### Footer
-
-- Footer Navigation Changes Dymamicaly.
-  The footer is dynamic and changes if the user is loged in or out. If logged out, the menu button say _login_, _Blog_, _Shop_, _Sign up_,
-  If the user is logged in the menu changes to:
-  _Subscribes_, _Blog_, _Shop_, _Logout_.
-  And if the user is a Pro member, _Subscribes_ changes to _Programs_.
-- Newsletter:
-  The Newsletter sign ups form is in the footer. This way it is always on every page.
-- Back to Top.
-  The Back to the top button is global but you see it mostly in the footer, This is a handly way to get back to the top of the page.
-
-#### Home Page Features
-
-##### Section 1.
-
-- Dynamic buttons
-  The 4 main buttons in section 1 of the main page are dynamic and change with the user membership level.
-  A public user will see Shop Sign up and Login Blog
-
-  ![btn_no_user](media/wireframes/btn_no_user.png)
-
-  If the user has logged in but not a Pro member the button will change to
-
-  ![btn_user](media/wireframes/btn_user.png)
-
-  If the user is a Pro member the buttons will change to
-
-  ![btn_member](media/wireframes/btn_member.png)
-
-##### Section 2
-
-The 3 cards are links to different parts of the site.
-They are clickable and lead to:
-
-1. The Trainging Program categories.
-2. The blogs main page.
-3. The Focus shop.
-
-##### Section 3
-
-- **Dynamic Subscription section**.
-  The subscription section users membership status.
-  If the user is a Pro member this section is hidden. This gives the user less scrolling to get to the shop or the featured blogs.
-
-#### Section 4
-
-- **The Special Offers section**:
-  Holds all the special offers that are listed.
-- **Clickable Products**:
-  The products are clickable and will take you to that products detailed page, where you can add to cart.
-  controlled in the admin All the products that are displayed here are controlled in the admin ears.
-- **Hidden Dynamically**:
-  If there are no special offers the section will be hidden.
-
-#### Section 5
-
-- **Featured Blogs**: All the featured blogs are shown here with the help of Bootstrap's Carousel.
-- **Clickable blogs**:
-  The blogs are clickable and will take you to the blog details where you can read it.
-- **Controlled in the admin**:
-  All featured blogs are controlled in the admin area.
-
- <div align="right">
-
-[Back to Top :arrow_up:](#testing)
-
-</div>
-
----
-
-### Blog Features
-
-- **Featured** **Blogs**:
-  The same feature that is used in Home page Section 5 is used in the blog list page.
-- **Search Blogs**:
-  The search bar in the blogs section will look for a matching word or words in either the name or content of the blogs. If there are any Matches will generate a results page. If there are none there is a link back to the blog page.
-
-- **Colour Code Categories**:
-  The Categories in the blog menu are colour coded to make it easier to distinguish the blogs. Each blog post - has a coloured border that matches the category colour.
-- **Likes, Views and Comments**:
-  Every time a logged on user clicks and views a blog it is recorded and shown on the blogs views counter. If a blog is liked it shows up in the thumbs up count. And the same if a blog is commented on.
-- **Members Blog section**:
-  The members block is where all the members blog will be posted.
-- **Members blogs restricted access**
-  Only logged in users may view the member blogs
-- **Find all blog from author**:
-  When you are on the blog's detailed page clicking on the authors name will bring you to their blogs page. Here you will be able to see all the blogs they have written.
-  All the blogs in their page are ordered from newest to oldest.
-- **Commenting on Blogs**:
-  This way the users can connect with each other, ask questions, leave answers, or just comment.
-- **Creating and Editing blogs**:
-  Only logged in users may create or comment on blogs
-- **User access**:
-  Only login users may create or comment on blogs
-- **Blog Author Control**
-  Only the blogs authors may edit there blogs
-- **Word Processors (Ckeditor)**:
-  The word processor call 'Ckeditor' is used to create or edit blogs, this gives the user a lovely interface to write, link, and add pictures to a blog post.
-- **Controlled from Admin**:
-  Blogs can be written and edited front the admin area. If blogs are not inline with the rules and code of conduct, they can be deleted without the author's permission.
-
- <div align="right">
-
-[Back to Top :arrow_up:](#table-of-contents)
-
-</div>
-
-### Focus Shop Features
-
-- **Product** **Filtering**:
-  You can filter the products in the shop with category selectors:
-  - All products - lets you sort by price, lowest to highest or by category in an alphabetical order.
-  - Activewaer & EQP - lets you sort by individual Activewear & EQP categories.
-  - Supplements - let you sort by individual supplements categories.
-  - Special Offers - shows you all the Special Offers.
-
-This makes it quicker to find the product you are looking for.
-
-- **Sort By Selector**:
-  Here you can sort the products by:
-
-  - _Price_ -(low-high) or (high-low).
-  - _Name_ - (A-Z) or (Z-A).
-  - _Category_ (A-Z) or (Z-A).
-  - _Rating_ (low-high) or (high-low).
-
-- **Product cards**:
-  The Product cards are clickable and will take you to the details product page. If the product does not have an image a 'No Image' image will take its place.
-
-- **Out of Stock**:
-  You can make a product out of stock from the admin area.
-- **Controlled from Admin**:
-  The admin area is the place where you can add, edit or delete products from your inventory. Only authorised users may do this.
-- **Reviews**:
-  Products can get reviewed by logged in users, this is done on the product details page.
-- **Stars Rating**:
-  Products can get a star rating by logged in user, each review and rate is listed with the product, A overall rating is made using this. The overall rating is displayed with the product on the product card.
-
-- **Search Bar**:
-  The search bar will look for a matching word or words in either the name or description of the products.
-- **Special offers**:
-  Products are put on special offer from the admin area. A ‘was’ price tells the user the old price. It will be hidden if the ‘was’ price is smaller than the price.
-- **Quantity selector**
-  Lets you add more items to your order.
-- **Size selector**:
-  Lets the user choose a size if the product has a size, otherwise this will be hidden.
-- **Shopping Cart Icon**:
-  The shopping cart icon in the top right next to the username, is all ways shown. If the cart is empty it says ‘Empty’ if there cart has items, There is a running grand total that turns green and including all the discounts charges and taxes, No surprises at the checkout.
-- **Add to Cart Message**:
-  When you add an item to the cart, a message will appear letting you know it was successful, and give the user a quick way to checkout with a checkout button.
-- **Detailed Price Breakdown**:
-  In the cart section of the shop, a breakdown of all the charges are on the right, so you know how much you paid for what.
-- **Adjust Cart**:
-  The user can adjust or delete from the cart if they have made a mistake.
-- **Secure Payment method**:
-  Using [Stripe](https://stripe.com) is a secure way to place your orders
-- **Order Receipt Emailed**:
-  Once the order has been submitted and Stripe receives payment a webhook is sent with back to Focus, once we have received this, we send an email with all the order details and the Stripe Payment Receipt.
-- **Backup Order with Webhook**:
-  If for some reason the user leaves the page before the order is complete but the payment goes through, the billing details and shipping address is sent with the payment, this way we can get them in the webhooks.
-
-### Memberships Features
-
-- **Memberships**
-  When a new use logs in for the first time a free membership is given to them.
-- **Members access**
-  members grains you asses to:
-  - _Writing Blog_
-  - _Commenting on blog posts_
-  - _review and rating products_
-  - _The Dashboard_
-  - _Programs (Pro only)_
-- **Subscriptions**:
-  A user can become a pro member by subscribing to Focus
-- **Stripe Subscription**:
-  Using [Stripe](https://stripe.com) subscriptions make sure that the user is charged, and sends a webhook motifinig of that payment and date. When we have this we send an email letting the user know that the subscription has been successful.
-- **Monthly Receipt emails**:
-  With the webhooks from Stripe whenever a payment is made we send the user an emailed receipt.
-
-### Programs Features
-
-- **Controlled from Admin**:
-  All programs are added, edited and deleted from the admin area only.
-- **Dynamically Added/Edited**
-  When new context or existing content is added or edited, it will automatically be updated on the programs page.
-
-### Workouts Features
-
-- **Controlled from Admin**:
-  Workouts are added from the admin area only.
-- **Dynamically Added/Edited**:
-  When a new Workout is added it will automatically be added to the programs workout list.
-- **Cloudinary**:
-  The video files itself are not stored in the Focus database, they are linked with a url from a video hosting server. Focus fitness uses [Cloudinary](https://cloudinary.com/).
-
-<details>
-<summary>How To add a video to Cloudinary and add to Focus.</summary>
-
-1. Make a Cloudinary account.
-2. Login and make a file to keep you videos in.
-3. Upload the video, when if has finished it will show you the Url.
-4. Copy the Url.
-5. In the Focus admin section click on workouts tab in the Programs section.
-6. Click ‘Add Workout’.
-7. Fill out all the fields in the form.
-8. Where it says 'Video url' paste in the videos url.
-9. Press 'Save'.
-
-</details>
-
-### DashBoard Features
-
-- **Change User Password**:
-  In the profile admin section the user can change their password
-- **Change User Delivery Details**: Here the user may change or fill in all their delivery details.
-- **Membership Select Access**:
-  The user can see what level of membership they are, and find the date due to the next payment (if applicable).
-- **Users Blogs**:
-  Here you can see all the blogs the user has written, if they haven’t written any yet, there is a link to start.
-- **Orders History**:
-  A list of all the previous orders the user has made in the shop. They are arranged from news to oldest.
-
-### Future Features
-
-- Full Profile Page:
-  A full profile page with all picture and bio.
-
-- Log your workouts:
-  A workout log page that you fill out in your workouts to keep track of your progress.
-- Newsletter marketing manager:
-  I would like to have my Newsletters email list auto upload to an email service that takes care of the mass emails
-
- <div align="right">
 
 [Back to Top :arrow_up:](#table-of-contents)
 

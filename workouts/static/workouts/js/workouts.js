@@ -738,7 +738,6 @@ $(document).ready(function() {
             try {
                 month = date.split(".")[0]
                 day = date.split(". ")[1].split(",")[0]
-                let year = date.split(", ")[1].slice(-2)
             }catch{
                 month = date.split(" ")[0]
                 if (month != "May"){
@@ -748,7 +747,6 @@ $(document).ready(function() {
                     month = month.slice(0, -1)
                 }
                 day = date.split(" ")[1].split(",")[0]
-                let year = date.split(", ")[1].slice(-2)
             }
             $(this).html(`<div class='display-month'>${month}</div><div class='display-day'>${day}</div>`)
         })
