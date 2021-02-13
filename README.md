@@ -1020,3 +1020,5 @@ With the database populated with the new data a immediatley learned that I had t
 In the end refactoring my python code to make as little as possible calls to the data base was the solution, letting the site function smoothly for a large user base.
 
 Dealing with this challenge definitely taught me a lot that I would not have learned by making a basic webshop project.
+
+Something to note; during the final weeks of the development of this project GitPod was having general issues (in Europe), not always performing normally. This sometimes made it impossible to issue the manage.py runserver command, resulting in an inabitly to test the implemantation/adaptation of (new) code. During this period I made many git commits, since I had already deployed to heroku, in order to be able to keep developing, examining my changes on the deployed website. This might result in a strange git log history.
