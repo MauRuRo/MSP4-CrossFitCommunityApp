@@ -18,6 +18,8 @@
 
 [![Generic badge](https://img.shields.io/badge/Hero_Community_live_Demo-Here-<>.svg)](https://hero-community.herokuapp.com/)
 
+_To explore the site as an existing user you can log in as "ElvisP" with the password "applepears"._
+
 ---
 
 ## Table of Contents
@@ -590,6 +592,7 @@ A general feature that's not part of a specific page is the notification feature
 - A graph that tracks a users level progress history.
 - A module that let's the user track their BMI over time.
 - Challenges and other group features to engage the user more and have them be more active and healthy.
+- A seperate module to operate member comments.
 - For further inspiration for future features look to [BeyondTheWhiteboard](https://beyondthewhiteboard.com/).
 
 ---
@@ -705,6 +708,8 @@ During the development of the project the code was consistently tested at every 
 Responsiveness was also tested throughout the development process manually.
 
 All forms were thorougly manually tested, testing invalid inputs on each field. 
+
+The functioning of the website was tested with a database of up to 80.000 rows (500 users and their logs). It functioned smoothly demonstrating the capability to function for a large scale user database. For Heroku deployment it was necessary to scale back the amount of users and logs to stay below the 10.000 row limit of the free postgres database.
 
 After deployment the website was beta-tested by a group of friends, which resulted in some significant addaptations, namely the addition security settings in the settings.py file (line 249), to ensure that the website is always run securely from https, as it turned out this did not happen automatically and for one of the testers resulted in the javascript not loading. Also an issue with a overfow-x not being defined resulted in a mysterious floating scrollbar on an invisible div; this was also resolved thanks to the beta testing.
 
@@ -987,8 +992,7 @@ If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/
 - Over the course of the development of this project I purused all over the world wide web to inform myself, learn and find solutions. One site in particular gave me a solution for how I wanted to load my data to the page (which I discoverd I could not do in one go since it was too much data): https://alphacoder.xyz/lazy-loading-with-django-and-jquery/.
 
 
-#### Content
-
+### Content
 
 For the content of the workout information I have taken text from [BeyondTheWhiteboard](https://beyondthewhiteboard.com/). For the images I refer you to the [Design](#design) segment.
 All other textual data was fabricated by myself.
@@ -1002,3 +1006,17 @@ This README file has been structured (and is in parts copied from (where similar
 [ Back to Top :arrow_up:](#table-of-contents)
 
 </div>
+
+---
+
+## Creator Notes
+
+As the final project in the Full Stack Developer Course of Code Institute, I definitely spend a lot more time on this one than any of the other projects. I had to learn a lot by continuously looking up answers to the questions I had on various message boards, including Stack Overflow and Stack. On a few occasions I also requested Tutor assistence. Sometimes I could copy solutions other developers had found, other times I had to rely on my own ingenuity. 
+
+I chose to do a project that was significantly different form the webshop example from the course material. This presented some challenges, most noteworthy one that I only fully understood halfway through developing: As I was partway through completing the website, I noted it was time to populate the database with a significant amount of users and logs in order to properly demonstrate the websites purpose and fucntionality as a statistical analysis tool. I spend some time writing code to generate the fictional users, and sequentially generate logs for each user for each workout (4 logs per workout per user in fact). This code is no longer in the project. In the end I generated 500 fictional users, each with 4 logs for each of 5 workouts for each of 8 categories. As noted by Heroku later on, this resulted in over 80.000 rows in the database (exceeding the maximum of 10k rows in the free tier ussage of heroku).
+
+With the database populated with the new data a immediatley learned that I had to significantly refactor and alter my code to accomodate this. There were issues with loading time (calculating hero-levels) and the loading of all the log entries to the page in one go (which was not possible, so I had to conceive of the scrolling pagination solution). Whilst trying to solve these issues I spent a lot of time learning about Asynchronous Django and Threading, where calculations would be made simultaneously and (in my mind) the complete function would thus complete faster. This turned out to be a false assumption. I also did a short tutorial in React, which was recommended by a fellow student as a possible solution. But this did not turn out to be the solution.
+
+In the end refactoring my python code to make as little as possible calls to the data base was the solution, letting the site function smoothly for a large user base.
+
+Dealing with this challenge definitely taught me a lot that I would not have learned by making a basic webshop project.
