@@ -581,7 +581,7 @@ This module shows the profile information of the selected user, similar to how i
 
 ### **Further Features**
 - **Notifications**
-A general feature that's not part of a specific page is the notification feature. When a member comments on another members workout log, the owner of the log get's a notification message on their browser in real time (without having to reload the page). They also receive an email of the notification. The user can opt to turn off the email notifications by changing email settings (form the profile page). The notification feautre also applies to a user adding anther member to a group (of which that member will then receive a notification, if the group is shared).
+A general feature that's not part of a specific page is the notification feature. When a member comments on another members workout log, the owner of the log get's a notification message on their browser in real time (without having to reload the page). They also receive an email of the notification. The user can opt to turn off the email notifications by changing email settings (form the profile page).  Other members who have commented on the same log also get a notification of a new comment on that log. The notification feature also applies to a user adding anther member to a group (of which that member will then receive a notification, if the group is shared).
 - **Cronjobs** For the site to work properly in a real world environment, the statistics for inactive users need to be updated regurlarly. I looked in to writing cronjobs using (among others) the django-crontab package, but I could not get this to be implemented following the instructions of the docs. I concluded that use of this package is not possible in a GitPod/Heroku deployment setup. That is why I ended up using Heroku Scheduler as an alternative, which updates the statistics for all users who have not logged in in the past 24 hours once a day.
 
 ---
@@ -717,6 +717,9 @@ All forms were thorougly manually tested, testing invalid inputs on each field.
 The functioning of the website was tested with a database of up to 80.000 rows (500 users and their logs) in SQLite and for a short period also in Postgres. It functioned smoothly demonstrating the capability to function for a large scale user database. For Heroku deployment it was necessary to scale back the amount of users and logs to stay below the 10.000 row limit of the free tier postgres database.
 #### Beta Testing
 After deployment the website was beta-tested by a group of friends, which resulted in some significant addaptations, namely the addition security settings in the settings.py file (line 249), to ensure that the website is always run securely from https, as it turned out this did not happen automatically and for one of the testers resulted in the javascript not loading. Also an issue with a overfow-x not being defined resulted in a mysterious floating scrollbar on an invisible div; this was also resolved thanks to the beta testing.
+
+I've also requested peer review in the Code Institute Slack community.
+
 #### Validators
 Besides manual testing all the HTML files and the CSS file have been tested using W3 validator. All custom javascript files have been tested by using JShint. Python files have continuously been monitored for issues using PEP8.
 
