@@ -16,7 +16,7 @@
     </ol>
 </div>
 {% for r_group in rank_groups %}
-<ol class="log-ranking log-rank">
+<div class="log-ranking log-rank card-list">
     <div
         class="row mx-0 my-1 align-items-center justify-content-center direction direction-up direction-rank rank-dir-up">
         <i class="fas fa-angle-double-up"></i></div>
@@ -176,7 +176,7 @@
     <div
         class="row mx-0 my-1 align-items-center justify-content-center direction direction-down direction-rank rank-dir-down">
         <i class="fas fa-angle-double-down"></i></div>
-</ol>
+</div>
 {% endfor %}
 <div id="gender" hidden>{{ profile.gender }}</div>
 <div id="profile-name" hidden>{{ profile.full_name }}</div>

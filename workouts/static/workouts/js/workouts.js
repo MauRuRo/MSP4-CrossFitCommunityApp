@@ -366,7 +366,7 @@ $(document).ready(function() {
     function scrollMyRank(){
         try{
             let uid = $("#user-id-no").attr("data");
-            let group = $(".log-ranking:visible").attr("class").split(" ")[1];
+            let group = $(".log-ranking:visible").attr("class").split(" ")[2];
             let group_no = group.split("-")[2];
             let memberid = "#rank-user-" + uid + "-group-" + group_no;
             $(memberid).children(".rank-counter").css({"color": "#ffc107", "text-shadow": "2px 2px 1px blue"});
@@ -1106,7 +1106,7 @@ $(document).ready(function() {
         $("#log-to-edit-id").html(log_id);
         let info = $(this).closest('.rank-card').children('.card-col');
         let wodname;
-        if  ($(this).closest("ol").hasClass("log-history") == true){
+        if  ($(this).closest(".card-list").hasClass("log-history") == true){
             wodname = info.find(".his-wod-name:first").children("strong").text();
         } else{
             wodname = "default";
