@@ -6,7 +6,7 @@
         </form>
     </div>
 </div>
-<ol class="group-members">
+<div class="group-members">
     {% for member in group %}
     <div class="row rank-card mx-0 my-1 align-items-center justify-content-between" id="{{ member.id }}"
         data-country="{{ member.userprofile.country.code }}">
@@ -30,7 +30,8 @@
         </div>
     </div>
     {% endfor %}
-    <div class="row mx-0 my-1 align-items-center justify-content-center direction direction-down-group direction-group group-dir-down">
+    <div
+        class="row mx-0 my-1 align-items-center justify-content-center direction direction-down-group direction-group group-dir-down">
         <i class="fas fa-angle-double-down"></i></div>
     <div class="row justify-content-center search-wait" hidden><i class='fas fa-circle-notch fa-spin'></i></div>
-</ol>
+</div>
