@@ -1,11 +1,11 @@
 // Script to set colors for active/inactive selected/unselected choicefields in form.
 let countrySelected = $('#id_country').val();
-if(!countrySelected) {
+if (!countrySelected) {
     $('#id_country').css('color', '#aab7c4');
 }
-$('#id_country').change(function() {
+$('#id_country').change(function () {
     countrySelected = $(this).val();
-    if(!countrySelected) {
+    if (!countrySelected) {
         $(this).css('color', '#aab7c4');
     } else {
         $(this).css('color', '#000');
@@ -13,12 +13,12 @@ $('#id_country').change(function() {
 });
 
 let genderSelected = $('#id_gender').val();
-if(!genderSelected) {
+if (!genderSelected) {
     $('#id_gender').css('color', '#aab7c4');
 }
-$('#id_gender').change(function() {
+$('#id_gender').change(function () {
     genderSelected = $(this).val();
-    if(!genderSelected) {
+    if (!genderSelected) {
         $(this).css('color', '#aab7c4');
     } else {
         $(this).css('color', '#000');
