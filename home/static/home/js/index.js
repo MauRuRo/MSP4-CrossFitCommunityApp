@@ -1,3 +1,3 @@
 $(document).ready(function(){
-    $("body").addClass("indexbody")
+    $("body").addClass("indexbody");
 })

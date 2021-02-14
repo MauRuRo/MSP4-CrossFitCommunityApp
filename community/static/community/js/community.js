@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     // SET VARIABLES AND ADJUST HTML/CSS ON PAGE LOAD
-		'use strict';
     let group_data = $("#group-select-data").attr('data');
     group_data = group_data.toString();
     group_data = JSON.parse(group_data);
