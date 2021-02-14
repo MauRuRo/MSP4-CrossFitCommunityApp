@@ -42,6 +42,7 @@ _To explore the site as an existing user you can log in as "ElvisP" with the pas
 > 6.  [**Testing**](#testing)
 > 7.  [**Deployment**](#deployment)
 > 8.  [**Credits & Acknowledgements**](#credits)
+> 8.  [**Creator Notes**](#creator-notes)
 
 ---
 
@@ -52,6 +53,8 @@ My goal was to make a web application similar to the existing website [BeyondThe
 The basic idea is to create an online platform where a commnity of users can log their workout results and compare to each other and see what level they are at as a function of the total community results. BeyondTheWhiteboard has a lot of feautures on their application, each of which was worth exploring, but due to the limited amount of time available to me I limited the scope of the site functionality to logging, ranking, comparing, commenting and grouping.
 
 Users can make use of the website's functionality for a one time payment of €9,99. I might also have opted for a subscription payment of say €0,99 per month.
+
+During development I spent a lot of time trying to make the UX very user friendly and intuitive: A lot of elements are clickable and linked so you can navigate through the website intuitively through multiple "paths".
 
 ### User Stories
 
@@ -579,6 +582,7 @@ This module shows the profile information of the selected user, similar to how i
 ### **Further Features**
 - **Notifications**
 A general feature that's not part of a specific page is the notification feature. When a member comments on another members workout log, the owner of the log get's a notification message on their browser in real time (without having to reload the page). They also receive an email of the notification. The user can opt to turn off the email notifications by changing email settings (form the profile page). The notification feautre also applies to a user adding anther member to a group (of which that member will then receive a notification, if the group is shared).
+- **Cronjobs** For the site to work properly in a real world environment, the statistics for inactive users need to be updated regurlarly. I looked in to writing cronjobs using (among others) the django-crontab package, but I could not get this to be implemented following the instructions of the docs. I concluded that use of this package is not possible in a GitPod/Heroku deployment setup. That is why I ended up using Heroku Scheduler as an alternative, which updates the statistics for all users who have not logged in in the past 24 hours once a day.
 
 ---
 
@@ -691,6 +695,7 @@ The colors are mostly primary colors that reminisce of whiteboard markers. I tri
 
 - [W3 Validator](https://validator.w3.org/nu/) ~ The HTML Validation Service.
 - [W3C CSS Validation](https://jigsaw.w3.org/css-validator/) ~ A CSS validator checks your Cascading Style Sheets to make sure that they comply with the CSS standards set by the W3 Consortium.
+- [JShint](https://jshint.com/) ~ An online Javascript validator.
 - [Google Fonts](https://fonts.google.com/) ~ A library free licensed font families, an interactive web directory for browsing the library.
 
 <div align="right">
@@ -713,13 +718,13 @@ The functioning of the website was tested with a database of up to 80.000 rows (
 
 After deployment the website was beta-tested by a group of friends, which resulted in some significant addaptations, namely the addition security settings in the settings.py file (line 249), to ensure that the website is always run securely from https, as it turned out this did not happen automatically and for one of the testers resulted in the javascript not loading. Also an issue with a overfow-x not being defined resulted in a mysterious floating scrollbar on an invisible div; this was also resolved thanks to the beta testing.
 
-Besides manual testing all the HTML files and the CSS file have been rested using W3 validator.
+Besides manual testing all the HTML files and the CSS file have been tested using W3 validator. All custom javascript files have been tested by using JShint.
 
-There were no major issues: the validator could not handle the django and jinja syntax though.
+There were no major issues: the html validator could not handle the django template and jinja syntax though.
 
 One noteworthy issue that did turn up was that div elements were nested inside an ol element (in the activity and ranking module ). Apparently this is not correct html, however since it does not present any functionality issues and translating to correct html would be a lot of work I decided to leave it as is.
 
-For the testing of the user stories I refer you to [User Stories](#user-stories). (Click to expand each stories instructions.)
+For the testing of the user stories I refer you to [User Stories](#user-stories). (Click to expand each story instructions.)
 
  <div align="right">
 
@@ -994,10 +999,10 @@ If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/
 
 ### Content
 
-For the content of the workout information I have taken text from [BeyondTheWhiteboard](https://beyondthewhiteboard.com/). For the images I refer you to the [Design](#design) segment.
+- For the content of the workout information I have taken text from [BeyondTheWhiteboard](https://beyondthewhiteboard.com/). For the images I refer you to the [Design](#design) segment.
 All other textual data was fabricated by myself.
 
-This README file has been structured (and is in parts copied from (where similar information applied)) based on the extremely thorough README file of my fellow CI student [Clint Davis's  project: Focus Fitness](https://github.com/Clinton-Davis/focus_fitness/blob/master/README.md).
+- This README file has been structured (and is in parts copied from (where similar information applied)) based on the extremely thorough README file of my fellow CI student [Clint Davis's  project: Focus Fitness](https://github.com/Clinton-Davis/focus_fitness/blob/master/README.md).
 
 
  <div align="right">
@@ -1022,4 +1027,14 @@ Dealing with this challenge definitely taught me a lot that I would not have lea
 
 Something to note; during the final weeks of the development of this project GitPod was having general issues (in Europe), not always performing normally. This sometimes made it impossible to issue the manage.py runserver command, resulting in an inabitly to test the implemantation/adaptation of (new) code. During this period I made many git commits, since I had already deployed to heroku, in order to be able to keep developing, examining my changes on the deployed website. This might result in a strange git log history.
 
+As this was a learning project; along the way I became more proficient and understanding of the code languages I was using. The logic of the website grew in an organic way as my knowledge progressed. Looking back some of the logic could definitely be re-written in a more efficient way. Due to time constraints, I will not take the time to do this.
+
 ###### <i>Disclaimer: This project was created for educational purposes only as part of the Code Institute Full Stack Software Development Course for Milestone 4 Django!</i>
+
+ <div align="right">
+
+[ Back to Top :arrow_up:](#table-of-contents)
+
+</div>
+
+---

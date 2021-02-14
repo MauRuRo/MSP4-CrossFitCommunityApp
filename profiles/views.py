@@ -20,9 +20,7 @@ import statistics
 def cache_payment_create_profile(request):
     try:
         pid = request.POST.get('client_secret').split('_secret')[0]
-        print("pid:", pid)
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        print("seckey:", stripe.api_key)
         stripe.PaymentIntent.modify(pid, metadata={
             'user': request.user.pk,
             'email': request.user.email,
@@ -35,7 +33,6 @@ def cache_payment_create_profile(request):
         })
         return HttpResponse(status=200)
     except Exception as e:
-        print("FAILED THE CACHE")
         messages.error(request, 'Sorry, your payment cannot be \
             processed right now. Please try again later.')
 
@@ -245,7 +242,6 @@ def cat_levels_info(percentiles, cat_levels, cat, wod_level, wod_cat):
 
 @require_POST
 def calc_level(request):
-    print("PROFILE CALC")
     """A function that calculates and returns Levels, per WOD,
     per Category and General,
     incl. the relevant results and the accuracy of the assesment."""
@@ -388,7 +384,6 @@ def getLevels(user, wod):
                             break
         if result_index is False:
             result_index = 0
-        # result_index += 1
         total_results = len(log_id_list)
         percentile = round(
             (total_results - result_index) / total_results * 100

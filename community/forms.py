@@ -1,5 +1,4 @@
 from django import forms
-# from profiles.widgets import CustomClearableFileInput
 from .models import CustomGroup
 
 
@@ -12,7 +11,6 @@ class CustomGroupForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         placeholders = {
             'name': 'Group Name',
-            # 'group_users': 'Group Members',
             'share': 'Share with group members'
         }
 

@@ -98,7 +98,6 @@ class StripeWH_Handler:
                     content=f'Webhook received: {event["type"]} | ERROR: {e}',
                     status=500)
         self._send_confirmation_email(new_profile)
-        print("WEBHOOK PAYMENT SUCCEEDED")
         return HttpResponse(
             content=f'Webhook received: {event["type"]} | \
                 SUCCESS: created profile in webhook',
@@ -108,7 +107,6 @@ class StripeWH_Handler:
         """
         Handle the payment_intent.payment_failed webhook from Stripe
         """
-        print("FAILED WEBHOOK PAYMENT")
         return HttpResponse(
             content=f'Webhook received: {event["type"]}',
             status=200)

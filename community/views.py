@@ -43,7 +43,6 @@ def community(request):
         date_month = date.today() - timedelta(days=30)
         month = selected_group_logs.filter(date__gte=date_month).count()
         admin = False
-        # group_s = json.loads(getGroup(request))
         group_s = getGroup(request)
         groupname = ''
         if group_s["custom"] != "false":
@@ -173,7 +172,6 @@ def getGroupSelectionUsers(request):
     """Helper function that returns all the users of the selected group."""
     # Determine group selection
     if request.user.is_authenticated and hasattr(request.user, 'userprofile'):
-        # group_select = json.loads(getGroup(request))
         group_select = getGroup(request)
         if group_select["custom"] == 'false':
             if group_select["location"] == "group-global":
@@ -222,7 +220,6 @@ def resetStats(request):
         date_month = date.today() - timedelta(days=30)
         month = selected_group_logs.filter(date__gte=date_month).count()
         admin = False
-        # group_s = json.loads(getGroup(request))
         group_s = getGroup(request)
         groupname = ''
         if group_s["custom"] != "false":

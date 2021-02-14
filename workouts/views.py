@@ -302,7 +302,6 @@ def workouts(request, wod_id):
         }
         template = "workouts/workouts.html"
         return render(request, template, context)
-    # else if request is POST
     else:
         # Determine workout type and set appropriate values
         # to get the right data from the request.POST
@@ -932,7 +931,6 @@ def getSliderLevel(request):
                     if prep_rank == 0:
                         prep_rank = rank
         if prep_rank != 0:
-            # last_rank = rlistgenderall[-1][1]
             last_rank = len(rlistgenderall)
             prep_rank = prep_rank - 1
             percentile = round((((last_rank - prep_rank)/last_rank)) * 100)
@@ -1003,7 +1001,6 @@ def calc_level(user):
 def setInitialSliderLevel(request, wod, lapse_date, rank_result, men_logs, women_logs):
     """Determine the result needed for a level of around 50 (median result)"""
     ft_seconds = True
-    # group_s = json.loads(getGroup(request))
     group_s = getGroup(request)
     if group_s["custom"] != "false" or group_s["age"] == "true" or group_s["location"] != "group-global":
         selected_group = Log.objects.all()
