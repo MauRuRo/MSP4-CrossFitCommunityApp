@@ -498,7 +498,7 @@ def send_group_notification(groupname, members, admin):
         if member != admin:
             n_setting = MailNotificationSettings.objects.filter(user=member)
             if n_setting.count == 1:
-                if n_setting[0].notify == False:
+                if n_setting[0].notify is False:
                     continue
             email = member.email
             subject = "Somebody added you to a group!"

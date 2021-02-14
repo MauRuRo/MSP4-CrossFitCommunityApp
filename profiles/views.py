@@ -440,7 +440,7 @@ def resetNotes(request):
     """Turn on or off mail notifications for user"""
     if request.user.is_authenticated and request.is_ajax:
         notes = request.user.notifications.unread()
-         # build html template
+        # build html template
         calling_group_html = loader.render_to_string(
             'includes/toasts/toast_notification.html',
             {'notes': notes}
