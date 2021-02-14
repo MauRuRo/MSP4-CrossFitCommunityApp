@@ -999,7 +999,6 @@ All other textual data was fabricated by myself.
 
 This README file has been structured (and is in parts copied from (where similar information applied)) based on the extremely thorough README file of my fellow CI student [Clint Davis's  project: Focus Fitness](https://github.com/Clinton-Davis/focus_fitness/blob/master/README.md).
 
-###### <i>Disclaimer: This project was created for educational use only as part of the Code Institute Full Stack Software Development Course for Milestone 4 Django!</i>
 
  <div align="right">
 
@@ -1022,3 +1021,5 @@ In the end refactoring my python code to make as little as possible calls to the
 Dealing with this challenge definitely taught me a lot that I would not have learned by making a basic webshop project.
 
 Something to note; during the final weeks of the development of this project GitPod was having general issues (in Europe), not always performing normally. This sometimes made it impossible to issue the manage.py runserver command, resulting in an inabitly to test the implemantation/adaptation of (new) code. During this period I made many git commits, since I had already deployed to heroku, in order to be able to keep developing, examining my changes on the deployed website. This might result in a strange git log history.
+
+###### <i>Disclaimer: This project was created for educational purposes only as part of the Code Institute Full Stack Software Development Course for Milestone 4 Django!</i>
