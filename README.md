@@ -340,7 +340,7 @@ You may also use the social account sign up. Facebook and Google.
 
 **Sign Up and Login.**
 You may use the social account buttons to sign in or use the form.
-The form has two fields, ‘email’ and ‘Password’ and a remember me button and a link to your if you have forgotten your password.
+The form has two fields, ‘email’ and ‘Password’ and a 'remember me button' and a link for if you have forgotten your password.
 All of [Allauth](https://django-allauth.readthedocs.io/en/latest/) HTML pages have been more or less customised to fit the themes of the site.
 
 
@@ -718,9 +718,9 @@ The functioning of the website was tested with a database of up to 80.000 rows (
 
 After deployment the website was beta-tested by a group of friends, which resulted in some significant addaptations, namely the addition security settings in the settings.py file (line 249), to ensure that the website is always run securely from https, as it turned out this did not happen automatically and for one of the testers resulted in the javascript not loading. Also an issue with a overfow-x not being defined resulted in a mysterious floating scrollbar on an invisible div; this was also resolved thanks to the beta testing.
 
-Besides manual testing all the HTML files and the CSS file have been tested using W3 validator. All custom javascript files have been tested by using JShint.
+Besides manual testing all the HTML files and the CSS file have been tested using W3 validator. All custom javascript files have been tested by using JShint. Python files have continuously been monitored for issues using PEP8.
 
-There were no major issues: the html validator could not handle the django template and jinja syntax though.
+There were no major issues: the html validator could not handle the django template and jinja syntax though. The python validator noted some "line too long" issues, but in those cases the choice to not break up the line was a concious one as it would have made the readability less good, in my opinion.
 
 One noteworthy issue that did turn up was that div elements were nested inside an ol element (in the activity and ranking module ). Apparently this is not correct html, however since it does not present any functionality issues and translating to correct html would be a lot of work I decided to leave it as is.
 
