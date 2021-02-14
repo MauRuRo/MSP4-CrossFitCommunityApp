@@ -24,25 +24,15 @@ function fill_notification_list(data) {
     if (menus) {
         var messages = data.unread_list.map(function (item) {
             var message = "";
-            // if(typeof item.actor !== 'undefined'){
-            //     message = item.actor;
-            // }
             if(typeof item.verb !== 'undefined'){
-                // message = message + " " + item.verb;
                 message = item.verb;
             }
-            // if(typeof item.target !== 'undefined'){
-            //     message = message + " " + item.target;
-            // }
-            // if(typeof item.timestamp !== 'undefined'){
-            //     message = message + " " + item.timestamp;
-            // }
             return `<li data-noteid=${item.slug}>` + message + '</li>';
-        }).join('')
+        }).join('');
         for (var i = 0; i < menus.length; i++){
             menus[i].innerHTML = messages;
         }
-        resetNotes()
+        resetNotes();
     }
 }
 
@@ -64,7 +54,7 @@ function fetch_api_data() {
                     consecutive_misfires++;
                 }
             }
-        })
+        });
         r.open("GET", notify_api_url+'?max='+notify_fetch_count, true);
         r.send();
     }
@@ -75,37 +65,37 @@ function fetch_api_data() {
         if (badges) {
             for (var i = 0; i < badges.length; i++){
                 badges[i].innerHTML = "!";
-                badges[i].title = "Connection lost!"
+                badges[i].title = "Connection lost!";
             }
         }
     }
 }
 
 setTimeout(fetch_api_data, 1000);
-
+// resets the messages display for new notifications.
 function resetNotes(){
     $.ajax({
         type: "POST",
         url: "/profile/resetNotes/",
         success: function(data){
-            $(".n-messages").html(data.calling_group_html)
-            formatToast()
+            $(".n-messages").html(data.calling_group_html);
+            formatToast();
         },
         error: function(){
-            console.log("ajax resetNOTES failed")
+            console.log("ajax resetNOTES failed");
         }
-    })
+    });
 }
 // Format notification toast.
 function formatToast(){
     $(".note-col").each(function(){
         if ($(this).data('note-type') == "comment"){
-        let text = $(this).text()
-        let note = text.split("$%$%")[0]
-        let message = text.split("$%$%")[1]
-        let toasthtml = `<p>${note}<hr><em>${message}</em></p>`
-        $(this).html(toasthtml)
+        let text = $(this).text();
+        let note = text.split("$%$%")[0];
+        let message = text.split("$%$%")[1];
+        let toasthtml = `<p>${note}<hr><em>${message}</em></p>`;
+        $(this).html(toasthtml);
         }
-    })
-    $(".n-messages").children(".toast").addClass("show")
+    });
+    $(".n-messages").children(".toast").addClass("show");
 }
