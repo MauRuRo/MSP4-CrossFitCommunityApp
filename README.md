@@ -402,7 +402,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
     <summary>Workout Stats</summary>
 
     <p align="center">
-    <img src="media/screenshots/workoutstats.png">
+    <img src="media/screenshots/workoutstats.png" width="300">
     </p>
 
     </details>
@@ -413,7 +413,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <summary>Hero Levels</summary>
 
   <p align="center">
-  <img src="media/screenshots/herolevels.png">
+  <img src="media/screenshots/herolevels.png" width="400">
   </p>
 
 </details>
@@ -424,7 +424,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <summary>Profile Info</summary>
 
   <p align="center">
-  <img src="media/screenshots/profileinfo.png">
+  <img src="media/screenshots/profileinfo.png" width="300">
   </p>
 
 </details>
@@ -455,7 +455,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <details>
   <summary>Activity</summary>
   <p align="center">
-  <img src="media/screenshots/activity.png">
+  <img src="media/screenshots/activity.png" width="300">
   </p>
   </details>
 
@@ -468,7 +468,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <details>
   <summary>Workout of the Day</summary>
   <p align="center">
-  <img src="media/screenshots/workoutoftheday.png">
+  <img src="media/screenshots/workoutoftheday.png" width="400">
   </p>
   </details>
 
@@ -477,7 +477,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <details>
   <summary>Ranking</summary>
   <p align="center">
-  <img src="media/screenshots/ranking.png">
+  <img src="media/screenshots/ranking.png" width="300">
   </p>
   </details>
 
@@ -486,7 +486,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <details>
   <summary>Workouts</summary>
   <p align="center">
-  <img src="media/screenshots/workouts.png">
+  <img src="media/screenshots/workouts.png" width="300">
   </p>
   </details>
 
@@ -495,7 +495,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <details>
   <summary>Log</summary>
   <p align="center">
-  <img src="media/screenshots/log.png">
+  <img src="media/screenshots/log.png" width="300">
   </p>
   </details>
 
@@ -520,7 +520,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <details>
   <summary>Groups</summary>
   <p align="center">
-  <img src="media/screenshots/groups.png">
+  <img src="media/screenshots/groups.png" width="400">
   </p>
   </details>
 
@@ -529,7 +529,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <details>
   <summary>Members</summary>
   <p align="center">
-  <img src="media/screenshots/members.png">
+  <img src="media/screenshots/members.png" width="300">
   </p>
   </details>
 
@@ -538,7 +538,7 @@ It displays a enticing text encouring the user buy an account and it displays a 
   <details>
   <summary>Group Stats</summary>
   <p align="center">
-  <img src="media/screenshots/groupstats.png">
+  <img src="media/screenshots/groupstats.png" width="300">
   </p>
   </details>
 
