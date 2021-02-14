@@ -714,7 +714,7 @@ Responsiveness was also tested throughout the development process manually.
 
 All forms were thorougly manually tested, testing invalid inputs on each field. 
 #### Scale
-The functioning of the website was tested with a database of up to 80.000 rows (500 users and their logs). It functioned smoothly demonstrating the capability to function for a large scale user database. For Heroku deployment it was necessary to scale back the amount of users and logs to stay below the 10.000 row limit of the free postgres database.
+The functioning of the website was tested with a database of up to 80.000 rows (500 users and their logs) in SQLite and for a short period also in Postgres. It functioned smoothly demonstrating the capability to function for a large scale user database. For Heroku deployment it was necessary to scale back the amount of users and logs to stay below the 10.000 row limit of the free tier postgres database.
 #### Beta Testing
 After deployment the website was beta-tested by a group of friends, which resulted in some significant addaptations, namely the addition security settings in the settings.py file (line 249), to ensure that the website is always run securely from https, as it turned out this did not happen automatically and for one of the testers resulted in the javascript not loading. Also an issue with a overfow-x not being defined resulted in a mysterious floating scrollbar on an invisible div; this was also resolved thanks to the beta testing.
 #### Validators
@@ -722,13 +722,13 @@ Besides manual testing all the HTML files and the CSS file have been tested usin
 
 There were no major issues: the html validator could not handle the django template and jinja syntax though. The python validator noted some "line too long" issues, but in those cases the choice to not break up the line was a concious one as it would have made the readability less good, in my opinion.
 
-One noteworthy issue that did turn up was that div elements were nested inside an ol element (in the activity and ranking module ). Apparently this is not correct html, however since it does not present any functionality issues and translating to correct html would be a lot of work I decided to leave it as is.
+One noteworthy issue that did turn up was that div elements were nested inside an ol element (in the activity and ranking module ). Apparently this is not correct html, however it did not present any functionality issues. I did manage to change the "ol" element to a "div" element, adding an extra class to identify it and making some minor changes to the relevant js files.
 #### User Stories
 For the testing of the user stories I refer you to [User Stories](#user-stories). (Click to expand each story instructions.)
 #### Programmatic Testing
-Because all of the sites major pages are only accessible by authenticated users, and all pages operate using an intricate web of models connected to the get or post request, writing django tests for the views, functions, forms and models seemed overly complex in this context and unneccesarily time consuming. Testing manually in this case was the most optimal choice. As an educational excercise however, I did write a few tests, which you will find under community/test_forms.py, community/test_views.py, home/test_views.py, profiles/models.py.
+Because all of the sites major pages are only accessible by authenticated users, and all pages operate using an intricate web of models connected to the get or post request, writing django tests for the views, functions, forms and models seemed overly complex in this context and unneccesarily time consuming. Testing manually in this case was the most optimal choice. As an educational excercise however, I did write a few tests, which you will find under community/test_forms.py, community/test_views.py, home/test_views.py, profiles/models.py. These tests are based on the instruction video's of Code Institute.
 
-Unfortunately I only learned about testing integration software like [Travis](https://travis-ci.org/) around the time I finished developing the app. It was not used during this project.
+Unfortunately I only learned about testing integration software like [Travis](https://travis-ci.org/) around the time I finished developing the app. It was not used during this project but is definitely worth looking at for a next project.
 
  <div align="right">
 
