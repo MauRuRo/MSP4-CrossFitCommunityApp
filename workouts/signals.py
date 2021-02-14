@@ -9,6 +9,8 @@ from .models import MemberComment
 def notify_comment(sender, instance, created, **kwargs):
     user = instance.member
     receiver = instance.log_id.user
+    if user == receiver:
+        return
     user_name = user.userprofile.full_name
     workout = instance.log_id.workout.workout_name
     wod_date = instance.log_id.date
