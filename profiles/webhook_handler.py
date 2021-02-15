@@ -18,7 +18,7 @@ class StripeWH_Handler:
 
     def _send_confirmation_email(self, new_profile):
         """ Send th user confirmation email"""
-        cust_email = new_profile.email
+        cust_email = new_profile.user.email
         subject = render_to_string(
             'profiles/confirmation_emails/account_created_subject.txt',
             {'profile': new_profile})
