@@ -17,7 +17,6 @@ class StripeWH_Handler:
 
     def _send_confirmation_email(self, new_profile):
         """ Send the user a confirmation email"""
-        print("SENDING EMAIL")
         cust_email = new_profile.email
         subject = render_to_string(
             'profiles/confirmation_emails/account_created_subject.txt',
@@ -50,38 +49,25 @@ class StripeWH_Handler:
         birthdate = datetime.strptime(userprofile.birthdate, "%d %b %Y")
         birthdate = datetime.strftime(birthdate, "%Y-%m-%d")
         user = User.objects.get(pk=userprofile.user)
-        print(user)
         profile_exists = False
         attempt = 1
         while attempt <= 5:
-            print("IN WHILE")
             try:
                 new_profile = UserProfile.objects.get(
-                    # full_name__iexact=userprofile.full_name,
-                    # town_or_city__iexact=userprofile.town_or_city,
-                    # country__iexact=userprofile.country,
-                    # gender__iexact=userprofile.gender,
-                    # weight__iexact=userprofile.weight,
-                    # birthdate__iexact=birthdate,
-                    user=user,
-                    # stripe_pid__iexact=pid
+                    user=user
                 )
                 profile_exists = True
-                print("PROFILE IS TRUE")
                 break
             except UserProfile.DoesNotExist:
-                print("NOT FOUND: Retry in 1 second")
                 attempt += 1
                 time.sleep(1)
         if profile_exists:
-            print("NO ERROR: PROFILE EXISTS")
             self._send_confirmation_email(new_profile)
             return HttpResponse(
                     content=f'Webhook received: {event["type"]} | \
                         Success: Verified profile already in database',
                     status=200)
         else:
-            print("PROFILE NOT FOUND: CREATE IN WEBHOOK")
             new_profile = None
             try:
                 new_profile = UserProfile.objects.create(
@@ -101,7 +87,6 @@ class StripeWH_Handler:
             except Exception as e:
                 print("in the exception")
                 if new_profile:
-                    print("deleting profile because of error")
                     new_profile.delete()
                 return HttpResponse(
                     content=f'Webhook received: {event["type"]} | ERROR: {e}',
