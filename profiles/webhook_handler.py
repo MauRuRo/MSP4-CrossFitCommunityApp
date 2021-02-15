@@ -53,6 +53,7 @@ class StripeWH_Handler:
         profile_exists = False
         attempt = 1
         while attempt <= 5:
+            print("IN WHILE")
             try:
                 new_profile = UserProfile.objects.get(
                     full_name__iexact=userprofile.full_name,
@@ -65,8 +66,10 @@ class StripeWH_Handler:
                     stripe_pid__iexact=pid
                 )
                 profile_exists = True
+                print("PROFILE IS TRUE")
                 break
             except UserProfile.DoesNotExist:
+                print("NOT FOUND: Retry in 1 second")
                 attempt += 1
                 time.sleep(1)
         if profile_exists:
@@ -77,6 +80,7 @@ class StripeWH_Handler:
                         Success: Verified profile already in database',
                     status=200)
         else:
+            print("PROFILE NOT FOUND: CREATE IN WEBHOOK")
             new_profile = None
             try:
                 new_profile = UserProfile.objects.create(
