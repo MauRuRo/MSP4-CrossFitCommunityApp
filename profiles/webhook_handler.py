@@ -5,9 +5,8 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
-import json
 import time
-from datetime import datetime, date, timedelta
+from datetime import datetime
 
 
 class StripeWH_Handler:
@@ -17,8 +16,9 @@ class StripeWH_Handler:
         self.request = request
 
     def _send_confirmation_email(self, new_profile):
-        """ Send th user confirmation email"""
-        cust_email = new_profile.user.email
+        """ Send the user a confirmation email"""
+        print("SENDING EMAIL")
+        cust_email = new_profile.email
         subject = render_to_string(
             'profiles/confirmation_emails/account_created_subject.txt',
             {'profile': new_profile})
@@ -70,6 +70,7 @@ class StripeWH_Handler:
                 attempt += 1
                 time.sleep(1)
         if profile_exists:
+            print("NO ERROR: PROFILE EXISTS")
             self._send_confirmation_email(new_profile)
             return HttpResponse(
                     content=f'Webhook received: {event["type"]} | \
@@ -81,6 +82,7 @@ class StripeWH_Handler:
                 new_profile = UserProfile.objects.create(
                     full_name=userprofile.full_name,
                     town_or_city=userprofile.town_or_city,
+                    email=user.email,
                     country=userprofile.country,
                     gender=userprofile.gender,
                     weight=userprofile.weight,
