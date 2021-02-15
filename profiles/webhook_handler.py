@@ -50,20 +50,21 @@ class StripeWH_Handler:
         birthdate = datetime.strptime(userprofile.birthdate, "%d %b %Y")
         birthdate = datetime.strftime(birthdate, "%Y-%m-%d")
         user = User.objects.get(pk=userprofile.user)
+        print(user)
         profile_exists = False
         attempt = 1
         while attempt <= 5:
             print("IN WHILE")
             try:
                 new_profile = UserProfile.objects.get(
-                    full_name__iexact=userprofile.full_name,
-                    town_or_city__iexact=userprofile.town_or_city,
-                    country__iexact=userprofile.country,
-                    gender__iexact=userprofile.gender,
-                    weight__iexact=userprofile.weight,
-                    birthdate__iexact=birthdate,
+                    # full_name__iexact=userprofile.full_name,
+                    # town_or_city__iexact=userprofile.town_or_city,
+                    # country__iexact=userprofile.country,
+                    # gender__iexact=userprofile.gender,
+                    # weight__iexact=userprofile.weight,
+                    # birthdate__iexact=birthdate,
                     user=user,
-                    stripe_pid__iexact=pid
+                    # stripe_pid__iexact=pid
                 )
                 profile_exists = True
                 print("PROFILE IS TRUE")
