@@ -94,7 +94,9 @@ class StripeWH_Handler:
                 new_profile.save()
                 createDefaultHeroLevels(user)
             except Exception as e:
+                print("in the exception")
                 if new_profile:
+                    print("deleting profile because of error")
                     new_profile.delete()
                 return HttpResponse(
                     content=f'Webhook received: {event["type"]} | ERROR: {e}',
