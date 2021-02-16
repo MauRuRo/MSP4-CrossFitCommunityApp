@@ -21,7 +21,7 @@
 <details>
 <summary>I am clickable, please click me for further explanation.</summary>
 
-In this README you'll find clickable lines like this one indicated by a triangle at start of the line. Click the line to expand further information or images.
+In this README you'll find clickable lines like this one indicated by a triangle at the start of the line. Click the line to expand further information or images.
 </details>
 
 ---
