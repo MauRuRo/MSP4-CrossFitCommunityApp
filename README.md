@@ -18,7 +18,11 @@
 
 [![Generic badge](https://img.shields.io/badge/Hero_Community_live_Demo-Here-<>.svg)](https://hero-community.herokuapp.com/)
 
-_To explore the site as an existing user you can log in as "ElvisP" with the password "applepears"._
+<details>
+<summary>I am clickable, please click me for further explanation.</summary>
+
+In this README you'll find clickable lines like this one indicated by a triangle at start of the line. Click the line to expand further information or images.
+</details>
 
 ---
 
@@ -43,6 +47,7 @@ _To explore the site as an existing user you can log in as "ElvisP" with the pas
 > 7.  [**Deployment**](#deployment)
 > 8.  [**Credits & Acknowledgements**](#credits)
 > 8.  [**Creator Notes**](#creator-notes)
+
 
 ---
 
