@@ -845,17 +845,19 @@ Once you have [Git](https://git-scm.com/) and [Pip](https://pip.pypa.io/en/stabl
     $ python manage.py runserver
     ```
 
+Note: please note the SITE_ID value in the settings.py file. During development I created and deleted a couple of site model objects, which resulted in that there was no longer a site corresponding with the id=1. I had to find the correct site ID number to make it work.
  <div align="right">
 
 [Back to Top :arrow_up:](#table-of-contents)
 
 </div>
 
+
 ---
 
 ### Heroku Deployment
 
-You will need a [AWS](https://aws.amazon.com/s3/) account and a [S3 bucket](https://aws.amazon.com/s3/) to hold all the static files for this project.
+You will need an [AWS](https://aws.amazon.com/s3/) account and a [S3 bucket](https://aws.amazon.com/s3/) to hold all the static files for this project.
 If you would like to use the [allauth](https://django-allauth.readthedocs.io/en/latest/) socialaccounts logins, you can find out more here. [Facebook](https://developers.facebook.com/products/facebook-login/) and [Google](https://developers.google.com/identity/sign-in/web/sign-in)
 
 1.  Open Heroku.
@@ -1024,17 +1026,17 @@ All other textual data was fabricated by myself.
 
 As the final project in the Full Stack Developer Course of Code Institute, I definitely spend a lot more time on this one than any of the other projects. I had to learn a lot by continuously looking up answers to the questions I had on various message boards, including Stack Overflow and Stack. On a few occasions I also requested Tutor assistence. Sometimes I could copy solutions other developers had found, other times I had to rely on my own ingenuity. 
 
-I chose to do a project that was significantly different form the webshop example from the course material. This presented some challenges, most noteworthy one that I only fully understood halfway through developing: As I was partway through completing the website, I noted it was time to populate the database with a significant amount of users and logs in order to properly demonstrate the websites purpose and fucntionality as a statistical analysis tool. I spend some time writing code to generate the fictional users, and sequentially generate logs for each user for each workout (4 logs per workout per user in fact). This code is no longer in the project. In the end I generated 500 fictional users, each with 4 logs for each of 5 workouts for each of 8 categories. As noted by Heroku later on, this resulted in over 80.000 rows in the database (exceeding the maximum of 10k rows in the free tier ussage of heroku).
+I chose to do a project that was significantly different form the webshop example from the course material. This presented some challenges, most noteworthy one that I only fully understood halfway through developing: As I was partway through completing the website, I noted it was time to populate the database with a significant amount of users and logs in order to properly demonstrate the websites purpose and fucntionality as a statistical analysis tool. I spent some time writing code to generate the fictional users, and sequentially generate logs for each user for each workout (4 logs per workout per user in fact). This code is no longer in the project. In the end I generated 500 fictional users, each with 4 logs for each of 5 workouts for each of 8 categories. As noted by Heroku later on, this resulted in over 80.000 rows in the database (exceeding the maximum of 10k rows in the free tier ussage of heroku).
 
-With the database populated with the new data a immediatley learned that I had to significantly refactor and alter my code to accomodate this. There were issues with loading time (calculating hero-levels) and the loading of all the log entries to the page in one go (which was not possible, so I had to conceive of the scrolling pagination solution). Whilst trying to solve these issues I spent a lot of time learning about Asynchronous Django and Threading, where calculations would be made simultaneously and (in my mind) the complete function would thus complete faster. This turned out to be a false assumption. I also did a short tutorial in React, which was recommended by a fellow student as a possible solution. But this did not turn out to be the solution.
+With the database populated with the new data I immediately learned that I had to significantly refactor and alter my code to accomodate this. There were issues with loading time (calculating hero-levels) and the loading of all the log entries to the page in one go (which was not possible, so I had to conceive of the scrolling pagination solution). Whilst trying to solve these issues I spent a lot of time learning about Asynchronous Django and Threading, where calculations would be made simultaneously and (in my mind) the complete function would thus complete faster. This turned out to be a false assumption. I also did a short tutorial on React, which was recommended by a fellow student as a possible solution. But this did not turn out to be the solution.
 
 In the end refactoring my python code to make as little as possible calls to the data base was the solution, letting the site function smoothly for a large user base.
 
 Dealing with this challenge definitely taught me a lot that I would not have learned by making a basic webshop project.
 
-Something to note; during the final weeks of the development of this project GitPod was having general issues (in Europe), not always performing normally. This sometimes made it impossible to issue the manage.py runserver command, resulting in an inabitly to test the implemantation/adaptation of (new) code. During this period I made many git commits, since I had already deployed to heroku, in order to be able to keep developing, examining my changes on the deployed website. This might result in a strange git log history.
+Something to note; during the final weeks of the development of this project GitPod was having general issues (in Europe), not always performing normally. This sometimes made it impossible to issue the manage.py runserver command, resulting in an inabitly to test the implemantation/adaptation of (new) code. During this period I made many git commits, since I had already deployed to heroku, in order to be able to keep developing, examining my changes on the deployed website. This might result in a strange looking git log history.
 
-As this was a learning project; along the way I became more proficient and understanding of the code languages I was using. The logic of the website grew in an organic way as my knowledge progressed. Looking back some of the logic could definitely be re-written in a more efficient way. Due to time constraints, I will not take the time to do this.
+As this was a learning project, along the way I became more proficient and understanding of the code languages I was using. The logic of the website grew in an organic way as my knowledge progressed. Looking back some of the logic could definitely be re-written in a more efficient way. Due to time constraints, I will not take the time to do this.
 
 ###### <i>Disclaimer: This project was created for educational purposes only as part of the Code Institute Full Stack Software Development Course for Milestone 4 Django!</i>
 

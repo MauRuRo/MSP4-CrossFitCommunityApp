@@ -137,7 +137,6 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 SITE_ID = 6
 
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -148,7 +147,6 @@ LOGIN_REDIRECT_URL = '/profile/'
 
 
 WSGI_APPLICATION = 'crossfit_community.wsgi.application'
-# ASGI_APPLICATION = 'crossfit_community.asgi.application'
 
 
 # Database
