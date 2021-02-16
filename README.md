@@ -319,7 +319,7 @@ During development I spent a lot of time trying to make the UX very user friendl
 
 </div>
 
-## Structure and Feautures
+## Structure and Features
 ### General
 
 The basic structure of the web page is
@@ -333,13 +333,13 @@ The Landing Page, Sign-up Page and Login Page are publically accesible. After a 
 I had a very basic idea for the website structure before I started writing the code, which I sketched out in some very simple [wireframes](https://github.com/MauRuRo/MSP4-CrossFitCommunityApp/tree/master/documentation) at the start of the process.
 
 #### Sign Up (Registration) and Login
-
+**Sign Up**
 I have used a 3rd Party package called [Allauth](https://django-allauth.readthedocs.io/en/latest/) to take care of the logic.
 The users are asked to fill in the Registration with fields ‘Email’, ‘Username’, and password, this is done twice to make sure they are both the same.
 You may also use the social account sign up. Facebook and Google.
 
-**Sign Up and Login.**
-You may use the social account buttons to sign in or use the form.
+**Login**
+You may use the social account buttons to log in or use the form.
 The form has two fields, ‘email’ and ‘Password’ and a 'remember me button' and a link for if you have forgotten your password.
 All of [Allauth](https://django-allauth.readthedocs.io/en/latest/) HTML pages have been more or less customised to fit the themes of the site.
 
